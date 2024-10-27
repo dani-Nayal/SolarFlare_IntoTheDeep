@@ -12,12 +12,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class FieldCentricMecanumTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        // Declare our motors
-        // Make sure your ID's match your configuration
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
-        DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
+        DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
+
+        DcMotor hang = hardwareMap.dcMotor.get("hang");
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
@@ -41,6 +42,14 @@ public class FieldCentricMecanumTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            if (gamepad2.left_bumper){
+                hang.setPower(-1);
+            }
+            if (gamepad2.right_bumper){
+                hang.setPower(1);
+            }
+            telemetry.addData("hang pos", hang.getCurrentPosition());
+            telemetry.update();
             if (gamepad1.a){
 
             }
