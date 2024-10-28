@@ -29,6 +29,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
             else if (dynamicKp==0.014){
                 dynamicKp=0.015;
             }
+            hangTets();
         }
     }
     public void armTets(){
@@ -42,6 +43,8 @@ public class TetsyWetsyUwU extends LinearOpMode {
             armtarget+=15;
         }
         arm.setPower(dynamicKp*(armtarget-arm.getCurrentPosition()));
+        telemetry.addData("armpos",arm.getCurrentPosition());
+        telemetry.addData("armtarget",armtarget);
     }
     public void bucketTets(){
         DcMotorEx bucket = hardwareMap.get(DcMotorEx.class, "bucket");
@@ -54,6 +57,8 @@ public class TetsyWetsyUwU extends LinearOpMode {
             buckettarget+=15;
         }
         bucket.setPower(dynamicKp*(armtarget-bucket.getCurrentPosition()));
+        telemetry.addData("bucketpos",bucket.getCurrentPosition());
+        telemetry.addData("buckettarget",buckettarget);
     }
     public void hangTets(){
         DcMotorEx hang = hardwareMap.get(DcMotorEx.class, "hang");
@@ -66,6 +71,8 @@ public class TetsyWetsyUwU extends LinearOpMode {
             hangtarget+=15;
         }
         hang.setPower(dynamicKp*(hangtarget-hang.getCurrentPosition()));
+        telemetry.addData("hangpos",hang.getCurrentPosition());
+        telemetry.addData("hangtarget",hangtarget);
     }
     public void extendoTets(){
         DcMotorEx extendo=hardwareMap.get(DcMotorEx.class, "extendo");
@@ -76,6 +83,8 @@ public class TetsyWetsyUwU extends LinearOpMode {
             extendotarget-=15;
         }
         extendo.setPower(dynamicKp*(extendotarget-extendo.getCurrentPosition()));
+        telemetry.addData("extendopos",extendo.getCurrentPosition());
+        telemetry.addData("extendotarget",extendotarget);
     }
     public void clawFingerTets(){
         Servo clawfingers = hardwareMap.get(Servo.class, "clawfingers");
@@ -112,5 +121,6 @@ public class TetsyWetsyUwU extends LinearOpMode {
         }
         pitch1.setPosition(pitchtarget/270);
         pitch2.setPosition(pitchtarget/270);
+        telemetry.addData("clawpitch",pitchtarget);
     }
 }
