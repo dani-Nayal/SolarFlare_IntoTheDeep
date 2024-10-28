@@ -2,16 +2,18 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp
-public class FieldCentricMecanumTeleOp extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+public class TeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+
+        double hangTarget = 0;
+        double kP = 0.015;
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
@@ -42,14 +44,31 @@ public class FieldCentricMecanumTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (gamepad2.left_bumper){
-                hang.setPower(-1);
+            if (gamepad2.left_bumper) {
+                if (hangTarget >= 15) {
+                    hangTarget -= 15;
+                }
+                else{
+                    hangTarget=0;
+                }
             }
-            if (gamepad2.right_bumper){
-                hang.setPower(1);
+            else if (gamepad2.right_bumper){
+                if (hangTarget <= 3619){
+                    hangTarget += 15;
+                }
+                else {
+                    hangTarget = 3634 ;
+                }
+
             }
+            if (gamepad2.dpad_down){
+
+            }
+            hang.setPower(hangTarget * kP);
             telemetry.addData("hang pos", hang.getCurrentPosition());
+            telemetry.addData("hang target", hangTarget);
             telemetry.update();
+
             if (gamepad1.a){
 
             }
