@@ -16,8 +16,6 @@ public class TetsyWetsyUwU extends LinearOpMode {
     boolean isPressingB=false;
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotorEx bucket = hardwareMap.get(DcMotorEx.class, "bucket");
-        DcMotorEx hang = hardwareMap.get(DcMotorEx.class, "bucket");
         while (opModeIsActive()){
             if (isStopRequested()) return;
             if (dynamicKp==0.015){
@@ -29,7 +27,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
             else if (dynamicKp==0.014){
                 dynamicKp=0.015;
             }
-            hangTets();
+            bucketTets();
         }
     }
     public void armTets(){
@@ -65,10 +63,10 @@ public class TetsyWetsyUwU extends LinearOpMode {
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (gamepad2.left_bumper){
-            hangtarget-=15;
+            hangtarget-=100;
         }
         else if (gamepad2.right_bumper){
-            hangtarget+=15;
+            hangtarget+=100;
         }
         hang.setPower(dynamicKp*(hangtarget-hang.getCurrentPosition()));
         telemetry.addData("hangpos",hang.getCurrentPosition());
