@@ -43,8 +43,9 @@ public class TeleOp extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        boolean isPressingA=false;
         while (opModeIsActive()) {
-
+            /*
             if (gamepad2.left_bumper) {
                 if (hangTarget >= 15) {
                     hangTarget -= 15;
@@ -62,17 +63,21 @@ public class TeleOp extends LinearOpMode {
                 }
 
             }
-            if (gamepad2.dpad_down){
-
+            */
+            if (gamepad2.a){
+                if (!isPressingA) {
+                    if (hangTarget==0) {hangTarget=3634;} else {hangTarget=0;}
+                    isPressingA=true;
+                }
             }
-            hang.setPower(hangTarget * kP);
+            else{
+                isPressingA=false;
+            }
+            hang.setPower(-(hang.getCurrentPosition()-hangTarget) * kP);
             telemetry.addData("hang pos", hang.getCurrentPosition());
             telemetry.addData("hang target", hangTarget);
             telemetry.update();
 
-            if (gamepad1.a){
-
-            }
             if (gamepad1.b){
 
             }
