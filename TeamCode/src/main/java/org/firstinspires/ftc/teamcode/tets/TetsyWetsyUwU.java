@@ -27,7 +27,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
             else if (dynamicKp==0.014){
                 dynamicKp=0.015;
             }
-            armTets();
+            bucketTets();
         }
     }
     public void armTets(){

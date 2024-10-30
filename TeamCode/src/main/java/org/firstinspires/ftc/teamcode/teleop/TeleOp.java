@@ -78,7 +78,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("hang target", hangTarget);
             telemetry.update();
 
-            if (gamepad1.b){
+            if (gamepad1.a){
 
             }
             if (gamepad1.x){
