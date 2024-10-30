@@ -18,6 +18,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
     boolean isPressingB=false;
     @Override
     public void runOpMode() throws InterruptedException {
+        waitForStart();
         while (opModeIsActive()){
             if (isStopRequested()) return;
             if (dynamicKp==0.015){
