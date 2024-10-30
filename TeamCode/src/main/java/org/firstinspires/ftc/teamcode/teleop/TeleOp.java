@@ -43,6 +43,7 @@ public class TeleOp extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        boolean isPressing2A=false;
         boolean isPressingA=false;
         while (opModeIsActive()) {
             /*
