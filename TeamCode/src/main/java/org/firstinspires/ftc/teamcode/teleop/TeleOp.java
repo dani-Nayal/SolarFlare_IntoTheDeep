@@ -13,6 +13,7 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         double hangTarget = 0;
+        double bucketTarget = 0;
 
         double kP = 0.015;
 
@@ -22,6 +23,7 @@ public class TeleOp extends LinearOpMode {
         DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
 
         DcMotor hang = hardwareMap.dcMotor.get("hang");
+        DcMotor bucket = hardwareMap.dcMotor.get("bucket");
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
@@ -77,17 +79,20 @@ public class TeleOp extends LinearOpMode {
             hang.setPower(-(hang.getCurrentPosition()-hangTarget) * kP);
             telemetry.addData("hang pos", hang.getCurrentPosition());
             telemetry.addData("hang target", hangTarget);
-            telemetry.update();
 
             if (gamepad1.a){
                 if (!isPressingA) {
-                    if (hangTarget==0) {hangTarget=3634;} else {hangTarget=0;}
+                    if (bucketTarget==0) {bucketTarget=3634;} else {bucketTarget=0;}
                     isPressingA=true;
                 }
             }
             else{
                 isPressingA=false;
             }
+            bucket.setPower(-(bucket.getCurrentPosition()-bucketTarget) * kP);
+            telemetry.addData("bucket pos", bucket.getCurrentPosition());
+            telemetry.addData("bucket target", bucketTarget);
+            telemetry.update();
             if (gamepad1.x){
 
             }
