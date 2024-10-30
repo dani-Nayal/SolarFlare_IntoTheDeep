@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TetsyWetsyUwU extends LinearOpMode {
     int armtarget=0;
     int buckettarget=0;
