@@ -65,13 +65,13 @@ public class TeleOp extends LinearOpMode {
             }
             */
             if (gamepad2.a){
-                if (!isPressingA) {
+                if (!isPressing2A) {
                     if (hangTarget==0) {hangTarget=3634;} else {hangTarget=0;}
-                    isPressingA=true;
+                    isPressing2A=true;
                 }
             }
             else{
-                isPressingA=false;
+                isPressing2A=false;
             }
             hang.setPower(-(hang.getCurrentPosition()-hangTarget) * kP);
             telemetry.addData("hang pos", hang.getCurrentPosition());
@@ -79,7 +79,13 @@ public class TeleOp extends LinearOpMode {
             telemetry.update();
 
             if (gamepad1.a){
-
+                if (!isPressingA) {
+                    if (hangTarget==0) {hangTarget=3634;} else {hangTarget=0;}
+                    isPressingA=true;
+                }
+            }
+            else{
+                isPressingA=false;
             }
             if (gamepad1.x){
 
