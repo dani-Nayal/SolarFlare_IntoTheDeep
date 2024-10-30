@@ -15,6 +15,7 @@ public class TeleOp extends LinearOpMode {
         double hangTarget = 0;
         double kP = 0.015;
 
+
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
@@ -33,8 +34,8 @@ public class TeleOp extends LinearOpMode {
         IMU imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
@@ -44,6 +45,8 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            // If target is less than 15 immediately set target to 0 when going down
+            // Prevents negative target
             if (gamepad2.left_bumper) {
                 if (hangTarget >= 15) {
                     hangTarget -= 15;
@@ -52,6 +55,8 @@ public class TeleOp extends LinearOpMode {
                     hangTarget=0;
                 }
             }
+            // If target is greater than 3619 set target to max when going down
+            // Prevents target from going over
             else if (gamepad2.right_bumper){
                 if (hangTarget <= 3619){
                     hangTarget += 15;
@@ -61,11 +66,13 @@ public class TeleOp extends LinearOpMode {
                 }
 
             }
-            if (gamepad2.dpad_down){
-
-            }
-            hang.setPower(hangTarget * kP);
+            //if (gamepad2.dpad_down){
+          //      hang.setPower(-1);
+           // }
+            hang.setPower( (hangTarget - hang.getCurrentPosition()) * kP );
             telemetry.addData("hang pos", hang.getCurrentPosition());
+            telemetry.addData("heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
             telemetry.addData("hang target", hangTarget);
             telemetry.update();
 
