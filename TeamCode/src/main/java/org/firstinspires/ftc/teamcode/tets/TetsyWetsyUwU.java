@@ -77,7 +77,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else if (gamepad1.right_bumper){
             buckettarget+=15;
         }
-        bucket.setPower(dynamicKp*(armtarget-bucket.getCurrentPosition()));
+        bucket.setPower(dynamicKp*(buckettarget-bucket.getCurrentPosition()));
         telemetry.addData("bucketpos",bucket.getCurrentPosition());
         telemetry.addData("buckettarget",buckettarget);
     }
