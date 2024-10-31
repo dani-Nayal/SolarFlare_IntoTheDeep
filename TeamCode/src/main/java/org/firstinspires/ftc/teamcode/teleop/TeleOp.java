@@ -25,6 +25,10 @@ public class TeleOp extends LinearOpMode {
         DcMotor hang = hardwareMap.dcMotor.get("hang");
         DcMotor bucket = hardwareMap.dcMotor.get("bucket");
 
+        bucket.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bucket.setDirection(DcMotor.Direction.REVERSE);
+        bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
