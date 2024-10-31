@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.tets;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
@@ -70,6 +71,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
     public void bucketTets(){
 
         bucket.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bucket.setDirection(DcMotor.Direction.REVERSE);
         bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (gamepad1.left_bumper){
             buckettarget-=15;
