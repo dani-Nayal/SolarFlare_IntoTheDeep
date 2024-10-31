@@ -16,8 +16,27 @@ public class TetsyWetsyUwU extends LinearOpMode {
     double dynamicKp=0.015;
     boolean isPressingA=false;
     boolean isPressingB=false;
+    Servo clawfingers;
+    Servo clawroll;
+    DcMotorEx extendo;
+    DcMotorEx hang;
+    DcMotorEx arm;
+    DcMotorEx bucket;
+    Servo pitch1;
+    Servo pitch2;
     @Override
     public void runOpMode() throws InterruptedException {
+        /*
+        clawfingers = hardwareMap.get(Servo.class, "clawfingers");
+        clawroll = hardwareMap.get(Servo.class, "clawroll");
+        extendo=hardwareMap.get(DcMotorEx.class, "extendo");
+        hang = hardwareMap.get(DcMotorEx.class, "hang");
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
+        pitch1 = hardwareMap.get(Servo.class, "clawpitch");
+        pitch2 = hardwareMap.get(Servo.class, "clawpitch");
+        */
+        bucket=hardwareMap.get(DcMotorEx.class, "bucket");
+
         waitForStart();
         while (opModeIsActive()){
             if (isStopRequested()) return;
@@ -31,10 +50,11 @@ public class TetsyWetsyUwU extends LinearOpMode {
                 dynamicKp=0.015;
             }
             bucketTets();
+            telemetry.update();
         }
     }
     public void armTets(){
-        DcMotorEx arm = hardwareMap.get(DcMotorEx.class, "arm");
+
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (gamepad1.left_trigger>0){
@@ -48,7 +68,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("armtarget",armtarget);
     }
     public void bucketTets(){
-        DcMotorEx bucket = hardwareMap.get(DcMotorEx.class, "bucket");
+
         bucket.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (gamepad1.left_bumper){
@@ -62,7 +82,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("buckettarget",buckettarget);
     }
     public void hangTets(){
-        DcMotorEx hang = hardwareMap.get(DcMotorEx.class, "hang");
+
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (gamepad2.left_bumper){
@@ -76,7 +96,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("hangtarget",hangtarget);
     }
     public void extendoTets(){
-        DcMotorEx extendo=hardwareMap.get(DcMotorEx.class, "extendo");
+
         if (gamepad2.left_trigger>0){
             extendotarget+=15;
         }
@@ -88,7 +108,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("extendotarget",extendotarget);
     }
     public void clawFingerTets(){
-        Servo clawfingers = hardwareMap.get(Servo.class, "clawfingers");
+
         if (gamepad1.a) {
             if (isPressingA) {
                 clawfingers.setPosition(1 - clawfingers.getPosition());
@@ -100,7 +120,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         }
     }
     public void clawRollTets(){
-        Servo clawroll = hardwareMap.get(Servo.class, "clawroll");
+
         if (gamepad1.b) {
             if (isPressingB) {
                 if(clawroll.getPosition()==0){clawroll.setPosition(0.5);}else{clawroll.setPosition(0);}
@@ -112,8 +132,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         }
     }
     public void clawPitchTets(){
-        Servo pitch1 = hardwareMap.get(Servo.class, "clawpitch");
-        Servo pitch2 = hardwareMap.get(Servo.class, "clawpitch");
+
         if (gamepad1.left_stick_y>0&&pitchtarget<210) {
             pitchtarget+=15;
         }
