@@ -14,6 +14,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
     int hangtarget=0;
     int extendotarget=0;
     double pitchtarget=135;
+    double rolltarget=135;
     double dynamicKp=0.015;
     boolean isPressingA=false;
     boolean isPressingB=false;
@@ -25,6 +26,8 @@ public class TetsyWetsyUwU extends LinearOpMode {
     DcMotorEx bucket;
     Servo pitch1;
     Servo pitch2;
+    int clawrollmax=180;
+    int pitchmax=270;
     @Override
     public void runOpMode() throws InterruptedException {
         /*
@@ -122,16 +125,15 @@ public class TetsyWetsyUwU extends LinearOpMode {
         }
     }
     public void clawRollTets(){
-
-        if (gamepad1.b) {
-            if (isPressingB) {
-                if(clawroll.getPosition()==0){clawroll.setPosition(0.5);}else{clawroll.setPosition(0);}
-                isPressingB=true;
-            }
+        if (gamepad1.right_stick_y>0&&rolltarget<210) {
+            rolltarget+=15;
         }
-        else{
-            isPressingB=false;
+        else if (gamepad1.left_stick_y<0&&rolltarget>60){
+            rolltarget-=15;
         }
+        pitch1.setPosition(rolltarget/clawrollmax);
+        pitch2.setPosition(rolltarget/clawrollmax);
+        telemetry.addData("clawroll",rolltarget);
     }
     public void clawPitchTets(){
 
@@ -141,8 +143,8 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else if (gamepad1.left_stick_y<0&&pitchtarget>60){
             pitchtarget-=15;
         }
-        pitch1.setPosition(pitchtarget/270);
-        pitch2.setPosition(pitchtarget/270);
+        pitch1.setPosition(pitchtarget/pitchmax);
+        pitch2.setPosition(pitchtarget/pitchmax);
         telemetry.addData("clawpitch",pitchtarget);
     }
 }
