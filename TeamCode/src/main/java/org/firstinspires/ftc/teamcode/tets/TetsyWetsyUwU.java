@@ -121,7 +121,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
 
         if (gamepad1.a) {
             if (isPressingA) {
-                clawfingers.setPosition(1 - clawfingers.getPosition());
+                if (clawfingers.getPosition()==0.8) {clawfingers.setPosition(1);} else {clawfingers.setPosition(0.8);}
                 isPressingA=true;
             }
         }
