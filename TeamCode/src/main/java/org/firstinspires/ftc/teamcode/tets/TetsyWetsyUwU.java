@@ -130,33 +130,32 @@ public class TetsyWetsyUwU extends LinearOpMode {
         }
     }
     public void clawRollTets(){
-        if (gamepad1.right_stick_y>0&&rolltarget<210) {
-            rolltarget+=15;
+        if (gamepad1.right_stick_y>0&&rolltarget<225) {
+            rolltarget+=0.5;
         }
-        else if (gamepad1.left_stick_y<0&&rolltarget>60){
-            rolltarget-=15;
+        else if (gamepad1.left_stick_y<0&&rolltarget>45){
+            rolltarget-=0.5;
         }
-        pitch1.setPosition(rolltarget/clawrollmax);
-        pitch2.setPosition(rolltarget/clawrollmax);
+        clawroll.setPosition(rolltarget/clawrollmax);
         telemetry.addData("clawroll",rolltarget);
     }
     public void clawPitchTets(){
-        if (gamepad1.left_stick_y>0&&pitchtarget<210) {
-            pitchtarget+=15;
+        if (gamepad1.left_stick_y>0&&pitchtarget<225) {
+            pitchtarget+=0.5;
         }
-        else if (gamepad1.left_stick_y<0&&pitchtarget>60){
-            pitchtarget-=15;
+        else if (gamepad1.left_stick_y<0&&pitchtarget>45){
+            pitchtarget-=0.5;
         }
         pitch1.setPosition(pitchtarget/pitchmax);
         pitch2.setPosition(pitchtarget/pitchmax);
         telemetry.addData("clawpitch",pitchtarget);
     }
     public void bucketSwervoTets(){
-        if (gamepad2.left_stick_y>0) {
-            bucketswervotarget+=15;
+        if (gamepad2.left_stick_y>0&&bucketswervotarget<270) {
+            bucketswervotarget+=0.5;
         }
-        else if (gamepad2.left_stick_y<0){
-            bucketswervotarget-=15;
+        else if (gamepad2.left_stick_y<0&&bucketswervotarget>0){
+            bucketswervotarget-=0.5;
         }
         bucketswervo.setPosition(bucketswervotarget/bucketpitchmax);
         telemetry.addData("bucketpitch",bucketswervotarget);
