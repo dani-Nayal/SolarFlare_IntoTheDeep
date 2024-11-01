@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -17,17 +19,27 @@ public class TeleOp extends LinearOpMode {
 
         double kP = 0.015;
 
+        DcMotor extendo = hardwareMap.dcMotor.get("extendo");
+        DcMotor extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
-
         DcMotor hang = hardwareMap.dcMotor.get("hang");
-        DcMotor bucket = hardwareMap.dcMotor.get("bucket");
+        DcMotor bucketSlides = hardwareMap.dcMotor.get("bucket");
 
-        bucket.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bucket.setDirection(DcMotor.Direction.REVERSE);
-        bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Servo clawPitchRight = hardwareMap.servo.get("clawPitchRight");
+        Servo clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
+        Servo clawFingers = hardwareMap.servo.get("clawFingers");
+        Servo clawWrist = hardwareMap.servo.get("clawWrist");
+        Servo bucket = hardwareMap.servo.get("bucket");
+
+        extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bucketSlides.setDirection(DcMotor.Direction.REVERSE);
+        bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
@@ -51,26 +63,10 @@ public class TeleOp extends LinearOpMode {
 
         boolean isPressing2A=false;
         boolean isPressingA=false;
-        while (opModeIsActive()) {
-            /*
-            if (gamepad2.left_bumper) {
-                if (hangTarget >= 15) {
-                    hangTarget -= 15;
-                }
-                else{
-                    hangTarget=0;
-                }
-            }
-            else if (gamepad2.right_bumper){
-                if (hangTarget <= 3619){
-                    hangTarget += 15;
-                }
-                else {
-                    hangTarget = 3634 ;
-                }
 
-            }
-            */
+        while (opModeIsActive()) {
+
+            // Hang toggle between min and max positions
             if (gamepad2.a){
                 if (!isPressing2A) {
                     if (hangTarget==0) {hangTarget=3634;} else {hangTarget=0;}
@@ -84,19 +80,21 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("hang pos", hang.getCurrentPosition());
             telemetry.addData("hang target", hangTarget);
 
+            // Bucket Slides toggle between min and max positions
             if (gamepad1.a){
                 if (!isPressingA) {
-                    if (bucketTarget==0) {bucketTarget=1891;} else {bucketTarget=0;}
+                    if (bucketTarget==0) {bucketTarget=3634;} else {bucketTarget=0;}
                     isPressingA=true;
                 }
             }
             else{
                 isPressingA=false;
             }
-            bucket.setPower(-(bucket.getCurrentPosition()-bucketTarget) * kP);
-            telemetry.addData("bucket pos", bucket.getCurrentPosition());
+
+            bucketSlides.setPower(-(bucketSlides.getCurrentPosition()-bucketTarget) * kP);
+            telemetry.addData("bucket pos", bucketSlides.getCurrentPosition());
             telemetry.addData("bucket target", bucketTarget);
-            telemetry.update();
+
             if (gamepad1.x){
 
             }
@@ -116,7 +114,7 @@ public class TeleOp extends LinearOpMode {
 
             }
 
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+            double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
@@ -141,6 +139,8 @@ public class TeleOp extends LinearOpMode {
             backLeftMotor.setPower(backLeftPower);
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
+
+            telemetry.update();
         }
     }
 }
