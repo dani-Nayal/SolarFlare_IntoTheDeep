@@ -15,6 +15,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
     int extendotarget=0;
     double pitchtarget=135;
     double rolltarget=135;
+    double bucketswervotarget=0;
     double dynamicKp=0.015;
     boolean isPressingA=false;
     boolean isPressingB=false;
@@ -26,8 +27,10 @@ public class TetsyWetsyUwU extends LinearOpMode {
     DcMotorEx bucket;
     Servo pitch1;
     Servo pitch2;
+    Servo bucketswervo;
     int clawrollmax=180;
     int pitchmax=270;
+    int bucketpitchmax=270;
     @Override
     public void runOpMode() throws InterruptedException {
         /*
@@ -37,9 +40,9 @@ public class TetsyWetsyUwU extends LinearOpMode {
         hang = hardwareMap.get(DcMotorEx.class, "hang");
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         pitch1 = hardwareMap.get(Servo.class, "clawpitch");
-        Servo pitch1.setDirection(Servo.Direction.REVERSE);
+        pitch1.setDirection(Servo.Direction.REVERSE);
         pitch2 = hardwareMap.get(Servo.class, "clawpitch");
-
+        bucketswervo = hardwareMap.get(Servo.class, "bucketservo");
         */
         bucket=hardwareMap.get(DcMotorEx.class, "bucket");
 
@@ -147,5 +150,16 @@ public class TetsyWetsyUwU extends LinearOpMode {
         pitch1.setPosition(pitchtarget/pitchmax);
         pitch2.setPosition(pitchtarget/pitchmax);
         telemetry.addData("clawpitch",pitchtarget);
+    }
+    public void bucketSwervoTets(){
+        if (gamepad2.left_stick_y>0&&pitchtarget<265) {
+            bucketswervotarget+=15;
+        }
+        else if (gamepad2.left_stick_y<0&&pitchtarget>15){
+            bucketswervotarget-=15;
+        }
+        pitch1.setPosition(bucketswervotarget/bucketpitchmax);
+        pitch2.setPosition(bucketswervotarget/bucketpitchmax);
+        telemetry.addData("clawpitch",bucketswervotarget);
     }
 }
