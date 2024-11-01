@@ -37,7 +37,9 @@ public class TetsyWetsyUwU extends LinearOpMode {
         hang = hardwareMap.get(DcMotorEx.class, "hang");
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         pitch1 = hardwareMap.get(Servo.class, "clawpitch");
+        Servo pitch1.setDirection(Servo.Direction.REVERSE);
         pitch2 = hardwareMap.get(Servo.class, "clawpitch");
+
         */
         bucket=hardwareMap.get(DcMotorEx.class, "bucket");
 
@@ -136,7 +138,6 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("clawroll",rolltarget);
     }
     public void clawPitchTets(){
-
         if (gamepad1.left_stick_y>0&&pitchtarget<210) {
             pitchtarget+=15;
         }
