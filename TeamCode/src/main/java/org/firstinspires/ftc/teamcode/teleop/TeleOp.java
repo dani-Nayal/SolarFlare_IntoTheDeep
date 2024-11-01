@@ -86,7 +86,7 @@ public class TeleOp extends LinearOpMode {
 
             if (gamepad1.a){
                 if (!isPressingA) {
-                    if (bucketTarget==0) {bucketTarget=3634;} else {bucketTarget=0;}
+                    if (bucketTarget==0) {bucketTarget=1891;} else {bucketTarget=0;}
                     isPressingA=true;
                 }
             }
