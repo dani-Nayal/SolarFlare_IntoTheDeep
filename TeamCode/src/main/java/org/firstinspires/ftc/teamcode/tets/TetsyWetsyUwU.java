@@ -152,14 +152,13 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("clawpitch",pitchtarget);
     }
     public void bucketSwervoTets(){
-        if (gamepad2.left_stick_y>0&&pitchtarget<265) {
+        if (gamepad2.left_stick_y>0) {
             bucketswervotarget+=15;
         }
-        else if (gamepad2.left_stick_y<0&&pitchtarget>15){
+        else if (gamepad2.left_stick_y<0){
             bucketswervotarget-=15;
         }
-        pitch1.setPosition(bucketswervotarget/bucketpitchmax);
-        pitch2.setPosition(bucketswervotarget/bucketpitchmax);
-        telemetry.addData("clawpitch",bucketswervotarget);
+        bucketswervo.setPosition(bucketswervotarget/bucketpitchmax);
+        telemetry.addData("bucketpitch",bucketswervotarget);
     }
 }
