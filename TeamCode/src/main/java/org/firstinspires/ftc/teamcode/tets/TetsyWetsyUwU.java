@@ -101,7 +101,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else if (gamepad2.right_bumper){
             hangtarget+=100;
         }
-        hang.setPower(dynamicKp*(hangtarget-hang.getCurrentPosition()));
+        hang.setPower(dynamicKp*-(hangtarget-hang.getCurrentPosition()));
         telemetry.addData("hangpos",hang.getCurrentPosition());
         telemetry.addData("hangtarget",hangtarget);
     }
