@@ -90,7 +90,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("extendo target", extendoTarget);
 
             // Extendo pitch presets
-            if (gamepad1.a){
+            if (gamepad1.b){
                 // extendoPitchTarget = down position
             }
             if (gamepad1.x){
@@ -148,11 +148,13 @@ public class TeleOp extends LinearOpMode {
                     if (clawFingers.getPosition() == 0.8) {
                         isPressingA2 = true;
                         clawFingers.setPosition(1);
-                    }
-                    else clawFingers.setPosition(0.8);
+                    } else clawFingers.setPosition(0.8);
                 }
             }
+
             else isPressingA2 = false;
+            // Dynamic claw
+
             telemetry.addData("claw finger position", clawFingers.getPosition());
 
             // Claw wrist dynamic movement
