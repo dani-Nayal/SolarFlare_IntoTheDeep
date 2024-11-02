@@ -52,14 +52,16 @@ public class TetsyWetsyUwU extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()){
             if (isStopRequested()) return;
+
             bucketTets();
-            telemetry.update();
             armTets();
             extendoTets();
             clawFingerTets();
             clawRollTets();
             clawPitchTets();
             bucketSwervoTets();
+
+            telemetry.update();
         }
     }
     public void armTets(){
