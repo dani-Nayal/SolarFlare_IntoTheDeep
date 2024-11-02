@@ -15,6 +15,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
     int extendotarget=0;
     double pitchtarget=135;
     double rolltarget=135;
+    double fingertarget=0;
     double bucketswervotarget=0;
     double dynamicKp=0.015;
     boolean isPressingA=false;
@@ -31,6 +32,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
     int clawrollmax=180;
     int pitchmax=270;
     int bucketpitchmax=270;
+    int fingermax=180;
     @Override
     public void runOpMode() throws InterruptedException {
         /*
@@ -118,26 +120,15 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("extendotarget",extendotarget);
     }
     public void clawFingerTets(){
-        /*
-        if (gamepad1.a) {
-            if (isPressingA) {
-                if (clawfingers.getPosition()==0.8) {clawfingers.setPosition(1);} else {clawfingers.setPosition(0.8);}
-                isPressingA=true;
-            }
+        if (gamepad2.right_stick_y>0&&fingertarget<270){
+            fingertarget+=0.5;
         }
-        else{
-            isPressingA=false;
+        else if (gamepad2.right_stick_y<0&&fingertarget>0){
+            fingertarget-=0.5;
         }
-        */
-        if (gamepad2.left_trigger>0){
-            clatarget+=0.5;
-        }
-        else if (gamepad2.right_trigger>0 && extendotarget>15){
-            extendotarget-=15;
-        }
-        extendo.setPower(dynamicKp*(extendotarget-extendo.getCurrentPosition()));
-        telemetry.addData("extendopos",extendo.getCurrentPosition());
-        telemetry.addData("extendotarget",extendotarget);
+        clawfingers.setPosition(fingertarget/fingermax);
+        telemetry.addData("clawfingerpos",clawfingers.getPosition());
+        telemetry.addData("clawfinger",fingertarget);
     }
     public void clawRollTets(){
         if (gamepad1.right_stick_y>0&&rolltarget<225) {
@@ -148,6 +139,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         }
         clawroll.setPosition(rolltarget/clawrollmax);
         telemetry.addData("clawroll",rolltarget);
+        telemetry.addData("clawrollpos",clawroll.getPosition());
     }
     public void clawPitchTets(){
         if (gamepad1.left_stick_y>0&&pitchtarget<225) {
@@ -159,6 +151,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         pitch1.setPosition(pitchtarget/pitchmax);
         pitch2.setPosition(pitchtarget/pitchmax);
         telemetry.addData("clawpitch",pitchtarget);
+        telemetry.addData("clawpitchpos",pitch1.getPosition());
     }
     public void bucketSwervoTets(){
         if (gamepad2.left_stick_y>0&&bucketswervotarget<270) {
@@ -169,5 +162,6 @@ public class TetsyWetsyUwU extends LinearOpMode {
         }
         bucketswervo.setPosition(bucketswervotarget/bucketpitchmax);
         telemetry.addData("bucketpitch",bucketswervotarget);
+        telemetry.addData("bucketpitchpos",bucketswervo.getPosition());
     }
 }
