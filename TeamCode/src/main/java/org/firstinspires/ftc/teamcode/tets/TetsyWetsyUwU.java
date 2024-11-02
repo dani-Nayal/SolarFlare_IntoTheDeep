@@ -118,7 +118,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("extendotarget",extendotarget);
     }
     public void clawFingerTets(){
-
+        /*
         if (gamepad1.a) {
             if (isPressingA) {
                 if (clawfingers.getPosition()==0.8) {clawfingers.setPosition(1);} else {clawfingers.setPosition(0.8);}
@@ -128,6 +128,16 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else{
             isPressingA=false;
         }
+        */
+        if (gamepad2.left_trigger>0){
+            clatarget+=0.5;
+        }
+        else if (gamepad2.right_trigger>0 && extendotarget>15){
+            extendotarget-=15;
+        }
+        extendo.setPower(dynamicKp*(extendotarget-extendo.getCurrentPosition()));
+        telemetry.addData("extendopos",extendo.getCurrentPosition());
+        telemetry.addData("extendotarget",extendotarget);
     }
     public void clawRollTets(){
         if (gamepad1.right_stick_y>0&&rolltarget<225) {
