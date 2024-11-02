@@ -17,7 +17,10 @@ public class TetsyWetsyUwU extends LinearOpMode {
     double rolltarget=135;
     double fingertarget=0;
     double bucketswervotarget=0;
-    double dynamicKp=0.015;
+    double armdynamicKp=0.015;
+    double extendodynamicKp=0.015;
+    double bucketdynamicKp=0.015;
+    double hangdynamicKp=0.015;
     boolean isPressingA=false;
     boolean isPressingB=false;
     Servo clawfingers;
@@ -51,15 +54,6 @@ public class TetsyWetsyUwU extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()){
             if (isStopRequested()) return;
-            if (dynamicKp==0.015){
-                dynamicKp=0.016;
-            }
-            else if (dynamicKp==0.016){
-                dynamicKp=0.014;
-            }
-            else if (dynamicKp==0.014){
-                dynamicKp=0.015;
-            }
             bucketTets();
             telemetry.update();
         }
@@ -74,7 +68,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else if (gamepad1.right_trigger>0){
             armtarget+=15;
         }
-        arm.setPower(dynamicKp*(armtarget-arm.getCurrentPosition()));
+        arm.setPower(armdynamicKp*(armtarget-arm.getCurrentPosition()));
         telemetry.addData("armpos",arm.getCurrentPosition());
         telemetry.addData("armtarget",armtarget);
     }
@@ -89,7 +83,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else if (gamepad1.right_bumper){
             buckettarget+=15;
         }
-        bucket.setPower(dynamicKp*(buckettarget-bucket.getCurrentPosition()));
+        bucket.setPower(bucketdynamicKp*(buckettarget-bucket.getCurrentPosition()));
         telemetry.addData("bucketpos",bucket.getCurrentPosition());
         telemetry.addData("buckettarget",buckettarget);
     }
@@ -103,7 +97,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else if (gamepad2.right_bumper){
             hangtarget+=100;
         }
-        hang.setPower(dynamicKp*-(hangtarget-hang.getCurrentPosition()));
+        hang.setPower(hangdynamicKp*-(hangtarget-hang.getCurrentPosition()));
         telemetry.addData("hangpos",hang.getCurrentPosition());
         telemetry.addData("hangtarget",hangtarget);
     }
@@ -115,7 +109,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else if (gamepad2.right_trigger>0 && extendotarget>15){
             extendotarget-=15;
         }
-        extendo.setPower(dynamicKp*(extendotarget-extendo.getCurrentPosition()));
+        extendo.setPower(extendodynamicKp*(extendotarget-extendo.getCurrentPosition()));
         telemetry.addData("extendopos",extendo.getCurrentPosition());
         telemetry.addData("extendotarget",extendotarget);
     }
