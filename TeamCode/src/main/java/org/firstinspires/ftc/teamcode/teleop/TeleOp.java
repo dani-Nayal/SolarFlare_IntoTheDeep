@@ -78,61 +78,6 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            // Claw pitch to position 0 to 1
-            if (gamepad2.left_bumper){
-                clawPitchLeft.setPosition(0);
-                clawPitchRight.setPosition(0);
-            }
-            if (gamepad2.right_bumper){
-                clawPitchLeft.setPosition(1);
-                clawPitchRight.setPosition(1);
-            }
-            telemetry.addData("left claw pitch position", clawPitchLeft.getPosition());
-            telemetry.addData("right claw pitch position", clawPitchRight.getPosition());
-
-            // Hang toggle between min and max positions
-            if (gamepad2.y){
-                if (!isPressingY2) {
-                    if (hangTarget == 0) {
-                        isPressingY2 = true;
-                        hangTarget = 3634;}
-                    else hangTarget = 0;
-
-                }
-            }
-            else {
-                isPressingY2=false;
-            }
-            hang.setPower((hangTarget = hang.getCurrentPosition()) * kP);
-            telemetry.addData("hang pos", hang.getCurrentPosition());
-            telemetry.addData("hang target", hangTarget);
-
-            // Bucket Slides toggle between min and max positions
-            if (gamepad1.a){
-                if (!isPressingA) {
-                    if (bucketSlidesTarget == 0) {
-                        isPressingA=true;
-                        bucketSlidesTarget = 1891;}
-                    else bucketSlidesTarget = 0;
-
-                }
-            }
-            else{
-                isPressingA=false;
-            }
-            bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
-            telemetry.addData("bucket pos", bucketSlides.getCurrentPosition());
-            telemetry.addData("bucket target", bucketSlidesTarget);
-
-            // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
-            if (bucketSlidesTarget - bucketSlides.getCurrentPosition()<100){
-                if (bucketSlidesTarget==1891){
-                    bucket.setPosition(1);
-                }
-                else{
-                    bucket.setPosition(0.2);
-                }
-            }
             // Dynamic extendo control
             if (gamepad1.left_bumper){
                 extendoTarget += 15;
@@ -154,6 +99,48 @@ public class TeleOp extends LinearOpMode {
             extendoPitch.setPower((extendoPitchTarget - extendo.getCurrentPosition()) * kP);
             telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
             telemetry.addData("extendo pitch target", extendoPitchTarget);
+
+            // Hang toggle between min and max positions
+            if (gamepad2.y){
+                if (!isPressingY2) {
+                    if (hangTarget == 0) {
+                        isPressingY2 = true;
+                        hangTarget = 3634;}
+                    else hangTarget = 0;
+                }
+            }
+            else isPressingY2=false;
+
+            hang.setPower((hangTarget = hang.getCurrentPosition()) * kP);
+            telemetry.addData("hang pos", hang.getCurrentPosition());
+            telemetry.addData("hang target", hangTarget);
+
+            // Bucket Slides toggle between min and max positions
+            if (gamepad1.a){
+                if (!isPressingA) {
+                    if (bucketSlidesTarget == 0) {
+                        isPressingA=true;
+                        bucketSlidesTarget = 1891;}
+                    else bucketSlidesTarget = 0;
+                }
+            }
+            else isPressingA=false;
+
+            bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
+            telemetry.addData("bucket pos", bucketSlides.getCurrentPosition());
+            telemetry.addData("bucket target", bucketSlidesTarget);
+
+            // Claw pitch to position 0 to 1
+            if (gamepad2.left_bumper){
+                clawPitchLeft.setPosition(0);
+                clawPitchRight.setPosition(0);
+            }
+            if (gamepad2.right_bumper){
+                clawPitchLeft.setPosition(1);
+                clawPitchRight.setPosition(1);
+            }
+            telemetry.addData("left claw pitch position", clawPitchLeft.getPosition());
+            telemetry.addData("right claw pitch position", clawPitchRight.getPosition());
 
             // Claw fingers toggle between open and closed
             if (gamepad2.a) {
@@ -178,9 +165,15 @@ public class TeleOp extends LinearOpMode {
             clawWrist.setPosition(clawWristPosition);
             telemetry.addData("claw wrist position", clawWrist.getPosition());
 
-
-
-
+            // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
+            if (bucketSlidesTarget - bucketSlides.getCurrentPosition()<100){
+                if (bucketSlidesTarget==1891){
+                    bucket.setPosition(1);
+                }
+                else{
+                    bucket.setPosition(0.2);
+                }
+            }
 
             if (gamepad1.options) {
                 imu.resetYaw();
