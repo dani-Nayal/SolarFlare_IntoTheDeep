@@ -17,6 +17,7 @@ public class TeleOp extends LinearOpMode {
         double extendoTarget = 0;
         double bucketSlidesTarget = 0;
         double clawWristPosition = 0;
+        double clawFingerPosition = 0;
 
         boolean isPressingA = false;
         boolean isPressingY2 = false;
@@ -147,14 +148,20 @@ public class TeleOp extends LinearOpMode {
                 if (!isPressingA2) {
                     if (clawFingers.getPosition() == 0.8) {
                         isPressingA2 = true;
-                        clawFingers.setPosition(1);
-                    } else clawFingers.setPosition(0.8);
+                        clawFingerPosition=1;
+                    } else clawFingerPosition=1;
                 }
             }
 
             else isPressingA2 = false;
             // Dynamic claw
-
+            if (gamepad2.right_trigger>0 && clawFingers.getPosition()<1){
+                clawFingerPosition+=0.01;
+            }
+            else if (gamepad2.left_trigger>0 && clawFingers.getPosition()>0) {
+                clawFingerPosition-=0.01;
+            }
+            clawFingers.setPosition(clawFingerPosition);
             telemetry.addData("claw finger position", clawFingers.getPosition());
 
             // Claw wrist dynamic movement
