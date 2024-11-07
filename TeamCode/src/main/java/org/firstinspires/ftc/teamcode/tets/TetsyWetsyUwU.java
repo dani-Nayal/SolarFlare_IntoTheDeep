@@ -69,10 +69,10 @@ public class TetsyWetsyUwU extends LinearOpMode {
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (gamepad1.left_trigger>0){
-            armtarget-=5;
+            armtarget-=1;
         }
         else if (gamepad1.right_trigger>0){
-            armtarget+=5;
+            armtarget+=1;
         }
         arm.setPower(armdynamicKp*(armtarget-arm.getCurrentPosition()));
         telemetry.addData("armpos",arm.getCurrentPosition());
