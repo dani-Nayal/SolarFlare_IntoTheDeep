@@ -88,6 +88,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
 
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hang.setDirection(DcMotorEx.Direction.REVERSE);
         if (gamepad2.left_bumper){
             hangtarget-=100;
         }
