@@ -18,6 +18,7 @@ public class TeleOp extends LinearOpMode {
         double bucketSlidesTarget = 0;
         double clawWristPosition = 0;
         double clawFingerPosition = 0;
+        int clawPitchPosition = 0;
 
         boolean isPressingA = false;
         boolean isPressingY2 = false;
@@ -95,7 +96,7 @@ public class TeleOp extends LinearOpMode {
                 // extendoPitchTarget = down position
             }
             if (gamepad1.x){
-                // extendoPitchTarget = default / intake position
+                // extendoPitchTarget = default / intake position, also move extendo and claw to transfer
             }
             extendoPitch.setPower((extendoPitchTarget - extendo.getCurrentPosition()) * kP);
             telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
@@ -132,14 +133,34 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("bucket target", bucketSlidesTarget);
 
             // Claw pitch to position 0 to 1
+            boolean isPressingBumper2=false;
             if (gamepad2.left_bumper){
-                clawPitchLeft.setPosition(0);
-                clawPitchRight.setPosition(0);
+                if (!isPressingBumper2) {
+                    if (clawPitchPosition == 90) {
+                        clawPitchPosition = 0;
+                    }
+                    if (clawPitchPosition == 180) {
+                        clawPitchPosition = 90;
+                    }
+                }
+                isPressingBumper2=true;
             }
-            if (gamepad2.right_bumper){
-                clawPitchLeft.setPosition(1);
-                clawPitchRight.setPosition(1);
+            else if (gamepad2.right_bumper){
+                if (!isPressingBumper2) {
+                    if (clawPitchPosition == 0) {
+                        clawPitchPosition = 90;
+                    }
+                    if (clawPitchPosition == 90) {
+                        clawPitchPosition = 180;
+                    }
+                }
+                isPressingBumper2=true;
             }
+            else{
+                isPressingBumper2=false;
+            }
+            clawPitchLeft.setPosition(clawPitchPosition/270);
+            clawPitchRight.setPosition(clawPitchPosition/270);
             telemetry.addData("left claw pitch position", clawPitchLeft.getPosition());
             telemetry.addData("right claw pitch position", clawPitchRight.getPosition());
 
@@ -152,7 +173,6 @@ public class TeleOp extends LinearOpMode {
                     } else clawFingerPosition=1;
                 }
             }
-
             else isPressingA2 = false;
             // Dynamic claw
             if (gamepad2.right_trigger>0 && clawFingers.getPosition()<1){
@@ -165,13 +185,23 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("claw finger position", clawFingers.getPosition());
 
             // Claw wrist dynamic movement
-            if (gamepad2.left_bumper && clawWrist.getPosition() > 0){
-                clawWristPosition -= 0.01;
+            boolean isPressingTrigger1=false;
+            if (gamepad1.left_trigger>0 && clawWristPosition >= 30) {
+                if (!isPressingTrigger1){
+                    clawWristPosition-=30;
+                    isPressingTrigger1 = true;
+                }
             }
-            if (gamepad2.right_bumper && clawWrist.getPosition() < 1){
-                clawWristPosition += 0.01;
+            else if (gamepad1.right_trigger>0 && clawWristPosition <= 240){
+                if (!isPressingTrigger1) {
+                    clawWristPosition+=30;
+                    isPressingTrigger1 = true;
+                }
             }
-            clawWrist.setPosition(clawWristPosition);
+            else{
+                isPressingTrigger1=false;
+            }
+            clawWrist.setPosition(clawWristPosition/270);
             telemetry.addData("claw wrist position", clawWrist.getPosition());
 
             // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
