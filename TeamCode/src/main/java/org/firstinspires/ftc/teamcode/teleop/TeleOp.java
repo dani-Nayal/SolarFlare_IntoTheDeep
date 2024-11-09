@@ -106,7 +106,7 @@ public class TeleOp extends LinearOpMode {
                 if (!isPressingY2) {
                     if (hangTarget == 0) {
                         isPressingY2 = true;
-                        hangTarget = 3634;}
+                        hangTarget = 1000;}
                     else hangTarget = 0;
                 }
             }
@@ -121,7 +121,7 @@ public class TeleOp extends LinearOpMode {
                 if (!isPressingA) {
                     if (bucketSlidesTarget == 0) {
                         isPressingA=true;
-                        bucketSlidesTarget = 1891;}
+                        bucketSlidesTarget = 1200;}
                     else bucketSlidesTarget = 0;
                 }
             }
