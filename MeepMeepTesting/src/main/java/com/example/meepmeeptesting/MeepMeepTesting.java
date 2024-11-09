@@ -106,6 +106,48 @@ public class MeepMeepTesting {
 
                 .build();
 
+        Action onePlusFourSpecimen = myBot.getDrive().actionBuilder(new Pose2d(24,-62, Math.toRadians(90)))
+                // Score preload
+                .strafeToLinearHeading(new Vector2d(9,-58), Math.toRadians(90))
+                .waitSeconds(1)
+                // Go to sample zone 1
+                .strafeToLinearHeading(new Vector2d(47.8,-44), Math.toRadians(90))
+                .waitSeconds(1)
+                // Go to sample zone 2
+                .strafeToLinearHeading(new Vector2d(58,-44), Math.toRadians(90))
+
+                .waitSeconds(1)
+                // Go to sample zone 3
+                .strafeToLinearHeading(new Vector2d(62,-44), Math.toRadians(76))
+                .waitSeconds(1)
+                // Go to OCP
+                .strafeToLinearHeading(new Vector2d(9,-59.5), Math.toRadians(0))
+                .waitSeconds(1)
+                // Score
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
+
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
+
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
+
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+
+                // Park
+                .strafeToLinearHeading(new Vector2d(30,-62), Math.toRadians(90))
+                .build();
+
+        Action onePlusThreeBucket = myBot.getDrive().actionBuilder(new Pose2d(24,-))
+
 
 
 
@@ -150,7 +192,7 @@ public class MeepMeepTesting {
         // Score specimen on top rung
 
 
-        myBot.runAction(onePlusThreeSpecimenV3);
+        myBot.runAction(onePlusFourSpecimen);
 
 
 
