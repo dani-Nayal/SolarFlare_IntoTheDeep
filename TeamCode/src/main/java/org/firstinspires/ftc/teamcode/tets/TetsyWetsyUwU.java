@@ -23,6 +23,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
     double hangdynamicKp=0.015;
     boolean isPressingA=false;
     boolean isPressingB=false;
+    boolean isPressingY2 = false;
     Servo clawfingers;
     Servo clawroll;
     DcMotorEx extendo;
@@ -104,7 +105,6 @@ public class TetsyWetsyUwU extends LinearOpMode {
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hang.setDirection(DcMotorEx.Direction.REVERSE);
-        boolean isPressingY2 = false;
         if (gamepad2.y){
             if (!isPressingY2) {
                 if (hangtarget == 0) {hangtarget = 3600;}

@@ -23,7 +23,8 @@ public class TeleOp extends LinearOpMode {
         boolean isPressingA = false;
         boolean isPressingY2 = false;
         boolean isPressingA2 = false;
-
+        boolean isPressingBumper2=false;
+        boolean isPressingTrigger1=false;
         double kP = 0.015;
 
         DcMotor extendo = hardwareMap.dcMotor.get("extendo");
@@ -133,7 +134,6 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("bucket target", bucketSlidesTarget);
 
             // Claw pitch to position 0 to 1
-            boolean isPressingBumper2=false;
             if (gamepad2.left_bumper){
                 if (!isPressingBumper2) {
                     if (clawPitchPosition == 90) {
@@ -185,7 +185,6 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("claw finger position", clawFingers.getPosition());
 
             // Claw wrist dynamic movement
-            boolean isPressingTrigger1=false;
             if (gamepad1.left_trigger>0 && clawWristPosition >= 30) {
                 if (!isPressingTrigger1){
                     clawWristPosition-=30;
