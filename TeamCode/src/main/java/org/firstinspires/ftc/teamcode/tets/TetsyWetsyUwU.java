@@ -89,12 +89,29 @@ public class TetsyWetsyUwU extends LinearOpMode {
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hang.setDirection(DcMotorEx.Direction.REVERSE);
-        if (gamepad2.left_bumper){
+        if (gamepad2.left_bumper && hangtarget>100){
             hangtarget-=100;
         }
-        else if (gamepad2.right_bumper){
+        else if (gamepad2.right_bumper && hangtarget<3500){
             hangtarget+=100;
         }
+        hang.setPower(hangdynamicKp*-(hangtarget-hang.getCurrentPosition()));
+        telemetry.addData("hangpos",hang.getCurrentPosition());
+        telemetry.addData("hangtarget",hangtarget);
+    }
+    public void hangTets2(){
+        hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hang.setDirection(DcMotorEx.Direction.REVERSE);
+        boolean isPressingY2 = false;
+        if (gamepad2.y){
+            if (!isPressingY2) {
+                if (hangtarget == 0) {hangtarget = 3600;}
+                else hangtarget = 2500;
+                isPressingY2 = true;
+            }
+        }
+        else isPressingY2=false;
         hang.setPower(hangdynamicKp*-(hangtarget-hang.getCurrentPosition()));
         telemetry.addData("hangpos",hang.getCurrentPosition());
         telemetry.addData("hangtarget",hangtarget);
