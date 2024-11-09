@@ -38,15 +38,15 @@ public class TetsyWetsyUwU extends LinearOpMode {
     int fingermax=180;
     @Override
     public void runOpMode() throws InterruptedException {
-        //clawfingers = hardwareMap.get(Servo.class, "clawfingers");
-        //clawroll = hardwareMap.get(Servo.class, "clawroll");
+        //clawfingers = hardwareMap.get(Servo.class, "clawFingers");
+        //clawroll = hardwareMap.get(Servo.class, "clawWrist");
         //extendo=hardwareMap.get(DcMotorEx.class, "extendo");
         hang = hardwareMap.get(DcMotorEx.class, "hang");
-        //arm = hardwareMap.get(DcMotorEx.class, "arm");
-        //pitch1 = hardwareMap.get(Servo.class, "clawpitch");
-        //pitch2 = hardwareMap.get(Servo.class, "clawpitch");
-        //bucketswervo = hardwareMap.get(Servo.class, "bucketservo");
-        //bucket=hardwareMap.get(DcMotorEx.class, "bucket");
+        //arm = hardwareMap.get(DcMotorEx.class, "extendoPitch");
+        //pitch1 = hardwareMap.get(Servo.class, "clawPitchLeft");
+        //pitch2 = hardwareMap.get(Servo.class, "clawPitchRight");
+        //bucketswervo = hardwareMap.get(Servo.class, "bucket");
+        //bucket=hardwareMap.get(DcMotorEx.class, "bucketSlides");
 
         waitForStart();
         while (opModeIsActive()){

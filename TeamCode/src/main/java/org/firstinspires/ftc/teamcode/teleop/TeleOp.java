@@ -33,7 +33,7 @@ public class TeleOp extends LinearOpMode {
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
         DcMotor hang = hardwareMap.dcMotor.get("hang");
-        DcMotor bucketSlides = hardwareMap.dcMotor.get("bucket");
+        DcMotor bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
 
         Servo clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
         Servo clawPitchRight = hardwareMap.servo.get("clawPitchRight");
