@@ -25,7 +25,7 @@ public class MeepMeepTesting {
         MeepMeep meepMeep = new MeepMeep(800);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(30, 30, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(65, 65, Math.toRadians(180), Math.toRadians(180), 15)
                 .setDimensions(12.4375,15.0625)
                 .build();
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)
@@ -93,18 +93,95 @@ public class MeepMeepTesting {
                 )
                 .build();
 
+
         Action onePlusThreeSpecimenV3 = myBot.getDrive().actionBuilder(new Pose2d(24,-62, Math.toRadians(90)))
-                // Go to scoring zone first time
-                .strafeToLinearHeading(new Vector2d(10,-33.7), Math.toRadians(90))
+                // Score preload
+                .strafeToLinearHeading(new Vector2d(9,-58), Math.toRadians(90))
                 .waitSeconds(1)
                 // Move to pushing position 1
-                .strafeToLinearHeading(new Vector2d(31.5,-33.7), Math.toRadians(90))
-                .strafeToLinearHeading(new Vector2d(40,-13), Math.toRadians(90))
-                .strafeToLinearHeading(new Vector2d(47,-13), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(36,-33.7), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(40,-15), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(49,-15), Math.toRadians(90))
                 // Move down
-                .strafeToLinearHeading(new Vector2d(31.5,-33.7), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(49,-50), Math.toRadians(90))
+                // Move up
+                .strafeToLinearHeading(new Vector2d(49,-15), Math.toRadians(90))
+                // Move to pushing position 2
+                .strafeToLinearHeading(new Vector2d(57,-15), Math.toRadians(90))
+                // Move down
+                .strafeToLinearHeading(new Vector2d(57,-50), Math.toRadians(90))
+                // Move up
+                .strafeToLinearHeading(new Vector2d(57,-15), Math.toRadians(90))
+                // Move to pushing position 3
+                .strafeToLinearHeading(new Vector2d(63.5,-15), Math.toRadians(90))
+                // Move down
+                .strafeToLinearHeading(new Vector2d(63.5,-50), Math.toRadians(90))
+                // Move to OSP
+                .strafeToLinearHeading(new Vector2d(9,-58), Math.toRadians(0))
+                .waitSeconds(1)
+                // Scoring
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
 
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
+
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                // Park
+                .strafeToLinearHeading(new Vector2d(29,-62), Math.toRadians(90))
                 .build();
+
+        Action onePlusFourSpecimen = myBot.getDrive().actionBuilder(new Pose2d(24,-62, Math.toRadians(90)))
+                // Score preload
+                .strafeToLinearHeading(new Vector2d(9,-58), Math.toRadians(90))
+                .waitSeconds(1)
+                // Go to sample zone 1
+                .strafeToLinearHeading(new Vector2d(47.8,-44), Math.toRadians(90))
+                .waitSeconds(1)
+                // Go to sample zone 2
+                .strafeToLinearHeading(new Vector2d(58,-44), Math.toRadians(90))
+
+                .waitSeconds(1)
+                // Go to sample zone 3
+                .strafeToLinearHeading(new Vector2d(62,-44), Math.toRadians(76))
+                .waitSeconds(1)
+                // Go to OCP
+                .strafeToLinearHeading(new Vector2d(9,-59.5), Math.toRadians(0))
+                .waitSeconds(1)
+                // Score
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
+
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
+
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
+
+                .turnTo(Math.toRadians(90))
+                .waitSeconds(1)
+
+                // Park
+                .strafeToLinearHeading(new Vector2d(30,-62), Math.toRadians(90))
+                .build();
+
+        Action onePlusThreeBucket = myBot.getDrive().actionBuilder(new Pose2d(24,-62,Math.toRadians(90)))
+                .build();
+
+
+
+
 
 
 
@@ -150,7 +227,7 @@ public class MeepMeepTesting {
         // Score specimen on top rung
 
 
-        myBot.runAction(onePlusThreeSpecimenV3);
+        myBot.runAction(onePlusFourSpecimen);
 
 
 
