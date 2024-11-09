@@ -51,6 +51,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()){
             if (isStopRequested()) return;
+            hangTets2();
             hangTets();
             telemetry.update();
         }
@@ -95,7 +96,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         else if (gamepad2.right_bumper && hangtarget<3500){
             hangtarget+=100;
         }
-        hang.setPower(hangdynamicKp*-(hangtarget-hang.getCurrentPosition()));
+        hang.setPower(hangdynamicKp*(hangtarget-hang.getCurrentPosition()));
         telemetry.addData("hangpos",hang.getCurrentPosition());
         telemetry.addData("hangtarget",hangtarget);
     }
@@ -107,12 +108,13 @@ public class TetsyWetsyUwU extends LinearOpMode {
         if (gamepad2.y){
             if (!isPressingY2) {
                 if (hangtarget == 0) {hangtarget = 3600;}
-                else hangtarget = 2500;
+                else if (hangtarget == 3600) {hangtarget = 2500;}
+                else if (hangtarget == 2500) {hangtarget = 0;}
                 isPressingY2 = true;
             }
         }
         else isPressingY2=false;
-        hang.setPower(hangdynamicKp*-(hangtarget-hang.getCurrentPosition()));
+        hang.setPower(hangdynamicKp*(hangtarget-hang.getCurrentPosition()));
         telemetry.addData("hangpos",hang.getCurrentPosition());
         telemetry.addData("hangtarget",hangtarget);
     }
