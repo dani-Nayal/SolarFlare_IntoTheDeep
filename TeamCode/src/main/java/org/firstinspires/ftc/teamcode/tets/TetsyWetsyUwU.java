@@ -13,10 +13,10 @@ public class TetsyWetsyUwU extends LinearOpMode {
     int buckettarget=0;
     int hangtarget=0;
     int extendotarget=0;
-    double pitchtarget=135;
+    double pitchtarget=0;
     double rolltarget=135;
     double fingertarget=0;
-    double bucketswervotarget=0;
+    double bucketswervotarget=135;
     double armdynamicKp=0.015;
     double extendodynamicKp=0.015;
     double bucketdynamicKp=0.015;
@@ -42,18 +42,17 @@ public class TetsyWetsyUwU extends LinearOpMode {
         //clawfingers = hardwareMap.get(Servo.class, "clawFingers");
         //clawroll = hardwareMap.get(Servo.class, "clawWrist");
         //extendo=hardwareMap.get(DcMotorEx.class, "extendo");
-        hang = hardwareMap.get(DcMotorEx.class, "hang");
+        //hang = hardwareMap.get(DcMotorEx.class, "hang");
         //arm = hardwareMap.get(DcMotorEx.class, "extendoPitch");
-        //pitch1 = hardwareMap.get(Servo.class, "clawPitchLeft");
-        //pitch2 = hardwareMap.get(Servo.class, "clawPitchRight");
+        pitch1 = hardwareMap.get(Servo.class, "clawPitchLeft");
+        pitch2 = hardwareMap.get(Servo.class, "clawPitchRight");
         //bucketswervo = hardwareMap.get(Servo.class, "bucket");
         //bucket=hardwareMap.get(DcMotorEx.class, "bucketSlides");
 
         waitForStart();
         while (opModeIsActive()){
             if (isStopRequested()) return;
-            hangTets2();
-            hangTets();
+            clawPitchTets();
             telemetry.update();
         }
     }
@@ -105,8 +104,8 @@ public class TetsyWetsyUwU extends LinearOpMode {
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (gamepad2.y){
             if (!isPressingY2) {
-                if (hangtarget == 0) {hangtarget = 3600;}
-                else if (hangtarget == 3600) {hangtarget = 1500;}
+                if (hangtarget == 0) {hangtarget = 9517;}
+                else if (hangtarget == 9517) {hangtarget = 5287;}
                 else {hangtarget = 0;}
                 isPressingY2 = true;
             }
@@ -151,11 +150,11 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("clawrollpos",clawroll.getPosition());
     }
     public void clawPitchTets(){
-        pitch1.setDirection(Servo.Direction.REVERSE);
-        if (gamepad1.left_stick_y>0&&pitchtarget<225) {
+        pitch2.setDirection(Servo.Direction.REVERSE);
+        if (gamepad1.left_stick_y>0&&pitchtarget<270) {
             pitchtarget+=0.5;
         }
-        else if (gamepad1.left_stick_y<0&&pitchtarget>45){
+        else if (gamepad1.left_stick_y<0&&pitchtarget>0){
             pitchtarget-=0.5;
         }
         pitch1.setPosition(pitchtarget/pitchmax);
