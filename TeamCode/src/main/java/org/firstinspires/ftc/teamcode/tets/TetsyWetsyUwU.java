@@ -150,12 +150,12 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("clawrollpos",clawroll.getPosition());
     }
     public void clawPitchTets(){
-        pitch2.setDirection(Servo.Direction.REVERSE);
-        if (gamepad1.left_stick_y>0&&pitchtarget<270) {
-            pitchtarget+=0.5;
-        }
-        else if (gamepad1.left_stick_y<0&&pitchtarget>0){
+        pitch1.setDirection(Servo.Direction.REVERSE);
+        if (gamepad1.left_stick_y<0&&pitchtarget>0) {
             pitchtarget-=0.5;
+        }
+        else if (gamepad1.left_stick_y>0&&pitchtarget<270){
+            pitchtarget+=0.5;
         }
         pitch1.setPosition(pitchtarget/pitchmax);
         pitch2.setPosition(pitchtarget/pitchmax);
