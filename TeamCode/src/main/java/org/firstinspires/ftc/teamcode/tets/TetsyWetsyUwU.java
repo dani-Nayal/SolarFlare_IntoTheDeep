@@ -43,29 +43,23 @@ public class TetsyWetsyUwU extends LinearOpMode {
         //clawroll = hardwareMap.get(Servo.class, "clawWrist");
         //extendo=hardwareMap.get(DcMotorEx.class, "extendo");
         //hang = hardwareMap.get(DcMotorEx.class, "hang");
-<<<<<<< Updated upstream
         //arm = hardwareMap.get(DcMotorEx.class, "extendoPitch");
         pitch1 = hardwareMap.get(Servo.class, "clawPitchLeft");
         pitch2 = hardwareMap.get(Servo.class, "clawPitchRight");
         //bucketswervo = hardwareMap.get(Servo.class, "bucket");
-=======
         arm = hardwareMap.get(DcMotorEx.class, "extendoPitch");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //pitch1 = hardwareMap.get(Servo.class, "clawPitchLeft");
         //pitch2 = hardwareMap.get(Servo.class, "clawPitchRight");
 
        // bucketswervo = hardwareMap.get(Servo.class, "bucket");
->>>>>>> Stashed changes
         //bucket=hardwareMap.get(DcMotorEx.class, "bucketSlides");
 
         waitForStart();
         while (opModeIsActive()){
             if (isStopRequested()) return;
-<<<<<<< Updated upstream
             clawPitchTets();
-=======
             armTets();
->>>>>>> Stashed changes
             telemetry.update();
         }
     }
