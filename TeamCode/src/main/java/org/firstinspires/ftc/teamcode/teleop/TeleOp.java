@@ -48,6 +48,7 @@ public class TeleOp extends LinearOpMode {
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        extendo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -153,7 +154,7 @@ public class TeleOp extends LinearOpMode {
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 90) {
+                    if (clawPitchPosition == 104) {
                         clawPitchPosition = 30.5;
                     }
                     else if (clawPitchPosition == 217){
@@ -196,10 +197,10 @@ public class TeleOp extends LinearOpMode {
             else isPressingA2 = false;
             // Dynamic claw
             if (gamepad2.right_bumper && clawFingers.getPosition()<1){
-                clawFingerPosition+=0.01;
+                clawFingerPosition+=5;
             }
             else if (gamepad2.left_bumper && clawFingers.getPosition()>0) {
-                clawFingerPosition-=0.01;
+                clawFingerPosition-=5;
             }
             clawFingers.setPosition(clawFingerPosition/180);
             telemetry.addData("claw finger position", clawFingers.getPosition());
