@@ -43,22 +43,38 @@ public class TetsyWetsyUwU extends LinearOpMode {
         //clawroll = hardwareMap.get(Servo.class, "clawWrist");
         //extendo=hardwareMap.get(DcMotorEx.class, "extendo");
         //hang = hardwareMap.get(DcMotorEx.class, "hang");
+<<<<<<< Updated upstream
         //arm = hardwareMap.get(DcMotorEx.class, "extendoPitch");
         pitch1 = hardwareMap.get(Servo.class, "clawPitchLeft");
         pitch2 = hardwareMap.get(Servo.class, "clawPitchRight");
         //bucketswervo = hardwareMap.get(Servo.class, "bucket");
+=======
+        arm = hardwareMap.get(DcMotorEx.class, "extendoPitch");
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //pitch1 = hardwareMap.get(Servo.class, "clawPitchLeft");
+        //pitch2 = hardwareMap.get(Servo.class, "clawPitchRight");
+
+       // bucketswervo = hardwareMap.get(Servo.class, "bucket");
+>>>>>>> Stashed changes
         //bucket=hardwareMap.get(DcMotorEx.class, "bucketSlides");
 
         waitForStart();
         while (opModeIsActive()){
             if (isStopRequested()) return;
+<<<<<<< Updated upstream
             clawPitchTets();
+=======
+            armTets();
+>>>>>>> Stashed changes
             telemetry.update();
         }
     }
     public void armTets(){
-
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+       /*
+       arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (gamepad1.left_trigger>0){
             armtarget-=1;
@@ -67,8 +83,12 @@ public class TetsyWetsyUwU extends LinearOpMode {
             armtarget+=1;
         }
         arm.setPower(armdynamicKp*(armtarget-arm.getCurrentPosition()));
+
+        */
         telemetry.addData("armpos",arm.getCurrentPosition());
         telemetry.addData("armtarget",armtarget);
+
+
     }
     public void bucketTets(){
 
@@ -116,7 +136,9 @@ public class TetsyWetsyUwU extends LinearOpMode {
         telemetry.addData("hangtarget",hangtarget);
     }
     public void extendoTets(){
+        extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        /*
         if (gamepad2.left_trigger>0){
             extendotarget+=15;
         }
@@ -124,6 +146,8 @@ public class TetsyWetsyUwU extends LinearOpMode {
             extendotarget-=15;
         }
         extendo.setPower(extendodynamicKp*(extendotarget-extendo.getCurrentPosition()));
+
+         */
         telemetry.addData("extendopos",extendo.getCurrentPosition());
         telemetry.addData("extendotarget",extendotarget);
     }
@@ -142,7 +166,7 @@ public class TetsyWetsyUwU extends LinearOpMode {
         if (gamepad1.right_stick_y>0&&rolltarget<225) {
             rolltarget+=0.5;
         }
-        else if (gamepad1.left_stick_y<0&&rolltarget>45){
+        else if (gamepad1.right_stick_y<0&&rolltarget>45){
             rolltarget-=0.5;
         }
         clawroll.setPosition(rolltarget/clawrollmax);

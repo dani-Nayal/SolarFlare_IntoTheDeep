@@ -25,7 +25,7 @@ public class MeepMeepTesting {
         MeepMeep meepMeep = new MeepMeep(800);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(30, 30, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setDimensions(12.4375,15.0625)
                 .build();
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)
@@ -89,8 +89,7 @@ public class MeepMeepTesting {
                 .strafeToLinearHeading(new Vector2d(57,-47), Math.toRadians(60))
                 .waitSeconds(1)
                 .strafeToLinearHeading(new Vector2d(55,-47), Math.toRadians(260))
-                .waitSeconds(1
-                )
+                .waitSeconds(1)
                 .build();
 
         Action onePlusThreeSpecimenV3 = myBot.getDrive().actionBuilder(new Pose2d(24,-62, Math.toRadians(90)))
@@ -115,7 +114,6 @@ public class MeepMeepTesting {
                 .waitSeconds(1)
                 // Go to sample zone 2
                 .strafeToLinearHeading(new Vector2d(58,-44), Math.toRadians(90))
-
                 .waitSeconds(1)
                 // Go to sample zone 3
                 .strafeToLinearHeading(new Vector2d(62,-44), Math.toRadians(76))
@@ -141,12 +139,36 @@ public class MeepMeepTesting {
 
                 .turnTo(Math.toRadians(90))
                 .waitSeconds(1)
-
                 // Park
                 .strafeToLinearHeading(new Vector2d(30,-62), Math.toRadians(90))
                 .build();
 
-        Action onePlusThreeBucket = myBot.getDrive().actionBuilder(new Pose2d(24,-))
+        Action onePlusThreeBucket = myBot.getDrive().actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(90)))
+                // Score preload
+                .strafeToLinearHeading(new Vector2d(-9,-58), Math.toRadians(90))
+                .waitSeconds(1.5)
+                // Go to sample zone 1
+                .strafeToLinearHeading(new Vector2d(-48,-53), Math.toRadians(90))
+                .waitSeconds(1)
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(45))
+                .waitSeconds(2)
+                // Go to sample zone 2
+                .strafeToLinearHeading(new Vector2d(-57,-50), Math.toRadians(90))
+                .waitSeconds(1)
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-60,-54), Math.toRadians(67))
+                .waitSeconds(2)
+                // Turn and score bucket
+                .strafeToLinearHeading(new Vector2d(-61,-50), Math.toRadians(105))
+                .waitSeconds(1)
+                .strafeToLinearHeading(new Vector2d(-58,-55), Math.toRadians(55))
+                .waitSeconds(2)
+                // Park
+                .strafeToLinearHeading(new Vector2d(-30,-6), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(0))
+                .waitSeconds(1)
+                .build();
 
 
 
@@ -192,9 +214,8 @@ public class MeepMeepTesting {
         // Score specimen on top rung
 
 
-        myBot.runAction(onePlusFourSpecimen);
-
-
-
+        // Extendo max length is 21 inches
+        // Outtake length is 6.5 inches
+        myBot.runAction(onePlusThreeBucket);
     }
 }

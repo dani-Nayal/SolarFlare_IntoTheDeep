@@ -45,11 +45,10 @@ public class TeleOp extends LinearOpMode {
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // Test Reverse
+        extendoPitch.setDirection(DcMotor.Direction.REVERSE);
         extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // Test Reverse
         extendoPitch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -81,23 +80,32 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            // Extendo retracted 0 ticks
+            // Extendo fully extending 360
             // Dynamic extendo control
-            if (gamepad1.left_bumper){
-                extendoTarget += 15;
+            if (gamepad1.y){
+                extendoTarget = 360;
             }
-            else if (gamepad1.right_bumper){
-                extendoTarget -= 15;
+            if (gamepad1.a){
+                extendoTarget = 0;
+            }
+            if (gamepad1.left_stick_y > 0){
+                extendoTarget += 7;
+            }
+            else if (gamepad1.left_stick_y < 0){
+                extendoTarget -= 7;
             }
             extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
             telemetry.addData("extendo position", extendo.getCurrentPosition());
             telemetry.addData("extendo target", extendoTarget);
 
-            // Extendo pitch presets
-            if (gamepad1.b){
-                // extendoPitchTarget = down position
+            // Extendo pitch transfer / default pos 0 ticks
+            // Extendo pitch pickup 1421
+            if (gamepad1.dpad_up){
+               extendoPitchTarget = 1421;
             }
-            if (gamepad1.x){
-                // extendoPitchTarget = default / intake position, also move extendo and claw to transfer
+            if (gamepad1.dpad_down){
+               extendoPitchTarget = 0;
             }
             extendoPitch.setPower((extendoPitchTarget - extendo.getCurrentPosition()) * kP);
             telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
@@ -119,7 +127,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("hang target", hangTarget);
 
             // Bucket Slides toggle between min and max positions
-            if (gamepad1.a){
+            if (gamepad1.x){
                 if (!isPressingA) {
                     if (bucketSlidesTarget == 0) {
                         isPressingA=true;
@@ -133,57 +141,38 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("bucket pos", bucketSlides.getCurrentPosition());
             telemetry.addData("bucket target", bucketSlidesTarget);
 
-            // Claw pitch to position 0 to 1
-            if (gamepad2.left_bumper){
-                if (!isPressingBumper2) {
-                    if (clawPitchPosition == 90) {
-                        clawPitchPosition = 0;
-                    }
-                    if (clawPitchPosition == 180) {
-                        clawPitchPosition = 90;
-                    }
-                }
-                isPressingBumper2=true;
-            }
-            else if (gamepad2.right_bumper){
-                if (!isPressingBumper2) {
-                    if (clawPitchPosition == 0) {
-                        clawPitchPosition = 90;
-                    }
-                    if (clawPitchPosition == 90) {
-                        clawPitchPosition = 180;
-                    }
-                }
-                isPressingBumper2=true;
-            }
-            else{
-                isPressingBumper2=false;
-            }
+            // Claw pitch picking up pos 30.5 degrees
+            // Claw transfer pos 217 degrees
+            // Claw pitch going into sub 104 degrees
+            if 
             clawPitchLeft.setPosition(clawPitchPosition/270);
             clawPitchRight.setPosition(clawPitchPosition/270);
             telemetry.addData("left claw pitch position", clawPitchLeft.getPosition());
             telemetry.addData("right claw pitch position", clawPitchRight.getPosition());
 
+            // Claw finger close 0 degrees
+            // Claw finger open 50 degrees
             // Claw fingers toggle between open and closed
             if (gamepad2.a) {
                 if (!isPressingA2) {
-                    if (clawFingers.getPosition() == 0.8) {
+                    if (clawFingers.getPosition() == 50/270) {
                         isPressingA2 = true;
-                        clawFingerPosition=1;
-                    } else clawFingerPosition=1;
+                        clawFingerPosition= 0;
+                    } else clawFingerPosition= 0;
                 }
             }
             else isPressingA2 = false;
             // Dynamic claw
-            if (gamepad2.right_trigger>0 && clawFingers.getPosition()<1){
+            if (gamepad2.right_bumper && clawFingers.getPosition()<1){
                 clawFingerPosition+=0.01;
             }
-            else if (gamepad2.left_trigger>0 && clawFingers.getPosition()>0) {
+            else if (gamepad2.left_bumper && clawFingers.getPosition()>0) {
                 clawFingerPosition-=0.01;
             }
             clawFingers.setPosition(clawFingerPosition);
             telemetry.addData("claw finger position", clawFingers.getPosition());
 
+            // Default perpendicular pos 76.5 degrees
             // Claw wrist dynamic movement
             if (gamepad1.left_trigger>0 && clawWristPosition >= 30) {
                 if (!isPressingTrigger1){
@@ -203,15 +192,8 @@ public class TeleOp extends LinearOpMode {
             clawWrist.setPosition(clawWristPosition/270);
             telemetry.addData("claw wrist position", clawWrist.getPosition());
 
-            // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
-            if (bucketSlidesTarget - bucketSlides.getCurrentPosition()<100){
-                if (bucketSlidesTarget==1891){
-                    bucket.setPosition(1);
-                }
-                else{
-                    bucket.setPosition(0.2);
-                }
-            }
+            // BucketTransfer / default pos 81.51 degrees
+            // Bucket Deposit pos 190 degrees
 
             if (gamepad1.options) {
                 imu.resetYaw();
