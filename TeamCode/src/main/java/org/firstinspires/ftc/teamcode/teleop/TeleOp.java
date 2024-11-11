@@ -111,7 +111,7 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.dpad_up){
                extendoPitchTarget = 0;
             }
-            extendoPitch.setPower((extendoPitchTarget - extendo.getCurrentPosition()) * kP);
+            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kP);
             telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
             telemetry.addData("extendo pitch target", extendoPitchTarget);
 
