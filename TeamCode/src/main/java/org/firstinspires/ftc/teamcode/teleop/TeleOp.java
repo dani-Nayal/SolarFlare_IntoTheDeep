@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import com.qualcomm.robotcore.util.ElapsedTime;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends LinearOpMode {
     @Override
@@ -21,12 +24,18 @@ public class TeleOp extends LinearOpMode {
         double clawPitchPosition = 217;
         double bucketPosition = 81.51;
 
-        boolean isPressingX = false;
+        boolean isPressingY = false;
         boolean isPressingY2 = false;
-        boolean isPressingA2 = false;
+        boolean isPressingTrigger1 = false;
         boolean isPressingBumper2=false;
-        boolean isPressingTrigger1=false;
+        boolean isXSequenceActive=false;
+        boolean isBSequenceActive=false;
+        boolean isASequenceActive=false;
+
         double kP = 0.015;
+        ElapsedTime Xtimer = new ElapsedTime();
+        ElapsedTime Btimer = new ElapsedTime();
+        ElapsedTime Atimer = new ElapsedTime();
 
         DcMotor extendo = hardwareMap.dcMotor.get("extendo");
         DcMotor extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
@@ -68,11 +77,6 @@ public class TeleOp extends LinearOpMode {
         bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         clawPitchLeft.setDirection(Servo.Direction.REVERSE);
-        // Test clawPitchLeft Reverse
-        // Test clawPitchRight Reverse
-        // Test clawFingers Reverse
-        // Test clawWrist Reverse
-        // Test bucket Reverse
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
@@ -85,24 +89,66 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            // Intake sequence picking up sample in sample zone (straight to down claw pitch)
+            if (gamepad1.x){
+                isXSequenceActive=true;
+            }
+            if (isXSequenceActive) {
+                bucketPosition=81.51;
+                Xtimer.reset();
+                if (Xtimer.seconds()>0.5){
+                    bucketSlidesTarget=0;
+                    isXSequenceActive=false;
+                }
+            }
+            // Intake sequence picking up sample in submersible (claw pitch needs to fit over sub)
+            if (gamepad1.b){
+                isBSequenceActive=true;
+            }
+            if (isBSequenceActive) {
+                extendoPitchTarget = 1421;
+                clawWristPosition = 76.5;
+                Btimer.reset();
+                if (Btimer.seconds() > 1) {
+                    extendoTarget = 360;
+                    clawPitchPosition = 104;
+                    isBSequenceActive=false;
+                }
+            }
+            // Transfer sample
+            else if (gamepad1.a){
+                isASequenceActive=true;
+            }
+            if (isASequenceActive) {
+                extendoTarget = 0;
+                clawWristPosition = 76.5;
+                Atimer.reset();
+                if (Atimer.seconds() > 1) {
+                    extendoPitchTarget = 0;
+                    clawPitchPosition = 217;
+                    isASequenceActive=false;
+                }
+            }
+
             // Extendo retracted 0 ticks
             // Extendo fully extending 360
             // Dynamic extendo control
+            //bro why did you comment out our entire dynamic extendo control
+            /*
             if (gamepad1.y){
                 extendoTarget = 360;
             }
             if (gamepad1.a){
                 extendoTarget = 0;
             }
+            */
             if (gamepad1.right_bumper){
                 extendoTarget += 7;
             }
             else if (gamepad1.left_bumper){
                 extendoTarget -= 7;
             }
-            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
-            telemetry.addData("extendo position", extendo.getCurrentPosition());
-            telemetry.addData("extendo target", extendoTarget);
+
 
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1421
@@ -112,9 +158,6 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.dpad_up){
                extendoPitchTarget = 0;
             }
-            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kP);
-            telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
-            telemetry.addData("extendo pitch target", extendoPitchTarget);
 
             // Hang toggle between min and max positions
             if (gamepad2.y){
@@ -127,26 +170,19 @@ public class TeleOp extends LinearOpMode {
             }
             else isPressingY2=false;
 
-            hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
-            telemetry.addData("hang pos", hang.getCurrentPosition());
-            telemetry.addData("hang target", hangTarget);
 
             // Bucket Slides toggle between min and max positions
-            if (gamepad1.x){
-                if (!isPressingX) {
+            if (gamepad1.y){
+                if (!isPressingY) {
                     if (bucketSlidesTarget == 0) {
                         bucketSlidesTarget = 1200;}
                     else {
                         bucketSlidesTarget = 0;
                     }
-                    isPressingX=true;
+                    isPressingY=true;
                 }
             }
-            else isPressingX=false;
-
-            bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
-            telemetry.addData("bucket pos", bucketSlides.getCurrentPosition());
-            telemetry.addData("bucket target", bucketSlidesTarget);
+            else isPressingY=false;
 
             // Claw pitch picking up pos 30.5 degrees
             // Claw transfer pos 217 degrees
@@ -177,30 +213,54 @@ public class TeleOp extends LinearOpMode {
             else{
                 isPressingBumper2=false;
             }
-            clawPitchLeft.setPosition(clawPitchPosition/270);
-            clawPitchRight.setPosition(clawPitchPosition/270);
-            telemetry.addData("left claw pitch position", clawPitchLeft.getPosition());
-            telemetry.addData("right claw pitch position", clawPitchRight.getPosition());
-
 
             // Claw finger close 0 degrees
-            // Claw finger open 50 degrees
+            // Claw finger partially open 50 degrees
+            // Claw finger fully open 100 degrees
             // Claw fingers toggle between open and closed
+
+            /*
             if (gamepad2.a) {
                 if (!isPressingA2) {
                     if (clawFingers.getPosition() == 50) {
                         clawFingerPosition= 0;
-                    } else clawFingerPosition= 0;
+                    } else clawFingerPosition= 50;
                     isPressingA2 = true;
                 }
             }
             else isPressingA2 = false;
-            // Dynamic claw
+
             if (gamepad2.right_bumper && clawFingers.getPosition()<1){
                 clawFingerPosition+=5;
             }
             else if (gamepad2.left_bumper && clawFingers.getPosition()>0) {
                 clawFingerPosition-=5;
+            }
+            */
+            if (gamepad1.left_trigger>0){
+                if (!isPressingTrigger1) {
+                    if (clawFingerPosition == 100) {
+                        clawFingerPosition = 50;
+                    }
+                    else if (clawFingerPosition == 50){
+                        clawFingerPosition = 0;
+                    }
+                }
+                isPressingTrigger1=true;
+            }
+            else if (gamepad1.right_trigger>0){
+                if (!isPressingTrigger1) {
+                    if (clawFingerPosition == 0) {
+                        clawFingerPosition = 50;
+                    }
+                    else if (clawFingerPosition == 50) {
+                        clawFingerPosition = 100;
+                    }
+                }
+                isPressingTrigger1=true;
+            }
+            else{
+                isPressingTrigger1=false;
             }
             clawFingers.setPosition(clawFingerPosition/180);
             telemetry.addData("claw finger position", clawFingers.getPosition());
@@ -210,10 +270,10 @@ public class TeleOp extends LinearOpMode {
             if (gamepad2.b){
                 clawWristPosition = 76.5;
             }
-            if (gamepad1.left_trigger>0 && clawWristPosition >= 10) {
+            if (gamepad2.left_trigger>0 && clawWristPosition >= 10) {
                 clawWristPosition -= 10;
             }
-            else if (gamepad1.right_trigger>0 && clawWristPosition <= 66.5) {
+            else if (gamepad2.right_trigger>0 && clawWristPosition <= 66.5) {
                 clawWristPosition += 10;
             }
             clawWrist.setPosition(clawWristPosition/180);
@@ -228,19 +288,7 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.dpad_left){
                 bucketPosition = 190;
             }
-            /*if (bucketSlidesTarget - bucketSlides.getCurrentPosition() < 100){
-                if (bucketSlidesTarget==1891){
-                    bucketPosition = 190;
-                }
-                else{
-                    bucketPosition = 81.51;
-                }
-            }
 
-             */
-            bucket.setPosition(bucketPosition/270);
-            telemetry.addData("bucket pos", bucket.getPosition());
-            telemetry.addData("bucket target", bucketPosition);
 
             if (gamepad1.options) {
                 imu.resetYaw();
@@ -268,6 +316,26 @@ public class TeleOp extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
 
+            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
+            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kP);
+            hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
+            bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
+            clawPitchLeft.setPosition(clawPitchPosition/270);
+            clawPitchRight.setPosition(clawPitchPosition/270);
+            bucket.setPosition(bucketPosition/270);
+
+            telemetry.addData("extendo position", extendo.getCurrentPosition());
+            telemetry.addData("extendo target", extendoTarget);
+            telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
+            telemetry.addData("extendo pitch target", extendoPitchTarget);
+            telemetry.addData("hang pos", hang.getCurrentPosition());
+            telemetry.addData("hang target", hangTarget);
+            telemetry.addData("bucket pos", bucketSlides.getCurrentPosition());
+            telemetry.addData("bucket target", bucketSlidesTarget);
+            telemetry.addData("left claw pitch position", clawPitchLeft.getPosition());
+            telemetry.addData("right claw pitch position", clawPitchRight.getPosition());
+            telemetry.addData("bucket pos", bucket.getPosition());
+            telemetry.addData("bucket target", bucketPosition);
             telemetry.update();
         }
     }
