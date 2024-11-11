@@ -16,12 +16,12 @@ public class TeleOp extends LinearOpMode {
         double extendoPitchTarget = 0;
         double extendoTarget = 0;
         double bucketSlidesTarget = 0;
-        double clawWristPosition = 0;
-        double clawFingerPosition = 0;
-        double clawPitchPosition = 0;
-        double bucketPosition = 0;
+        double clawWristPosition = 76.5;
+        double clawFingerPosition = 50;
+        double clawPitchPosition = 217;
+        double bucketPosition = 81.51;
 
-        boolean isPressingA = false;
+        boolean isPressingX = false;
         boolean isPressingY2 = false;
         boolean isPressingA2 = false;
         boolean isPressingBumper2=false;
@@ -90,10 +90,10 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.a){
                 extendoTarget = 0;
             }
-            if (gamepad1.right_stick_y > 0){
+            if (gamepad1.right_bumper){
                 extendoTarget += 7;
             }
-            else if (gamepad1.right_stick_y < 0){
+            else if (gamepad1.left_bumper){
                 extendoTarget -= 7;
             }
             extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
@@ -129,14 +129,16 @@ public class TeleOp extends LinearOpMode {
 
             // Bucket Slides toggle between min and max positions
             if (gamepad1.x){
-                if (!isPressingA) {
+                if (!isPressingX) {
                     if (bucketSlidesTarget == 0) {
-                        isPressingA=true;
                         bucketSlidesTarget = 1200;}
-                    else bucketSlidesTarget = 0;
+                    else {
+                        bucketSlidesTarget = 0;
+                    }
+                    isPressingX=true;
                 }
             }
-            else isPressingA=false;
+            else isPressingX=false;
 
             bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
             telemetry.addData("bucket pos", bucketSlides.getCurrentPosition());
@@ -149,21 +151,21 @@ public class TeleOp extends LinearOpMode {
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
                     if (clawPitchPosition == 90) {
-                        clawPitchPosition = 0;
+                        clawPitchPosition = 30.5;
                     }
-                    else if (clawPitchPosition == 180){
-                        clawPitchPosition = 90;
+                    else if (clawPitchPosition == 217){
+                        clawPitchPosition = 104;
                     }
                 }
                 isPressingBumper2=true;
             }
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 0) {
-                        clawPitchPosition = 90;
+                    if (clawPitchPosition == 30.5) {
+                        clawPitchPosition = 104;
                     }
-                    else if (clawPitchPosition == 90) {
-                        clawPitchPosition = 180;
+                    else if (clawPitchPosition == 104) {
+                        clawPitchPosition = 217;
                     }
                 }
                 isPressingBumper2=true;
