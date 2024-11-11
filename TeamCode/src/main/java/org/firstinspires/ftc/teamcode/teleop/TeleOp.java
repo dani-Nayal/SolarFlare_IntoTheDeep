@@ -17,7 +17,7 @@ public class TeleOp extends LinearOpMode {
         double extendoTarget = 0;
         double bucketSlidesTarget = 0;
         double clawWristPosition = 76.5;
-        double clawFingerPosition = 50/270;
+        double clawFingerPosition = 50;
         double clawPitchPosition = 217;
         double bucketPosition = 81.51;
 
@@ -187,7 +187,7 @@ public class TeleOp extends LinearOpMode {
             // Claw fingers toggle between open and closed
             if (gamepad2.a) {
                 if (!isPressingA2) {
-                    if (clawFingers.getPosition() == 50/270) {
+                    if (clawFingers.getPosition() == 50) {
                         clawFingerPosition= 0;
                     } else clawFingerPosition= 0;
                     isPressingA2 = true;
@@ -201,7 +201,7 @@ public class TeleOp extends LinearOpMode {
             else if (gamepad2.left_bumper && clawFingers.getPosition()>0) {
                 clawFingerPosition-=0.01;
             }
-            clawFingers.setPosition(clawFingerPosition);
+            clawFingers.setPosition(clawFingerPosition/180);
             telemetry.addData("claw finger position", clawFingers.getPosition());
 
             // Default perpendicular pos 76.5 degrees
@@ -215,7 +215,7 @@ public class TeleOp extends LinearOpMode {
             else if (gamepad1.right_trigger>0 && clawWristPosition <= 66.5) {
                 clawWristPosition += 10;
             }
-            clawWrist.setPosition(clawWristPosition/270);
+            clawWrist.setPosition(clawWristPosition/180);
             telemetry.addData("claw wrist position", clawWrist.getPosition());
 
             // BucketTransfer / default pos 81.51 degrees
