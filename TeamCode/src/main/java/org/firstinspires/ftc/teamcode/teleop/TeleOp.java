@@ -46,7 +46,6 @@ public class TeleOp extends LinearOpMode {
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        extendoPitch.setDirection(DcMotor.Direction.REVERSE);
         extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
