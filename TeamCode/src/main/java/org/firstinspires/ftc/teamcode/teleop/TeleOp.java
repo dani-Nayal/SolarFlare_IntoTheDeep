@@ -17,7 +17,7 @@ public class TeleOp extends LinearOpMode {
         double extendoTarget = 0;
         double bucketSlidesTarget = 0;
         double clawWristPosition = 76.5;
-        double clawFingerPosition = 50;
+        double clawFingerPosition = 50/270;
         double clawPitchPosition = 217;
         double bucketPosition = 81.51;
 
@@ -45,19 +45,23 @@ public class TeleOp extends LinearOpMode {
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
+        extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendoPitch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hang.setDirection(DcMotorSimple.Direction.REVERSE);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bucketSlides.setDirection(DcMotor.Direction.REVERSE);
         bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
