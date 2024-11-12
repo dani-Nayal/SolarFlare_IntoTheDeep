@@ -33,6 +33,7 @@ public class TeleOp extends LinearOpMode {
         boolean isASequenceActive=false;
 
         double kP = 0.015;
+        double kPpitch = 0.008;
         ElapsedTime Xtimer = new ElapsedTime();
         ElapsedTime Btimer = new ElapsedTime();
         ElapsedTime Atimer = new ElapsedTime();
@@ -324,7 +325,7 @@ public class TeleOp extends LinearOpMode {
             backRightMotor.setPower(backRightPower);
 
             extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
-            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kP);
+            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kPpitch);
             hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
             bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
             clawPitchLeft.setPosition(clawPitchPosition/270);
