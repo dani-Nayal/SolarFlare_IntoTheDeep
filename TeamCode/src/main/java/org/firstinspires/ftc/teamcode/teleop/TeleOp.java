@@ -92,10 +92,11 @@ public class TeleOp extends LinearOpMode {
             // bucket slides retraction sequence
             if (gamepad1.x){
                 isXSequenceActive=true;
+                Xtimer.reset();
             }
             if (isXSequenceActive) {
                 bucketPosition=81.51;
-                Xtimer.reset();
+
                 if (Xtimer.seconds()>0.5){
                     bucketSlidesTarget=0;
                     isXSequenceActive=false;
@@ -104,11 +105,12 @@ public class TeleOp extends LinearOpMode {
             // Intake sequence picking up sample in submersible (claw pitch needs to fit over sub)
             if (gamepad1.b){
                 isBSequenceActive=true;
+                Btimer.reset();
+
             }
             if (isBSequenceActive) {
-                extendoPitchTarget = 1421;
+                extendoPitchTarget = 1300;
                 clawWristPosition = 76.5;
-                Btimer.reset();
                 if (Btimer.seconds() > 1) {
                     extendoTarget = 503;
                     clawPitchPosition = 104;
@@ -118,11 +120,12 @@ public class TeleOp extends LinearOpMode {
             // Transfer sample
             else if (gamepad1.a){
                 isASequenceActive=true;
+                Atimer.reset();
+
             }
             if (isASequenceActive) {
                 extendoTarget = 0;
-                clawWristPosition = 76.5;
-                Atimer.reset();
+                clawWristPosition = 104;
                 if (Atimer.seconds() > 1) {
                     extendoPitchTarget = 0;
                     clawPitchPosition = 217;
@@ -151,9 +154,9 @@ public class TeleOp extends LinearOpMode {
 
 
             // Extendo pitch transfer / default pos 0 ticks
-            // Extendo pitch pickup 1421
+            // Extendo pitch pickup 1300
             if (gamepad1.dpad_down){
-               extendoPitchTarget = 1421;
+               extendoPitchTarget = 1300;
             }
             if (gamepad1.dpad_up){
                extendoPitchTarget = 0;
