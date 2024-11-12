@@ -159,6 +159,14 @@ public class TeleOp extends LinearOpMode {
                extendoPitchTarget = 0;
             }
 
+            //dyanmic extendo movement - for specimen scoring
+            if (gamepad2.right_stick_y>0&&extendoPitchTarget>=50){
+                extendoPitchTarget-=50;
+            }
+            else if (gamepad2.right_stick_y<0&&extendoPitchTarget<=1371){
+                extendoPitchTarget+=50;
+            }
+
             // Hang toggle between min and max positions
             if (gamepad2.y){
                 if (!isPressingY2) {
