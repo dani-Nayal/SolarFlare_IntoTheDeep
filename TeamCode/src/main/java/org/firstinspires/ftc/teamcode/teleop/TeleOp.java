@@ -68,7 +68,6 @@ public class TeleOp extends LinearOpMode {
 
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        hang.setDirection(DcMotorSimple.Direction.REVERSE);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -89,7 +88,7 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            // Intake sequence picking up sample in sample zone (straight to down claw pitch)
+            // bucket slides retraction sequence
             if (gamepad1.x){
                 isXSequenceActive=true;
             }
@@ -110,7 +109,7 @@ public class TeleOp extends LinearOpMode {
                 clawWristPosition = 76.5;
                 Btimer.reset();
                 if (Btimer.seconds() > 1) {
-                    extendoTarget = 360;
+                    extendoTarget = 503;
                     clawPitchPosition = 104;
                     isBSequenceActive=false;
                 }
@@ -143,10 +142,10 @@ public class TeleOp extends LinearOpMode {
             }
             */
             if (gamepad1.right_bumper){
-                extendoTarget += 7;
+                extendoTarget += 30;
             }
             else if (gamepad1.left_bumper){
-                extendoTarget -= 7;
+                extendoTarget -= 30;
             }
 
 
@@ -175,7 +174,7 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.y){
                 if (!isPressingY) {
                     if (bucketSlidesTarget == 0) {
-                        bucketSlidesTarget = 1200;}
+                        bucketSlidesTarget = 1000;}
                     else {
                         bucketSlidesTarget = 0;
                     }
@@ -282,10 +281,10 @@ public class TeleOp extends LinearOpMode {
             // BucketTransfer / default pos 81.51 degrees
             // Bucket Deposit pos 190 degrees
             // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
-            if (gamepad1.dpad_right){
+            if (gamepad2.dpad_down ){
                 bucketPosition = 81.51;
             }
-            if (gamepad1.dpad_left){
+            if (gamepad2.dpad_up){
                 bucketPosition = 190;
             }
 
