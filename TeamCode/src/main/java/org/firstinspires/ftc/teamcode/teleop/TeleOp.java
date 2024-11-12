@@ -88,7 +88,7 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            // Intake sequence picking up sample in sample zone (straight to down claw pitch)
+            // Retraction sequence for bucket
             if (gamepad1.x){
                 isXSequenceActive=true;
             }
@@ -100,7 +100,7 @@ public class TeleOp extends LinearOpMode {
                     isXSequenceActive=false;
                 }
             }
-            // Intake sequence picking up sample in submersible (claw pitch needs to fit over sub)
+            // Intake sequence picking up sample  (claw pitch needs to fit over sub.) We will manually lower claw.
             if (gamepad1.b){
                 isBSequenceActive=true;
             }
@@ -236,6 +236,7 @@ public class TeleOp extends LinearOpMode {
                 clawFingerPosition-=0.01;
             }
             */
+            //for claw we are now doing a hotbar cycle between three states: closed, partially open, and open. Tristan said its fine.
             if (gamepad1.left_trigger>0){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 100) {
