@@ -141,10 +141,10 @@ public class TeleOp extends LinearOpMode {
                 extendoTarget = 0;
             }
             */
-            if (gamepad1.right_bumper){
+            if (gamepad2.right_bumper){
                 extendoTarget += 30;
             }
-            else if (gamepad1.left_bumper){
+            else if (gamepad2.left_bumper){
                 extendoTarget -= 30;
             }
 
@@ -236,7 +236,7 @@ public class TeleOp extends LinearOpMode {
                 clawFingerPosition-=5;
             }
             */
-            if (gamepad1.left_trigger>0){
+            if (gamepad1.left_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 100) {
                         clawFingerPosition = 50;
@@ -247,7 +247,7 @@ public class TeleOp extends LinearOpMode {
                 }
                 isPressingTrigger1=true;
             }
-            else if (gamepad1.right_trigger>0){
+            else if (gamepad1.right_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 0) {
                         clawFingerPosition = 50;
@@ -289,6 +289,7 @@ public class TeleOp extends LinearOpMode {
             }
 
 
+
             if (gamepad1.options) {
                 imu.resetYaw();
             }
@@ -309,6 +310,13 @@ public class TeleOp extends LinearOpMode {
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
+
+            if (gamepad1.left_trigger>0.5) { // Checks for left trigger input, slows all motors by 50%
+                frontLeftPower = 0.5 * (rotY + rotX + rx) / denominator;
+                backLeftPower = 0.5 * (rotY - rotX + rx) / denominator;
+                frontRightPower = 0.5 * (rotY - rotX - rx) / denominator;
+                backRightPower = 0.5 * (rotY + rotX - rx) / denominator;
+            }
 
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);
