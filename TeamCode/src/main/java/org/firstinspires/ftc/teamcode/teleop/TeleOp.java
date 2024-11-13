@@ -125,7 +125,8 @@ public class TeleOp extends LinearOpMode {
             }
             if (isASequenceActive) {
                 extendoTarget = 0;
-                clawWristPosition = 104;
+                clawPitchPosition=104;
+                clawWristPosition = 76.5;
                 if (Atimer.seconds() > 1) {
                     extendoPitchTarget = 0;
                     clawPitchPosition = 217;
@@ -173,7 +174,7 @@ public class TeleOp extends LinearOpMode {
             // Hang toggle between min and max positions
             if (gamepad2.y){
                 if (!isPressingY2) {
-                    if (hangTarget == 5287) {
+                    if (hangTarget == 0) {
                         isPressingY2 = true;
                         hangTarget = 9517;}
                     else hangTarget = 5287;
