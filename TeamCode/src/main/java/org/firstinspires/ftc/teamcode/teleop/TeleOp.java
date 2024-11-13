@@ -55,6 +55,11 @@ public class TeleOp extends LinearOpMode {
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -109,9 +114,9 @@ public class TeleOp extends LinearOpMode {
 
             }
             if (isBSequenceActive) {
-                extendoPitchTarget = 1300;
+                extendoPitchTarget = 1350;
                 clawWristPosition = 76.5;
-                if (Btimer.seconds() > 1) {
+                if (Btimer.seconds() > 0.7) {
                     extendoTarget = 503;
                     clawPitchPosition = 104;
                     isBSequenceActive=false;
@@ -155,9 +160,9 @@ public class TeleOp extends LinearOpMode {
 
 
             // Extendo pitch transfer / default pos 0 ticks
-            // Extendo pitch pickup 1300
+            // Extendo pitch pickup 1350
             if (gamepad1.dpad_down){
-               extendoPitchTarget = 1300;
+               extendoPitchTarget = 1350;
             }
             if (gamepad1.dpad_up){
                extendoPitchTarget = 0;
@@ -167,7 +172,7 @@ public class TeleOp extends LinearOpMode {
             if (gamepad2.right_stick_y>0&&extendoPitchTarget>=50){
                 extendoPitchTarget-=50;
             }
-            else if (gamepad2.right_stick_y<0&&extendoPitchTarget<=1371){
+            else if (gamepad2.right_stick_y<0&&extendoPitchTarget<=1300){
                 extendoPitchTarget+=50;
             }
 
