@@ -61,6 +61,11 @@ public class TeleOp extends LinearOpMode {
         IMU imu = hardwareMap.get(IMU.class, "imu");
         GoBildaPinpointDriver pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -100,10 +105,11 @@ public class TeleOp extends LinearOpMode {
             // bucket slides retraction sequence
             if (gamepad1.x){
                 isXSequenceActive=true;
+                Xtimer.reset();
             }
             if (isXSequenceActive) {
                 bucketPosition=81.51;
-                Xtimer.reset();
+
                 if (Xtimer.seconds()>0.5){
                     bucketSlidesTarget=0;
                     isXSequenceActive=false;
@@ -112,12 +118,13 @@ public class TeleOp extends LinearOpMode {
             // Intake sequence picking up sample in submersible (claw pitch needs to fit over sub)
             if (gamepad1.b){
                 isBSequenceActive=true;
+                Btimer.reset();
+
             }
             if (isBSequenceActive) {
-                extendoPitchTarget = 1421;
+                extendoPitchTarget = 1350;
                 clawWristPosition = 76.5;
-                Btimer.reset();
-                if (Btimer.seconds() > 1) {
+                if (Btimer.seconds() > 0.7) {
                     extendoTarget = 503;
                     clawPitchPosition = 104;
                     isBSequenceActive=false;
@@ -126,11 +133,13 @@ public class TeleOp extends LinearOpMode {
             // Transfer sample
             else if (gamepad1.a){
                 isASequenceActive=true;
+                Atimer.reset();
+
             }
             if (isASequenceActive) {
                 extendoTarget = 0;
+                clawPitchPosition=104;
                 clawWristPosition = 76.5;
-                Atimer.reset();
                 if (Atimer.seconds() > 1) {
                     extendoPitchTarget = 0;
                     clawPitchPosition = 217;
@@ -159,9 +168,9 @@ public class TeleOp extends LinearOpMode {
 
 
             // Extendo pitch transfer / default pos 0 ticks
-            // Extendo pitch pickup 1421
+            // Extendo pitch pickup 1350
             if (gamepad1.dpad_down){
-               extendoPitchTarget = 1421;
+               extendoPitchTarget = 1350;
             }
             if (gamepad1.dpad_up){
                extendoPitchTarget = 0;
@@ -171,14 +180,14 @@ public class TeleOp extends LinearOpMode {
             if (gamepad2.right_stick_y>0&&extendoPitchTarget>=50){
                 extendoPitchTarget-=50;
             }
-            else if (gamepad2.right_stick_y<0&&extendoPitchTarget<=1371){
+            else if (gamepad2.right_stick_y<0&&extendoPitchTarget<=1300){
                 extendoPitchTarget+=50;
             }
 
             // Hang toggle between min and max positions
             if (gamepad2.y){
                 if (!isPressingY2) {
-                    if (hangTarget == 5287) {
+                    if (hangTarget == 0) {
                         isPressingY2 = true;
                         hangTarget = 9517;}
                     else hangTarget = 5287;
