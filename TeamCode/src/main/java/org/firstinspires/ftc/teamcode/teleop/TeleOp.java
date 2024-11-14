@@ -269,13 +269,6 @@ public class TeleOp extends LinearOpMode {
                 }
             }
             else isPressingA2 = false;
-            // Dynamic claw
-            if (gamepad2.right_bumper && clawFingers.getPosition()<1){
-                clawFingerPosition+=5;
-            }
-            else if (gamepad2.left_bumper && clawFingers.getPosition()>0) {
-                clawFingerPosition-=5;
-            }
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 100) {
