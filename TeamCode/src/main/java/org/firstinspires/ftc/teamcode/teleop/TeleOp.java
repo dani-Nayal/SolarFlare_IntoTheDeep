@@ -58,7 +58,7 @@ public class TeleOp extends LinearOpMode {
         Servo clawWrist = hardwareMap.servo.get("clawWrist");
         Servo bucket = hardwareMap.servo.get("bucket");
 
-        IMU imu = hardwareMap.get(IMU.class, "imu");
+        //IMU imu = hardwareMap.get(IMU.class, "imu");
         GoBildaPinpointDriver pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -89,10 +89,10 @@ public class TeleOp extends LinearOpMode {
 
         clawPitchLeft.setDirection(Servo.Direction.REVERSE);
 
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        imu.initialize(parameters);
+        //IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                //RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                //RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        //imu.initialize(parameters);
 
         pinpoint.resetPosAndIMU();
 
@@ -159,10 +159,10 @@ public class TeleOp extends LinearOpMode {
                 extendoTarget = 0;
             }
             */
-            if (gamepad2.right_bumper){
+            if (gamepad1.right_bumper){
                 extendoTarget += 30;
             }
-            else if (gamepad2.left_bumper){
+            else if (gamepad1.left_bumper){
                 extendoTarget -= 30;
             }
 
@@ -262,7 +262,7 @@ public class TeleOp extends LinearOpMode {
                 clawFingerPosition-=5;
             }
             */
-            if (gamepad1.left_bumper){
+            if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 100) {
                         clawFingerPosition = 50;
@@ -273,7 +273,7 @@ public class TeleOp extends LinearOpMode {
                 }
                 isPressingTrigger1=true;
             }
-            else if (gamepad1.right_bumper){
+            else if (gamepad2.right_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 0) {
                         clawFingerPosition = 50;
@@ -369,6 +369,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("right claw pitch position", clawPitchRight.getPosition());
             telemetry.addData("bucket pos", bucket.getPosition());
             telemetry.addData("bucket target", bucketPosition);
+            telemetry.addData("bot heading", botHeading);
             telemetry.update();
         }
     }
