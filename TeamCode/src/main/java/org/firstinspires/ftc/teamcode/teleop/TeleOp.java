@@ -58,7 +58,7 @@ public class TeleOp extends LinearOpMode {
         Servo clawWrist = hardwareMap.servo.get("clawWrist");
         Servo bucket = hardwareMap.servo.get("bucket");
 
-        //IMU imu = hardwareMap.get(IMU.class, "imu");
+        IMU imu = hardwareMap.get(IMU.class, "imu");
         GoBildaPinpointDriver pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -89,10 +89,10 @@ public class TeleOp extends LinearOpMode {
 
         clawPitchLeft.setDirection(Servo.Direction.REVERSE);
 
-        //IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                //RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                //RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        //imu.initialize(parameters);
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        imu.initialize(parameters);
 
         pinpoint.resetPosAndIMU();
 
@@ -324,7 +324,7 @@ public class TeleOp extends LinearOpMode {
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
-            double botHeading = pinpoint.getYawScalar();
+            double botHeading = 0;
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
