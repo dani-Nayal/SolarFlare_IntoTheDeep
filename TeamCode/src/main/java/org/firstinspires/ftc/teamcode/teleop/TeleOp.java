@@ -38,6 +38,7 @@ public class TeleOp extends LinearOpMode {
         boolean isPressingTrigger1=false;
         double kP = 0.015;
         double kPpitch = 0.008;
+
         ElapsedTime Xtimer = new ElapsedTime();
         ElapsedTime Btimer = new ElapsedTime();
         ElapsedTime Atimer = new ElapsedTime();
@@ -263,6 +264,7 @@ public class TeleOp extends LinearOpMode {
             // Claw finger close 0 degrees
             // Claw finger open 50 degrees
             // Claw fingers toggle between open and closed
+            // Claww fingers fully open 100 degrees
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 100) {
