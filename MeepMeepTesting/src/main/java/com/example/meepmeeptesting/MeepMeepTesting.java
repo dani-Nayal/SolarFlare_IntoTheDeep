@@ -216,6 +216,6 @@ public class MeepMeepTesting {
 
         // Extendo max length is 21 inches
         // Outtake length is 6.5 inches
-        myBot.runAction(onePlusThreeBucket);
+        myBot.runAction(onePlusFourSpecimen);
     }
 }

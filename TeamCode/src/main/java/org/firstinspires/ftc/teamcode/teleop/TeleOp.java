@@ -289,6 +289,7 @@ public class TeleOp extends LinearOpMode {
             }
             clawFingers.setPosition(clawFingerPosition/180);
             telemetry.addData("claw finger position", clawFingers.getPosition());
+            telemetry.addData("claw finger degree", clawFingerPosition);
 
             // Default perpendicular pos 76.5 degrees
             // Claw wrist dynamic movement
