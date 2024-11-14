@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-<<<<<<< Updated upstream
 import android.util.Log;
 
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
-=======
->>>>>>> Stashed changes
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,14 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-<<<<<<< Updated upstream
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-
-=======
->>>>>>> Stashed changes
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends LinearOpMode {
     @Override
@@ -34,20 +27,19 @@ public class TeleOp extends LinearOpMode {
         double clawFingerPosition = 50;
         double clawPitchPosition = 217;
         double bucketPosition = 81.51;
-
+        boolean isXSequenceActive=false;
+        boolean isASequenceActive=false;
+        boolean isBSequenceActive=false;
         boolean isPressingX = false;
         boolean isPressingY2 = false;
         boolean isPressingA2 = false;
         boolean isPressingBumper2=false;
         boolean isPressingTrigger1=false;
         double kP = 0.015;
-<<<<<<< Updated upstream
         double kPpitch = 0.008;
         ElapsedTime Xtimer = new ElapsedTime();
         ElapsedTime Btimer = new ElapsedTime();
         ElapsedTime Atimer = new ElapsedTime();
-=======
->>>>>>> Stashed changes
 
         DcMotor extendo = hardwareMap.dcMotor.get("extendo");
         DcMotor extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
@@ -113,7 +105,6 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-<<<<<<< Updated upstream
             // bucket slides retraction sequence
             if (gamepad1.x){
                 isXSequenceActive=true;
@@ -159,8 +150,6 @@ public class TeleOp extends LinearOpMode {
                 }
             }
 
-=======
->>>>>>> Stashed changes
             // Extendo retracted 0 ticks
             // Extendo fully extending 360
             // Dynamic extendo control
@@ -183,11 +172,8 @@ public class TeleOp extends LinearOpMode {
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1350
             if (gamepad1.dpad_down){
-<<<<<<< Updated upstream
                extendoPitchTarget = 1350;
-=======
                 extendoPitchTarget = 1421;
->>>>>>> Stashed changes
             }
             if (gamepad1.dpad_up){
                 extendoPitchTarget = 0;
@@ -290,8 +276,6 @@ public class TeleOp extends LinearOpMode {
             else if (gamepad2.left_bumper && clawFingers.getPosition()>0) {
                 clawFingerPosition-=5;
             }
-<<<<<<< Updated upstream
-            */
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 100) {
@@ -317,8 +301,7 @@ public class TeleOp extends LinearOpMode {
             else{
                 isPressingTrigger1=false;
             }
-=======
->>>>>>> Stashed changes
+
             clawFingers.setPosition(clawFingerPosition/180);
             telemetry.addData("claw finger position", clawFingers.getPosition());
             telemetry.addData("claw finger degree", clawFingerPosition);
@@ -394,7 +377,6 @@ public class TeleOp extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
 
-<<<<<<< Updated upstream
             extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
             extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kPpitch);
             hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
@@ -416,8 +398,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("bucket pos", bucket.getPosition());
             telemetry.addData("bucket target", bucketPosition);
             telemetry.addData("bot heading", botHeading);
-=======
->>>>>>> Stashed changes
+
             telemetry.update();
         }
     }
