@@ -153,12 +153,7 @@ public class TeleOp extends LinearOpMode {
             // Extendo retracted 0 ticks
             // Extendo fully extending 360
             // Dynamic extendo control
-            if (gamepad1.y){
-                extendoTarget = 360;
-            }
-            if (gamepad1.a){
-                extendoTarget = 0;
-            }
+
             if (gamepad1.right_bumper){
                 extendoTarget += 30;
             }
@@ -172,7 +167,6 @@ public class TeleOp extends LinearOpMode {
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1350
             if (gamepad1.dpad_down){
-               extendoPitchTarget = 1350;
                 extendoPitchTarget = 1421;
             }
             if (gamepad1.dpad_up){
@@ -183,12 +177,13 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("extendo pitch target", extendoPitchTarget);
 
             //dyanmic extendo movement - for specimen scoring
-            if (gamepad2.right_stick_y>0&&extendoPitchTarget>=50){
+            if (-gamepad2.right_stick_y>0&&extendoPitchTarget>=50){
                 extendoPitchTarget-=50;
             }
-            else if (gamepad2.right_stick_y<0&&extendoPitchTarget<=1300){
+            else if (-gamepad2.right_stick_y<0&&extendoPitchTarget<=1300){
                 extendoPitchTarget+=50;
             }
+
 
             // Hang toggle between min and max positions
             if (gamepad2.y){
@@ -196,7 +191,7 @@ public class TeleOp extends LinearOpMode {
                     if (hangTarget == 0) {
                         isPressingY2 = true;
                         hangTarget = 9517;}
-                    else hangTarget = 5287;
+                    else hangTarget = 5000;
                 }
             }
             else isPressingY2=false;
@@ -206,7 +201,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("hang target", hangTarget);
 
             // Bucket Slides toggle between min and max positions
-            if (gamepad1.x){
+            if (gamepad1.y){
                 if (!isPressingX) {
                     if (bucketSlidesTarget == 0) {
                         bucketSlidesTarget = 1000;}
@@ -260,15 +255,6 @@ public class TeleOp extends LinearOpMode {
             // Claw finger close 0 degrees
             // Claw finger open 50 degrees
             // Claw fingers toggle between open and closed
-            if (gamepad2.a) {
-                if (!isPressingA2) {
-                    if (clawFingers.getPosition() == 50) {
-                        clawFingerPosition= 0;
-                    } else clawFingerPosition= 0;
-                    isPressingA2 = true;
-                }
-            }
-            else isPressingA2 = false;
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 100) {
@@ -304,10 +290,10 @@ public class TeleOp extends LinearOpMode {
             if (gamepad2.b){
                 clawWristPosition = 76.5;
             }
-            if (gamepad1.left_trigger>0 && clawWristPosition >= 10) {
+            if (gamepad2.left_trigger>0 && clawWristPosition >= 10) {
                 clawWristPosition -= 10;
             }
-            else if (gamepad1.right_trigger>0 && clawWristPosition <= 66.5) {
+            else if (gamepad2.right_trigger>0 && clawWristPosition <= 66.5) {
                 clawWristPosition += 10;
             }
             clawWrist.setPosition(clawWristPosition/180);
@@ -316,12 +302,21 @@ public class TeleOp extends LinearOpMode {
             // BucketTransfer / default pos 81.51 degrees
             // Bucket Deposit pos 190 degrees
             // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
-            if (gamepad2.dpad_down ){
+            /*
+            if (gamepad2.dpad_down){
                 bucketPosition = 81.51;
             }
             if (gamepad2.dpad_up){
                 bucketPosition = 190;
             }
+            */
+            if (gamepad2.a){
+                if (!isPressingA2){
+                    isPressingA2=true;
+                    if (bucketPosition==81.51) {bucketPosition=190;} else {bucketPosition=81.51;}
+                }
+            }
+            else isPressingA2=false;
             /*if (bucketSlidesTarget - bucketSlides.getCurrentPosition() < 100){
                 if (bucketSlidesTarget==1891){
                     bucketPosition = 190;
