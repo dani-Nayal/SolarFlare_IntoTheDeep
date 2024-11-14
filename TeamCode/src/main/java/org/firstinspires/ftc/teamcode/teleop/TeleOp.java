@@ -30,9 +30,10 @@ public class TeleOp extends LinearOpMode {
         boolean isXSequenceActive=false;
         boolean isASequenceActive=false;
         boolean isBSequenceActive=false;
-        boolean isPressingX = false;
+        boolean isPressingY = false;
         boolean isPressingY2 = false;
         boolean isPressingA2 = false;
+        boolean isPressingX2 = false;
         boolean isPressingBumper2=false;
         boolean isPressingTrigger1=false;
         double kP = 0.015;
@@ -183,6 +184,13 @@ public class TeleOp extends LinearOpMode {
             else if (-gamepad2.right_stick_y<0&&extendoPitchTarget<=1300){
                 extendoPitchTarget+=50;
             }
+            if (gamepad2.x&&extendoPitchTarget>=200){
+                if (!isPressingX2) {
+                    extendoPitchTarget -= 200;
+                    isPressingX2=true;
+                }
+            }
+            else isPressingX2=false;
 
 
             // Hang toggle between min and max positions
@@ -202,16 +210,16 @@ public class TeleOp extends LinearOpMode {
 
             // Bucket Slides toggle between min and max positions
             if (gamepad1.y){
-                if (!isPressingX) {
+                if (!isPressingY) {
                     if (bucketSlidesTarget == 0) {
                         bucketSlidesTarget = 1000;}
                     else {
                         bucketSlidesTarget = 0;
                     }
-                    isPressingX=true;
+                    isPressingY=true;
                 }
             }
-            else isPressingX=false;
+            else isPressingY=false;
 
             bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
             telemetry.addData("bucket pos", bucketSlides.getCurrentPosition());
