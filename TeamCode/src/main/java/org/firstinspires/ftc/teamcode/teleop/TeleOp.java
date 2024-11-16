@@ -142,11 +142,11 @@ public class TeleOp extends LinearOpMode {
 
             }
             if (isASequenceActive) {
-                extendoTarget = 0;
                 clawWristPosition = 76.5;
-                
-                if (Atimer.seconds() > 0.4){
+
+                if (Atimer.seconds() > 0.3){
                     clawPitchPosition = 104;
+                    extendoTarget = 0;
                 }
 
                 if (Atimer.seconds() > 1) {
