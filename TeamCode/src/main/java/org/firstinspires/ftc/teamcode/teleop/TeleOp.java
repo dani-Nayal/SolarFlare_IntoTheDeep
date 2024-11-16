@@ -36,6 +36,7 @@ public class TeleOp extends LinearOpMode {
         boolean isPressingX2 = false;
         boolean isPressingBumper2=false;
         boolean isPressingTrigger1=false;
+        boolean isPressingDpad=false;
         double kP = 0.015;
         double kPpitch = 0.005;
 
@@ -173,22 +174,42 @@ public class TeleOp extends LinearOpMode {
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1350
             if (gamepad1.dpad_down){
-                extendoPitchTarget = 1421;
+                if (!isPressingDpad) {
+                    if (extendoPitchTarget == 0) {
+                        extendoPitchTarget = 100;
+                    }
+                    else if (extendoPitchTarget == 100){
+                        extendoPitchTarget = 1421;
+                    }
+                }
+                isPressingDpad=true;
             }
-            if (gamepad1.dpad_up){
-                extendoPitchTarget = 0;
+            else if (gamepad1.dpad_up){
+                if (!isPressingDpad) {
+                    if (extendoPitchTarget == 1421) {
+                        extendoPitchTarget = 100;
+                    }
+                    else if (extendoPitchTarget == 100) {
+                        extendoPitchTarget = 0;
+                    }
+                }
+                isPressingDpad=true;
+            }
+            else{
+                isPressingDpad=false;
             }
             extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kP);
             telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
             telemetry.addData("extendo pitch target", extendoPitchTarget);
-
-            //dyanmic extendo movement - for specimen scoring
+            /*
+            //dynamic extendo movement - for specimen scoring
             if (-gamepad2.right_stick_y>0&&extendoPitchTarget>=50){
                 extendoPitchTarget-=50;
             }
             else if (-gamepad2.right_stick_y<0&&extendoPitchTarget<=1300){
                 extendoPitchTarget+=50;
             }
+            */
             if (gamepad2.x&&extendoPitchTarget>=200){
                 if (!isPressingX2) {
                     extendoPitchTarget -= 200;
