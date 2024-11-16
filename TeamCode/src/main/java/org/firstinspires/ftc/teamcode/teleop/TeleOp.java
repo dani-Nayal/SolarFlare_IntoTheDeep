@@ -258,7 +258,7 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.y){
                 if (!isPressingY) {
                     if (bucketSlidesTarget == 0) {
-                        bucketSlidesTarget = 1000;}
+                        bucketSlidesTarget = 1100;}
                     else {
                         bucketSlidesTarget = 0;
                     }
