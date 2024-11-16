@@ -280,10 +280,7 @@ public class TeleOp extends LinearOpMode {
                     if (clawPitchPosition == 200){
                         clawPitchPosition = 104;
                     }
-                    else if (clawPitchPosition == 104) {
-                        clawPitchPosition = 67.25;
-                    }
-                    else if (clawPitchPosition == 67.25) {
+                    else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
                         clawPitchPosition = 30.5;
                     }
                 }
@@ -291,10 +288,7 @@ public class TeleOp extends LinearOpMode {
             }
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 30.5) {
-                        clawPitchPosition = 67.25;
-                    }
-                    else if (clawPitchPosition == 67.25) {
+                    if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25) {
                         clawPitchPosition = 104;
                     }
                     else if (clawPitchPosition == 104) {
@@ -305,6 +299,9 @@ public class TeleOp extends LinearOpMode {
             }
             else{
                 isPressingBumper2=false;
+            }
+            if (gamepad2.options){
+                clawPitchPosition = 67.25;
             }
             clawPitchLeft.setPosition(clawPitchPosition/270);
             clawPitchRight.setPosition(clawPitchPosition/270);
