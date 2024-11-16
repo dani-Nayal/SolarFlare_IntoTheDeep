@@ -163,7 +163,7 @@ public class TeleOp extends LinearOpMode {
                 B2timer.reset();
             }
             if (isB2SequenceActive) {
-                clawPitchPosition = 217;
+                clawPitchPosition = 200;
                 bucketPosition=190;
                 extendoPitchTarget=100;
                 if (B2timer.seconds() > 1) {
@@ -277,11 +277,14 @@ public class TeleOp extends LinearOpMode {
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 104) {
-                        clawPitchPosition = 30.5;
-                    }
-                    else if (clawPitchPosition == 200){
+                    if (clawPitchPosition == 200){
                         clawPitchPosition = 104;
+                    }
+                    else if (clawPitchPosition == 104) {
+                        clawPitchPosition = 67.25;
+                    }
+                    else if (clawPitchPosition == 67.25) {
+                        clawPitchPosition = 30.5;
                     }
                 }
                 isPressingBumper2=true;
@@ -289,6 +292,9 @@ public class TeleOp extends LinearOpMode {
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
                     if (clawPitchPosition == 30.5) {
+                        clawPitchPosition = 67.25;
+                    }
+                    else if (clawPitchPosition == 67.25) {
                         clawPitchPosition = 104;
                     }
                     else if (clawPitchPosition == 104) {
