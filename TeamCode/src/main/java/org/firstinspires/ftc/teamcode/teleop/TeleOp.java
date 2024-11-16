@@ -143,7 +143,11 @@ public class TeleOp extends LinearOpMode {
             }
             if (isASequenceActive) {
                 extendoTarget = 0;
-                clawWristPosition = 104;
+                clawWristPosition = 76.5;
+                
+                if (Atimer.seconds() > 0.4){
+                    clawPitchPosition = 104;
+                }
 
                 if (Atimer.seconds() > 1) {
                     extendoPitchTarget = 0;
@@ -302,7 +306,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("claw finger degree", clawFingerPosition);
 
             // Default perpendicular pos 76.5 degrees
-            
+
             if (gamepad2.left_trigger>0 ) {
                 clawWristPosition = 76.5;
             }
