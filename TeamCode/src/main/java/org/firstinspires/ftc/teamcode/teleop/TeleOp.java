@@ -243,7 +243,7 @@ public class TeleOp extends LinearOpMode {
                         isPressingY2 = true;
                     }
                     else {
-                        hangTarget = 5000;
+                        hangTarget = 5200;
                         isPressingY2 = true;
                     }
                 }
