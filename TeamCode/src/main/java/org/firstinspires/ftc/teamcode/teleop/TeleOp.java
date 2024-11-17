@@ -158,14 +158,18 @@ public class TeleOp extends LinearOpMode {
                     isASequenceActive=false;
                 }
             }
+            //specimen setup sequence (including retraction of extendo after specimen pickup)
             else if (gamepad2.b){
                 isB2SequenceActive=true;
                 B2timer.reset();
             }
             if (isB2SequenceActive) {
-                clawPitchPosition = 200;
+                clawPitchPosition = 104;
                 bucketPosition=190;
-                extendoPitchTarget=100;
+                extendoTarget=0;
+                if (B2timer.seconds() > 0.5) {
+                    extendoPitchTarget = 100;
+                }
                 if (B2timer.seconds() > 1) {
                     extendoTarget=390;
                     isB2SequenceActive=false;
@@ -300,6 +304,7 @@ public class TeleOp extends LinearOpMode {
             else{
                 isPressingBumper2=false;
             }
+            //specimen scoring pitch position
             if (gamepad2.options){
                 clawPitchPosition = 67.25;
             }
@@ -312,7 +317,7 @@ public class TeleOp extends LinearOpMode {
             // Claw finger close 0 degrees
             // Claw finger open 50 degrees
             // Claw fingers toggle between open and closed
-            // Claww fingers fully open 100 degrees
+            // Claw fingers fully open 100 degrees
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 100) {
