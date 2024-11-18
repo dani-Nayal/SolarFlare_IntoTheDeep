@@ -164,11 +164,11 @@ public class TeleOp extends LinearOpMode {
                 B2timer.reset();
             }
             if (isB2SequenceActive) {
-                clawPitchPosition = 104;
+                clawPitchPosition = 67.25;
                 bucketPosition=190;
                 extendoTarget=0;
                 if (B2timer.seconds() > 0.5) {
-                    extendoPitchTarget = 100;
+                    extendoPitchTarget = 760;
                 }
                 if (B2timer.seconds() > 1) {
                     extendoTarget=390;
@@ -194,9 +194,9 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.dpad_down){
                 if (!isPressingDpad) {
                     if (extendoPitchTarget == 0) {
-                        extendoPitchTarget = 100;
+                        extendoPitchTarget = 760;
                     }
-                    else if (extendoPitchTarget == 100){
+                    else if (extendoPitchTarget == 760 || extendoPitchTarget == 960){
                         extendoPitchTarget = 1421;
                     }
                 }
@@ -204,10 +204,10 @@ public class TeleOp extends LinearOpMode {
             }
             else if (gamepad1.dpad_up){
                 if (!isPressingDpad) {
-                    if (extendoPitchTarget == 1421) {
-                        extendoPitchTarget = 100;
+                    if (extendoPitchTarget == 1421 || extendoPitchTarget == 960) {
+                        extendoPitchTarget = 760;
                     }
-                    else if (extendoPitchTarget == 100) {
+                    else if (extendoPitchTarget == 760) {
                         extendoPitchTarget = 0;
                     }
                 }
@@ -230,7 +230,7 @@ public class TeleOp extends LinearOpMode {
             */
             if (gamepad2.x&&extendoPitchTarget>=200){
                 if (!isPressingX2) {
-                    extendoPitchTarget -= 200;
+                    extendoPitchTarget=960;
                     isPressingX2=true;
                 }
             }
