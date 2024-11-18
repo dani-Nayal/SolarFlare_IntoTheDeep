@@ -141,7 +141,7 @@ public class TeleOp extends LinearOpMode {
             }
             if (isASequenceActive) {
                 clawWristPosition = 76.5;
-                bucketPosition=190;
+                bucketPosition=81.51;
                 if (Atimer.seconds() > 0.3){
                     clawPitchPosition = 104;
                     extendoTarget = 0;
@@ -163,7 +163,7 @@ public class TeleOp extends LinearOpMode {
                 bucketPosition=190;
                 extendoTarget=0;
                 if (B2timer.seconds() > 0.5) {
-                    extendoPitchTarget = 560;
+                    extendoPitchTarget = 450;
                 }
                 if (B2timer.seconds() > 1) {
                     extendoTarget=500;
@@ -189,9 +189,9 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.dpad_down){
                 if (!isPressingDpad) {
                     if (extendoPitchTarget == 0) {
-                        extendoPitchTarget = 560;
+                        extendoPitchTarget = 450;
                     }
-                    else if (extendoPitchTarget == 560 || extendoPitchTarget == 760){
+                    else if (extendoPitchTarget == 450 || extendoPitchTarget == 760){
                         extendoPitchTarget = 1421;
                     }
                 }
@@ -200,9 +200,9 @@ public class TeleOp extends LinearOpMode {
             else if (gamepad1.dpad_up){
                 if (!isPressingDpad) {
                     if (extendoPitchTarget == 1421 || extendoPitchTarget == 760) {
-                        extendoPitchTarget = 560;
+                        extendoPitchTarget = 450;
                     }
-                    else if (extendoPitchTarget == 560) {
+                    else if (extendoPitchTarget == 450) {
                         extendoPitchTarget = 0;
                     }
                 }
