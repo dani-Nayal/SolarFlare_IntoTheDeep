@@ -117,7 +117,39 @@ public class onePlusThreeBucket extends LinearOpMode{
         ClawFingers clawFingers = new ClawFingers(hardwareMap);
         ClawWrist clawWrist = new ClawWrist(hardwareMap);
         Bucket bucket = new Bucket(hardwareMap);
-        TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
+
+        Action onePlusThreeBucket = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(90)))
+                // Score preload
+                .strafeToLinearHeading(new Vector2d(-9,-58), Math.toRadians(90))
+                .waitSeconds(1.5)
+                // Go to sample zone 1
+                .strafeToLinearHeading(new Vector2d(-48,-53), Math.toRadians(90))
+                .waitSeconds(1.5)
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
+                .waitSeconds(2)
+                // Go to sample zone 2
+                .strafeToLinearHeading(new Vector2d(-57,-50), Math.toRadians(90))
+                .waitSeconds(1.5)
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
+                .waitSeconds(2)
+                // Turn and score bucket
+                .strafeToLinearHeading(new Vector2d(-61,-50), Math.toRadians(105))
+                .waitSeconds(1.5)
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
+                .waitSeconds(2)
+                // Park
+                .strafeToLinearHeading(new Vector2d(-30,-6), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(0))
+                .waitSeconds(1)
+                .build();
+        
+        waitForStart();
+
+        Actions.runBlocking(
+                onePlusThreeBucket
+        );
 
     }
 }
