@@ -25,7 +25,7 @@ public class TeleOp extends LinearOpMode {
         double bucketSlidesTarget = 0;
         double clawWristPosition = 76.5;
         double clawFingerPosition = 50;
-        double clawPitchPosition = 200;
+        double clawPitchPosition = 210;
         double bucketPosition = 81.51;
         boolean isXSequenceActive=false;
         boolean isASequenceActive=false;
@@ -91,12 +91,7 @@ public class TeleOp extends LinearOpMode {
         bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         clawPitchLeft.setDirection(Servo.Direction.REVERSE);
-        // Test clawPitchLeft Reverse
-        // Test clawPitchRight Reverse
-        // Test clawFingers Reverse
-        // Test clawWrist Reverse
-        // Test bucket Reverse
-        //extendo specimen target 390
+
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
@@ -154,7 +149,7 @@ public class TeleOp extends LinearOpMode {
 
                 if (Atimer.seconds() > 1) {
                     extendoPitchTarget = 0;
-                    clawPitchPosition = 200;
+                    clawPitchPosition = 210;
                     isASequenceActive=false;
                 }
             }
@@ -176,7 +171,7 @@ public class TeleOp extends LinearOpMode {
                 }
             }
             // Extendo retracted 0 ticks
-            // Extendo fully extending 360
+            // Extendo fully extending 36050
             // Dynamic extendo control
 
             if ((gamepad1.right_bumper) && (extendoTarget <= 473)){
@@ -228,7 +223,7 @@ public class TeleOp extends LinearOpMode {
                 extendoPitchTarget+=50;
             }
             */
-            if (gamepad2.x&&extendoPitchTarget>=200){
+            if (gamepad2.x&&extendoPitchTarget>=210){
                 if (!isPressingX2) {
                     extendoPitchTarget=960;
                     isPressingX2=true;
@@ -243,11 +238,12 @@ public class TeleOp extends LinearOpMode {
                     if (hangTarget == 0) {
                         isPressingY2 = true;
                         hangTarget = 9517;}
-                    else if (hangTarget == 5000) {
+                    else if (hangTarget == 9517) {
+                        hangTarget = 5300;
                         isPressingY2 = true;
                     }
-                    else {
-                        hangTarget = 5200;
+                    else if (hangTarget == 5300){
+                        hangTarget = 0;
                         isPressingY2 = true;
                     }
                 }
@@ -281,7 +277,7 @@ public class TeleOp extends LinearOpMode {
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 200){
+                    if (clawPitchPosition == 210){
                         clawPitchPosition = 104;
                     }
                     else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
@@ -296,7 +292,7 @@ public class TeleOp extends LinearOpMode {
                         clawPitchPosition = 104;
                     }
                     else if (clawPitchPosition == 104) {
-                        clawPitchPosition = 200;
+                        clawPitchPosition = 210;
                     }
                 }
                 isPressingBumper2=true;
