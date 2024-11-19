@@ -144,7 +144,10 @@ public class TeleOp extends LinearOpMode {
                 bucketPosition=81.51;
                 if (Atimer.seconds() > 0.3){
                     clawPitchPosition = 104;
-                    extendoTarget = 0;
+
+                }
+                if (Atimer.seconds() > 0.5){
+                    extendoTarget=0;
                 }
 
                 if (Atimer.seconds() > 1) {
@@ -159,10 +162,15 @@ public class TeleOp extends LinearOpMode {
                 B2timer.reset();
             }
             if (isB2SequenceActive) {
-                clawPitchPosition = 67.25;
-                bucketPosition=190;
-                extendoTarget=0;
-                if (B2timer.seconds() > 0.5) {
+                clawWristPosition =76.5;
+
+                if (B2timer.seconds()>0.3){
+                    clawPitchPosition = 67.25;
+                    bucketPosition=190;
+                    extendoTarget=0;
+                }
+
+                if (B2timer.seconds() > 0.6) {
                     extendoPitchTarget = 450;
                 }
                 if (B2timer.seconds() > 1) {
@@ -277,23 +285,29 @@ public class TeleOp extends LinearOpMode {
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 210){
-                        clawPitchPosition = 104;
+                    if(clawWristPosition==76.5){
+                        if (clawPitchPosition == 210){
+                            clawPitchPosition = 104;
+                        }
+                        else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
+                            clawPitchPosition = 30.5;
+                        }
                     }
-                    else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
-                        clawPitchPosition = 30.5;
-                    }
+
                 }
                 isPressingBumper2=true;
             }
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25) {
-                        clawPitchPosition = 104;
+                    if (clawWristPosition==76.5){
+                        if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25) {
+                            clawPitchPosition = 104;
+                        }
+                        else if (clawPitchPosition == 104) {
+                            clawPitchPosition = 210;
+                        }
                     }
-                    else if (clawPitchPosition == 104) {
-                        clawPitchPosition = 210;
-                    }
+
                 }
                 isPressingBumper2=true;
             }
@@ -301,7 +315,7 @@ public class TeleOp extends LinearOpMode {
                 isPressingBumper2=false;
             }
             //specimen scoring pitch position
-            if (gamepad2.options){
+            if ((gamepad2.options) && (clawWristPosition==76.5)){
                 clawPitchPosition = 67.25;
             }
             clawPitchLeft.setPosition(clawPitchPosition/270);
