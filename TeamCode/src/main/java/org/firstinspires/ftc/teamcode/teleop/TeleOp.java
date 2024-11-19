@@ -327,11 +327,11 @@ public class TeleOp extends LinearOpMode {
             }
             else if (gamepad2.right_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 0) {
+                    if (clawFingerPosition == 5) {
                         clawFingerPosition = 50;
                     }
                     else if (clawFingerPosition == 50) {
-                        clawFingerPosition = 100;
+                        clawFingerPosition = 80;
                     }
                 }
                 isPressingTrigger1=true;
