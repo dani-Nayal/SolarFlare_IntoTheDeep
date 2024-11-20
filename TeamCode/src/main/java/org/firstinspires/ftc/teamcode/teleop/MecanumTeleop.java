@@ -139,10 +139,13 @@ public class MecanumTeleop extends LinearOpMode {
             }
             if (isASequenceActive) {
                 clawWristPosition = 76.5;
-
+                bucketPosition=81.51;
                 if (Atimer.seconds() > 0.3){
                     clawPitchPosition = 104;
-                    extendoTarget = 0;
+
+                }
+                if (Atimer.seconds() > 0.5){
+                    extendoTarget=0;
                 }
 
                 if (Atimer.seconds() > 1) {
@@ -157,14 +160,19 @@ public class MecanumTeleop extends LinearOpMode {
                 B2timer.reset();
             }
             if (isB2SequenceActive) {
-                clawPitchPosition = 67.25;
-                bucketPosition=190;
-                extendoTarget=0;
-                if (B2timer.seconds() > 0.5) {
-                    extendoPitchTarget = 760;
+                clawWristPosition =76.5;
+
+                if (B2timer.seconds()>0.3){
+                    clawPitchPosition = 67.25;
+                    bucketPosition=190;
+                    extendoTarget=0;
+                }
+
+                if (B2timer.seconds() > 0.6) {
+                    extendoPitchTarget = 450;
                 }
                 if (B2timer.seconds() > 1) {
-                    extendoTarget=390;
+                    extendoTarget=500;
                     isB2SequenceActive=false;
                 }
             }
@@ -185,9 +193,9 @@ public class MecanumTeleop extends LinearOpMode {
             if (gamepad1.dpad_down){
                 if (!isPressingDpad) {
                     if (extendoPitchTarget == 0) {
-                        extendoPitchTarget = 760;
+                        extendoPitchTarget = 450;
                     }
-                    else if (extendoPitchTarget == 760 || extendoPitchTarget == 960){
+                    else if (extendoPitchTarget == 450 || extendoPitchTarget == 760){
                         extendoPitchTarget = 1421;
                     }
                 }
@@ -195,10 +203,10 @@ public class MecanumTeleop extends LinearOpMode {
             }
             else if (gamepad1.dpad_up){
                 if (!isPressingDpad) {
-                    if (extendoPitchTarget == 1421 || extendoPitchTarget == 960) {
-                        extendoPitchTarget = 760;
+                    if (extendoPitchTarget == 1421 || extendoPitchTarget == 760) {
+                        extendoPitchTarget = 450;
                     }
-                    else if (extendoPitchTarget == 760) {
+                    else if (extendoPitchTarget == 450) {
                         extendoPitchTarget = 0;
                     }
                 }
@@ -219,7 +227,7 @@ public class MecanumTeleop extends LinearOpMode {
             */
             if (gamepad2.x&&extendoPitchTarget>=210){
                 if (!isPressingX2) {
-                    extendoPitchTarget=960;
+                    extendoPitchTarget=760;
                     isPressingX2=true;
                 }
             }
@@ -268,23 +276,29 @@ public class MecanumTeleop extends LinearOpMode {
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 210){
-                        clawPitchPosition = 104;
+                    if(clawWristPosition==76.5){
+                        if (clawPitchPosition == 210){
+                            clawPitchPosition = 104;
+                        }
+                        else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
+                            clawPitchPosition = 30.5;
+                        }
                     }
-                    else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
-                        clawPitchPosition = 30.5;
-                    }
+
                 }
                 isPressingBumper2=true;
             }
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
-                    if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25) {
-                        clawPitchPosition = 104;
+                    if (clawWristPosition==76.5){
+                        if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25) {
+                            clawPitchPosition = 104;
+                        }
+                        else if (clawPitchPosition == 104) {
+                            clawPitchPosition = 210;
+                        }
                     }
-                    else if (clawPitchPosition == 104) {
-                        clawPitchPosition = 210;
-                    }
+
                 }
                 isPressingBumper2=true;
             }
@@ -292,7 +306,7 @@ public class MecanumTeleop extends LinearOpMode {
                 isPressingBumper2=false;
             }
             //specimen scoring pitch position
-            if (gamepad2.options){
+            if ((gamepad2.options) && (clawWristPosition==76.5)){
                 clawPitchPosition = 67.25;
             }
             clawPitchLeft.setPosition(clawPitchPosition/270);
@@ -318,11 +332,11 @@ public class MecanumTeleop extends LinearOpMode {
             }
             else if (gamepad2.right_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 0) {
+                    if (clawFingerPosition == 5) {
                         clawFingerPosition = 50;
                     }
                     else if (clawFingerPosition == 50) {
-                        clawFingerPosition = 100;
+                        clawFingerPosition = 80;
                     }
                 }
                 isPressingTrigger1=true;
@@ -378,6 +392,7 @@ public class MecanumTeleop extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            //double botHeading = 0;
             
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
