@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.util.Log;
-
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -10,12 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.InitializeMechanisms;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class TeleOp extends LinearOpMode {
+public class MecanumTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -180,9 +178,7 @@ public class TeleOp extends LinearOpMode {
             else if ((gamepad1.left_bumper) && (extendoTarget >= 30)){
                 extendoTarget -= 30;
             }
-            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
-            telemetry.addData("extendo position", extendo.getCurrentPosition());
-            telemetry.addData("extendo target", extendoTarget);
+
 
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1350
@@ -211,9 +207,7 @@ public class TeleOp extends LinearOpMode {
             else{
                 isPressingDpad=false;
             }
-            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kP);
-            telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
-            telemetry.addData("extendo pitch target", extendoPitchTarget);
+
             /*
             //dynamic extendo movement - for specimen scoring
             if (-gamepad2.right_stick_y>0&&extendoPitchTarget>=50){
@@ -249,10 +243,7 @@ public class TeleOp extends LinearOpMode {
                 }
             }
             else isPressingY2=false;
-
-            hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
-            telemetry.addData("hang pos", hang.getCurrentPosition());
-            telemetry.addData("hang target", hangTarget);
+            
 
             // Bucket Slides toggle between min and max positions
             if (gamepad1.y){
