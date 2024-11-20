@@ -330,18 +330,18 @@ public class TeleOp extends LinearOpMode {
             // Claw fingers fully open 100 degrees
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 100) {
+                    if (clawFingerPosition == 80) {
                         clawFingerPosition = 50;
                     }
                     else if (clawFingerPosition == 50){
-                        clawFingerPosition = 0;
+                        clawFingerPosition = 2;
                     }
                 }
                 isPressingTrigger1=true;
             }
             else if (gamepad2.right_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 5) {
+                    if (clawFingerPosition == 2) {
                         clawFingerPosition = 50;
                     }
                     else if (clawFingerPosition == 50) {
@@ -400,8 +400,8 @@ public class TeleOp extends LinearOpMode {
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-            //double botHeading = 0;
+            //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double botHeading = 0;
             
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
