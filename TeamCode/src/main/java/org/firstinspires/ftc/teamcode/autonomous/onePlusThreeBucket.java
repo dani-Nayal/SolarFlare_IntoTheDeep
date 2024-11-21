@@ -205,16 +205,6 @@ public class onePlusThreeBucket extends LinearOpMode{
         Pose2d initialPose = new Pose2d(-42,-62.5,Math.toRadians(270));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
-
-        Action park = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(-30,-6), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(180))
-                .build();
-        Action test = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
-                .turnTo(90)
-                .build();
-
-
         Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
                 // Score preload
                 .strafeToLinearHeading(new Vector2d(-9,-58), Math.toRadians(270))
@@ -382,7 +372,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
                                         // Move to scoring position
-                                        onePlusThreeBucket5,
+                                        onePlusThreeBucket7,
                                         new SequentialAction(
                                                 // Retract extendo
                                                 customActions.setExtendoTarget(0),
