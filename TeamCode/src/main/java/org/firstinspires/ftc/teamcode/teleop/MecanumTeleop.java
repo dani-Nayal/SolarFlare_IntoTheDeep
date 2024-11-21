@@ -24,7 +24,7 @@ public class MecanumTeleop extends LinearOpMode {
         double clawWristPosition = 76.5;
         double clawFingerPosition = 50;
         double clawPitchPosition = 200;
-        double bucketPosition = 81.51;
+        double bucketPosition = 85;
         boolean isXSequenceActive=false;
         boolean isASequenceActive=false;
         boolean isBSequenceActive=false;
@@ -109,7 +109,7 @@ public class MecanumTeleop extends LinearOpMode {
                 Xtimer.reset();
             }
             if (isXSequenceActive) {
-                bucketPosition=81.51;
+                bucketPosition=85;
 
                 if (Xtimer.seconds()>0.5){
                     bucketSlidesTarget=0;
@@ -139,7 +139,7 @@ public class MecanumTeleop extends LinearOpMode {
             }
             if (isASequenceActive) {
                 clawWristPosition = 76.5;
-                bucketPosition=81.51;
+                bucketPosition=85;
                 if (Atimer.seconds() > 0.3){
                     clawPitchPosition = 104;
 
@@ -360,12 +360,12 @@ public class MecanumTeleop extends LinearOpMode {
             clawWrist.setPosition(clawWristPosition/180);
             telemetry.addData("claw wrist position", clawWrist.getPosition());
 
-            // BucketTransfer / default pos 81.51 degrees
+            // BucketTransfer / default pos 85 degrees
             // Bucket Deposit pos 190 degrees
             // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
             /*
             if (gamepad2.dpad_down){
-                bucketPosition = 81.51;
+                bucketPosition = 85;
             }
             if (gamepad2.dpad_up){
                 bucketPosition = 190;
@@ -374,7 +374,7 @@ public class MecanumTeleop extends LinearOpMode {
             if (gamepad2.a){
                 if (!isPressingA2){
                     isPressingA2=true;
-                    if (bucketPosition==81.51) {bucketPosition=190;} else {bucketPosition=81.51;}
+                    if (bucketPosition==85) {bucketPosition=190;} else {bucketPosition=85;}
                 }
             }
             else isPressingA2=false;
