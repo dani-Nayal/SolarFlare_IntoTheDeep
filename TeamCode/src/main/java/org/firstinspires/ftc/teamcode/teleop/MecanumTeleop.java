@@ -23,7 +23,7 @@ public class MecanumTeleop extends LinearOpMode {
         double bucketSlidesTarget = 0;
         double clawWristPosition = 76.5;
         double clawFingerPosition = 50;
-        double clawPitchPosition = 200;
+        double clawPitchPosition = 195;
         double bucketPosition = 85;
         boolean isXSequenceActive=false;
         boolean isASequenceActive=false;
@@ -150,7 +150,7 @@ public class MecanumTeleop extends LinearOpMode {
 
                 if (Atimer.seconds() > 1) {
                     extendoPitchTarget = 0;
-                    clawPitchPosition = 200;
+                    clawPitchPosition = 195;
                     isASequenceActive=false;
                 }
             }
@@ -164,7 +164,7 @@ public class MecanumTeleop extends LinearOpMode {
 
                 if (B2timer.seconds()>0.3){
                     clawPitchPosition = 104;
-                    bucketPosition=190;
+                    bucketPosition=205;
                     extendoTarget=0;
                 }
 
@@ -271,13 +271,13 @@ public class MecanumTeleop extends LinearOpMode {
             telemetry.addData("bucket target", bucketSlidesTarget);
 
             // Claw pitch picking up pos 30.5 degrees
-            // Claw transfer pos 200 degrees
+            // Claw transfer pos 195 degrees
             // Claw pitch going into sub 104 degrees
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
                     if(clawWristPosition==76.5){
-                        if (clawPitchPosition == 200){
+                        if (clawPitchPosition == 195){
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
@@ -295,7 +295,7 @@ public class MecanumTeleop extends LinearOpMode {
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104) {
-                            clawPitchPosition = 200;
+                            clawPitchPosition = 195;
                         }
                     }
 
@@ -361,20 +361,20 @@ public class MecanumTeleop extends LinearOpMode {
             telemetry.addData("claw wrist position", clawWrist.getPosition());
 
             // BucketTransfer / default pos 85 degrees
-            // Bucket Deposit pos 190 degrees
+            // Bucket Deposit pos 205 degrees
             // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
             /*
             if (gamepad2.dpad_down){
                 bucketPosition = 85;
             }
             if (gamepad2.dpad_up){
-                bucketPosition = 190;
+                bucketPosition = 205;
             }
             */
             if (gamepad2.a){
                 if (!isPressingA2){
                     isPressingA2=true;
-                    if (bucketPosition==85) {bucketPosition=190;} else {bucketPosition=85;}
+                    if (bucketPosition==85) {bucketPosition=205;} else {bucketPosition=85;}
                 }
             }
             else isPressingA2=false;
