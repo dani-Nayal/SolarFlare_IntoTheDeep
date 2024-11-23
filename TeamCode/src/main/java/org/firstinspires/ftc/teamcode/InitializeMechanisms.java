@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,22 +10,33 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class InitializeMechanisms {
     public DcMotor extendo;
-    public void initialize(HardwareMap hardwareMap) {
-        extendo = hardwareMap.dcMotor.get("extendo");
-        DcMotor extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
-        DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
-        DcMotor hang = hardwareMap.dcMotor.get("hang");
-        DcMotor bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
+    public DcMotor extendoPitch;
+    public DcMotor frontLeftMotor;
+    public DcMotor backLeftMotor;
+    public DcMotor frontRightMotor;
+    public DcMotor backRightMotor;
+    public DcMotor hang;
+    public DcMotor bucketSlides;
+    public Servo clawPitchLeft;
+    public Servo clawPitchRight;
+    public Servo clawFingers;
+    public Servo clawWrist;
+    public Servo bucket;
+    public InitializeMechanisms(HardwareMap hardwareMap){
+        this.extendo = hardwareMap.dcMotor.get("extendo");
+        this.extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
+        this.frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
+        this.backLeftMotor = hardwareMap.dcMotor.get("leftBack");
+        this.frontRightMotor = hardwareMap.dcMotor.get("rightFront");
+        this.backRightMotor = hardwareMap.dcMotor.get("rightBack");
+        this.hang = hardwareMap.dcMotor.get("hang");
+        this.bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
 
-        Servo clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
-        Servo clawPitchRight = hardwareMap.servo.get("clawPitchRight");
-        Servo clawFingers = hardwareMap.servo.get("clawFingers");
-        Servo clawWrist = hardwareMap.servo.get("clawWrist");
-        Servo bucket = hardwareMap.servo.get("bucket");
-
+        this.clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
+        this.clawPitchRight = hardwareMap.servo.get("clawPitchRight");
+        this.clawFingers = hardwareMap.servo.get("clawFingers");
+        this.clawWrist = hardwareMap.servo.get("clawWrist");
+        this.bucket = hardwareMap.servo.get("bucket");
         IMU imu = hardwareMap.get(IMU.class, "imu");
         GoBildaPinpointDriver pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
@@ -65,6 +74,5 @@ public class InitializeMechanisms {
         imu.initialize(parameters);
 
         pinpoint.resetPosAndIMU();
-
     }
 }
