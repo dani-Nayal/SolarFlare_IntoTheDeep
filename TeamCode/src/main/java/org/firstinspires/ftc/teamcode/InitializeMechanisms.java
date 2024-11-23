@@ -29,21 +29,18 @@ public class InitializeMechanisms {
         this.backLeftMotor = hardwareMap.dcMotor.get("leftBack");
         this.frontRightMotor = hardwareMap.dcMotor.get("rightFront");
         this.backRightMotor = hardwareMap.dcMotor.get("rightBack");
-        this.hang = hardwareMap.dcMotor.get("hang");
         this.bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
+        this.hang = hardwareMap.dcMotor.get("hang");
+
 
         this.clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
         this.clawPitchRight = hardwareMap.servo.get("clawPitchRight");
         this.clawFingers = hardwareMap.servo.get("clawFingers");
         this.clawWrist = hardwareMap.servo.get("clawWrist");
         this.bucket = hardwareMap.servo.get("bucket");
+
         IMU imu = hardwareMap.get(IMU.class, "imu");
         GoBildaPinpointDriver pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -57,14 +54,19 @@ public class InitializeMechanisms {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bucketSlides.setDirection(DcMotor.Direction.REVERSE);
         bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         clawPitchLeft.setDirection(Servo.Direction.REVERSE);
 

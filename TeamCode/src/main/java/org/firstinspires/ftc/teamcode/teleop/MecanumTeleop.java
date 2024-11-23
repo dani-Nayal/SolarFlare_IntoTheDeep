@@ -365,6 +365,7 @@ public class MecanumTeleop extends LinearOpMode {
 
             if (gamepad1.options) {
                 imu.resetYaw();
+                pinpoint.resetPosAndIMU();
             }
 
             double y = -gamepad1.left_stick_y;
@@ -425,6 +426,8 @@ public class MecanumTeleop extends LinearOpMode {
             telemetry.addData("bucket target", bucketPosition);
 
             telemetry.addData("bot heading", botHeading);
+            telemetry.addData("pinpoint heading", pinpoint.getYawScalar());
+            telemetry.addData("Control hub IMU heading", imu.getRobotYawPitchRollAngles().getYaw());
 
             telemetry.update();
         }

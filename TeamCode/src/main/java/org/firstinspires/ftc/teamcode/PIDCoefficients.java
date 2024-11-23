@@ -1,6 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 public class PIDCoefficients {
-    public static double kP = 0.015;
+    PIDCoefficients pid = new PIDCoefficients();
+
+    public PIDCoefficients(){
+        double kP;
+        double kI;
+        double kD;
+
+    }
 }
 
