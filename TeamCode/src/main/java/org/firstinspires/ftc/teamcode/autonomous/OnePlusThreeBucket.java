@@ -26,16 +26,17 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 @Config
 @Autonomous(name = "OnePlusThreeBucket", group = "Autonomous")
 public class OnePlusThreeBucket extends LinearOpMode {
-    InitializeMechanisms initializeMechanisms = new InitializeMechanisms(hardwareMap);
-    DcMotor extendo = initializeMechanisms.extendo;
-    DcMotor extendoPitch = initializeMechanisms.extendoPitch;
-    DcMotor hang = initializeMechanisms.hang;
-    DcMotor bucketSlides = initializeMechanisms.bucketSlides;
-    Servo clawPitchLeft = initializeMechanisms.clawPitchLeft;
-    Servo clawPitchRight = initializeMechanisms.clawPitchRight;
-    Servo clawFingers = initializeMechanisms.clawFingers;
-    Servo clawWrist = initializeMechanisms.clawWrist;
-    Servo bucket = initializeMechanisms.bucket;
+    double kP = 0.015;
+
+    DcMotor extendo;
+    DcMotor extendoPitch;
+    DcMotor hang;
+    DcMotor bucketSlides;
+    Servo clawPitchLeft;
+    Servo clawPitchRight;
+    Servo clawFingers;
+    Servo clawWrist;
+    Servo bucket;
     public double extendoTarget = 0;
     public double extendoPitchTarget = 0;
     public double clawPitchPosition = 104;
@@ -47,14 +48,14 @@ public class OnePlusThreeBucket extends LinearOpMode {
 
     public class GlobalPID implements Action {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * PIDCoefficients.kP);
-            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * PIDCoefficients.kP);
-            hang.setPower((hangTarget - hang.getCurrentPosition()) * PIDCoefficients.kP);
-            bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * PIDCoefficients.kP);
+            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
+            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kP);
+            hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
+            bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
             clawPitchLeft.setPosition(clawPitchPosition / 270);
             clawPitchRight.setPosition(clawPitchPosition / 270);
             bucket.setPosition(bucketPosition / 270);
-            clawFingers.setPosition(clawFingerPosition / 270);
+            clawFingers.setPosition(clawFingerPosition / 180);
             clawWrist.setPosition(clawWristPosition / 180);
             return true;
         }
@@ -203,8 +204,20 @@ public class OnePlusThreeBucket extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        InitializeMechanisms initializeMechanisms = new InitializeMechanisms(hardwareMap);
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
+
+        extendo = initializeMechanisms.extendo;
+        extendoPitch = initializeMechanisms.extendoPitch;
+        hang = initializeMechanisms.hang;
+        bucketSlides = initializeMechanisms.bucketSlides;
+        clawPitchLeft = initializeMechanisms.clawPitchLeft;
+        clawPitchRight = initializeMechanisms.clawPitchRight;
+        clawFingers = initializeMechanisms.clawFingers;
+        clawWrist = initializeMechanisms.clawWrist;
+        bucket = initializeMechanisms.bucket;
+
 
         Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42, -62.5, Math.toRadians(270)))
                 // Score preload
