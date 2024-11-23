@@ -26,7 +26,7 @@ public class MeepMeepTesting {
         MeepMeep meepMeep = new MeepMeep(800);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(30, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setDimensions(12.4375,15.0625)
                 .build();
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)
@@ -301,13 +301,22 @@ public class MeepMeepTesting {
 
                 myBot.runAction(new SequentialAction(
                         onePlusThreeBucket1,
+                        new SleepAction(2),
                         onePlusThreeBucket2,
+                        new SleepAction(2),
                         onePlusThreeBucket3,
+                        new SleepAction(2),
                         onePlusThreeBucket4,
+                        new SleepAction(2),
                         onePlusThreeBucket5,
+                        new SleepAction(2),
                         onePlusThreeBucket6,
+                        new SleepAction(2),
                         onePlusThreeBucket7,
-                        onePlusThreeBucket8
+                        new SleepAction(2),
+                        onePlusThreeBucket8,
+                        new SleepAction(2)
+
                         ));
 
 

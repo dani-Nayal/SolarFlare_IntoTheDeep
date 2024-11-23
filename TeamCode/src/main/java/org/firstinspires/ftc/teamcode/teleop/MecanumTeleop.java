@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -10,6 +11,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.InitializeMechanisms;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -428,6 +430,8 @@ public class MecanumTeleop extends LinearOpMode {
             telemetry.addData("bot heading", botHeading);
             telemetry.addData("pinpoint heading", pinpoint.getYawScalar());
             telemetry.addData("Control hub IMU heading", imu.getRobotYawPitchRollAngles().getYaw());
+            telemetry.addData("pinpoint x",pinpoint.getPosX());
+            telemetry.addData("pinpoint y", pinpoint.getPosY());
 
             telemetry.update();
         }

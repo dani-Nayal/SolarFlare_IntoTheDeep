@@ -28,7 +28,7 @@ public class PinpointDrive extends MecanumDrive {
         X (forward) odometry pod is. Left of the center is a positive number,
         right of the center is a negative number. The Y pod offset refers to how far forwards from
         the tracking point the Y (strafe) odometry pod is: forward of the center is a positive number,
-        backwards is a negative number.
+        backwards is a negative numbere
          */
         //These are tuned for 3110-0002-0001 Product Insight #1
         // RR localizer note: These units are inches, presets are converted from mm (which is why they are inexact)
@@ -84,8 +84,8 @@ public class PinpointDrive extends MecanumDrive {
         This is recommended before you run your autonomous, as a bad initial calibration can cause
         an incorrect starting value for x, y, and heading.
          */
-        //pinpoint.recalibrateIMU();
         pinpoint.resetPosAndIMU();
+
         // wait for pinpoint to finish calibrating
         try {
             Thread.sleep(300);

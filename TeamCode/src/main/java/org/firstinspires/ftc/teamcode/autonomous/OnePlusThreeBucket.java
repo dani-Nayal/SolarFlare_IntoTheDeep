@@ -27,7 +27,6 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 @Autonomous(name = "OnePlusThreeBucket", group = "Autonomous")
 public class OnePlusThreeBucket extends LinearOpMode {
     double kP = 0.015;
-
     DcMotor extendo;
     DcMotor extendoPitch;
     DcMotor hang;
@@ -204,9 +203,44 @@ public class OnePlusThreeBucket extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+
         InitializeMechanisms initializeMechanisms = new InitializeMechanisms(hardwareMap);
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
+
+        Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
+                // Score preload
+                .strafeToLinearHeading(new Vector2d(-9,-58), Math.toRadians(270))
+                .build();
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-9,-58, Math.toRadians(270)))
+                // Go to sample zone 1
+                .strafeToLinearHeading(new Vector2d(-48,-53), Math.toRadians(270))
+                .build();
+        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-48,-53, Math.toRadians(270)))
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .build();
+        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+                // Sample zone 2
+                .strafeToLinearHeading(new Vector2d(-57,-50), Math.toRadians(270))
+                .build();
+        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-57,-50, Math.toRadians(270)))
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .build();
+        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+                // turn and score bucket
+                .strafeToLinearHeading(new Vector2d(-61,-50), Math.toRadians(285))
+                .build();
+        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-61,-50, Math.toRadians(285)))
+                // turn and score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .build();
+        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+                // park
+                .strafeToLinearHeading(new Vector2d(-35,-6), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(180))
+                .build();
 
         extendo = initializeMechanisms.extendo;
         extendoPitch = initializeMechanisms.extendoPitch;
@@ -218,209 +252,172 @@ public class OnePlusThreeBucket extends LinearOpMode {
         clawWrist = initializeMechanisms.clawWrist;
         bucket = initializeMechanisms.bucket;
 
-
-        Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42, -62.5, Math.toRadians(270)))
-                // Score preload
-                .strafeToLinearHeading(new Vector2d(-9, -58), Math.toRadians(270))
-                .build();
-        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-9, -58, Math.toRadians(270)))
-                // Go to sample zone 1
-                .strafeToLinearHeading(new Vector2d(-48, -53), Math.toRadians(270))
-                .build();
-        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-48, -53, Math.toRadians(270)))
-                // Score bucket
-                .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(225))
-                .build();
-        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-54, -54, Math.toRadians(225)))
-                // Sample zone 2
-                .strafeToLinearHeading(new Vector2d(-57, -50), Math.toRadians(270))
-                .build();
-        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-57, -50, Math.toRadians(270)))
-                // Score bucket
-                .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(225))
-                .build();
-        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54, -54, Math.toRadians(225)))
-                // turn and score bucket
-                .strafeToLinearHeading(new Vector2d(-61, -50), Math.toRadians(285))
-                .build();
-        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-61, -50, Math.toRadians(285)))
-                // turn and score bucket
-                .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(225))
-                .build();
-        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54, -54, Math.toRadians(225)))
-                // park
-                .strafeToLinearHeading(new Vector2d(-35, -6), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-23.4, -6), Math.toRadians(180))
-                .build();
-
-
-        OnePlusThreeBucket onePlusThreeBucket = new OnePlusThreeBucket();
-
         waitForStart();
 
         Actions.runBlocking(
                 new ParallelAction(
-                        onePlusThreeBucket.GlobalPID(),
+                        GlobalPID(),
                         new SequentialAction(
                                 // Close claw
-                                onePlusThreeBucket.setClawFingerPosition(0),
+                                setClawFingerPosition(0),
                                 // Drive and prepare extendo
                                 new ParallelAction(
                                         // Drive to scoring pos
                                         onePlusThreeBucket1,
                                         // Raise extendo pitch and extendo
                                         new SequentialAction(
-                                                onePlusThreeBucket.setExtendoPitchTarget(450),
+                                                setExtendoPitchTarget(450),
                                                 new SleepAction(0.5),
-                                                onePlusThreeBucket.setExtendoTarget(500)
+                                                setExtendoTarget(500)
                                         )
                                 ),
                                 // Lower extendo pitch
-                                onePlusThreeBucket.setExtendoPitchTarget(760),
+                                setExtendoPitchTarget(760),
                                 new SleepAction(1.5),
                                 // Open claw
-                                onePlusThreeBucket.setClawFingerPosition(50),
+                                setClawFingerPosition(50),
                                 // Retract extendo to default position
-                                onePlusThreeBucket.setExtendoTarget(0),
+                                setExtendoTarget(0),
                                 new SleepAction(0.5),
                                 // Drive to sample zone 1 and lower extendo pitch when driving
                                 new ParallelAction(
                                         // Drive to sample zone 1
                                         onePlusThreeBucket2,
                                         // Extendo pitch pickup position
-                                        onePlusThreeBucket.setExtendoPitchTarget(1421)
+                                        setExtendoPitchTarget(1421)
                                 ),
                                 /** CHANGE LATER **/
-                                onePlusThreeBucket.setExtendoTarget(250),
+                                setExtendoTarget(250),
                                 // Claw pitch picking up pos
-                                onePlusThreeBucket.setClawPitchPosition(30.5),
+                                setClawPitchPosition(30.5),
                                 new SleepAction(0.7),
                                 // Close Claw
-                                onePlusThreeBucket.setClawFingerPosition(0),
+                                setClawFingerPosition(0),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
                                         // Move to scoring position
                                         onePlusThreeBucket3,
                                         new SequentialAction(
                                                 // Retract extendo
-                                                onePlusThreeBucket.setExtendoTarget(0),
+                                                setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                onePlusThreeBucket.setClawPitchPosition(195),
+                                                setClawPitchPosition(195),
                                                 new SleepAction(0.3),
                                                 // Extendo pitch transfer position
-                                                onePlusThreeBucket.setExtendoPitchTarget(0),
+                                                setExtendoPitchTarget(0),
                                                 new SleepAction(1.5),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                onePlusThreeBucket.setClawFingerPosition(80)
+                                                setClawFingerPosition(80)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
                                 new SleepAction(0.5),
                                 // Move bucketSlides up to scoring position
-                                onePlusThreeBucket.setBucketSlidesTarget(1100),
+                                setBucketSlidesTarget(1100),
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
-                                onePlusThreeBucket.setBucketPosition(205),
+                                setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                onePlusThreeBucket.setBucketPosition(85),
+                                setBucketPosition(85),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
                                 // Move bucketSlides back to down position
-                                onePlusThreeBucket.setBucketSlidesTarget(0),
+                                setBucketSlidesTarget(0),
                                 // Drive to sample zone 2, while driving lower extendoPitch
                                 new ParallelAction(
                                         // Drive to sample zone 2
                                         onePlusThreeBucket4,
                                         // Lower extendo pitch to pickup pos
-                                        onePlusThreeBucket.setExtendoPitchTarget(1421)
+                                        setExtendoPitchTarget(1421)
                                 ),
                                 /** CHANGE LATER **/
-                                onePlusThreeBucket.setExtendoTarget(250),
+                                setExtendoTarget(250),
                                 // Claw pitch picking up position
-                                onePlusThreeBucket.setClawPitchPosition(30.5),
+                                setClawPitchPosition(30.5),
                                 new SleepAction(0.7),
                                 // Close claw
-                                onePlusThreeBucket.setClawFingerPosition(0),
+                                setClawFingerPosition(0),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
                                         // Move to scoring position
                                         onePlusThreeBucket5,
                                         new SequentialAction(
                                                 // Retract extendo
-                                                onePlusThreeBucket.setExtendoTarget(0),
+                                                setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                onePlusThreeBucket.setClawPitchPosition(195),
+                                                setClawPitchPosition(195),
                                                 // Extendo pitch transfer position
                                                 new SleepAction(0.3),
-                                                onePlusThreeBucket.setExtendoPitchTarget(0),
+                                                setExtendoPitchTarget(0),
                                                 new SleepAction(1.5),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                onePlusThreeBucket.setClawFingerPosition(80)
+                                                setClawFingerPosition(80)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
                                 new SleepAction(0.5),
                                 // Move bucketSlides up to scoring position
-                                onePlusThreeBucket.setBucketSlidesTarget(1100),
+                                setBucketSlidesTarget(1100),
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
-                                onePlusThreeBucket.setBucketPosition(205),
+                                setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                onePlusThreeBucket.setBucketPosition(85),
+                                setBucketPosition(85),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
                                 // Move bucketSlides back to down position
-                                onePlusThreeBucket.setBucketSlidesTarget(0),
+                                setBucketSlidesTarget(0),
                                 // Drive to sample zone 3, while driving lower extendoPitch
                                 new ParallelAction(
                                         // Drive to sample zone 3
                                         onePlusThreeBucket6,
                                         // Lower extendo pitch to pickup pos
-                                        onePlusThreeBucket.setExtendoPitchTarget(1421)
+                                        setExtendoPitchTarget(1421)
                                 ),
                                 /** CHANGE LATER **/
-                                onePlusThreeBucket.setExtendoTarget(250),
+                                setExtendoTarget(250),
                                 // Claw pitch picking up position
-                                onePlusThreeBucket.setClawPitchPosition(30.5),
+                                setClawPitchPosition(30.5),
                                 new SleepAction(0.7),
                                 // Close claw
-                                onePlusThreeBucket.setClawFingerPosition(0),
+                                setClawFingerPosition(0),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
                                         // Move to scoring position
                                         onePlusThreeBucket7,
                                         new SequentialAction(
                                                 // Retract extendo
-                                                onePlusThreeBucket.setExtendoTarget(0),
+                                                setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                onePlusThreeBucket.setClawPitchPosition(195),
+                                                setClawPitchPosition(195),
                                                 // Extendo pitch transfer position
                                                 new SleepAction(0.3),
-                                                onePlusThreeBucket.setExtendoPitchTarget(0),
+                                                setExtendoPitchTarget(0),
                                                 new SleepAction(1.5),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                onePlusThreeBucket.setClawFingerPosition(80)
+                                                setClawFingerPosition(80)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
                                 new SleepAction(0.5),
                                 // Move bucketSlides up to scoring position
-                                onePlusThreeBucket.setBucketSlidesTarget(1100),
+                                setBucketSlidesTarget(1100),
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
-                                onePlusThreeBucket.setBucketPosition(205),
+                                setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                onePlusThreeBucket.setBucketPosition(85),
+                                setBucketPosition(85),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
                                 // Move bucketSlides back to down position
-                                onePlusThreeBucket.setBucketSlidesTarget(0),
+                                setBucketSlidesTarget(0),
                                 // Park
                                 onePlusThreeBucket8
                                 /** ADD ACTUAL LEVEL 1 ASCENT**/
+
                         )
                 )
         );

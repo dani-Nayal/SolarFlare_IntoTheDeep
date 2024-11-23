@@ -74,7 +74,5 @@ public class InitializeMechanisms {
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
-
-        pinpoint.resetPosAndIMU();
     }
 }
