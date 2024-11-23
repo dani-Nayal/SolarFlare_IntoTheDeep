@@ -318,7 +318,7 @@ public class MecanumTeleop extends LinearOpMode {
             // Claw finger close 0 degrees
             // Claw finger open 50 degrees
             // Claw fingers toggle between open and closed
-            // Claw fingers fully open 100 degrees
+            // Claw fingers fully open 80 degrees
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
                     if (clawFingerPosition == 80) {

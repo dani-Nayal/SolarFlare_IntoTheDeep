@@ -88,7 +88,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                 bucketSlidesTarget = 0;
                 clawWristPosition = 76.5;
                 clawFingerPosition = 50;
-                clawPitchPosition = 200;
+                clawPitchPosition = 104; //[change] best start pos for pitch is 104. This is what is used when scoring specimen
                 bucketPosition = 81.51;
                 return false;
             }
@@ -272,7 +272,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 customActions.setExtendoTarget(0),
                                 new SleepAction(0.5),
                                 // Extendo pitch default position
-                                customActions.setExtendoPitchTarget(0),
+                                customActions.setExtendoPitchTarget(0), // why not  remove this line and go directly to 1421 pickup position while driving to sample zone?
                                 // Drive to sample zone 1 and lower extendo pitch when driving
                                 new ParallelAction(
                                         // Drive to sample zone 1
@@ -293,14 +293,15 @@ public class onePlusThreeBucket extends LinearOpMode{
                                         onePlusThreeBucket3,
                                         new SequentialAction(
                                                 // Retract extendo
+                                                customActions.setClawPitchPosition(195), //[change]195 is new pitch position for transfer
                                                 customActions.setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                customActions.setClawPitchPosition(200),
+                                                new SleepAction(0.3), //[change] give extendo time to retract before moving extendo pitch
                                                 // Extendo pitch transfer position
                                                 customActions.setExtendoPitchTarget(0),
                                                 new SleepAction(1.5),
                                                 // Open claw fully bc bucketslides coming down later
-                                                customActions.setClawFingerPosition(100)
+                                                customActions.setClawFingerPosition(80) //[change]for some reason Tristan wants 80 instead of 100
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
@@ -308,10 +309,12 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 // Move bucketslides up to scoring position
                                 customActions.setBucketSlidesTarget(1100),
                                 // Rotate bucket to score
+                                new SleepAction(0.4), //[change] give bucket slides time to get to target before rotating to avoid dropping sample
                                 customActions.setBucketPosition(190),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
                                 customActions.setBucketPosition(81.51),
+                                new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
                                 // Drive to sample zone 2, while driving lower extendopitch
@@ -336,23 +339,26 @@ public class onePlusThreeBucket extends LinearOpMode{
                                                 // Retract extendo
                                                 customActions.setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                customActions.setClawPitchPosition(200),
+                                                customActions.setClawPitchPosition(195),
                                                 // Extendo pitch transfer position
+                                                new SleepAction(0.3), //[change] give extendo time to retract before moving extendo pitch
                                                 customActions.setExtendoPitchTarget(0),
                                                 new SleepAction(1.5),
                                                 // Open claw fully bc bucketslides coming down later
-                                                customActions.setClawFingerPosition(100)
+                                                customActions.setClawFingerPosition(80)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
                                 new SleepAction(0.5),
                                 // Move bucketslides up to scoring position
                                 customActions.setBucketSlidesTarget(1100),
+                                new SleepAction(0.4), //[change] give bucket slides time to get to target before rotating to avoid dropping sample
                                 // Rotate bucket to score
                                 customActions.setBucketPosition(190),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
                                 customActions.setBucketPosition(81.51),
+                                new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
                                 // Drive to sample zone 3, while driving lower extendopitch
@@ -377,23 +383,26 @@ public class onePlusThreeBucket extends LinearOpMode{
                                                 // Retract extendo
                                                 customActions.setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                customActions.setClawPitchPosition(200),
+                                                customActions.setClawPitchPosition(195),
+                                                new SleepAction(0.3), //[change] give extendo time to retract before moving extendo pitch
                                                 // Extendo pitch transfer position
                                                 customActions.setExtendoPitchTarget(0),
                                                 new SleepAction(1.5),
                                                 // Open claw fully bc bucketslides coming down later
-                                                customActions.setClawFingerPosition(100)
+                                                customActions.setClawFingerPosition(80)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
                                 new SleepAction(0.5),
                                 // Move bucketslides up to scoring position
                                 customActions.setBucketSlidesTarget(1100),
+                                new SleepAction(0.4), //[change] give bucket slides time to get to target before rotating to avoid dropping sample
                                 // Rotate bucket to score
                                 customActions.setBucketPosition(190),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
                                 customActions.setBucketPosition(81.51),
+                                new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
                                 // Park
