@@ -104,7 +104,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                 clawPitchLeft.setPosition(clawPitchPosition/270);
                 clawPitchRight.setPosition(clawPitchPosition/270);
                 bucket.setPosition(bucketPosition/270);
-                clawFingers.setPosition(clawFingerPosition/270);
+                clawFingers.setPosition(clawFingerPosition/180);
                 clawWrist.setPosition(clawWristPosition/180);
                 return true;
             }
