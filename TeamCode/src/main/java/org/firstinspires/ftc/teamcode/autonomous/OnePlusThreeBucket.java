@@ -163,7 +163,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
     }
 
     public Action setClawFingerPosition(double position) {
-        return new SetHangTarget(position);
+        return new SetClawFingerPosition(position);
     }
 
     public class SetClawWristPosition implements Action {
@@ -180,7 +180,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
     }
 
     public Action setClawWristPosition(double position) {
-        return new SetHangTarget(position);
+        return new SetClawWristPosition(position);
     }
 
     public class SetBucketPosition implements Action {
@@ -197,7 +197,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
     }
 
     public Action setBucketPosition(double position) {
-        return new SetHangTarget(position);
+        return new SetBucketTarget(position);
     }
 
     @Override
