@@ -149,7 +149,9 @@ public class MecanumTeleop extends LinearOpMode {
                 }
 
                 if (Atimer.seconds() > 1) {
-                    extendoPitchTarget = 0;
+                    if (!(extendoTarget>150)) {
+                        extendoPitchTarget = 0;
+                    }
                     clawPitchPosition = 195;
                     isASequenceActive=false;
                 }
@@ -190,7 +192,7 @@ public class MecanumTeleop extends LinearOpMode {
 
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1350
-            if (gamepad1.dpad_down){
+            if (gamepad1.dpad_down && !(extendoTarget>150)){
                 if (!isPressingDpad) {
                     if (extendoPitchTarget == 0) {
                         extendoPitchTarget = 450;
@@ -201,7 +203,7 @@ public class MecanumTeleop extends LinearOpMode {
                 }
                 isPressingDpad=true;
             }
-            else if (gamepad1.dpad_up){
+            else if (gamepad1.dpad_up && !(extendoTarget>150)){
                 if (!isPressingDpad) {
                     if (extendoPitchTarget == 1421 || extendoPitchTarget == 760) {
                         extendoPitchTarget = 450;
