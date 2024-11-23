@@ -386,7 +386,7 @@ public class MecanumTeleop extends LinearOpMode {
 
 
             if (gamepad1.options) {
-                pinpoint.resetPosAndIMU();
+                imu.resetYaw();
             }
 
             double y = -gamepad1.left_stick_y;
