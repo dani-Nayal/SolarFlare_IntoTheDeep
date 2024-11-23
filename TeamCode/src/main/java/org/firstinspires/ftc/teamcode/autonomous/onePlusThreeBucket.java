@@ -89,7 +89,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                 clawWristPosition = 76.5;
                 clawFingerPosition = 50;
                 clawPitchPosition = 104; //[change] best start pos for pitch is 104. This is what is used when scoring specimen
-                bucketPosition = 81.51;
+                bucketPosition = 85;
                 return false;
             }
         }
@@ -258,6 +258,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                                         onePlusThreeBucket1,
                                         // Raise extendo pitch and extendo
                                         new SequentialAction(
+                                                customActions.setBucketPosition(205), //[change] move bucket to avoid linkage crashing into bucket
                                                 customActions.setExtendoPitchTarget(450),
                                                 new SleepAction(0.5),
                                                 customActions.setExtendoTarget(500)
@@ -272,7 +273,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 customActions.setExtendoTarget(0),
                                 new SleepAction(0.5),
                                 // Extendo pitch default position
-                                customActions.setExtendoPitchTarget(0), // why not  remove this line and go directly to 1421 pickup position while driving to sample zone?
+                                customActions.setExtendoPitchTarget(0), // why not remove this line and go directly to 1421 pickup position while driving to sample zone?
                                 // Drive to sample zone 1 and lower extendo pitch when driving
                                 new ParallelAction(
                                         // Drive to sample zone 1
@@ -280,6 +281,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                                         // Extendo pitch pickup position
                                         customActions.setExtendoPitchTarget(1421)
                                 ),
+                                customActions.setBucketPosition(85), //[change] reset bucket after it was moved to avoid linkage crashing into bucket
                                 /** CHANGE LATER **/
                                 customActions.setExtendoTarget(250),
                                 // Claw pitch picking up pos
@@ -310,10 +312,10 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 customActions.setBucketSlidesTarget(1100),
                                 // Rotate bucket to score
                                 new SleepAction(0.4), //[change] give bucket slides time to get to target before rotating to avoid dropping sample
-                                customActions.setBucketPosition(190),
+                                customActions.setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                customActions.setBucketPosition(81.51),
+                                customActions.setBucketPosition(85),
                                 new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
@@ -354,10 +356,10 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 customActions.setBucketSlidesTarget(1100),
                                 new SleepAction(0.4), //[change] give bucket slides time to get to target before rotating to avoid dropping sample
                                 // Rotate bucket to score
-                                customActions.setBucketPosition(190),
+                                customActions.setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                customActions.setBucketPosition(81.51),
+                                customActions.setBucketPosition(85),
                                 new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
@@ -398,10 +400,10 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 customActions.setBucketSlidesTarget(1100),
                                 new SleepAction(0.4), //[change] give bucket slides time to get to target before rotating to avoid dropping sample
                                 // Rotate bucket to score
-                                customActions.setBucketPosition(190),
+                                customActions.setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                customActions.setBucketPosition(81.51),
+                                customActions.setBucketPosition(85),
                                 new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
