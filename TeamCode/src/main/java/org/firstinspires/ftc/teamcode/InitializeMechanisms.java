@@ -25,10 +25,10 @@ public class InitializeMechanisms {
     public InitializeMechanisms(HardwareMap hardwareMap){
         this.extendo = hardwareMap.dcMotor.get("extendo");
         this.extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
-        this.frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
-        this.backLeftMotor = hardwareMap.dcMotor.get("leftBack");
-        this.frontRightMotor = hardwareMap.dcMotor.get("rightFront");
-        this.backRightMotor = hardwareMap.dcMotor.get("rightBack");
+        //this.frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
+        //this.backLeftMotor = hardwareMap.dcMotor.get("leftBack");
+        //this.frontRightMotor = hardwareMap.dcMotor.get("rightFront");
+        //this.backRightMotor = hardwareMap.dcMotor.get("rightBack");
         this.bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
         this.hang = hardwareMap.dcMotor.get("hang");
 
