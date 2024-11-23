@@ -316,7 +316,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
                                 customActions.setBucketPosition(85),
-                                new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
+                                new SleepAction(0.4), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
                                 // Drive to sample zone 2, while driving lower extendopitch
@@ -360,7 +360,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
                                 customActions.setBucketPosition(85),
-                                new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
+                                new SleepAction(0.4), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
                                 // Drive to sample zone 3, while driving lower extendopitch
@@ -404,7 +404,7 @@ public class onePlusThreeBucket extends LinearOpMode{
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
                                 customActions.setBucketPosition(85),
-                                new SleepAction(0.2), //[change] give servo time to rotate to avoid lvl 4 hang
+                                new SleepAction(0.4), //[change] give servo time to rotate to avoid lvl 4 hang
                                 // Move bucketslides back to down position
                                 customActions.setBucketSlidesTarget(0),
                                 // Park
