@@ -40,7 +40,6 @@ public class InitializeMechanisms {
         this.bucket = hardwareMap.servo.get("bucket");
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
-        GoBildaPinpointDriver pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

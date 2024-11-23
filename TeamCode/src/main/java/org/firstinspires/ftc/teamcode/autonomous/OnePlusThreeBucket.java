@@ -197,7 +197,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
     }
 
     public Action setBucketPosition(double position) {
-        return new SetBucketTarget(position);
+        return new SetBucketPosition(position);
     }
 
     @Override
