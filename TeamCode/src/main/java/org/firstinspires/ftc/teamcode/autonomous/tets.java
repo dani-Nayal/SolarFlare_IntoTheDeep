@@ -77,14 +77,17 @@ public class tets extends LinearOpMode {
                                 .build();
         waitForStart();
         Actions.runBlocking(
-                onePlusThreeBucket1,
-                onePlusThreeBucket2,
-                onePlusThreeBucket3,
-                onePlusThreeBucket4,
-                onePlusThreeBucket5,
-                onePlusThreeBucket6,
-                onePlusThreeBucket7,
-                onePlusThreeBucket8
+                new SequentialAction(
+                        onePlusThreeBucket1,
+                        onePlusThreeBucket2,
+                        onePlusThreeBucket3,
+                        onePlusThreeBucket4,
+                        onePlusThreeBucket5,
+                        onePlusThreeBucket6,
+                        onePlusThreeBucket7,
+                        onePlusThreeBucket8
+                )
+
 
         );
     }
