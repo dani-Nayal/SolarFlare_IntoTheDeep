@@ -23,7 +23,7 @@ public class MecanumTeleop extends LinearOpMode {
         double hangTarget = 0;
         double extendoPitchTarget = 0;
         double extendoTarget = 0;
-        double bucketSlidesTarget = 0;
+        double bucketSlidesTarget = 100;
         double clawWristPosition = 76.5;
         double clawFingerPosition = 50;
         double clawPitchPosition = 195;
@@ -278,7 +278,7 @@ public class MecanumTeleop extends LinearOpMode {
             // Bucket Slides toggle between min and max positions
             if (gamepad1.y){
                 if (!isPressingY) {
-                    if (bucketSlidesTarget == 0) {
+                    if (bucketSlidesTarget == 0 || bucketSlidesTarget==100) {
                         bucketSlidesTarget = 1100;}
                     else {
                         bucketSlidesTarget = 0;

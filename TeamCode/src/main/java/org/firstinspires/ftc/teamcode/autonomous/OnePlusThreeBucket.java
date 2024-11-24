@@ -238,8 +238,8 @@ public class OnePlusThreeBucket extends LinearOpMode {
                 .build();
         Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
                 // park
-                .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(0))
                 .build();
 
         extendo = initializeMechanisms.extendo;
@@ -431,19 +431,18 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                 setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                setBucketPosition(85),
+                                //setBucketPosition(85),
                                 // Avoid level 4 hang
-                                new SleepAction(0.4),
-                                // Move bucketSlides back to down position
-                                setBucketSlidesTarget(0),
+                                //new SleepAction(0.4),
+                                // Move bucketSlides back to hang position
+                                setBucketSlidesTarget(100),
                                 // Park and low rung
 
                                 new ParallelAction(
                                         onePlusThreeBucket8,
                                         new SequentialAction(
                                                 // Touch low rung
-                                                setExtendoPitchTarget(100),
-                                                setExtendoTarget(300)
+
                                         )
                                 )
 
