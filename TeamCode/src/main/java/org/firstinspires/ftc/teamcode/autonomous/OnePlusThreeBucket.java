@@ -48,7 +48,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
     public class GlobalPID implements Action {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
-            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kP);
+            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * 0.005);
             hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
             bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
             clawPitchLeft.setPosition(clawPitchPosition / 270);
@@ -443,7 +443,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                         new SequentialAction(
                                                 // Touch low rung
                                                 setExtendoPitchTarget(100),
-                                                setExtendoTarget(150)
+                                                setExtendoTarget(300)
                                         )
                                 )
 
