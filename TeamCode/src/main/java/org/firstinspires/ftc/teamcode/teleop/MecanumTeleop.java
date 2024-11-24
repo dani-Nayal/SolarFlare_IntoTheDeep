@@ -114,7 +114,7 @@ public class MecanumTeleop extends LinearOpMode {
             if (isXSequenceActive) {
                 bucketPosition=85;
 
-                if (Xtimer.seconds()>0.5){
+                if (Xtimer.seconds()>0.3){
                     bucketSlidesTarget=0;
                     isXSequenceActive=false;
                 }
@@ -141,23 +141,43 @@ public class MecanumTeleop extends LinearOpMode {
 
             }
             if (isASequenceActive) {
-                clawWristPosition = 76.5;
-                bucketPosition=85;
-                if (Atimer.seconds() > 0.3){
+                if (clawWristPosition != 76.5){
+                    clawWristPosition = 76.5;
+                    bucketPosition=85;
+                    if (Atimer.seconds() > 0.3){
+                        clawPitchPosition = 104;
+
+                    }
+                    if (Atimer.seconds() > 0.5){
+                        extendoTarget=0;
+                    }
+
+                    if (Atimer.seconds() > 0.8) {
+                        if (!(extendo.getCurrentPosition()>150)) {
+                            extendoPitchTarget = 0;
+                        }
+                        clawPitchPosition = 195;
+                        isASequenceActive=false;
+                    }
+                }
+                else{
+                    bucketPosition=85;
                     clawPitchPosition = 104;
 
-                }
-                if (Atimer.seconds() > 0.5){
-                    extendoTarget=0;
+
+                    if (Atimer.seconds() > 0.2){
+                        extendoTarget=0;
+                    }
+
+                    if (Atimer.seconds() > 0.5) {
+                        if (!(extendo.getCurrentPosition()>150)) {
+                            extendoPitchTarget = 0;
+                        }
+                        clawPitchPosition = 195;
+                        isASequenceActive=false;
+                    }
                 }
 
-                if (Atimer.seconds() > 1) {
-                    if (!(extendo.getCurrentPosition()>150)) {
-                        extendoPitchTarget = 0;
-                    }
-                    clawPitchPosition = 195;
-                    isASequenceActive=false;
-                }
             }
             //specimen setup sequence (including retraction of extendo after specimen pickup)
             else if (gamepad2.b){
