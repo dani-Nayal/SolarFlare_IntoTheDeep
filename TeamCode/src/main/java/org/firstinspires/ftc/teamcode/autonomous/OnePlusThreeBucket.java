@@ -431,9 +431,9 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                 setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                //setBucketPosition(85),
+                                setBucketPosition(85),
                                 // Avoid level 4 hang
-                                //new SleepAction(0.4),
+                                new SleepAction(0.4),
                                 // Move bucketSlides back to hang position
                                 setBucketSlidesTarget(100),
                                 // Park and low rung
