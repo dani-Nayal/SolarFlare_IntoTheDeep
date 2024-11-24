@@ -210,7 +210,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
 
         Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
                 // Score preload
-                .strafeToLinearHeading(new Vector2d(-9,-58), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-7,-47), Math.toRadians(270))
                 .build();
         Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-9,-58, Math.toRadians(270)))
                 // Go to sample zone 1
@@ -220,7 +220,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                 // Score bucket
                 .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-58,-58, Math.toRadians(225)))
                 // Sample zone 2
                 .strafeToLinearHeading(new Vector2d(-57,-50), Math.toRadians(270))
                 .build();
@@ -228,7 +228,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                 // Score bucket
                 .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-58,-58, Math.toRadians(225)))
                 // turn and score bucket
                 .strafeToLinearHeading(new Vector2d(-61,-50), Math.toRadians(285))
                 .build();
@@ -236,9 +236,9 @@ public class OnePlusThreeBucket extends LinearOpMode {
                 // turn and score bucket
                 .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-58,-58, Math.toRadians(225)))
                 // park
-                .strafeToLinearHeading(new Vector2d(-35,-6), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(180))
                 .build();
 
@@ -260,37 +260,36 @@ public class OnePlusThreeBucket extends LinearOpMode {
                         new SequentialAction(
                                 // Close claw
                                 setClawFingerPosition(0),
-                                // Drive and prepare extendo
+                                // Drive and prepare extendo pitch
                                 new ParallelAction(
-                                        // Drive to scoring pos
                                         onePlusThreeBucket1,
-                                        // Raise extendo pitch and extendo
-                                        new SequentialAction(
-                                                setExtendoPitchTarget(450),
-                                                new SleepAction(0.5),
-                                                setExtendoTarget(500)
-                                        )
+                                        setExtendoPitchTarget(450)
                                 ),
-                                // Lower extendo pitch
-                                setExtendoPitchTarget(760),
-                                new SleepAction(1.5),
+                                // Raise extendo, lower extendoPitch slightly, lower claw pitch slightly
+                                new ParallelAction(
+                                        setExtendoTarget(500),
+                                        setExtendoPitchTarget(500),
+                                        setClawPitchPosition(100)
+                                ),
+                                // Lower extendo
+                                setExtendoTarget(400),
+                                new SleepAction(0.5),
                                 // Open claw
                                 setClawFingerPosition(50),
-                                // Retract extendo to default position
-                                setExtendoTarget(0),
-                                new SleepAction(0.5),
-                                // Drive to sample zone 1 and lower extendo pitch when driving
+                                // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                                 new ParallelAction(
+                                        // Retract extendo to default position
+                                        setExtendoTarget(0),
                                         // Drive to sample zone 1
                                         onePlusThreeBucket2,
                                         // Extendo pitch pickup position
                                         setExtendoPitchTarget(1421)
                                 ),
-                                /** CHANGE LATER **/
-                                setExtendoTarget(250),
+                                // Extendo to sample zone 1
+                                setExtendoTarget(300),
                                 // Claw pitch picking up pos
                                 setClawPitchPosition(30.5),
-                                new SleepAction(0.7),
+                                new SleepAction(1.2),
                                 // Close Claw
                                 setClawFingerPosition(0),
                                 // Retract extendo, transfer and move to scoring pos
@@ -305,7 +304,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                                 new SleepAction(0.3),
                                                 // Extendo pitch transfer position
                                                 setExtendoPitchTarget(0),
-                                                new SleepAction(1.5),
+                                                new SleepAction(0.8),
                                                 // Open claw fully bc bucketSlides coming down later
                                                 setClawFingerPosition(80)
                                         )
@@ -331,11 +330,11 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                         // Lower extendo pitch to pickup pos
                                         setExtendoPitchTarget(1421)
                                 ),
-                                /** CHANGE LATER **/
-                                setExtendoTarget(250),
+                                // Extendo to sample zone 2
+                                setExtendoTarget(300),
                                 // Claw pitch picking up position
                                 setClawPitchPosition(30.5),
-                                new SleepAction(0.7),
+                                new SleepAction(1.2),
                                 // Close claw
                                 setClawFingerPosition(0),
                                 // Retract extendo, transfer and move to scoring pos
@@ -350,7 +349,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                                 // Extendo pitch transfer position
                                                 new SleepAction(0.3),
                                                 setExtendoPitchTarget(0),
-                                                new SleepAction(1.5),
+                                                new SleepAction(0.8),
                                                 // Open claw fully bc bucketSlides coming down later
                                                 setClawFingerPosition(80)
                                         )
@@ -376,11 +375,11 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                         // Lower extendo pitch to pickup pos
                                         setExtendoPitchTarget(1421)
                                 ),
-                                /** CHANGE LATER **/
-                                setExtendoTarget(250),
+                                // Extendo to sample zone 3
+                                setExtendoTarget(350),
                                 // Claw pitch picking up position
                                 setClawPitchPosition(30.5),
-                                new SleepAction(0.7),
+                                new SleepAction(1.2),
                                 // Close claw
                                 setClawFingerPosition(0),
                                 // Retract extendo, transfer and move to scoring pos
@@ -395,7 +394,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                                 // Extendo pitch transfer position
                                                 new SleepAction(0.3),
                                                 setExtendoPitchTarget(0),
-                                                new SleepAction(1.5),
+                                                new SleepAction(0.8),
                                                 // Open claw fully bc bucketSlides coming down later
                                                 setClawFingerPosition(80)
                                         )
@@ -414,10 +413,15 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                 new SleepAction(0.4),
                                 // Move bucketSlides back to down position
                                 setBucketSlidesTarget(0),
-                                // Park
-                                onePlusThreeBucket8
-                                /** ADD ACTUAL LEVEL 1 ASCENT**/
-
+                                // Park and low rung
+                                new ParallelAction(
+                                        onePlusThreeBucket8,
+                                        new SequentialAction(
+                                                // Touch low rung
+                                                setExtendoPitchTarget(100),
+                                                setExtendoTarget(150)
+                                        )
+                                )
                         )
                 )
         );
