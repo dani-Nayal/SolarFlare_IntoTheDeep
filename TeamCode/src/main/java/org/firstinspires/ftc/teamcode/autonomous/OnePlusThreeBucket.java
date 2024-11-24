@@ -260,6 +260,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                         new SequentialAction(
                                 // Close claw
                                 setClawFingerPosition(0),
+                                setBucketPosition(205),
                                 // Drive and prepare extendo pitch
                                 new SleepAction(0.5),
                                 new ParallelAction(
@@ -289,6 +290,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                 setExtendoTarget(0),
                                 new SleepAction(0.5),
                                 new ParallelAction(
+                                        setBucketPosition(85),
 
                                         // Drive to sample zone 1
                                         onePlusThreeBucket2,
@@ -429,13 +431,13 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                 setBucketPosition(205),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                setBucketPosition(85),
+                                //setBucketPosition(85),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
                                 // Move bucketSlides back to down position
-                                setBucketSlidesTarget(0)
+                                setBucketSlidesTarget(0),
                                 // Park and low rung
-                                /*
+
                                 new ParallelAction(
                                         onePlusThreeBucket8,
                                         new SequentialAction(
@@ -445,7 +447,7 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                         )
                                 )
 
-                                 */
+
                         )
                 )
         );
