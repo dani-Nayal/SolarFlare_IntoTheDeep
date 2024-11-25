@@ -24,22 +24,22 @@ public class MecanumTeleop extends LinearOpMode {
         double hangTarget = 0;
         double extendoPitchTarget = 0;
         double extendoTarget = 0;
-        double bucketSlidesTarget = 300;
+        double bucketSlidesTarget = 0;
         double clawWristPosition = 76.5;
         double clawFingerPosition = 50;
         double clawPitchPosition = 195;
         double bucketPosition = 85;
-        boolean isXSequenceActive=false;
-        boolean isASequenceActive=false;
-        boolean isBSequenceActive=false;
-        boolean isB2SequenceActive=false;
+        boolean isXSequenceActive = false;
+        boolean isASequenceActive = false;
+        boolean isBSequenceActive = false;
+        boolean isB2SequenceActive = false;
         boolean isPressingY = false;
         boolean isPressingY2 = false;
         boolean isPressingA2 = false;
         boolean isPressingX2 = false;
-        boolean isPressingBumper2=false;
-        boolean isPressingTrigger1=false;
-        boolean isPressingDpad=false;
+        boolean isPressingBumper2 = false;
+        boolean isPressingTrigger1 = false;
+        boolean isPressingDpad = false;
         double kP = 0.015;
         double kPpitch = 0.005;
 
@@ -87,7 +87,9 @@ public class MecanumTeleop extends LinearOpMode {
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (gamepad2.back){
+            bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bucketSlides.setDirection(DcMotor.Direction.REVERSE);
         bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -284,7 +286,7 @@ public class MecanumTeleop extends LinearOpMode {
             // Bucket Slides toggle between min and max positions
             if (gamepad1.y){
                 if (!isPressingY) {
-                    if (bucketSlidesTarget == 0 || bucketSlidesTarget==300) {
+                    if (bucketSlidesTarget == 0) {
                         bucketSlidesTarget = 1100;}
                     else {
                         bucketSlidesTarget = 0;
