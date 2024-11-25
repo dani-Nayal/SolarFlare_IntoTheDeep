@@ -17,8 +17,10 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.InitializeMechanisms;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PIDCoefficients;
@@ -27,10 +29,13 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 @Config
 @Autonomous(name = "tets", group = "Autonomous")
 public class tets extends LinearOpMode {
+    HardwareConfig hw;
 
 
     @Override
     public void runOpMode() {
+        hw = new HardwareConfig(hardwareMap);
+        hw.extendo.motor.setPower(hw.extendo.motor.getCurrentPosition() * hw.extendo.kP);
         int xOffset = 42;
         double yOffset = 62.5;
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));

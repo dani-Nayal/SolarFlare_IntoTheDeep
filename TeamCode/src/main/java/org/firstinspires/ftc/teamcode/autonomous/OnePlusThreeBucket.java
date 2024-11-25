@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.InitializeMechanisms;
 import org.firstinspires.ftc.teamcode.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
@@ -26,6 +27,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 @Config
 @Autonomous(name = "OnePlusThreeBucket", group = "Autonomous")
 public class OnePlusThreeBucket extends LinearOpMode {
+
     double kP = 0.015;
     DcMotor extendo;
     DcMotor extendoPitch;
@@ -44,7 +46,6 @@ public class OnePlusThreeBucket extends LinearOpMode {
     public double bucketSlidesTarget = 0;
     public double bucketPosition = 85;
     public double hangTarget = 0;
-
     public class GlobalPID implements Action {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
@@ -59,150 +60,103 @@ public class OnePlusThreeBucket extends LinearOpMode {
             return true;
         }
     }
-
-    public Action GlobalPID() {
-        return new GlobalPID();
-    }
-
     public class SetExtendoTarget implements Action {
         private double target;
-
         public SetExtendoTarget(double target) {
             this.target = target;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             extendoTarget = target;
             return false;
         }
     }
-
-    public Action setExtendoTarget(double target) {
-        return new SetExtendoTarget(target);
-    }
-
     public class SetExtendoPitchTarget implements Action {
         private double target;
-
         public SetExtendoPitchTarget(double target) {
             this.target = target;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             extendoPitchTarget = target;
             return false;
         }
     }
-
-    public Action setExtendoPitchTarget(double target) {
-        return new SetExtendoPitchTarget(target);
-    }
-
     public class SetBucketSlidesTarget implements Action {
         private double target;
-
         public SetBucketSlidesTarget(double target) {
             this.target = target;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             bucketSlidesTarget = target;
             return false;
         }
     }
-
-    public Action setBucketSlidesTarget(double target) {
-        return new SetBucketSlidesTarget(target);
-    }
-
     public class SetHangTarget implements Action {
         private double target;
-
         public SetHangTarget(double target) {
             this.target = target;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             hangTarget = target;
             return false;
         }
     }
-
-    public Action setHangTarget(double target) {
-        return new SetHangTarget(target);
-    }
-
     public class SetClawPitchPosition implements Action {
         private double position;
-
         public SetClawPitchPosition(double position) {
             this.position = position;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             clawPitchPosition = position;
             return false;
         }
     }
-
-    public Action setClawPitchPosition(double position) {
-        return new SetClawPitchPosition(position);
-    }
-
     public class SetClawFingerPosition implements Action {
         private double position;
-
         public SetClawFingerPosition(double position) {
             this.position = position;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             clawFingerPosition = position;
             return false;
         }
     }
-
-    public Action setClawFingerPosition(double position) {
-        return new SetClawFingerPosition(position);
-    }
-
     public class SetClawWristPosition implements Action {
         private double position;
-
-        public SetClawWristPosition(double position) {
-            this.position = position;
-        }
-
+        public SetClawWristPosition(double position) {this.position = position;}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             clawWristPosition = position;
             return false;
         }
     }
-
-    public Action setClawWristPosition(double position) {
-        return new SetClawWristPosition(position);
-    }
-
     public class SetBucketPosition implements Action {
         private double position;
-
-        public SetBucketPosition(double position) {
-            this.position = position;
-        }
-
+        public SetBucketPosition(double position) {this.position = position;}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             bucketPosition = position;
             return false;
         }
     }
-
-    public Action setBucketPosition(double position) {
-        return new SetBucketPosition(position);
+    public Action setBucketPosition(double position) {return new SetBucketPosition(position);}
+    public Action GlobalPID() {
+        return new GlobalPID();
     }
+    public Action setExtendoTarget(double target) {
+        return new SetExtendoTarget(target);
+    }
+    public Action setHangTarget(double target) {return new SetHangTarget(target);}
+    public Action setClawWristPosition(double position) {return new SetClawWristPosition(position);}
+    public Action setClawFingerPosition(double position) {return new SetClawFingerPosition(position);}
+    public Action setClawPitchPosition(double position) {return new SetClawPitchPosition(position);}
+    public Action setBucketSlidesTarget(double target) {
+        return new SetBucketSlidesTarget(target);
+    }
+    public Action setExtendoPitchTarget(double target) {
+        return new SetExtendoPitchTarget(target);
+    }
+
 
     @Override
     public void runOpMode() {
-
 
         InitializeMechanisms initializeMechanisms = new InitializeMechanisms(hardwareMap);
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
