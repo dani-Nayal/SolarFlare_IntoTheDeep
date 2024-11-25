@@ -210,9 +210,9 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
 
         Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
                 // Score preload
-                .strafeToLinearHeading(new Vector2d(-3,-46), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-3,-45), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-3,-46, Math.toRadians(270)))
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-3,-45, Math.toRadians(270)))
                 // Go to sample zone 1
                 .strafeToLinearHeading(new Vector2d(-55,-52.5), Math.toRadians(270))
                 .build();
