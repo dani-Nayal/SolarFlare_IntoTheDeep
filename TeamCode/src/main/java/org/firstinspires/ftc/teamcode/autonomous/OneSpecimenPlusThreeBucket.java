@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
 @Autonomous(name = "OnePlusThreeBucket", group = "Autonomous")
-public class OnePlusThreeBucket extends LinearOpMode {
+public class OneSpecimenPlusThreeBucket extends LinearOpMode {
     double kP = 0.015;
     DcMotor extendo;
     DcMotor extendoPitch;
