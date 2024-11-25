@@ -29,6 +29,7 @@ public class MecanumTeleop extends LinearOpMode {
         double clawFingerPosition = 50;
         double clawPitchPosition = 195;
         double bucketPosition = 85;
+
         boolean isXSequenceActive=false;
         boolean isASequenceActive=false;
         boolean isBSequenceActive=false;
