@@ -12,7 +12,6 @@ public class CustomActions {
             this.target = target;
         }
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            extendoTarget = target;
             return false;
         }
     }

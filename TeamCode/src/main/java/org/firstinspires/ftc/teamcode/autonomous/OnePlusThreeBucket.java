@@ -163,9 +163,9 @@ public class OnePlusThreeBucket extends LinearOpMode {
 
         Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
                 // Score preload
-                .strafeToLinearHeading(new Vector2d(-7,-46.8), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-7,-46.3), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-7,-46.8, Math.toRadians(270)))
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-7,-46.3, Math.toRadians(270)))
                 // Go to sample zone 1
                 .strafeToLinearHeading(new Vector2d(-55,-52.5), Math.toRadians(270))
                 .build();
