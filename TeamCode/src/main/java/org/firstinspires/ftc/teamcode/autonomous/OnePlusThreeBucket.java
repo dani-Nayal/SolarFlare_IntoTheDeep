@@ -27,7 +27,6 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 @Config
 @Autonomous(name = "OnePlusThreeBucket", group = "Autonomous")
 public class OnePlusThreeBucket extends LinearOpMode {
-
     double kP = 0.015;
     DcMotor extendo;
     DcMotor extendoPitch;
@@ -388,21 +387,15 @@ public class OnePlusThreeBucket extends LinearOpMode {
                                 setBucketPosition(85),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
-                                // Move bucketSlides back to hang position
+                                // Move bucketSlides back to low rung touch position
                                 setBucketSlidesTarget(100),
                                 // Park and low rung
-
-                                new ParallelAction(
-                                        onePlusThreeBucket8,
-                                        new SequentialAction(
-                                                // Touch low rung
-
-                                        )
-                                )
-
-
+                                onePlusThreeBucket8
                         )
                 )
         );
     }
 }
+// wow you made it so the bottom very sigma
+
+
