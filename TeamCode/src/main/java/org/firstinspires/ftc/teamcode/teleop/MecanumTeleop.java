@@ -273,8 +273,8 @@ public class MecanumTeleop extends LinearOpMode {
                 if (!isPressingY2) {
                     if (hangTarget == 0) {
                         isPressingY2 = true;
-                        hangTarget = 9517;}
-                    else if (hangTarget == 9517) {
+                        hangTarget = 9000;}
+                    else if (hangTarget == 9000) {
                         hangTarget = 5400;
                         isPressingY2 = true;
                     }
