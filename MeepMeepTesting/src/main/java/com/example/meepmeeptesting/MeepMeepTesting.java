@@ -298,7 +298,7 @@ public class MeepMeepTesting {
         // Outtake length is 6.5 inches
 
 
-
+                /*
                 myBot.runAction(new SequentialAction(
                         onePlusThreeBucket1,
                         new SleepAction(2),
@@ -318,7 +318,9 @@ public class MeepMeepTesting {
                         new SleepAction(2)
 
                         ));
+                */
 
+        myBot.runAction(onePlusThreeSpecimenV2);
 
 
         /*
