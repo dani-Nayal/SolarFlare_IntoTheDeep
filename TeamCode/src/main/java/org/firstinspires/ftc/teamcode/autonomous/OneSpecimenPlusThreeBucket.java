@@ -166,7 +166,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        
+
         InitializeMechanisms initializeMechanisms = new InitializeMechanisms(hardwareMap);
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);

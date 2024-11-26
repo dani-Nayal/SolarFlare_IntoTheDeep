@@ -164,7 +164,6 @@ public class skibidigooner extends LinearOpMode {
         waitForStart();
 
         Actions.runBlocking(
-
                 new ParallelAction(
                         globalPID(),
                         new SequentialAction(
@@ -178,7 +177,6 @@ public class skibidigooner extends LinearOpMode {
                                         setExtendoPitchTarget(400),
                                         setClawPitchPosition(104)
                                 ),
-
                                 new SleepAction(0.5),
                                 // Raise extendo, lower extendoPitch slightly, lower claw pitch slightly
                                 new ParallelAction(
@@ -313,6 +311,7 @@ public class skibidigooner extends LinearOpMode {
                                         onePlusThreeBucket7,
                                         new SequentialAction(
                                                 // Retract extendo
+                                                
                                                 setExtendoTarget(0),
                                                 // Claw pitch transfer position
                                                 setClawPitchPosition(195),
