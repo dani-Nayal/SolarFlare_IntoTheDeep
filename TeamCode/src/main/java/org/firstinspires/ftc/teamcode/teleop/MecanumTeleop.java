@@ -413,12 +413,8 @@ public class MecanumTeleop extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
 
             //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-<<<<<<< Updated upstream
-            //double botHeading = pinpoint.getYawScalar();
+
             double botHeading = 0;
-=======
-            double botHeading = pinpoint.getYawScalar();
->>>>>>> Stashed changes
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);

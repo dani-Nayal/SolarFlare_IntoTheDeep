@@ -26,7 +26,7 @@ public class MeepMeepTesting {
         MeepMeep meepMeep = new MeepMeep(800);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(30, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setDimensions(12.4375,15.0625)
                 .build();
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)
@@ -70,41 +70,46 @@ public class MeepMeepTesting {
                 .build();
 
         // Incomplete
-        Action onePlusThreeSpecimenV2 = myBot.getDrive().actionBuilder(new Pose2d(24, -62, Math.toRadians(90)))
+        Action onePlusThreeSpecimenV2 = myBot.getDrive().actionBuilder(new Pose2d(24, -62, Math.toRadians(270)))
                 // Go to scoring zone first time
-                .strafeToLinearHeading(new Vector2d(10,-33.7), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(7.6,-41.8), Math.toRadians(270))
                 .waitSeconds(1)
                 // Go to sample 1 sample zone
-                .strafeToLinearHeading(new Vector2d(42,-37), Math.toRadians(70))
+                .strafeToLinearHeading(new Vector2d(30.7,-45.1), Math.toRadians(230))
+                .waitSeconds(1)
                 // Rotate towards observation zone
-                .strafeToLinearHeading(new Vector2d(46.7,-48.3), Math.toRadians(-90))
+                .turnTo(Math.toRadians(135))
+                .waitSeconds(1)
                 // Rotate to sample 2 in sample zone
-                .strafeToLinearHeading(new Vector2d(54,-35), Math.toRadians(65))
+                .strafeToLinearHeading(new Vector2d(40,-41), Math.toRadians(220))
+                .waitSeconds(1)
                 // Rotate towards observation zone 2nd time
-                .strafeToLinearHeading(new Vector2d(46.7,-48.3), Math.toRadians(-90))
+                .turnTo(Math.toRadians(110))
+                .waitSeconds(1)
                 // Rotate towards sample 3 in sample zone
-                .strafeToLinearHeading(new Vector2d(60,-30.5), Math.toRadians(30))
+                .strafeToLinearHeading(new Vector2d(51,-41), Math.toRadians(220))
+                .waitSeconds(1)
                 // Rotate towards observation zone
-                .strafeToLinearHeading(new Vector2d(46.7,-48.3), Math.toRadians(-90))
+                .turnTo(Math.toRadians(80))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(135))
                 // Score second specimen
-                .strafeToLinearHeading(new Vector2d(8,-33.7), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(3,-41.8), Math.toRadians(270))
                 .waitSeconds(1)
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(135))
                 .waitSeconds(0.5)
                 // Score fourth specimen
-                .strafeToLinearHeading(new Vector2d(4,-33.7), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(0,-41.8), Math.toRadians(270))
                 .waitSeconds(1)
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(135))
                 .waitSeconds(0.5)
                 // Score third specimen
-                .strafeToLinearHeading(new Vector2d(2,-33.7), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-3,-41.8), Math.toRadians(270))
                 .waitSeconds(1)
                 // Park
-                .strafeToLinearHeading(new Vector2d(34,-62), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(34,-62), Math.toRadians(270))
                 .build();
 
         Action onePlusThreeSpecimenV3 = myBot.getDrive().actionBuilder(new Pose2d(24,-62, Math.toRadians(90)))
