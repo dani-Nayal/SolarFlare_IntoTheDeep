@@ -191,11 +191,12 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                                 // Retract extendo
                                                 setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                setClawPitchPosition(195),
                                                 new SleepAction(0.3),
                                                 // Extendo pitch transfer position
                                                 setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
+                                                setClawPitchPosition(215),
+                                                new SleepAction(0.3),
                                                 // Open claw fully bc bucketSlides coming down later
                                                 setClawFingerPosition(80)
                                         )
@@ -240,11 +241,13 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                                 // Retract extendo
                                                 setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                setClawPitchPosition(195),
+                                                setClawPitchPosition(215),
                                                 // Extendo pitch transfer position
                                                 new SleepAction(0.3),
                                                 setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
+                                                setClawPitchPosition(215),
+                                                new SleepAction(0.3),
                                                 // Open claw fully bc bucketSlides coming down later
                                                 setClawFingerPosition(80)
                                         )
@@ -289,11 +292,13 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                                 // Retract extendo
                                                 setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                setClawPitchPosition(195),
+                                                setClawPitchPosition(215),
                                                 // Extendo pitch transfer position
                                                 new SleepAction(0.3),
                                                 setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
+                                                setClawPitchPosition(215),
+                                                new SleepAction(0.3),
                                                 // Open claw fully bc bucketSlides coming down later
                                                 setClawFingerPosition(80)
                                         )
