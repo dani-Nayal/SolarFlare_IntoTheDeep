@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.InitializeMechanisms;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name = "OnePlusThreeBucket", group = "Autonomous")
+@Autonomous(name = "OneSpecimenPlusThreeBucket", group = "Autonomous")
 public class OneSpecimenPlusThreeBucket extends LinearOpMode {
     public double extendoTarget = 0;
     public double extendoPitchTarget = 0;

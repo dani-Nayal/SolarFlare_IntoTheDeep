@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name = "OnePlusThreeBucket", group = "Autonomous")
+@Autonomous(name = "OneSpecimenPlusThreeSpecimen", group = "Autonomous")
 public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
     HardwareConfig hw;
     CustomActions actions;
