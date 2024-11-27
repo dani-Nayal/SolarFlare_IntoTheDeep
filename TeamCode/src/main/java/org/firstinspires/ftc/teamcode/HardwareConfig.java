@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
+import com.acmerobotics.roadrunner.ftc.PinpointEncoder;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
@@ -24,6 +26,7 @@ public class HardwareConfig {
     public ServoConfig clawWrist;
     public ServoConfig bucket;
     public IMUConfig imu;
+    public PinpointConfig pinpoint;
 
     public HardwareConfig(HardwareMap hardwareMap){
         this.extendo = new MotorConfig(
@@ -107,8 +110,9 @@ public class HardwareConfig {
                 "imu",
                 "LEFT",
                 "UP");
-
-
+        this.pinpoint = new PinpointConfig(
+                hardwareMap,
+                "pinpoint");
     }
     public class MotorConfig{
         public DcMotor motor;
@@ -149,9 +153,9 @@ public class HardwareConfig {
     }
     public class IMUConfig{
         public IMU imu;
-        String deviceName;
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
-        RevHubOrientationOnRobot.UsbFacingDirection usbDirection;
+        public String deviceName;
+        public RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
+        public RevHubOrientationOnRobot.UsbFacingDirection usbDirection;
         public IMUConfig(HardwareMap hardwareMap, String deviceName, String logoDirection, String usbDirection){
             this.imu = hardwareMap.get(IMU.class, deviceName);
             this.logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.valueOf(logoDirection);
@@ -163,4 +167,13 @@ public class HardwareConfig {
             imu.initialize(parameters);
         }
     }
+    public class PinpointConfig{
+        public GoBildaPinpointDriverRR pinpoint;
+        public String deviceName;
+        public PinpointConfig(HardwareMap hardwareMap, String deviceName){
+            pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class, deviceName);
+        }
+
+    }
+
 }
