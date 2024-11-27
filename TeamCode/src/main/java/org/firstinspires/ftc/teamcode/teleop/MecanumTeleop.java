@@ -27,7 +27,7 @@ public class MecanumTeleop extends LinearOpMode {
         double bucketSlidesTarget = 0;
         double clawWristPosition = 76.5;
         double clawFingerPosition = 50;
-        double clawPitchPosition = 195;
+        double clawPitchPosition = 215;
         double bucketPosition = 85;
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
@@ -164,7 +164,10 @@ public class MecanumTeleop extends LinearOpMode {
                         if (!(extendo.getCurrentPosition()>150)) {
                             extendoPitchTarget = 0;
                         }
-                        clawPitchPosition = 195;
+                    }
+
+                    if (extendoPitch.getCurrentPosition()<100) {
+                        clawPitchPosition = 215;
                         isASequenceActive=false;
                     }
                 }
@@ -181,7 +184,10 @@ public class MecanumTeleop extends LinearOpMode {
                         if (!(extendo.getCurrentPosition()>150)) {
                             extendoPitchTarget = 0;
                         }
-                        clawPitchPosition = 195;
+
+                    }
+                    if (extendoPitch.getCurrentPosition()<100) {
+                        clawPitchPosition = 215;
                         isASequenceActive=false;
                     }
                 }
@@ -257,7 +263,7 @@ public class MecanumTeleop extends LinearOpMode {
                 extendoPitchTarget+=50;
             }
             */
-            if (gamepad2.x&&extendoPitchTarget>=210){
+            if (gamepad2.x&&extendoPitchTarget>=215){
                 if (!isPressingX2) {
                     extendoPitchTarget=760;
                     isPressingX2=true;
@@ -297,13 +303,13 @@ public class MecanumTeleop extends LinearOpMode {
             else isPressingY=false;
 
             // Claw pitch picking up pos 30.5 degrees
-            // Claw transfer pos 195 degrees
+            // Claw transfer pos 215 degrees
             // Claw pitch going into sub 104 degrees
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
                     if(clawWristPosition==76.5){
-                        if (clawPitchPosition == 195){
+                        if (clawPitchPosition == 215){
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
@@ -321,7 +327,7 @@ public class MecanumTeleop extends LinearOpMode {
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104) {
-                            clawPitchPosition = 195;
+                            clawPitchPosition = 215;
                         }
                     }
                 }
