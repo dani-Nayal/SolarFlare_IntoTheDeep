@@ -90,9 +90,6 @@ public class MecanumTeleop extends LinearOpMode {
         hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (gamepad2.back){
-            bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
         bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bucketSlides.setDirection(DcMotor.Direction.REVERSE);
         bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -114,6 +111,10 @@ public class MecanumTeleop extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+
+            if (gamepad2.back){
+                bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
 
             pinpoint.update();
 
