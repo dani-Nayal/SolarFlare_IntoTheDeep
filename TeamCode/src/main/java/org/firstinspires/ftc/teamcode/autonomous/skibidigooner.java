@@ -16,25 +16,15 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 // Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.InitializeMechanisms;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
 @Autonomous(name = "OnePlusThreeBucket", group = "Autonomous")
-public class OneSpecimenPlusThreeBucket extends LinearOpMode {
-    double kP = 0.015;
-    DcMotor extendo;
-    DcMotor extendoPitch;
-    DcMotor hang;
-    DcMotor bucketSlides;
-    Servo clawPitchLeft;
-    Servo clawPitchRight;
-    Servo clawFingers;
-    Servo clawWrist;
-    Servo bucket;
+public class skibidigooner extends LinearOpMode {
+    HardwareConfig hw;
     public double extendoTarget = 0;
     public double extendoPitchTarget = 0;
     public double clawPitchPosition = 15;
@@ -43,28 +33,25 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
     public double bucketSlidesTarget = 0;
     public double bucketPosition = 85;
     public double hangTarget = 0;
-
     public class GlobalPID implements Action {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
-            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * 0.005);
-            hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
-            bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
-            clawPitchLeft.setPosition(clawPitchPosition / 270);
-            clawPitchRight.setPosition(clawPitchPosition / 270);
-            bucket.setPosition(bucketPosition / 270);
-            clawFingers.setPosition(clawFingerPosition / 180);
-            clawWrist.setPosition(clawWristPosition / 180);
+            hw.extendo.motor.setPower((extendoTarget - hw.extendo.motor.getCurrentPosition()) * hw.extendo.kP);
+            hw.extendoPitch.motor.setPower((extendoPitchTarget - hw.extendoPitch.motor.getCurrentPosition()) * 0.005);
+            hw.hang.motor.setPower((hangTarget - hw.hang.motor.getCurrentPosition()) * hw.extendo.kP);
+            hw.bucketSlides.motor.setPower((bucketSlidesTarget -  hw.bucketSlides.motor.getCurrentPosition()) * hw.extendo.kP);
+            hw.clawPitchLeft.servo.setPosition(clawPitchPosition / 270);
+            hw.clawPitchRight.servo.setPosition(clawPitchPosition / 270);
+            hw.bucket.servo.setPosition(bucketPosition / 270);
+            hw.clawFingers.servo.setPosition(clawFingerPosition / 180);
+            hw.clawWrist.servo.setPosition(clawWristPosition / 180);
             return true;
         }
     }
     public class SetExtendoTarget implements Action {
         private double target;
-
         public SetExtendoTarget(double target) {
             this.target = target;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             extendoTarget = target;
             return false;
@@ -72,11 +59,9 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
     }
     public class SetExtendoPitchTarget implements Action {
         private double target;
-
         public SetExtendoPitchTarget(double target) {
             this.target = target;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             extendoPitchTarget = target;
             return false;
@@ -84,35 +69,19 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
     }
     public class SetBucketSlidesTarget implements Action {
         private double target;
-
         public SetBucketSlidesTarget(double target) {
             this.target = target;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             bucketSlidesTarget = target;
             return false;
         }
     }
-    public class SetHangTarget implements Action {
-        private double target;
-
-        public SetHangTarget(double target) {
-            this.target = target;
-        }
-
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hangTarget = target;
-            return false;
-        }
-    }
     public class SetClawPitchPosition implements Action {
         private double position;
-
         public SetClawPitchPosition(double position) {
             this.position = position;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             clawPitchPosition = position;
             return false;
@@ -120,11 +89,9 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
     }
     public class SetClawFingerPosition implements Action {
         private double position;
-
         public SetClawFingerPosition(double position) {
             this.position = position;
         }
-
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             clawFingerPosition = position;
             return false;
@@ -132,11 +99,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
     }
     public class SetClawWristPosition implements Action {
         private double position;
-
-        public SetClawWristPosition(double position) {
-            this.position = position;
-        }
-
+        public SetClawWristPosition(double position) {this.position = position;}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             clawWristPosition = position;
             return false;
@@ -144,38 +107,31 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
     }
     public class SetBucketPosition implements Action {
         private double position;
-
-        public SetBucketPosition(double position) {
-            this.position = position;
-        }
-
+        public SetBucketPosition(double position) {this.position = position;}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             bucketPosition = position;
             return false;
         }
     }
-    public Action GlobalPID() {return new GlobalPID();}
+    public Action setBucketPosition(double position) {return new SetBucketPosition(position);}
+    public Action globalPID() {return new GlobalPID();}
     public Action setExtendoTarget(double target) {return new SetExtendoTarget(target);}
-    public Action setHangTarget(double target) {return new SetHangTarget(target);}
     public Action setClawWristPosition(double position) {return new SetClawWristPosition(position);}
     public Action setClawFingerPosition(double position) {return new SetClawFingerPosition(position);}
     public Action setClawPitchPosition(double position) {return new SetClawPitchPosition(position);}
     public Action setBucketSlidesTarget(double target) {return new SetBucketSlidesTarget(target);}
     public Action setExtendoPitchTarget(double target) {return new SetExtendoPitchTarget(target);}
-    public Action setBucketPosition(double position) {return new SetBucketPosition(position);}
-
     @Override
     public void runOpMode() {
-
-        InitializeMechanisms initializeMechanisms = new InitializeMechanisms(hardwareMap);
+        hw = new HardwareConfig(hardwareMap);
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
         Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
                 // Score preload
-                .strafeToLinearHeading(new Vector2d(-3,-45), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-7,-46.8), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-3,-45, Math.toRadians(270)))
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-7,-46.8, Math.toRadians(270)))
                 // Go to sample zone 1
                 .strafeToLinearHeading(new Vector2d(-55,-52.5), Math.toRadians(270))
                 .build();
@@ -205,21 +161,11 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(0))
                 .build();
 
-        extendo = initializeMechanisms.extendo;
-        extendoPitch = initializeMechanisms.extendoPitch;
-        hang = initializeMechanisms.hang;
-        bucketSlides = initializeMechanisms.bucketSlides;
-        clawPitchLeft = initializeMechanisms.clawPitchLeft;
-        clawPitchRight = initializeMechanisms.clawPitchRight;
-        clawFingers = initializeMechanisms.clawFingers;
-        clawWrist = initializeMechanisms.clawWrist;
-        bucket = initializeMechanisms.bucket;
-
         waitForStart();
 
         Actions.runBlocking(
                 new ParallelAction(
-                        GlobalPID(),
+                        globalPID(),
                         new SequentialAction(
                                 // Close claw
                                 setClawFingerPosition(0),
@@ -230,9 +176,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                         onePlusThreeBucket1,
                                         setExtendoPitchTarget(400),
                                         setClawPitchPosition(104)
-
                                 ),
-
                                 new SleepAction(0.5),
                                 // Raise extendo, lower extendoPitch slightly, lower claw pitch slightly
                                 new ParallelAction(
@@ -242,11 +186,10 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 ),
                                 new SleepAction(0.5),
                                 // Lower extendo
-                                setExtendoPitchTarget(850),
+                                setExtendoPitchTarget(750),
                                 new SleepAction(1),
                                 // Open claw
                                 setClawFingerPosition(50),
-
                                 new SleepAction(0.5),
                                 // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                                 // Retract extendo to default position
@@ -254,16 +197,14 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 new SleepAction(0.5),
                                 new ParallelAction(
                                         setBucketPosition(85),
-
                                         // Drive to sample zone 1
                                         onePlusThreeBucket2,
                                         // Extendo pitch pickup position
                                         setExtendoPitchTarget(1421)
                                 ),
                                 // Extendo to sample zone 1
-                                setExtendoTarget(425),
+                                setExtendoTarget(400),
                                 new SleepAction(0.5),
-
                                 // Claw pitch picking up pos
                                 setClawPitchPosition(30.5),
                                 new SleepAction(0.5),
@@ -309,15 +250,13 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                         setExtendoPitchTarget(1421)
                                 ),
                                 // Extendo to sample zone 2
-                                setExtendoTarget(425),
-
+                                setExtendoTarget(400),
                                 new SleepAction(0.5),
                                 // Claw pitch picking up position
                                 setClawPitchPosition(30.5),
                                 new SleepAction(0.5),
                                 // Close claw
                                 setClawFingerPosition(0),
-
                                 new SleepAction(0.5),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
@@ -358,15 +297,13 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                         setExtendoPitchTarget(1421)
                                 ),
                                 // Extendo to sample zone 3
-                                setExtendoTarget(425),
+                                setExtendoTarget(400),
                                 new SleepAction(0.5),
-
                                 // Claw pitch picking up position
                                 setClawPitchPosition(30.5),
                                 new SleepAction(0.5),
                                 // Close claw
                                 setClawFingerPosition(0),
-
                                 new SleepAction(0.5),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
@@ -374,6 +311,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                         onePlusThreeBucket7,
                                         new SequentialAction(
                                                 // Retract extendo
+                                                
                                                 setExtendoTarget(0),
                                                 // Claw pitch transfer position
                                                 setClawPitchPosition(195),
@@ -397,22 +335,12 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 setBucketPosition(85),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
-                                // Move bucketSlides back to hang position
-                                setBucketSlidesTarget(300),
+                                // Move bucketSlides back to low rung touch position
+                                setBucketSlidesTarget(100),
                                 // Park and low rung
-
-                                new ParallelAction(
-                                        onePlusThreeBucket8,
-                                        new SequentialAction(
-                                                // Touch low rung
-
-                                        )
-                                )
-
-
+                                onePlusThreeBucket8
                         )
                 )
         );
     }
 }
-

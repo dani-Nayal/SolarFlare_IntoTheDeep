@@ -29,6 +29,8 @@ public class MecanumTeleop extends LinearOpMode {
         double clawFingerPosition = 50;
         double clawPitchPosition = 215;
         double bucketPosition = 85;
+
+
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
         boolean isBSequenceActive = false;
@@ -40,6 +42,7 @@ public class MecanumTeleop extends LinearOpMode {
         boolean isPressingBumper2 = false;
         boolean isPressingTrigger1 = false;
         boolean isPressingDpad = false;
+
         double kP = 0.015;
         double kPpitch = 0.005;
 
