@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -14,13 +13,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
-@Config
-@Autonomous(name = "InProgressAuto", group = "Autonomous")
+/** TROUBLESHOOTING: DISABLE GLOBALPID() TEMPORARILY**/
+@Autonomous
 public class InProgressAuto extends LinearOpMode {
     HardwareConfig hw;
     CustomActions actions;
     RobotState state;
-
     @Override
     public void runOpMode() {
         hw = new HardwareConfig(hardwareMap);
@@ -69,6 +67,7 @@ public class InProgressAuto extends LinearOpMode {
         Actions.runBlocking(
                 new ParallelAction(
                         actions.globalPID(),
+                        actions.updateTelemetry(telemetry),
                         new SequentialAction(
                                 // Close claw
                                 actions.setClawFingerPosition(0),
