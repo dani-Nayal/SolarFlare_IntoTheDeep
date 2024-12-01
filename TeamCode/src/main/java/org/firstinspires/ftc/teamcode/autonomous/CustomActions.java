@@ -4,10 +4,14 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.HardwareConfig;
+import org.firstinspires.ftc.teamcode.MotorEnum;
+import org.firstinspires.ftc.teamcode.ServoEnum;
 
+// Contains all non-default roadrunner actions that are used in our autonomous routines
 public class CustomActions {
     RobotState state;
     HardwareConfig hw;
@@ -15,78 +19,39 @@ public class CustomActions {
         this.state = state;
         this.hw = hw;
     }
-    enum MotorName {
-        EXTENDO,
-        EXTENDO_PITCH,
-        BUCKET_SLIDES,
-        HANG
-    }
 
-    enum ServoName {
-        CLAW_PITCH,
-        CLAW_FINGER,
-        CLAW_WRIST,
-        BUCKET
-    }
+    public class SetMotorTargetAction implements Action {
+        MotorEnum motorEnum;
 
-    public class SetMotorTarget implements Action {
-        MotorName motorName;
+        // In ticks (pulses)
         int target;
 
-        public SetMotorTarget(MotorName motorName, int target) {
-            this.motorName = motorName;
+        public SetMotorTargetAction (MotorEnum motorEnum, int target) {
+            this.motorEnum = motorEnum;
             this.target = target;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            switch (motorName) {
-                case EXTENDO:
-                    state.setExtendoTarget(target);
-                    break;
-                case EXTENDO_PITCH:
-                    state.setExtendoPitchTarget(target);
-                    break;
-                case BUCKET_SLIDES:
-                    state.setBucketSlidesTarget(target);
-                    break;
-                case HANG:
-                    state.setHangTarget(target);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Illegal Motor Name " + motorName);
-            }
+            state.setMotorTarget(motorEnum, target);
             return false;
         }
     }
 
-    public class SetServoPosition implements Action {
-        ServoName servoName;
-        double degrees;
+    public class SetServoPositionAction  implements Action {
+        ServoEnum servoEnum;
 
-        public SetServoPosition(ServoName servoName, double degrees) {
-            this.servoName = servoName;
-            this.degrees = degrees;
+        // In degrees
+        double position;
+
+        public SetServoPositionAction (ServoEnum servoEnum, double position) {
+            this.servoEnum = servoEnum;
+            this.position = position;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            switch (servoName) {
-                case CLAW_PITCH:
-                    state.setClawPitchPosition(degrees);
-                    break;
-                case CLAW_FINGER:
-                    state.setClawFingerPosition(degrees);
-                    break;
-                case CLAW_WRIST:
-                    state.setClawWristPosition(degrees);
-                    break;
-                case BUCKET:
-                    state.setBucketPosition(degrees);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Illegal Servo Name " + servoName);
-            }
+            state.setServoPosition(servoEnum, position);
             return false;
         }
     }
@@ -94,16 +59,33 @@ public class CustomActions {
     public class GlobalPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hw.extendo.motor.setPower((state.getExtendoTarget() - hw.extendo.motor.getCurrentPosition()) * hw.extendo.kP);
-            hw.extendoPitch.motor.setPower((state.getExtendoPitchTarget() - hw.extendoPitch.motor.getCurrentPosition()) * 0.005);
-            hw.hang.motor.setPower((state.getHangTarget() - hw.hang.motor.getCurrentPosition()) * hw.extendo.kP);
-            hw.bucketSlides.motor.setPower((state.getBucketSlidesTarget() - hw.bucketSlides.motor.getCurrentPosition()) * hw.extendo.kP);
+            hw.getMotorConfig(MotorEnum.EXTENDO).motor.setPower
+                    ((state.getMotorTarget(MotorEnum.EXTENDO) - hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition()) * hw.getMotorConfig(MotorEnum.EXTENDO).kP);
 
-            hw.clawPitchLeft.servo.setPosition(state.getClawPitchPosition() / 270);
-            hw.clawPitchRight.servo.setPosition(state.getClawPitchPosition() / 270);
-            hw.bucket.servo.setPosition(state.getBucketPosition() / 270);
-            hw.clawFingers.servo.setPosition(state.getClawFingerPosition() / 180);
-            hw.clawWrist.servo.setPosition(state.getClawWristPosition() / 180);
+            hw.getMotorConfig(MotorEnum.EXTENDO_PITCH).motor.setPower
+                    ((state.getMotorTarget(MotorEnum.EXTENDO_PITCH)- hw.getMotorConfig(MotorEnum.EXTENDO_PITCH).motor.getCurrentPosition()) * hw.getMotorConfig(MotorEnum.EXTENDO_PITCH).kP);
+
+            hw.getMotorConfig(MotorEnum.HANG).motor.setPower
+                    ((state.getMotorTarget(MotorEnum.HANG) - hw.getMotorConfig(MotorEnum.HANG).motor.getCurrentPosition()) * hw.getMotorConfig(MotorEnum.HANG).kP);
+
+            hw.getMotorConfig(MotorEnum.BUCKET_SLIDES).motor.setPower
+                    ((state.getMotorTarget(MotorEnum.BUCKET_SLIDES) - hw.getMotorConfig(MotorEnum.BUCKET_SLIDES).motor.getCurrentPosition()) * hw.getMotorConfig(MotorEnum.BUCKET_SLIDES).kP);
+
+            hw.getServoConfig(ServoEnum.CLAW_PITCH_LEFT).servo.setPosition
+                    (state.getServoPosition(ServoEnum.CLAW_PITCH_LEFT) / 270);
+
+            hw.getServoConfig(ServoEnum.CLAW_PITCH_RIGHT).servo.setPosition
+                    (state.getServoPosition(ServoEnum.CLAW_PITCH_RIGHT) / 270);
+
+            hw.getServoConfig(ServoEnum.BUCKET).servo.setPosition
+                    (state.getServoPosition(ServoEnum.BUCKET) / 270);
+
+            hw.getServoConfig(ServoEnum.CLAW_FINGERS).servo.setPosition
+                    (state.getServoPosition(ServoEnum.CLAW_FINGERS) / 180);
+
+            hw.getServoConfig(ServoEnum.CLAW_WRIST).servo.setPosition
+                    (state.getServoPosition(ServoEnum.CLAW_WRIST) / 180);
+
             return true;
         }
     }
@@ -114,23 +96,25 @@ public class CustomActions {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            telemetry.addData("extendo position", hw.extendo.motor.getCurrentPosition());
-            telemetry.addData("extendo target", state.extendoTarget);
-            telemetry.addData("extendo pitch position", hw.extendoPitch.motor.getCurrentPosition() );
-            telemetry.addData("extendo pitch target", state.extendoPitchTarget);
-            telemetry.addData("hang pos", hw.hang.motor.getCurrentPosition());
-            telemetry.addData("hang target", state.hangTarget);
-            telemetry.addData("bucketSlides pos", hw.bucketSlides.motor.getCurrentPosition());
-            telemetry.addData("bucketSlides target", state.bucketSlidesTarget);
 
-            telemetry.addData("left claw pitch position", hw.clawPitchLeft.servo.getPosition());
-            telemetry.addData("right claw pitch position", hw.clawPitchRight.servo.getPosition());
-            telemetry.addData("claw finger position", hw.clawFingers.servo.getPosition());
-            telemetry.addData("claw finger position in degree", state.clawFingerPosition);
-            telemetry.addData("claw wrist position", hw.clawWrist.servo.getPosition());
-            telemetry.addData("bucket pos", hw.bucket.servo.getPosition());
-            telemetry.addData("bucket target", state.bucketPosition);
+            // Motor telemetry
+            telemetry.addData("extendo position", hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition());
+            telemetry.addData("extendo target", state.getMotorTarget(MotorEnum.EXTENDO));
+            telemetry.addData("extendo pitch position", hw.getMotorConfig(MotorEnum.EXTENDO_PITCH).motor.getCurrentPosition());
+            telemetry.addData("extendo pitch target", state.getMotorTarget(MotorEnum.EXTENDO_PITCH));
+            telemetry.addData("hang pos", hw.getMotorConfig(MotorEnum.HANG).motor.getCurrentPosition());
+            telemetry.addData("hang target", state.getMotorTarget(MotorEnum.HANG));
+            telemetry.addData("bucketSlides pos", hw.getMotorConfig(MotorEnum.BUCKET_SLIDES).motor.getCurrentPosition());
+            telemetry.addData("bucketSlides target", state.getMotorTarget(MotorEnum.BUCKET_SLIDES));
 
+            // Servo telemetry (in degrees)
+            telemetry.addData("left claw pitch position", hw.getServoConfig(ServoEnum.CLAW_PITCH_LEFT).servo.getPosition());
+            telemetry.addData("right claw pitch position",hw.getServoConfig(ServoEnum.CLAW_PITCH_RIGHT).servo.getPosition());
+            telemetry.addData("claw finger position",  hw.getServoConfig(ServoEnum.CLAW_FINGERS).servo.getPosition());
+            telemetry.addData("claw wrist position",  hw.getServoConfig(ServoEnum.CLAW_WRIST).servo.getPosition());
+            telemetry.addData("bucket position", hw.getServoConfig(ServoEnum.BUCKET).servo.getPosition());
+
+            // Misc telemetry
             telemetry.addData("pinpoint heading", hw.pinpoint.pinpoint.getYawScalar());
             telemetry.addData("Control hub IMU heading", hw.imu.imu.getRobotYawPitchRollAngles().getYaw());
             telemetry.addData("pinpoint x", hw.pinpoint.pinpoint.getPosX());
@@ -140,13 +124,13 @@ public class CustomActions {
         }
     }
 
-    public Action updateTelemetry(Telemetry telemetry){return new UpdateTelemetry(telemetry);};
+    public Action updateTelemetry(Telemetry telemetry) {return new UpdateTelemetry(telemetry);}
     public Action globalPID() {return new GlobalPID();}
-    public Action setExtendoTarget(int target) {return new SetMotorTarget(CustomActions.MotorName.EXTENDO, target);}
-    public Action setExtendoPitchTarget(int target) {return new SetMotorTarget(CustomActions.MotorName.EXTENDO_PITCH, target);}
-    public Action setBucketSlidesTarget(int target) {return new SetMotorTarget(CustomActions.MotorName.BUCKET_SLIDES, target);}
-    public Action setClawPitchPosition(double degrees) {return new SetServoPosition(CustomActions.ServoName.CLAW_PITCH, degrees);}
-    public Action setClawFingerPosition(double degrees) {return new SetServoPosition(CustomActions.ServoName.CLAW_FINGER, degrees);}
-    public Action setClawWristPosition(double degrees) {return new SetServoPosition(CustomActions.ServoName.CLAW_WRIST, degrees);}
-    public Action setBucketPosition(double degrees) {return new SetServoPosition(CustomActions.ServoName.BUCKET, degrees);}
+    public Action setExtendoTarget(int target) {return new SetMotorTargetAction(MotorEnum.EXTENDO, target);}
+    public Action setExtendoPitchTarget(int target) {return new SetMotorTargetAction(MotorEnum.EXTENDO_PITCH, target);}
+    public Action setBucketSlidesTarget(int target) {return new SetMotorTargetAction(MotorEnum.BUCKET_SLIDES, target);}
+    public Action setClawPitchPosition(double degrees) {return new ParallelAction(new SetServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, degrees), new SetServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, degrees));}
+    public Action setClawFingerPosition(double degrees) {return new SetServoPositionAction(ServoEnum.CLAW_FINGERS, degrees);}
+    public Action setClawWristPosition(double degrees) {return new SetServoPositionAction(ServoEnum.CLAW_WRIST, degrees);}
+    public Action setBucketPosition(double degrees) {return new SetServoPositionAction(ServoEnum.BUCKET, degrees);}
 }

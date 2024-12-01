@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
-/** TROUBLESHOOTING: DISABLE GLOBALPID() TEMPORARILY**/
 @Autonomous
 public class InProgressAuto extends LinearOpMode {
     HardwareConfig hw;

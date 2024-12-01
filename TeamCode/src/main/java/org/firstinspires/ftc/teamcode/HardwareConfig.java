@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
-import com.acmerobotics.roadrunner.ftc.PinpointEncoder;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
@@ -11,100 +10,116 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
+import java.util.HashMap;
+
+// Initializes hardwareMap of all mechanisms, as well as other related values
 public class HardwareConfig {
-    public MotorConfig extendo;
-    public MotorConfig extendoPitch;
-    public MotorConfig frontLeftMotor;
-    public MotorConfig backLeftMotor;
-    public MotorConfig frontRightMotor;
-    public MotorConfig backRightMotor;
-    public MotorConfig hang;
-    public MotorConfig bucketSlides;
-    public ServoConfig clawPitchLeft;
-    public ServoConfig clawPitchRight;
-    public ServoConfig clawFingers;
-    public ServoConfig clawWrist;
-    public ServoConfig bucket;
+    private final HashMap<MotorEnum,MotorConfig> motorConfigs;
+    private final HashMap<ServoEnum,ServoConfig> servoConfigs;
+
     public IMUConfig imu;
     public PinpointConfig pinpoint;
 
+    // Gets MotorConfig from motorConfigs HashMap
+    public MotorConfig getMotorConfig(MotorEnum motorEnum) throws IllegalArgumentException{
+        MotorConfig motorConfig = motorConfigs.get(motorEnum);
+        if (motorConfig == null){
+            throw new IllegalArgumentException("Config is not present for " + motorEnum.name());
+        }
+        return motorConfig;
+    }
+
+    // Gets ServoConfig from servoConfigs HashMap
+    public ServoConfig getServoConfig(ServoEnum servoEnum) throws IllegalArgumentException{
+        ServoConfig servoConfig = servoConfigs.get(servoEnum);
+        if (servoConfig == null){
+            throw new IllegalArgumentException("Config is not present for " + servoEnum.name());
+        }
+        return servoConfig;
+    }
+
     public HardwareConfig(HardwareMap hardwareMap){
-        this.extendo = new MotorConfig(
+        motorConfigs = new HashMap<>(10);
+        servoConfigs = new HashMap<>(10);
+
+        // Initialize MotorConfigs
+        motorConfigs.put(MotorEnum.EXTENDO, new MotorConfig(
                 hardwareMap,
                 "extendo",
                 0.015,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
-                "BRAKE");
-        this.extendoPitch = new MotorConfig(
+                "BRAKE"));
+        motorConfigs.put(MotorEnum.EXTENDO_PITCH, new MotorConfig(
                 hardwareMap,
                 "extendoPitch",
-                0.015,0,0,
+                0.005,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
-                "BRAKE");
-        this.frontLeftMotor = new MotorConfig(
+                "BRAKE"));
+        motorConfigs.put(MotorEnum.LEFT_FRONT, new MotorConfig(
                 hardwareMap,
                 "leftFront",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
-                "BRAKE");
-        this.backLeftMotor = new MotorConfig(
+                "BRAKE"));
+        motorConfigs.put(MotorEnum.LEFT_BACK, new MotorConfig(
                 hardwareMap,
-                "leftFront",
+                "leftBack",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
-                "BRAKE");
-        this.frontRightMotor = new MotorConfig(
+                "BRAKE"));
+        motorConfigs.put(MotorEnum.RIGHT_FRONT, new MotorConfig(
                 hardwareMap,
-                "leftFront",
+                "rightFront",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
-                "BRAKE");
-        this.backRightMotor = new MotorConfig(
+                "BRAKE"));
+        motorConfigs.put(MotorEnum.RIGHT_BACK, new MotorConfig(
                 hardwareMap,
-                "leftFront",
+                "rightBack",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
-                "BRAKE");
-        this.hang = new MotorConfig(
+                "BRAKE"));
+        motorConfigs.put(MotorEnum.HANG, new MotorConfig(
                 hardwareMap,
-                "leftFront",
+                "hang",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
-                "BRAKE");
-        this.bucketSlides = new MotorConfig(
+                "BRAKE"));
+        motorConfigs.put(MotorEnum.BUCKET_SLIDES, new MotorConfig(
                 hardwareMap,
-                "leftFront",
+                "bucketSlides",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
-                "BRAKE");
-        this.clawPitchLeft = new ServoConfig(
+                "BRAKE"));
+        // Initialize ServoConfigs
+        servoConfigs.put(ServoEnum.CLAW_PITCH_LEFT, new ServoConfig(
                 hardwareMap,
                 "clawPitchLeft",
-                "REVERSE");
-        this.clawPitchRight = new ServoConfig(
+                "REVERSE"));
+        servoConfigs.put(ServoEnum.CLAW_PITCH_RIGHT, new ServoConfig(
                 hardwareMap,
-                "clawPitchLeft",
-                "FORWARD");
-        this.clawFingers = new ServoConfig(
+                "clawPitchRight",
+                "FORWARD"));
+        servoConfigs.put(ServoEnum.CLAW_FINGERS, new ServoConfig(
                 hardwareMap,
-                "clawPitchLeft",
-                "FORWARD");
-        this.clawWrist = new ServoConfig(
+                "clawFingers",
+                "FORWARD"));
+        servoConfigs.put(ServoEnum.CLAW_WRIST, new ServoConfig(
                 hardwareMap,
-                "clawPitchLeft",
-                "FORWARD");
-        this.bucket = new ServoConfig(
+                "clawWrist",
+                "FORWARD"));
+        servoConfigs.put(ServoEnum.BUCKET, new ServoConfig(
                 hardwareMap,
-                "clawPitchLeft",
-                "FORWARD");
+                "bucket",
+                "FORWARD"));
         this.imu = new IMUConfig(
                 hardwareMap,
                 "imu",
@@ -114,18 +129,16 @@ public class HardwareConfig {
                 hardwareMap,
                 "pinpoint");
     }
-    public class MotorConfig{
+    public static class MotorConfig{
         public DcMotor motor;
-        public String deviceName;
         public double kP;
         public double kI;
         public double kD;
         public DcMotor.RunMode runMode;
         public DcMotorSimple.Direction direction;
-        public DcMotor.ZeroPowerBehavior zeroPowerBehaviour;
+        public ZeroPowerBehavior zeroPowerBehaviour;
         public MotorConfig(HardwareMap hardwareMap, String deviceName, double kP, double kI, double kD, String runMode, String direction, String zeroPowerBehaviour){
             this.motor = hardwareMap.dcMotor.get(deviceName);
-            this.deviceName = deviceName;
             this.kP = kP;
             this.kI = kI;
             this.kD = kD;
@@ -136,24 +149,19 @@ public class HardwareConfig {
             motor.setMode(this.runMode);
             motor.setDirection(this.direction);
             motor.setZeroPowerBehavior(this.zeroPowerBehaviour);
-
         }
-
     }
-    public class ServoConfig{
+    public static class ServoConfig{
         public Servo servo;
-        public String deviceName;
         public Servo.Direction direction;
         public ServoConfig(HardwareMap hardwareMap, String deviceName, String direction){
             this.servo = hardwareMap.servo.get(deviceName);
-            this.deviceName = deviceName;
             this.direction = Servo.Direction.valueOf(direction);
             servo.setDirection(this.direction);
         }
     }
-    public class IMUConfig{
+    public static class IMUConfig{
         public IMU imu;
-        public String deviceName;
         public RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
         public RevHubOrientationOnRobot.UsbFacingDirection usbDirection;
         public IMUConfig(HardwareMap hardwareMap, String deviceName, String logoDirection, String usbDirection){
@@ -167,11 +175,11 @@ public class HardwareConfig {
             imu.initialize(parameters);
         }
     }
-    public class PinpointConfig{
+    public static class PinpointConfig{
         public GoBildaPinpointDriverRR pinpoint;
-        public String deviceName;
         public PinpointConfig(HardwareMap hardwareMap, String deviceName){
             pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class, deviceName);
+
         }
 
     }

@@ -1,34 +1,42 @@
 package org.firstinspires.ftc.teamcode.autonomous;
+import org.firstinspires.ftc.teamcode.MotorEnum;
+import org.firstinspires.ftc.teamcode.ServoEnum;
+
+import java.util.HashMap;
 
 public class RobotState {
-    public double extendoTarget = 0;
-    public double extendoPitchTarget = 0;
-    public double clawPitchPosition = 15;
-    public double clawFingerPosition = 0;
-    public double clawWristPosition = 76.5;
-    public double bucketSlidesTarget = 0;
-    public double bucketPosition = 85;
-    public double hangTarget = 0;
-    public double getExtendoTarget() {
-        return extendoTarget;
+    HashMap<MotorEnum, Integer> targets = new HashMap<>(10);
+    HashMap<ServoEnum, Double> positions = new HashMap<>(10);
+    public RobotState(){
+        targets.put(MotorEnum.EXTENDO, 0);
+        targets.put(MotorEnum.EXTENDO_PITCH, 0);
+        targets.put(MotorEnum.HANG, 0);
+        targets.put(MotorEnum.BUCKET_SLIDES, 0);
+
+        positions.put(ServoEnum.CLAW_PITCH_LEFT, 15.0);
+        positions.put(ServoEnum.CLAW_PITCH_RIGHT, 15.0);
+        positions.put(ServoEnum.CLAW_FINGERS, 0.0);
+        positions.put(ServoEnum.CLAW_WRIST, 76.5);
+        positions.put(ServoEnum.BUCKET, 85.0);
     }
-    public void setExtendoTarget(double extendoTarget) {
-        this.extendoTarget = extendoTarget;
+    public int getMotorTarget(MotorEnum motorEnum) throws IllegalArgumentException{
+        Integer target = targets.get(motorEnum);
+        if (target == null) {
+            throw new IllegalArgumentException("No target set for " + motorEnum.name());
+        }
+        return target;
     }
-    public double getExtendoPitchTarget() {
-        return extendoPitchTarget;
+    public void setMotorTarget(MotorEnum motorEnum, int target){
+        targets.put(motorEnum, target);
     }
-    public void setExtendoPitchTarget(double extendoPitchTarget) {this.extendoPitchTarget = extendoPitchTarget;}
-    public double getClawPitchPosition() {return clawPitchPosition;}
-    public void setClawPitchPosition(double clawPitchPosition) {this.clawPitchPosition = clawPitchPosition;}
-    public double getBucketSlidesTarget() {return bucketSlidesTarget;}
-    public void setBucketSlidesTarget(double bucketSlidesTarget) {this.bucketSlidesTarget = bucketSlidesTarget;}
-    public double getHangTarget() {return hangTarget;}
-    public void setHangTarget(double hangTarget) {this.hangTarget = hangTarget;}
-    public double getClawFingerPosition() {return clawFingerPosition;}
-    public void setClawFingerPosition(double clawFingerPosition) {this.clawFingerPosition = clawFingerPosition;}
-    public double getClawWristPosition() {return clawWristPosition;}
-    public void setClawWristPosition(double clawWristPosition) {this.clawWristPosition = clawWristPosition;}
-    public double getBucketPosition() {return bucketPosition;}
-    public void setBucketPosition(double bucketPosition) {this.bucketPosition = bucketPosition;}
+    public double getServoPosition(ServoEnum servoEnum) throws IllegalArgumentException{
+        Double position = positions.get(servoEnum);
+        if (position == null){
+            throw new IllegalArgumentException("No position set for" + servoEnum.name());
+        }
+        return position;
+    }
+    public void setServoPosition(ServoEnum servoEnum, double position){
+        positions.put(servoEnum, position);
+    }
 }
