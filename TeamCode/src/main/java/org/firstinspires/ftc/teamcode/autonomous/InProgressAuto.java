@@ -20,30 +20,31 @@ public class InProgressAuto extends LinearOpMode {
     RobotState state;
     @Override
     public void runOpMode() {
-        hw = new HardwareConfig(hardwareMap);
+        HardwareConfig.makeHardwareConfig(hardwareMap);
+        hw = HardwareConfig.getHardwareConfig();
         state = new RobotState();
-        actions = new CustomActions(state, hw);
+        actions = new CustomActions(state);
 
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
         Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42, -62.5, Math.toRadians(270)))
                 // Score preload
-                .strafeToLinearHeading(new Vector2d(-7, -46.8), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-7, -47), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-7, -46.8, Math.toRadians(270)))
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-7, -47, Math.toRadians(270)))
                 // Go to sample zone 1
-                .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-54, -54, Math.toRadians(270)))
+        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-55, -55, Math.toRadians(270)))
                 // Score bucket
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(225))
                 .build();
         Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-54, -54, Math.toRadians(225)))
                 // Sample zone 2
-                .strafeToLinearHeading(new Vector2d(-63, -52), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-63, -52), Math.toRadians(273))
                 .build();
-        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-63, -52, Math.toRadians(270)))
+        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-63, -52, Math.toRadians(273)))
                 // Score bucket
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(225))
                 .build();
@@ -58,7 +59,7 @@ public class InProgressAuto extends LinearOpMode {
         Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54, -54, Math.toRadians(225)))
                 // park
                 .strafeToLinearHeading(new Vector2d(-44, -6), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(-23.4, -6), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-24, -6), Math.toRadians(0))
                 .build();
 
         waitForStart();

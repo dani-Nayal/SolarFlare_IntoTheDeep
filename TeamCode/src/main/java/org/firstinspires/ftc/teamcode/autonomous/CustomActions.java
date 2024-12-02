@@ -14,10 +14,8 @@ import org.firstinspires.ftc.teamcode.ServoEnum;
 // Contains all non-default roadrunner actions that are used in our autonomous routines
 public class CustomActions {
     RobotState state;
-    HardwareConfig hw;
-    public CustomActions(RobotState state, HardwareConfig hw) {
+    public CustomActions(RobotState state) {
         this.state = state;
-        this.hw = hw;
     }
 
     public class SetMotorTargetAction implements Action {
@@ -59,6 +57,7 @@ public class CustomActions {
     public class GlobalPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            HardwareConfig hw = HardwareConfig.getHardwareConfig();
             hw.getMotorConfig(MotorEnum.EXTENDO).motor.setPower
                     ((state.getMotorTarget(MotorEnum.EXTENDO) - hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition()) * hw.getMotorConfig(MotorEnum.EXTENDO).kP);
 
@@ -72,19 +71,19 @@ public class CustomActions {
                     ((state.getMotorTarget(MotorEnum.BUCKET_SLIDES) - hw.getMotorConfig(MotorEnum.BUCKET_SLIDES).motor.getCurrentPosition()) * hw.getMotorConfig(MotorEnum.BUCKET_SLIDES).kP);
 
             hw.getServoConfig(ServoEnum.CLAW_PITCH_LEFT).servo.setPosition
-                    (state.getServoPosition(ServoEnum.CLAW_PITCH_LEFT) / 270);
+                    (state.getServoPosition(ServoEnum.CLAW_PITCH_LEFT) / hw.getServoConfig(ServoEnum.CLAW_PITCH_LEFT).maxServoPosition);
 
             hw.getServoConfig(ServoEnum.CLAW_PITCH_RIGHT).servo.setPosition
-                    (state.getServoPosition(ServoEnum.CLAW_PITCH_RIGHT) / 270);
+                    (state.getServoPosition(ServoEnum.CLAW_PITCH_RIGHT) / hw.getServoConfig(ServoEnum.CLAW_PITCH_RIGHT).maxServoPosition);
 
             hw.getServoConfig(ServoEnum.BUCKET).servo.setPosition
-                    (state.getServoPosition(ServoEnum.BUCKET) / 270);
+                    (state.getServoPosition(ServoEnum.BUCKET) / hw.getServoConfig(ServoEnum.BUCKET).maxServoPosition);
 
             hw.getServoConfig(ServoEnum.CLAW_FINGERS).servo.setPosition
-                    (state.getServoPosition(ServoEnum.CLAW_FINGERS) / 180);
+                    (state.getServoPosition(ServoEnum.CLAW_FINGERS) / hw.getServoConfig(ServoEnum.CLAW_FINGERS).maxServoPosition);
 
             hw.getServoConfig(ServoEnum.CLAW_WRIST).servo.setPosition
-                    (state.getServoPosition(ServoEnum.CLAW_WRIST) / 180);
+                    (state.getServoPosition(ServoEnum.CLAW_WRIST) / hw.getServoConfig(ServoEnum.CLAW_WRIST).maxServoPosition);
 
             return true;
         }
@@ -96,6 +95,7 @@ public class CustomActions {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
+            HardwareConfig hw = HardwareConfig.getHardwareConfig();
 
             // Motor telemetry
             telemetry.addData("extendo position", hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition());

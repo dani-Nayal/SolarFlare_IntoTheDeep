@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 import org.firstinspires.ftc.teamcode.MotorEnum;
 import org.firstinspires.ftc.teamcode.ServoEnum;
+import org.firstinspires.ftc.teamcode.HardwareConfig;
 
 import java.util.HashMap;
 
@@ -27,7 +28,6 @@ public class RobotState {
         return target;
     }
     public void setMotorTarget(MotorEnum motorEnum, int target){
-
         targets.put(motorEnum, target);
     }
     public double getServoPosition(ServoEnum servoEnum) throws IllegalArgumentException{
@@ -38,6 +38,18 @@ public class RobotState {
         return position;
     }
     public void setServoPosition(ServoEnum servoEnum, double position){
+        HardwareConfig hw = HardwareConfig.getHardwareConfig();
+        // If position being set is out of the possible bounds, set to either the lowest position or the highest position
+        // If position being set is in bounds, set to position
+        if (position < hw.getServoConfig(servoEnum).minServoPosition) {
+            positions.put(servoEnum, hw.getServoConfig(servoEnum).minServoPosition);
+        }
+        else if (position > hw.getServoConfig(servoEnum).maxServoPosition){
+            positions.put(servoEnum ,hw.getServoConfig(servoEnum).maxServoPosition);
+        }
+        else{
+            positions.put(servoEnum,position);
+        }
         positions.put(servoEnum, position);
     }
 }
