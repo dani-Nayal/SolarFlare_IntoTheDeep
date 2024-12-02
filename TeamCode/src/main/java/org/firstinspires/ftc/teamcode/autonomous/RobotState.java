@@ -13,9 +13,9 @@ public class RobotState {
         targets.put(MotorEnum.HANG, 0);
         targets.put(MotorEnum.BUCKET_SLIDES, 0);
 
-        positions.put(ServoEnum.CLAW_PITCH_LEFT, 15.0);
-        positions.put(ServoEnum.CLAW_PITCH_RIGHT, 15.0);
-        positions.put(ServoEnum.CLAW_FINGERS, 0.0);
+        positions.put(ServoEnum.CLAW_PITCH_LEFT, 200.0);
+        positions.put(ServoEnum.CLAW_PITCH_RIGHT, 200.0);
+        positions.put(ServoEnum.CLAW_FINGERS, 39.0);
         positions.put(ServoEnum.CLAW_WRIST, 76.5);
         positions.put(ServoEnum.BUCKET, 85.0);
     }
@@ -27,6 +27,7 @@ public class RobotState {
         return target;
     }
     public void setMotorTarget(MotorEnum motorEnum, int target){
+
         targets.put(motorEnum, target);
     }
     public double getServoPosition(ServoEnum servoEnum) throws IllegalArgumentException{

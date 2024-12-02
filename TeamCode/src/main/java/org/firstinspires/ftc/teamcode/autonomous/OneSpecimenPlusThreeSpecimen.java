@@ -285,7 +285,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 setExtendoPitchTarget(850),
                 new SleepAction(1),
                 // Open claw
-                setClawFingerPosition(50),
+                setClawFingerPosition(90),
                 new SleepAction(0.5)
         );
         Action sampleZone1 = new SequentialAction(
@@ -307,7 +307,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 setClawPitchPosition(30.5),
                 new SleepAction(0.5),
                 // Close Claw
-                setClawFingerPosition(0),
+                setClawFingerPosition(39),
                 new SleepAction(0.5)
         );
         Action sampleZone2 = new SequentialAction(
@@ -331,7 +331,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 setClawPitchPosition(30.5),
                 new SleepAction(0.5),
                 // Close Claw
-                setClawFingerPosition(0),
+                setClawFingerPosition(39),
                 new SleepAction(0.5)
         );
         Action sampleZone3 = new SequentialAction(
@@ -355,7 +355,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 setClawPitchPosition(30.5),
                 new SleepAction(0.5),
                 // Close Claw
-                setClawFingerPosition(0),
+                setClawFingerPosition(39),
                 new SleepAction(0.5)
         );
         Action pickUpPosition = new SequentialAction(
@@ -366,7 +366,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 setClawPitchPosition(30.5),
                 new SleepAction(0.5),
                 // Close Claw
-                setClawFingerPosition(0),
+                setClawFingerPosition(39),
                 new SleepAction(0.5)
 
         );
@@ -391,15 +391,15 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                                 scoreSpecimen,
                                 sampleZone1,
                                 onePlusThreeSpecimen3,
-                                setClawFingerPosition(50),
+                                setClawFingerPosition(90),
                                 new SleepAction(0.5),
                                 sampleZone2,
                                 onePlusThreeSpecimen5,
-                                setClawFingerPosition(50),
+                                setClawFingerPosition(90),
                                 new SleepAction(0.5),
                                 sampleZone3,
                                 onePlusThreeSpecimen7,
-                                setClawFingerPosition(50),
+                                setClawFingerPosition(90),
                                 new SleepAction(0.5),
                                 pickUpPosition,
                                 scoreSpecimen,

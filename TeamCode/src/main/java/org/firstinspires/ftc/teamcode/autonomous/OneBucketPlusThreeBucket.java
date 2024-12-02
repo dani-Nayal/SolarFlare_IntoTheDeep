@@ -39,7 +39,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     public double extendoTarget = 0;
     public double extendoPitchTarget = 0;
     public double clawPitchPosition = 200;
-    public double clawFingerPosition = 0;
+    public double clawFingerPosition = 39;
     public double clawWristPosition = 76.5;
     public double bucketSlidesTarget = 0;
     public double bucketPosition = 85;
@@ -262,7 +262,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                 new ParallelAction(
                                         // Move to scoring position
                                         onePlusThreeBucket1,
-                                        setClawFingerPosition(80)
+                                        setClawFingerPosition(120)
                                 ),
                                 // Move bucketSlides up to scoring position
                                 setBucketSlidesTarget(1100),
@@ -292,7 +292,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                 setClawPitchPosition(30.5),
                                 new SleepAction(0.5),
                                 // Close Claw
-                                setClawFingerPosition(0),
+                                setClawFingerPosition(39),
                                 new SleepAction(0.5),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
@@ -306,10 +306,10 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                                 // Extendo pitch transfer position
                                                 setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
-                                                setClawPitchPosition(215),
+                                                setClawPitchPosition(200),
                                                 new SleepAction(0.3),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                setClawFingerPosition(80)
+                                                setClawFingerPosition(120)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
@@ -341,7 +341,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                 setClawPitchPosition(30.5),
                                 new SleepAction(0.5),
                                 // Close claw
-                                setClawFingerPosition(0),
+                                setClawFingerPosition(39),
 
                                 new SleepAction(0.5),
                                 // Retract extendo, transfer and move to scoring pos
@@ -356,10 +356,10 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                                 new SleepAction(0.3),
                                                 setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
-                                                setClawPitchPosition(215),
+                                                setClawPitchPosition(200),
                                                 new SleepAction(0.3),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                setClawFingerPosition(80)
+                                                setClawFingerPosition(120)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
@@ -391,7 +391,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                 setClawPitchPosition(30.5),
                                 new SleepAction(0.5),
                                 // Close claw
-                                setClawFingerPosition(0),
+                                setClawFingerPosition(39),
 
                                 new SleepAction(0.5),
                                 // Retract extendo, transfer and move to scoring pos
@@ -406,10 +406,10 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                                 new SleepAction(0.3),
                                                 setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
-                                                setClawPitchPosition(215),
+                                                setClawPitchPosition(200),
                                                 new SleepAction(0.3),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                setClawFingerPosition(80)
+                                                setClawFingerPosition(120)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket

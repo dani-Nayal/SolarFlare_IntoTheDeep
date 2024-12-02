@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 public class InProgressAuto extends LinearOpMode {
     HardwareConfig hw;
     CustomActions actions;
-    RobotState state; 
+    RobotState state;
     @Override
     public void runOpMode() {
         hw = new HardwareConfig(hardwareMap);
@@ -33,9 +33,9 @@ public class InProgressAuto extends LinearOpMode {
                 .build();
         Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-7, -46.8, Math.toRadians(270)))
                 // Go to sample zone 1
-                .strafeToLinearHeading(new Vector2d(-55, -52.5), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-55, -52.5, Math.toRadians(270)))
+        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-54, -54, Math.toRadians(270)))
                 // Score bucket
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(225))
                 .build();
@@ -69,7 +69,7 @@ public class InProgressAuto extends LinearOpMode {
                         actions.updateTelemetry(telemetry),
                         new SequentialAction(
                                 // Close claw
-                                actions.setClawFingerPosition(0),
+                                actions.setClawFingerPosition(39),
                                 actions.setBucketPosition(205),
                                 // Drive and prepare extendo pitch
                                 new SleepAction(0.5),
@@ -90,7 +90,7 @@ public class InProgressAuto extends LinearOpMode {
                                 actions.setExtendoPitchTarget(750),
                                 new SleepAction(1),
                                 // Open claw
-                                actions.setClawFingerPosition(50),
+                                actions.setClawFingerPosition(90),
                                 new SleepAction(0.5),
                                 // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                                 // Retract extendo to default position
@@ -110,7 +110,7 @@ public class InProgressAuto extends LinearOpMode {
                                 actions.setClawPitchPosition(30.5),
                                 new SleepAction(0.5),
                                 // Close Claw
-                                actions.setClawFingerPosition(0),
+                                actions.setClawFingerPosition(39),
                                 new SleepAction(0.5),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
@@ -120,13 +120,13 @@ public class InProgressAuto extends LinearOpMode {
                                                 // Retract extendo
                                                 actions.setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                actions.setClawPitchPosition(195),
+                                                actions.setClawPitchPosition(200),
                                                 new SleepAction(0.3),
                                                 // Extendo pitch transfer position
                                                 actions.setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                actions.setClawFingerPosition(80)
+                                                actions.setClawFingerPosition(120)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
@@ -157,7 +157,7 @@ public class InProgressAuto extends LinearOpMode {
                                 actions.setClawPitchPosition(30.5),
                                 new SleepAction(0.5),
                                 // Close claw
-                                actions.setClawFingerPosition(0),
+                                actions.setClawFingerPosition(30),
                                 new SleepAction(0.5),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
@@ -167,13 +167,13 @@ public class InProgressAuto extends LinearOpMode {
                                                 // Retract extendo
                                                 actions.setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                actions.setClawPitchPosition(195),
+                                                actions.setClawPitchPosition(200),
                                                 // Extendo pitch transfer position
                                                 new SleepAction(0.3),
                                                 actions.setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                actions.setClawFingerPosition(80)
+                                                actions.setClawFingerPosition(120)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket
@@ -201,10 +201,10 @@ public class InProgressAuto extends LinearOpMode {
                                 actions.setExtendoTarget(400),
                                 new SleepAction(0.5),
                                 // Claw pitch picking up position
-                                actions.setClawPitchPosition(30.5),
+                                actions.setClawPitchPosition(200),
                                 new SleepAction(0.5),
                                 // Close claw
-                                actions.setClawFingerPosition(0),
+                                actions.setClawFingerPosition(39),
                                 new SleepAction(0.5),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
@@ -215,13 +215,13 @@ public class InProgressAuto extends LinearOpMode {
 
                                                 actions.setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                actions.setClawPitchPosition(195),
+                                                actions.setClawPitchPosition(200),
                                                 // Extendo pitch transfer position
                                                 new SleepAction(0.3),
                                                 actions.setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
                                                 // Open claw fully bc bucketSlides coming down later
-                                                actions.setClawFingerPosition(80)
+                                                actions.setClawFingerPosition(120)
                                         )
                                 ),
                                 // Wait for sample to settle in bucket

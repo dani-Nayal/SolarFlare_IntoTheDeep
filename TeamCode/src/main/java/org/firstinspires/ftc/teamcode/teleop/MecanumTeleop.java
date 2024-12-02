@@ -26,7 +26,7 @@ public class MecanumTeleop extends LinearOpMode {
         double extendoTarget = 0;
         double bucketSlidesTarget = 0;
         double clawWristPosition = 76.5;
-        double clawFingerPosition = 50;
+        double clawFingerPosition = 120;
         double clawPitchPosition = 215;
         double bucketPosition = 85;
 
@@ -171,7 +171,7 @@ public class MecanumTeleop extends LinearOpMode {
                     }
 
                     if (extendoPitch.getCurrentPosition()<100) {
-                        clawPitchPosition = 215;
+                        clawPitchPosition = 200;
                         isASequenceActive=false;
                     }
                 }
@@ -191,7 +191,7 @@ public class MecanumTeleop extends LinearOpMode {
 
                     }
                     if (extendoPitch.getCurrentPosition()<100) {
-                        clawPitchPosition = 215;
+                        clawPitchPosition = 200;
                         isASequenceActive=false;
                     }
                 }
@@ -313,7 +313,7 @@ public class MecanumTeleop extends LinearOpMode {
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
                     if(clawWristPosition==76.5){
-                        if (clawPitchPosition == 215){
+                        if (clawPitchPosition == 200){
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
@@ -331,7 +331,7 @@ public class MecanumTeleop extends LinearOpMode {
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104) {
-                            clawPitchPosition = 215;
+                            clawPitchPosition = 200;
                         }
                     }
                 }
@@ -352,22 +352,22 @@ public class MecanumTeleop extends LinearOpMode {
             // Claw fingers fully open 80 degrees
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 80) {
-                        clawFingerPosition = 50;
+                    if (clawFingerPosition == 120) {
+                        clawFingerPosition = 90;
                     }
-                    else if (clawFingerPosition == 50){
-                        clawFingerPosition = 2;
+                    else if (clawFingerPosition == 90){
+                        clawFingerPosition = 41;
                     }
                 }
                 isPressingTrigger1=true;
             }
             else if (gamepad2.right_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 2) {
-                        clawFingerPosition = 50;
+                    if (clawFingerPosition == 41) {
+                        clawFingerPosition = 90;
                     }
-                    else if (clawFingerPosition == 50) {
-                        clawFingerPosition = 80;
+                    else if (clawFingerPosition == 90) {
+                        clawFingerPosition = 120;
                     }
                 }
                 isPressingTrigger1=true;
