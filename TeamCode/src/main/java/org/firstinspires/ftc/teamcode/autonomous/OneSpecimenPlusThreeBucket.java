@@ -240,7 +240,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
         Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
                 // park
                 .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(0))
                 .build();
 
         extendo = initializeMechanisms.extendo;
