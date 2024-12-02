@@ -62,28 +62,28 @@ public class HardwareConfig {
                 "leftFront",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
-                "FORWARD",
+                "REVERSE",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.LEFT_BACK, new MotorConfig(
                 hardwareMap,
                 "leftBack",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
-                "FORWARD",
+                "REVERSE",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.RIGHT_FRONT, new MotorConfig(
                 hardwareMap,
                 "rightFront",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
-                "REVERSE",
+                "FORWARD",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.RIGHT_BACK, new MotorConfig(
                 hardwareMap,
                 "rightBack",
                 0,0,0,
                 "RUN_WITHOUT_ENCODER",
-                "REVERSE",
+                "FORWARD",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.HANG, new MotorConfig(
                 hardwareMap,
