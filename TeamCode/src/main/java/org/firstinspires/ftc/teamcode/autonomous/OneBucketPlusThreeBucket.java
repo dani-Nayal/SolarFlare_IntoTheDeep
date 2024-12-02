@@ -62,7 +62,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action GlobalPID() {
-        return new OneSpecimenPlusThreeBucket.GlobalPID();
+        return new GlobalPID();
     }
 
     public class SetExtendoTarget implements Action {
@@ -79,7 +79,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action setExtendoTarget(double target) {
-        return new OneSpecimenPlusThreeBucket.SetExtendoTarget(target);
+        return new SetExtendoTarget(target);
     }
 
     public class SetExtendoPitchTarget implements Action {
@@ -96,7 +96,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action setExtendoPitchTarget(double target) {
-        return new OneSpecimenPlusThreeBucket.SetExtendoPitchTarget(target);
+        return new SetExtendoPitchTarget(target);
     }
 
     public class SetBucketSlidesTarget implements Action {
@@ -113,7 +113,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action setBucketSlidesTarget(double target) {
-        return new OneSpecimenPlusThreeBucket.SetBucketSlidesTarget(target);
+        return new SetBucketSlidesTarget(target);
     }
 
     public class SetHangTarget implements Action {
@@ -130,7 +130,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action setHangTarget(double target) {
-        return new OneSpecimenPlusThreeBucket.SetHangTarget(target);
+        return new SetHangTarget(target);
     }
 
     public class SetClawPitchPosition implements Action {
@@ -147,7 +147,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action setClawPitchPosition(double position) {
-        return new OneSpecimenPlusThreeBucket.SetClawPitchPosition(position);
+        return new SetClawPitchPosition(position);
     }
 
     public class SetClawFingerPosition implements Action {
@@ -164,7 +164,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action setClawFingerPosition(double position) {
-        return new OneSpecimenPlusThreeBucket.SetClawFingerPosition(position);
+        return new SetClawFingerPosition(position);
     }
 
     public class SetClawWristPosition implements Action {
@@ -181,7 +181,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action setClawWristPosition(double position) {
-        return new OneSpecimenPlusThreeBucket.SetClawWristPosition(position);
+        return new SetClawWristPosition(position);
     }
 
     public class SetBucketPosition implements Action {
@@ -198,7 +198,7 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
     }
 
     public Action setBucketPosition(double position) {
-        return new OneSpecimenPlusThreeBucket.SetBucketPosition(position);
+        return new SetBucketPosition(position);
     }
 
     @Override

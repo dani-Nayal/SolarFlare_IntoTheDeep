@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 public class InProgressAuto extends LinearOpMode {
     HardwareConfig hw;
     CustomActions actions;
-    RobotState state;
+    RobotState state; 
     @Override
     public void runOpMode() {
         hw = new HardwareConfig(hardwareMap);
