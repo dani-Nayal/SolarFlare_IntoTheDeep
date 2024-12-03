@@ -8,6 +8,8 @@ import java.util.HashMap;
 public class RobotState {
     HashMap<MotorEnum, Integer> targets = new HashMap<>(10);
     HashMap<ServoEnum, Double> positions = new HashMap<>(10);
+    HashMap<MotorEnum, Integer> autoDefaultMotorTargets                                                                     = new HashMap<>(10);
+    HashMap<ServoEnum, Double> autoDefaultServoPositions = new HashMap<>(10);
     public RobotState(){
         targets.put(MotorEnum.EXTENDO, 0);
         targets.put(MotorEnum.EXTENDO_PITCH, 0);
