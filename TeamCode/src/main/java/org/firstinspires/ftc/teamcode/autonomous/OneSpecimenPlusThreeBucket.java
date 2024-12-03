@@ -263,7 +263,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 // Close claw
                                 setClawFingerPosition(39),
                                 // Drive and prepare extendo pitch
-                                new SleepAction(0.5),
+                                new SleepAction(0.4),
                                 new ParallelAction(
                                         setBucketPosition(205),
                                         onePlusThreeBucket1,
@@ -272,7 +272,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
 
                                 ),
 
-                                new SleepAction(0.5),
+                                //new SleepAction(0.5),
                                 // Raise extendo, lower extendoPitch slightly, lower claw pitch slightly
                                 new ParallelAction(
                                         setExtendoTarget(500),
@@ -282,15 +282,15 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 new SleepAction(0.5),
                                 // Lower extendo pitch
                                 setExtendoPitchTarget(700),
-                                new SleepAction(1),
+                                new SleepAction(0.5),
                                 // Open claw
                                 setClawFingerPosition(90),
 
-                                new SleepAction(0.5),
+                                new SleepAction(0.2),
                                 // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                                 // Retract extendo to default position
                                 setExtendoTarget(0),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 new ParallelAction(
                                         setBucketPosition(85),
 
@@ -301,14 +301,14 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 ),
                                 // Extendo to sample zone 1
                                 setExtendoTarget(425),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
 
                                 // Claw pitch picking up pos
                                 setClawPitchPosition(30.5),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 // Close Claw
                                 setClawFingerPosition(39),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
                                         // Move to scoring position
@@ -317,12 +317,12 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                                 // Retract extendo
                                                 setExtendoTarget(0),
                                                 // Claw pitch transfer position
-                                                new SleepAction(0.3),
+                                                new SleepAction(0.2),
                                                 // Extendo pitch transfer position
                                                 setExtendoPitchTarget(0),
                                                 new SleepAction(0.8),
                                                 setClawPitchPosition(200),
-                                                new SleepAction(0.5),
+                                                new SleepAction(0.3),
                                                 // Open claw fully bc bucketSlides coming down later
                                                 setClawFingerPosition(120)
                                         )
@@ -334,7 +334,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
                                 setBucketPosition(205),
-                                new SleepAction(0.7),
+                                new SleepAction(0.5),
                                 // Move bucket back to default position
                                 setBucketPosition(85),
                                 // Avoid level 4 hang
@@ -351,14 +351,14 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 // Extendo to sample zone 2
                                 setExtendoTarget(425),
 
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 // Claw pitch picking up position
                                 setClawPitchPosition(30.5),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 // Close claw
                                 setClawFingerPosition(39),
 
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
                                         // Move to scoring position
@@ -384,7 +384,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
                                 setBucketPosition(205),
-                                new SleepAction(0.7),
+                                new SleepAction(0.5),
                                 // Move bucket back to default position
                                 setBucketPosition(85),
                                 // Avoid level 4 hang
@@ -400,15 +400,15 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 ),
                                 // Extendo to sample zone 3
                                 setExtendoTarget(425),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
 
                                 // Claw pitch picking up position
                                 setClawPitchPosition(30.5),
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 // Close claw
                                 setClawFingerPosition(39),
 
-                                new SleepAction(0.5),
+                                new SleepAction(0.3),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
                                         // Move to scoring position
@@ -434,15 +434,18 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
                                 setBucketPosition(205),
-                                new SleepAction(0.7),
+                                new SleepAction(0.5),
                                 // Move bucket back to default position
                                 setBucketPosition(85),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
                                 // Move bucketSlides back to hang position
-                                setBucketSlidesTarget(300),
-                                // Park and low rung
-                                onePlusThreeBucket8
+                                new ParallelAction(
+                                        setBucketSlidesTarget(300),
+                                        // Park and low rung
+                                        onePlusThreeBucket8
+                                )
+
 
                         )
                 )
