@@ -266,6 +266,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 .build();
         Action setUpSpecimen = new SequentialAction(
                 // Drive and prepare extendo pitch
+                setExtendoTarget(0),
                 new SleepAction(0.5),
                 new ParallelAction(
                         setBucketPosition(205),
@@ -274,7 +275,6 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 ),
                 new SleepAction(0.5),
                 setExtendoTarget(500),
-
                 new SleepAction(0.5));
         Action scoreSpecimen = new SequentialAction(
                 // Lower extendo
@@ -356,9 +356,13 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 setClawFingerPosition(39),
                 new SleepAction(0.5)
         );
-        Action pickUpPosition = new SequentialAction(
+        Action SetUpPickUp = new SequentialAction(
+                setExtendoTarget(0),
+                new SleepAction(0.5),
                 setExtendoPitchTarget(1350),
-                /** CHANGE THIS **/
+                new SleepAction(0.5)
+        );
+        Action pickUpSpecimen = new SequentialAction(
                 setExtendoTarget(200),
                 // Claw pitch picking up pos
                 setClawPitchPosition(30.5),
@@ -386,8 +390,10 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 new ParallelAction(
                         GlobalPID(),
                         new SequentialAction(
-                                setUpSpecimen,
-                                onePlusThreeSpecimen1,
+                                new ParallelAction(
+                                        setUpSpecimen,
+                                        onePlusThreeSpecimen1
+                                ),
                                 scoreSpecimen,
                                 sampleZone1,
                                 onePlusThreeSpecimen3,
@@ -401,11 +407,35 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                                 onePlusThreeSpecimen7,
                                 setClawFingerPosition(90),
                                 new SleepAction(0.5),
-                                pickUpPosition,
+                                new ParallelAction(
+                                        SetUpPickUp,
+                                        onePlusThreeSpecimen8
+                                ),
+                                pickUpSpecimen,
+                                new ParallelAction(
+                                        setUpSpecimen,
+                                        onePlusThreeSpecimen9
+                                ),
                                 scoreSpecimen,
-                                pickUpPosition,
+                                new ParallelAction(
+                                        SetUpPickUp,
+                                        onePlusThreeSpecimen10
+                                ),
+                                pickUpSpecimen,
+                                new ParallelAction(
+                                        setUpSpecimen,
+                                        onePlusThreeSpecimen11
+                                ),
                                 scoreSpecimen,
-                                pickUpPosition,
+                                new ParallelAction(
+                                        SetUpPickUp,
+                                        onePlusThreeSpecimen12
+                                ),
+                                pickUpSpecimen,
+                                new ParallelAction(
+                                        setUpSpecimen,
+                                        onePlusThreeSpecimen13
+                                ),
                                 scoreSpecimen,
                                 onePlusThreeSpecimen14
                         )
