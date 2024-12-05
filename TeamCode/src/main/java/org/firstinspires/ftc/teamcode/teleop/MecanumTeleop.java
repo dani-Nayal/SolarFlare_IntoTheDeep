@@ -29,7 +29,7 @@ public class MecanumTeleop extends LinearOpMode {
         double clawFingerPosition = 120;
         double clawPitchPosition = 215;
         double bucketPosition = 85;
-
+        double maxExtendoPosition = 69420;
 
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
@@ -223,11 +223,17 @@ public class MecanumTeleop extends LinearOpMode {
             // Extendo fully extending 36050
             // Dynamic extendo control
 
-            if ((gamepad1.right_bumper) && (extendoTarget <= 473)){
+            if ((gamepad1.right_bumper) && (extendoTarget <= maxExtendoPosition-30)){
                 extendoTarget += 30;
             }
-            else if ((gamepad1.left_bumper) && (extendoTarget >= 30)){
+            else if ((gamepad1.right_bumper) && (extendoTarget >= maxExtendoPosition-30)){
+                extendoTarget = maxExtendoPosition;
+            }
+            else if ((gamepad1.left_bumper) && (extendoTarget>=30)){
                 extendoTarget -= 30;
+            }
+            else if ((gamepad1.left_bumper) && (extendoTarget <= 30)){
+                extendoTarget = 0;
             }
 
             // Extendo pitch transfer / default pos 0 ticks
