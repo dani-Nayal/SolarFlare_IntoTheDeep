@@ -23,7 +23,8 @@ public class InProgressAuto extends LinearOpMode {
         HardwareConfig.makeHardwareConfig(hardwareMap);
         hw = HardwareConfig.getHardwareConfig();
         state = new RobotState();
-        actions = new CustomActions(state);
+        state.setAutoDefaultMotorTargets();
+        actions = new CustomActions(state,hardwareMap);
 
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
@@ -69,30 +70,8 @@ public class InProgressAuto extends LinearOpMode {
                         actions.globalPID(),
                         actions.updateTelemetry(telemetry),
                         new SequentialAction(
-                                // Close claw
-                                actions.setClawFingerPosition(39),
-                                actions.setBucketPosition(205),
-                                // Drive and prepare extendo pitch
-                                new SleepAction(0.5),
-                                new ParallelAction(
-                                        onePlusThreeBucket1,
-                                        actions.setExtendoPitchTarget(400),
-                                        actions.setClawPitchPosition(104)
-                                ),
-                                new SleepAction(0.5),
-                                // Raise extendo, lower extendoPitch slightly, lower claw pitch slightly
-                                new ParallelAction(
-                                        actions.setExtendoTarget(500),
-                                        actions.setExtendoPitchTarget(400),
-                                        actions.setClawPitchPosition(100)
-                                ),
-                                new SleepAction(0.5),
-                                // Lower extendo
-                                actions.setExtendoPitchTarget(750),
-                                new SleepAction(1),
-                                // Open claw
-                                actions.setClawFingerPosition(90),
-                                new SleepAction(0.5),
+
+
                                 // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                                 // Retract extendo to default position
                                 actions.setExtendoTarget(0),
