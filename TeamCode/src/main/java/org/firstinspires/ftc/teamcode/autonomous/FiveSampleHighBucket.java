@@ -10,13 +10,14 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.InitializeMechanisms;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-
+@Autonomous
 public class FiveSampleHighBucket extends LinearOpMode {
     double kP = 0.015;
     DcMotor extendo;
