@@ -114,6 +114,7 @@ public class MecanumTeleop extends LinearOpMode {
 
             if (gamepad2.back){
                 bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
             pinpoint.update();
@@ -203,7 +204,7 @@ public class MecanumTeleop extends LinearOpMode {
             // Extendo retracted 0 ticks
             // Extendo fully extending 36050
             // Dynamic extendo control
-
+            /*
             if ((gamepad1.right_bumper) && (extendoTarget <= maxExtendoPosition-30)){
                 extendoTarget += 30;
             }
@@ -216,15 +217,16 @@ public class MecanumTeleop extends LinearOpMode {
             else if ((gamepad1.left_bumper) && (extendoTarget <= 30)){
                 extendoTarget = 0;
             }
+            */
 
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1350
             if (gamepad1.dpad_down && !(extendo.getCurrentPosition()>150)){
                 if (!isPressingDpad) {
-                    if (extendoPitchTarget == 0) {
+                    if (extendoPitchTarget >= 0 && extendoPitchTarget<450){
                         extendoPitchTarget = 450;
                     }
-                    else if (extendoPitchTarget == 450 || extendoPitchTarget == 760){
+                    else if (extendoPitchTarget >= 450 && extendoPitchTarget<1421){
                         extendoPitchTarget = 1421;
                     }
                 }
@@ -232,10 +234,10 @@ public class MecanumTeleop extends LinearOpMode {
             }
             else if (gamepad1.dpad_up && !(extendo.getCurrentPosition()>150)){
                 if (!isPressingDpad) {
-                    if (extendoPitchTarget == 1421 || extendoPitchTarget == 760) {
+                    if (extendoPitchTarget <= 1421 && extendoPitchTarget > 450) {
                         extendoPitchTarget = 450;
                     }
-                    else if (extendoPitchTarget == 450) {
+                    else if (extendoPitchTarget <= 450 && extendoPitchTarget>0) {
                         extendoPitchTarget = 0;
                     }
                 }
@@ -245,15 +247,13 @@ public class MecanumTeleop extends LinearOpMode {
                 isPressingDpad=false;
             }
 
-            /*
-            //dynamic extendo movement - for specimen scoring
-            if (-gamepad2.right_stick_y>0&&extendoPitchTarget>=50){
-                extendoPitchTarget-=50;
+            //dynamic extendo pitch movement - for specimen scoring
+            if (-gamepad2.right_stick_y>0&&extendoPitchTarget>=50&&!(extendo.getCurrentPosition()>150)){
+                extendoPitchTarget-=20;
             }
-            else if (-gamepad2.right_stick_y<0&&extendoPitchTarget<=1300){
-                extendoPitchTarget+=50;
+            else if (-gamepad2.right_stick_y<0&&extendoPitchTarget<=1300&&!(extendo.getCurrentPosition()>150)){
+                extendoPitchTarget+=20;
             }
-            */
             if (gamepad2.x&&extendoPitchTarget>=215){
                 if (!isPressingX2) {
                     extendoPitchTarget=760;
@@ -373,15 +373,6 @@ public class MecanumTeleop extends LinearOpMode {
 
             // BucketTransfer / default pos 85 degrees
             // Bucket Deposit pos 205 degrees
-            // When bucket slides are going up the bucket will move when the slides are 100 ticks away from max position
-            /*
-            if (gamepad2.dpad_down){
-                bucketPosition = 85;
-            }
-            if (gamepad2.dpad_up){
-                bucketPosition = 205;
-            }
-            */
             if (gamepad2.a){
                 if (!isPressingA2){
                     isPressingA2=true;
