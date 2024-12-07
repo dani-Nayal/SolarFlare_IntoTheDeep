@@ -149,23 +149,22 @@ public class MecanumTeleop extends LinearOpMode {
             // Transfer sample
             else if (gamepad1.a){
                 isASequenceActive=true;
-                clawWristPosition = 76.5;
                 Atimer.reset();
 
             }
             if (isASequenceActive) {
-
+                if (clawWristPosition != 76.5){
                     clawWristPosition = 76.5;
                     bucketPosition=85;
-                    if (Atimer.seconds() > 0.5){
+                    if (Atimer.seconds() > 0.3){
                         clawPitchPosition = 104;
 
                     }
-                    if (Atimer.seconds() > 0.7){
+                    if (Atimer.seconds() > 0.5){
                         extendoTarget=0;
                     }
 
-                    if (Atimer.seconds() > 1) {
+                    if (Atimer.seconds() > 0.8) {
                         if (!(extendo.getCurrentPosition()>150)) {
                             extendoPitchTarget = 0;
                         }
@@ -176,9 +175,30 @@ public class MecanumTeleop extends LinearOpMode {
                         isASequenceActive=false;
                     }
                 }
+                else{
+                    bucketPosition=85;
+                    clawPitchPosition = 104;
 
+
+                    if (Atimer.seconds() > 0.2){
+                        extendoTarget=0;
+                    }
+
+                    if (Atimer.seconds() > 0.5) {
+                        if (!(extendo.getCurrentPosition()>150)) {
+                            extendoPitchTarget = 0;
+                        }
+
+                    }
+                    if (extendoPitch.getCurrentPosition()<100) {
+                        clawPitchPosition = 200;
+                        isASequenceActive=false;
+                    }
+                }
+
+            }
             //specimen setup sequence (including retraction of extendo after specimen pickup)
-            if (gamepad2.b){
+            else if (gamepad2.b){
                 isB2SequenceActive=true;
                 B2timer.reset();
             }
@@ -357,16 +377,12 @@ public class MecanumTeleop extends LinearOpMode {
             }
 
             // Default perpendicular claw pos 76.5 degrees
-
-            if(clawPitchPosition==30.5){
-                if (gamepad2.left_trigger>0) {
-                    clawWristPosition = 76.5;
-                }
-                else if (gamepad2.right_trigger>0 && clawWristPosition <= 143) {
-                    clawWristPosition += 10;
-                }
+            if (gamepad2.left_trigger>0) {
+                clawWristPosition = 76.5;
             }
-
+            else if (gamepad2.right_trigger>0 && clawWristPosition <= 143) {
+                clawWristPosition += 10;
+            }
 
             // BucketTransfer / default pos 85 degrees
             // Bucket Deposit pos 205 degrees
