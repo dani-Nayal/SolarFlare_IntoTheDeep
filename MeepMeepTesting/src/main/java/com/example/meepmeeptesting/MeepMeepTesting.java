@@ -355,6 +355,45 @@ public class MeepMeepTesting {
         // Strafe to 1, -33.7 with linear heading at 90
         // Score specimen on top rung
 
+        Action fiveSampleAuto1= myBot.getDrive().actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
+                // Score sample preload
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .build();
+        Action fiveSampleAuto2= myBot.getDrive().actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+                // Go to sample zone 1
+                .strafeToLinearHeading(new Vector2d(-55,-52.5), Math.toRadians(270))
+                .build();
+        Action fiveSampleAuto3 = myBot.getDrive().actionBuilder(new Pose2d(-55,-52.5, Math.toRadians(270)))
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
+                .build();
+        Action fiveSampleAuto4 = myBot.getDrive().actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
+                // Sample zone 2
+                .strafeToLinearHeading(new Vector2d(-63,-52), Math.toRadians(273))
+                .build();
+        Action fiveSampleAuto5 = myBot.getDrive().actionBuilder(new Pose2d(-63,-52, Math.toRadians(273)))
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .build();
+        Action fiveSampleAuto6 = myBot.getDrive().actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+                // sample zone 3
+                .strafeToLinearHeading(new Vector2d(-67,-52), Math.toRadians(285))
+                .build();
+        Action fiveSampleAuto7 = myBot.getDrive().actionBuilder(new Pose2d(-67,-52, Math.toRadians(285)))
+                // turn and score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .build();
+        Action fiveSampleAuto8 = myBot.getDrive().actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+                .strafeToLinearHeading(new Vector2d(0,-52), Math.toRadians(180))
+                .build();
+        Action fiveSampleAuto9 = myBot.getDrive().actionBuilder(new Pose2d(0,-52, Math.toRadians(180)))
+                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
+                .build();
+        Action fiveSampleAuto10 = myBot.getDrive().actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
+                // park
+                .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(0))
+                .build();
 
         // Extendo max length is 18.5 inches
         // Outtake length is 6.5 inches
@@ -381,22 +420,85 @@ public class MeepMeepTesting {
 
                         ));
                 */
+/*
+fiveSampleAuto1,
+                new SleepAction(2),
+                fiveSampleAuto2,
+                new SleepAction(2),
+                fiveSampleAuto3,
+                new SleepAction(2),
+                fiveSampleAuto4,
+                new SleepAction(2),
+                fiveSampleAuto5,
+                new SleepAction(2),
+                fiveSampleAuto6,
+                new SleepAction(2),
+                fiveSampleAuto7,
+                new SleepAction(2),
+                fiveSampleAuto8,
+                new SleepAction(2),
+                fiveSampleAuto9,
+                new SleepAction(2),
+                fiveSampleAuto10,
+                new SleepAction(2)
 
+ */
+        Action oneSpecimenPlusThreeBucket1 = myBot.getDrive().actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
+                // Score preload
+                .strafeToLinearHeading(new Vector2d(-3,-47), Math.toRadians(270))
+                .build();
+        Action oneSpecimenPlusThreeBucket2 = myBot.getDrive().actionBuilder(new Pose2d(-3,-47, Math.toRadians(270)))
+                // Go to sample zone 1
+                .strafeToLinearHeading(new Vector2d(-55,-52.5), Math.toRadians(270))
+                .build();
+        Action oneSpecimenPlusThreeBucket3 = myBot.getDrive().actionBuilder(new Pose2d(-55,-52.5, Math.toRadians(270)))
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
+                .build();
+        Action oneSpecimenPlusThreeBucket4 = myBot.getDrive().actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
+                // Sample zone 2
+                .strafeToLinearHeading(new Vector2d(-63,-52), Math.toRadians(273))
+                .build();
+        Action oneSpecimenPlusThreeBucket5 = myBot.getDrive().actionBuilder(new Pose2d(-63,-52, Math.toRadians(273)))
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .build();
+        Action oneSpecimenPlusThreeBucket6 = myBot.getDrive().actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+                // sample zone 3
+                .strafeToLinearHeading(new Vector2d(-67,-52), Math.toRadians(285))
+                .build();
+        Action oneSpecimenPlusThreeBucket7 = myBot.getDrive().actionBuilder(new Pose2d(-67,-52, Math.toRadians(285)))
+                // turn and score bucket
+                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .build();
+        Action oneSpecimenPlusThreeBucket8 = myBot.getDrive().actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+                // park
+                .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(0))
+
+                .build();
         myBot.runAction(new SequentialAction(
-                onePlusThreeSpecimen1,
-                onePlusThreeSpecimen2,
-                onePlusThreeSpecimen3,
-                onePlusThreeSpecimen4,
-                onePlusThreeSpecimen5,
-                onePlusThreeSpecimen6,
-                onePlusThreeSpecimen7,
-                onePlusThreeSpecimen8,
-                onePlusThreeSpecimen9,
-                onePlusThreeSpecimen10,
-                onePlusThreeSpecimen11,
-                onePlusThreeSpecimen12,
-                onePlusThreeSpecimen13,
-                onePlusThreeSpecimen14
+
+                fiveSampleAuto1,
+                new SleepAction(2),
+                fiveSampleAuto2,
+                new SleepAction(2),
+                fiveSampleAuto3,
+                new SleepAction(2),
+                fiveSampleAuto4,
+                new SleepAction(2),
+                fiveSampleAuto5,
+                new SleepAction(2),
+                fiveSampleAuto6,
+                new SleepAction(2),
+                fiveSampleAuto7,
+                new SleepAction(2),
+                fiveSampleAuto8,
+                new SleepAction(2),
+                fiveSampleAuto9,
+                new SleepAction(2),
+                fiveSampleAuto10,
+                new SleepAction(2)
         ));
 
 

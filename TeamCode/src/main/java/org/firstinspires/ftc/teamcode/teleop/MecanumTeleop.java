@@ -25,11 +25,11 @@ public class MecanumTeleop extends LinearOpMode {
         double extendoPitchTarget = 0;
         double extendoTarget = 0;
         double bucketSlidesTarget = 0;
-        double clawWristPosition = 76.5;
+        double clawWristPosition = 79.5;
         double clawFingerPosition = 120;
         double clawPitchPosition = 215;
         double bucketPosition = 85;
-
+        double maxExtendoPosition = 69420;
 
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
@@ -139,7 +139,7 @@ public class MecanumTeleop extends LinearOpMode {
             }
             if (isBSequenceActive) {
                 extendoPitchTarget = 1350;
-                clawWristPosition = 76.5;
+                clawWristPosition = 79.5;
                 if (Btimer.seconds() > 0.7) {
                     extendoTarget = 503;
                     clawPitchPosition = 104;
@@ -153,8 +153,8 @@ public class MecanumTeleop extends LinearOpMode {
 
             }
             if (isASequenceActive) {
-                if (clawWristPosition != 76.5){
-                    clawWristPosition = 76.5;
+                if (clawWristPosition != 79.5){
+                    clawWristPosition = 79.5;
                     bucketPosition=85;
                     if (Atimer.seconds() > 0.3){
                         clawPitchPosition = 104;
@@ -203,7 +203,7 @@ public class MecanumTeleop extends LinearOpMode {
                 B2timer.reset();
             }
             if (isB2SequenceActive) {
-                clawWristPosition =76.5;
+                clawWristPosition =79.5;
 
                 if (B2timer.seconds()>0.3){
                     clawPitchPosition = 104;
@@ -223,11 +223,17 @@ public class MecanumTeleop extends LinearOpMode {
             // Extendo fully extending 36050
             // Dynamic extendo control
 
-            if ((gamepad1.right_bumper) && (extendoTarget <= 473)){
+            if ((gamepad1.right_bumper) && (extendoTarget <= maxExtendoPosition-30)){
                 extendoTarget += 30;
             }
-            else if ((gamepad1.left_bumper) && (extendoTarget >= 30)){
+            else if ((gamepad1.right_bumper) && (extendoTarget >= maxExtendoPosition-30)){
+                extendoTarget = maxExtendoPosition;
+            }
+            else if ((gamepad1.left_bumper) && (extendoTarget>=30)){
                 extendoTarget -= 30;
+            }
+            else if ((gamepad1.left_bumper) && (extendoTarget <= 30)){
+                extendoTarget = 0;
             }
 
             // Extendo pitch transfer / default pos 0 ticks
@@ -312,7 +318,7 @@ public class MecanumTeleop extends LinearOpMode {
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
-                    if(clawWristPosition==76.5){
+                    if(clawWristPosition==79.5){
                         if (clawPitchPosition == 200){
                             clawPitchPosition = 104;
                         }
@@ -326,7 +332,7 @@ public class MecanumTeleop extends LinearOpMode {
             }
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
-                    if (clawWristPosition==76.5){
+                    if (clawWristPosition==79.5){
                         if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25) {
                             clawPitchPosition = 104;
                         }
@@ -342,7 +348,7 @@ public class MecanumTeleop extends LinearOpMode {
             }
 
             //specimen scoring pitch position
-            if ((gamepad2.options) && (clawWristPosition==76.5)){
+            if ((gamepad2.options) && (clawWristPosition==79.5)){
                 clawPitchPosition = 67.25;
             }
 
@@ -376,9 +382,9 @@ public class MecanumTeleop extends LinearOpMode {
                 isPressingTrigger1=false;
             }
 
-            // Default perpendicular claw pos 76.5 degrees
+            // Default perpendicular claw pos 79.5 degrees
             if (gamepad2.left_trigger>0) {
-                clawWristPosition = 76.5;
+                clawWristPosition = 79.5;
             }
             else if (gamepad2.right_trigger>0 && clawWristPosition <= 143) {
                 clawWristPosition += 10;

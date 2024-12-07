@@ -264,26 +264,22 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 // Park
                 .strafeToLinearHeading(new Vector2d(34,-62), Math.toRadians(270))
                 .build();
-        Action scoreSpecimen = new SequentialAction(
+        Action setUpSpecimen = new SequentialAction(
                 // Drive and prepare extendo pitch
+                setExtendoTarget(0),
                 new SleepAction(0.5),
                 new ParallelAction(
                         setBucketPosition(205),
-                        onePlusThreeSpecimen1,
                         setExtendoPitchTarget(400),
                         setClawPitchPosition(104)
                 ),
                 new SleepAction(0.5),
-                // Raise extendo, lower extendoPitch slightly, lower claw pitch slightly
-                new ParallelAction(
-                        setExtendoTarget(500),
-                        setExtendoPitchTarget(400),
-                        setClawPitchPosition(100)
-                ),
-                new SleepAction(0.5),
+                setExtendoTarget(500),
+                new SleepAction(0.5));
+        Action scoreSpecimen = new SequentialAction(
                 // Lower extendo
                 setExtendoPitchTarget(850),
-                new SleepAction(1),
+                new SleepAction(0.7),
                 // Open claw
                 setClawFingerPosition(90),
                 new SleepAction(0.5)
@@ -291,18 +287,20 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
         Action sampleZone1 = new SequentialAction(
                 // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                 // Retract extendo to default position
-                setExtendoTarget(0),
-                new SleepAction(0.5),
                 new ParallelAction(
-                        // Drive to sample zone 1
                         onePlusThreeSpecimen2,
-                        // Extendo pitch pickup position
-                        setExtendoPitchTarget(1350)
+                        new SequentialAction(
+                            setExtendoTarget(0),
+                            new SleepAction(0.5),
+                            // Extendo pitch pickup position
+                            setExtendoPitchTarget(1350),
+                            // Extendo to sample zone 1
+                            /** CHANGE THIS **/
+                            new SleepAction(0.5),
+                            setExtendoTarget(425),
+                            new SleepAction(0.5)
+                        )
                 ),
-                // Extendo to sample zone 1
-                /** CHANGE THIS **/
-                setExtendoTarget(425),
-                new SleepAction(0.5),
                 // Claw pitch picking up pos
                 setClawPitchPosition(30.5),
                 new SleepAction(0.5),
@@ -311,22 +309,22 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 new SleepAction(0.5)
         );
         Action sampleZone2 = new SequentialAction(
-                // Drive to sample zone 2, lower extendo, retract extendo pitch when driving
+                // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                 // Retract extendo to default position
-                setExtendoTarget(0),
-                new SleepAction(0.5),
                 new ParallelAction(
-
-                        // Drive to sample zone 2
                         onePlusThreeSpecimen4,
-                        // Extendo pitch pickup position
-                        setExtendoPitchTarget(1350)
+                        new SequentialAction(
+                                setExtendoTarget(0),
+                                new SleepAction(0.5),
+                                // Extendo pitch pickup position
+                                setExtendoPitchTarget(1350),
+                                // Extendo to sample zone 1
+                                /** CHANGE THIS **/
+                                new SleepAction(0.5),
+                                setExtendoTarget(425),
+                                new SleepAction(0.5)
+                        )
                 ),
-                // Extendo to sample zone 1
-                /** CHANGE THIS **/
-                setExtendoTarget(425),
-                new SleepAction(0.5),
-
                 // Claw pitch picking up pos
                 setClawPitchPosition(30.5),
                 new SleepAction(0.5),
@@ -335,22 +333,22 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 new SleepAction(0.5)
         );
         Action sampleZone3 = new SequentialAction(
-                // Drive to sample zone 3, lower extendo, retract extendo pitch when driving
+                // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                 // Retract extendo to default position
-                setExtendoTarget(0),
-                new SleepAction(0.5),
                 new ParallelAction(
-
-                        // Drive to sample zone 3
                         onePlusThreeSpecimen6,
-                        // Extendo pitch pickup position
-                        setExtendoPitchTarget(1350)
+                        new SequentialAction(
+                                setExtendoTarget(0),
+                                new SleepAction(0.5),
+                                // Extendo pitch pickup position
+                                setExtendoPitchTarget(1350),
+                                // Extendo to sample zone 1
+                                /** CHANGE THIS **/
+                                new SleepAction(0.5),
+                                setExtendoTarget(425),
+                                new SleepAction(0.5)
+                        )
                 ),
-                // Extendo to sample zone 1
-                /** CHANGE THIS **/
-                setExtendoTarget(425),
-                new SleepAction(0.5),
-
                 // Claw pitch picking up pos
                 setClawPitchPosition(30.5),
                 new SleepAction(0.5),
@@ -358,9 +356,13 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 setClawFingerPosition(39),
                 new SleepAction(0.5)
         );
-        Action pickUpPosition = new SequentialAction(
+        Action SetUpPickUp = new SequentialAction(
+                setExtendoTarget(0),
+                new SleepAction(0.5),
                 setExtendoPitchTarget(1350),
-                /** CHANGE THIS **/
+                new SleepAction(0.5)
+        );
+        Action pickUpSpecimen = new SequentialAction(
                 setExtendoTarget(200),
                 // Claw pitch picking up pos
                 setClawPitchPosition(30.5),
@@ -388,6 +390,10 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 new ParallelAction(
                         GlobalPID(),
                         new SequentialAction(
+                                new ParallelAction(
+                                        setUpSpecimen,
+                                        onePlusThreeSpecimen1
+                                ),
                                 scoreSpecimen,
                                 sampleZone1,
                                 onePlusThreeSpecimen3,
@@ -401,11 +407,35 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                                 onePlusThreeSpecimen7,
                                 setClawFingerPosition(90),
                                 new SleepAction(0.5),
-                                pickUpPosition,
+                                new ParallelAction(
+                                        SetUpPickUp,
+                                        onePlusThreeSpecimen8
+                                ),
+                                pickUpSpecimen,
+                                new ParallelAction(
+                                        setUpSpecimen,
+                                        onePlusThreeSpecimen9
+                                ),
                                 scoreSpecimen,
-                                pickUpPosition,
+                                new ParallelAction(
+                                        SetUpPickUp,
+                                        onePlusThreeSpecimen10
+                                ),
+                                pickUpSpecimen,
+                                new ParallelAction(
+                                        setUpSpecimen,
+                                        onePlusThreeSpecimen11
+                                ),
                                 scoreSpecimen,
-                                pickUpPosition,
+                                new ParallelAction(
+                                        SetUpPickUp,
+                                        onePlusThreeSpecimen12
+                                ),
+                                pickUpSpecimen,
+                                new ParallelAction(
+                                        setUpSpecimen,
+                                        onePlusThreeSpecimen13
+                                ),
                                 scoreSpecimen,
                                 onePlusThreeSpecimen14
                         )
