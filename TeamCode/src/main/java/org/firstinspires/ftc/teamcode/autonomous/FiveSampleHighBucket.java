@@ -202,41 +202,41 @@ public class FiveSampleHighBucket extends LinearOpMode {
 
         Action fiveSampleAuto1= drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
                 // Score sample preload
-                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(-58,-53), Math.toRadians(225))
                 .build();
-        Action fiveSampleAuto2= drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action fiveSampleAuto2= drive.actionBuilder(new Pose2d(-58,-53, Math.toRadians(225)))
                 // Go to sample zone 1
-                .strafeToLinearHeading(new Vector2d(-55,-52.5), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-53,-51), Math.toRadians(270))
                 .build();
-        Action fiveSampleAuto3 = drive.actionBuilder(new Pose2d(-55,-52.5, Math.toRadians(270)))
+        Action fiveSampleAuto3 = drive.actionBuilder(new Pose2d(-53,-51, Math.toRadians(270)))
                 // Score bucket
                 .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
                 .build();
         Action fiveSampleAuto4 = drive.actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
                 // Sample zone 2
-                .strafeToLinearHeading(new Vector2d(-63,-52), Math.toRadians(273))
+                .strafeToLinearHeading(new Vector2d(-63,-51), Math.toRadians(273))
                 .build();
-        Action fiveSampleAuto5 = drive.actionBuilder(new Pose2d(-63,-52, Math.toRadians(273)))
+        Action fiveSampleAuto5 = drive.actionBuilder(new Pose2d(-63,-51, Math.toRadians(273)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
-                .build();
-        Action fiveSampleAuto6 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
-                // sample zone 3
-                .strafeToLinearHeading(new Vector2d(-67,-52), Math.toRadians(285))
-                .build();
-        Action fiveSampleAuto7 = drive.actionBuilder(new Pose2d(-67,-52, Math.toRadians(285)))
-                // turn and score bucket
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
-                .build();
-        Action fiveSampleAuto8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
-                // go to scarsdale sample for the wr
-                .strafeToLinearHeading(new Vector2d(-15,-48), Math.toRadians(180))
-                .build();
-        Action fiveSampleAuto9 = drive.actionBuilder(new Pose2d(0,-52, Math.toRadians(180)))
-                // score sample lets go
                 .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
                 .build();
-        Action fiveSampleAuto10 = drive.actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
+        Action fiveSampleAuto6 = drive.actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
+                // sample zone 3
+                .strafeToLinearHeading(new Vector2d(-67,-51), Math.toRadians(285))
+                .build();
+        Action fiveSampleAuto7 = drive.actionBuilder(new Pose2d(-67,-51, Math.toRadians(285)))
+                // turn and score bucket
+                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
+                .build();
+        Action fiveSampleAuto8 = drive.actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
+                // go to scarsdale sample for the wr
+                .strafeToLinearHeading(new Vector2d(-39,-48), Math.toRadians(180))
+                .build();
+        Action fiveSampleAuto9 = drive.actionBuilder(new Pose2d(-39,-48, Math.toRadians(180)))
+                // score sample lets go
+                .strafeToLinearHeading(new Vector2d(-53.5,-53), Math.toRadians(225))
+                .build();
+        Action fiveSampleAuto10 = drive.actionBuilder(new Pose2d(-53.5,-53, Math.toRadians(225)))
                 // park
                 .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
                 .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(0))
@@ -439,7 +439,7 @@ public class FiveSampleHighBucket extends LinearOpMode {
                                         setClawPitchPosition(30.5)
                                 ),
                                 // Extend extendo
-                                setExtendoTarget(300),
+                                setExtendoTarget(380),
                                 new SleepAction(0.6),
                                 // Close Claw
                                 setClawFingerPosition(39),
