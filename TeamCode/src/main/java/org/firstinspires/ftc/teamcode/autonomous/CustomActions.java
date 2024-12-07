@@ -168,11 +168,10 @@ public class CustomActions {
         }
     }
     public class PickUpGroundSample implements Action{
-        public PickUpGroundSample(Pose2d initialPose, Vector2d pickUpPose, double heading, double extendoPos, )
+        public PickUpGroundSample(Pose2d initialPose, Vector2d pickUpPose, double heading, double extendoPos)
+        {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            Actions.runBlocking(
 
-            );
             return false;
         }
     }
