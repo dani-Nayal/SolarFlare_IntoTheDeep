@@ -29,7 +29,7 @@ public class MecanumTeleop extends LinearOpMode {
         double clawFingerPosition = 120;
         double clawPitchPosition = 215;
         double bucketPosition = 85;
-        double maxExtendoPosition = 503;
+        double maxExtendoPosition = 380;
 
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
@@ -153,50 +153,31 @@ public class MecanumTeleop extends LinearOpMode {
 
             }
             if (isASequenceActive) {
-                if (clawWristPosition != 79.5){
-                    clawWristPosition = 79.5;
-                    bucketPosition=85;
-                    if (Atimer.seconds() > 0.3){
-                        clawPitchPosition = 104;
 
-                    }
-                    if (Atimer.seconds() > 0.5){
-                        extendoTarget=0;
-                    }
-
-                    if (Atimer.seconds() > 0.8) {
-                        if (!(extendo.getCurrentPosition()>150)) {
-                            extendoPitchTarget = 0;
-                        }
-                    }
-
-                    if (extendoPitch.getCurrentPosition()<100) {
-                        clawPitchPosition = 200;
-                        isASequenceActive=false;
-                    }
-                }
-                else{
-                    bucketPosition=85;
+                clawWristPosition = 79.5;
+                bucketPosition=85;
+                if (Atimer.seconds() > 0.5){
                     clawPitchPosition = 104;
 
+                }
+                if (Atimer.seconds() > 0.5){
+                    extendoTarget=0;
+                }
 
-                    if (Atimer.seconds() > 0.2){
-                        extendoTarget=0;
+                if (Atimer.seconds() > 0.8) {
+                    if (!(extendo.getCurrentPosition()>150)) {
+                        extendoPitchTarget = 0;
                     }
+                }
 
-                    if (Atimer.seconds() > 0.5) {
-                        if (!(extendo.getCurrentPosition()>150)) {
-                            extendoPitchTarget = 0;
-                        }
-
-                    }
-                    if (extendoPitch.getCurrentPosition()<100) {
-                        clawPitchPosition = 200;
-                        isASequenceActive=false;
-                    }
+                if (extendoPitch.getCurrentPosition()<100) {
+                    clawPitchPosition = 200;
+                    isASequenceActive=false;
                 }
 
             }
+
+            
             //specimen setup sequence (including retraction of extendo after specimen pickup)
             else if (gamepad2.b){
                 isB2SequenceActive=true;
@@ -420,7 +401,7 @@ public class MecanumTeleop extends LinearOpMode {
 
             //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-            double botHeading = 0;
+            double botHeading = pinpoint.getHeading();
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -473,7 +454,7 @@ public class MecanumTeleop extends LinearOpMode {
             telemetry.addData("bucket target", bucketPosition);
 
             telemetry.addData("bot heading", botHeading);
-            telemetry.addData("pinpoint heading", pinpoint.getYawScalar());
+            telemetry.addData("pinpoint heading", pinpoint.getHeading());
             telemetry.addData("Control hub IMU heading", imu.getRobotYawPitchRollAngles().getYaw());
             telemetry.addData("pinpoint x",pinpoint.getPosX());
             telemetry.addData("pinpoint y", pinpoint.getPosY());
