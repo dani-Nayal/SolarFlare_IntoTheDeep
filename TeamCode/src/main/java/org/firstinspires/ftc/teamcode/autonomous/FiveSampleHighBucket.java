@@ -229,9 +229,11 @@ public class FiveSampleHighBucket extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
                 .build();
         Action fiveSampleAuto8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
-                .strafeToLinearHeading(new Vector2d(0,-52), Math.toRadians(180))
+                // go to scarsdale sample for the wr
+                .strafeToLinearHeading(new Vector2d(-25,-48), Math.toRadians(180))
                 .build();
         Action fiveSampleAuto9 = drive.actionBuilder(new Pose2d(0,-52, Math.toRadians(180)))
+                // score sample lets go
                 .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
                 .build();
         Action fiveSampleAuto10 = drive.actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
@@ -239,6 +241,17 @@ public class FiveSampleHighBucket extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
                 .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(0))
                 .build();
+
+        extendo = initializeMechanisms.extendo;
+        extendoPitch = initializeMechanisms.extendoPitch;
+        hang = initializeMechanisms.hang;
+        bucketSlides = initializeMechanisms.bucketSlides;
+        clawPitchLeft = initializeMechanisms.clawPitchLeft;
+        clawPitchRight = initializeMechanisms.clawPitchRight;
+        clawFingers = initializeMechanisms.clawFingers;
+        clawWrist = initializeMechanisms.clawWrist;
+        bucket = initializeMechanisms.bucket;
+
         waitForStart();
 
         Actions.runBlocking(

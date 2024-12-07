@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.MotorEnum;
 import org.firstinspires.ftc.teamcode.ServoEnum;
-import org.firstinspires.ftc.teamcode.autonomous.RobotState;
+import org.firstinspires.ftc.teamcode.RobotState;
 
 public class TeleOpSequences {
     HardwareConfig hw;

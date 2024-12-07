@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.RobotState;
 
 @Autonomous
 public class InProgressAuto extends LinearOpMode {
@@ -23,7 +24,7 @@ public class InProgressAuto extends LinearOpMode {
         HardwareConfig.makeHardwareConfig(hardwareMap);
         hw = HardwareConfig.getHardwareConfig();
         state = new RobotState();
-        state.setAutoDefaultMotorTargets();
+        state.setAutoDefaultState();
         actions = new CustomActions(state,hardwareMap);
 
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));

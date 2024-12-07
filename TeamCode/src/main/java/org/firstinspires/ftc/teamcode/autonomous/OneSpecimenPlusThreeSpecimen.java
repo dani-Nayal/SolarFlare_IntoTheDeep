@@ -217,7 +217,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(30.7,-45.1), Math.toRadians(230))
                 .build();
         Action onePlusThreeSpecimen3 = drive.actionBuilder(new Pose2d(30.7, -45.1, Math.toRadians(230)))
-                // Rotate towards observation zone
+                // Rotate towards observation zone 1st time
                 .turnTo(Math.toRadians(135))
                 .build();
         Action onePlusThreeSpecimen4 = drive.actionBuilder(new Pose2d(30.7, -45.1, Math.toRadians(135)))
@@ -233,7 +233,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(51,-41), Math.toRadians(220))
                 .build();
         Action onePlusThreeSpecimen7 = drive.actionBuilder(new Pose2d(51, -41, Math.toRadians(220)))
-                // Rotate towards observation zone
+                // Rotate towards observation zone 3rd time
                 .turnTo(Math.toRadians(80))
                 .build();
         Action onePlusThreeSpecimen8 = drive.actionBuilder(new Pose2d(51, -41, Math.toRadians(80)))
@@ -264,6 +264,7 @@ public class OneSpecimenPlusThreeSpecimen extends LinearOpMode {
                 // Park
                 .strafeToLinearHeading(new Vector2d(34,-62), Math.toRadians(270))
                 .build();
+
         Action setUpSpecimen = new SequentialAction(
                 // Drive and prepare extendo pitch
                 setExtendoTarget(0),

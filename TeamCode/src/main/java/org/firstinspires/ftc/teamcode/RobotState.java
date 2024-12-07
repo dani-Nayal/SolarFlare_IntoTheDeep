@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode;
 import org.firstinspires.ftc.teamcode.MotorEnum;
 import org.firstinspires.ftc.teamcode.ServoEnum;
 import org.firstinspires.ftc.teamcode.HardwareConfig;
@@ -13,18 +13,7 @@ public class RobotState {
     HashMap<MotorEnum, Integer> teleOpDefaultMotorTargets = new HashMap<>(10);
     HashMap<ServoEnum, Double> teleOpDefaultServoPositions = new HashMap<>(10);
 
-    public RobotState(){
-        autoDefaultMotorTargets.put(MotorEnum.EXTENDO, 0);
-        autoDefaultMotorTargets.put(MotorEnum.EXTENDO_PITCH, 0);
-        autoDefaultMotorTargets.put(MotorEnum.HANG, 0);
-        autoDefaultMotorTargets.put(MotorEnum.BUCKET_SLIDES, 0);
-
-        autoDefaultServoPositions.put(ServoEnum.CLAW_PITCH_LEFT, 200.0);
-        autoDefaultServoPositions.put(ServoEnum.CLAW_PITCH_RIGHT, 200.0);
-        autoDefaultServoPositions.put(ServoEnum.CLAW_FINGERS, 39.0);
-        autoDefaultServoPositions.put(ServoEnum.CLAW_WRIST, 76.5);
-        autoDefaultServoPositions.put(ServoEnum.BUCKET, 85.0);
-
+    public void setTeleOpDefaultState(){
         teleOpDefaultMotorTargets.put(MotorEnum.EXTENDO, 0);
         teleOpDefaultMotorTargets.put(MotorEnum.EXTENDO_PITCH, 0);
         teleOpDefaultMotorTargets.put(MotorEnum.HANG, 0);
@@ -36,18 +25,6 @@ public class RobotState {
         teleOpDefaultServoPositions.put(ServoEnum.CLAW_WRIST, 76.5);
         teleOpDefaultServoPositions.put(ServoEnum.BUCKET, 85.0);
 
-        targets.put(MotorEnum.EXTENDO, 0);
-        targets.put(MotorEnum.EXTENDO_PITCH, 0);
-        targets.put(MotorEnum.HANG, 0);
-        targets.put(MotorEnum.BUCKET_SLIDES, 0);
-
-        positions.put(ServoEnum.CLAW_PITCH_LEFT, 200.0);
-        positions.put(ServoEnum.CLAW_PITCH_RIGHT, 200.0);
-        positions.put(ServoEnum.CLAW_FINGERS, 39.0);
-        positions.put(ServoEnum.CLAW_WRIST, 76.5);
-        positions.put(ServoEnum.BUCKET, 85.0);
-    }
-    public void setTeleOpDefaultMotorTargets(){
         targets.put(MotorEnum.EXTENDO, teleOpDefaultMotorTargets.get(MotorEnum.EXTENDO));
         targets.put(MotorEnum.EXTENDO_PITCH, teleOpDefaultMotorTargets.get(MotorEnum.EXTENDO_PITCH));
         targets.put(MotorEnum.HANG, teleOpDefaultMotorTargets.get(MotorEnum.HANG));
@@ -59,7 +36,18 @@ public class RobotState {
         positions.put(ServoEnum.CLAW_WRIST, teleOpDefaultServoPositions.get(ServoEnum.CLAW_WRIST));
         positions.put(ServoEnum.BUCKET, teleOpDefaultServoPositions.get(ServoEnum.BUCKET));
     }
-    public void setAutoDefaultMotorTargets(){
+    public void setAutoDefaultState(){
+        autoDefaultMotorTargets.put(MotorEnum.EXTENDO, 0);
+        autoDefaultMotorTargets.put(MotorEnum.EXTENDO_PITCH, 0);
+        autoDefaultMotorTargets.put(MotorEnum.HANG, 0);
+        autoDefaultMotorTargets.put(MotorEnum.BUCKET_SLIDES, 0);
+
+        autoDefaultServoPositions.put(ServoEnum.CLAW_PITCH_LEFT, 200.0);
+        autoDefaultServoPositions.put(ServoEnum.CLAW_PITCH_RIGHT, 200.0);
+        autoDefaultServoPositions.put(ServoEnum.CLAW_FINGERS, 39.0);
+        autoDefaultServoPositions.put(ServoEnum.CLAW_WRIST, 76.5);
+        autoDefaultServoPositions.put(ServoEnum.BUCKET, 85.0);
+
         targets.put(MotorEnum.EXTENDO, autoDefaultMotorTargets.get(MotorEnum.EXTENDO));
         targets.put(MotorEnum.EXTENDO_PITCH, autoDefaultMotorTargets.get(MotorEnum.EXTENDO_PITCH));
         targets.put(MotorEnum.HANG, autoDefaultMotorTargets.get(MotorEnum.HANG));

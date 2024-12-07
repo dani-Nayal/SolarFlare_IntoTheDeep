@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.MotorEnum;
-import org.firstinspires.ftc.teamcode.autonomous.RobotState;
+import org.firstinspires.ftc.teamcode.RobotState;
 
 public class OptimizedTeleOp extends LinearOpMode {
     HardwareConfig hw;
