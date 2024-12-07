@@ -202,7 +202,7 @@ public class FiveSampleHighBucket extends LinearOpMode {
 
         Action fiveSampleAuto1= drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
                 // Score sample preload
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
                 .build();
         Action fiveSampleAuto2= drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
                 // Go to sample zone 1
@@ -230,7 +230,7 @@ public class FiveSampleHighBucket extends LinearOpMode {
                 .build();
         Action fiveSampleAuto8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
                 // go to scarsdale sample for the wr
-                .strafeToLinearHeading(new Vector2d(-25,-48), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-15,-48), Math.toRadians(180))
                 .build();
         Action fiveSampleAuto9 = drive.actionBuilder(new Pose2d(0,-52, Math.toRadians(180)))
                 // score sample lets go
@@ -434,14 +434,16 @@ public class FiveSampleHighBucket extends LinearOpMode {
                                 new ParallelAction(
                                         fiveSampleAuto8,
                                         // Extendo pitch to pickup pos
-                                        setExtendoTarget(1350),
+                                        setExtendoPitchTarget(1350),
                                         // Claw pitch picking up position
                                         setClawPitchPosition(30.5)
                                 ),
                                 // Extend extendo
                                 setExtendoTarget(300),
+                                new SleepAction(0.6),
                                 // Close Claw
                                 setClawFingerPosition(39),
+                                new SleepAction(0.4),
                                 // Retract extendo, transfer and move to scoring pos
                                 new ParallelAction(
                                         // Move to scoring position
