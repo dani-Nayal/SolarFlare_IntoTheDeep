@@ -195,6 +195,7 @@ public class MecanumTeleop extends LinearOpMode {
             }
             if (isB2SequenceActive) {
                 clawWristPosition =79.5;
+                clawPitchPosition=205;
 
                 if (B2timer.seconds()>0.3){
                     clawPitchPosition = 104;
@@ -226,10 +227,11 @@ public class MecanumTeleop extends LinearOpMode {
                 }
 
                 if (B2timer.seconds() > 0.6) {
-                    extendoPitchTarget = 1000;
+                    extendoPitchTarget = 1100;
                 }
                 if (B2timer.seconds() > 1) {
-                    extendoTarget=500;
+                    extendoTarget=maxExtendoPosition;
+                    clawFingerPosition=120;
                     isOp2SequenceActive=false;
                 }
             }
@@ -334,10 +336,10 @@ public class MecanumTeleop extends LinearOpMode {
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
                     if(clawWristPosition==79.5){
-                        if (clawPitchPosition == 205){
+                        if (clawPitchPosition > 104){
                             clawPitchPosition = 104;
                         }
-                        else if (clawPitchPosition == 104 || clawPitchPosition == 67.25 || clawPitchPosition==84) {
+                        else if (clawPitchPosition <= 104) {
                             clawPitchPosition = 30.5;
                         }
                     }
@@ -348,10 +350,10 @@ public class MecanumTeleop extends LinearOpMode {
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
                     if (clawWristPosition==79.5){
-                        if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25 || clawPitchPosition==84) {
+                        if (clawPitchPosition < 104) {
                             clawPitchPosition = 104;
                         }
-                        else if (clawPitchPosition == 104) {
+                        else if (clawPitchPosition >= 104) {
                             clawPitchPosition = 205;
                         }
                     }
