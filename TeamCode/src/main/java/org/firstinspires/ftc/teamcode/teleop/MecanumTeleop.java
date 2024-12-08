@@ -27,9 +27,10 @@ public class MecanumTeleop extends LinearOpMode {
         double bucketSlidesTarget = 0;
         double clawWristPosition = 79.5;
         double clawFingerPosition = 120;
-        double clawPitchPosition = 215;
+        double clawPitchPosition = 205;
         double bucketPosition = 85;
-        double maxExtendoPosition = 290;
+        
+        double maxExtendoPosition = 325;
 
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
@@ -172,7 +173,7 @@ public class MecanumTeleop extends LinearOpMode {
                 }
 
                 if (extendoPitch.getCurrentPosition()<100) {
-                    clawPitchPosition = 200;
+                    clawPitchPosition = 205;
                     isASequenceActive=false;
                 }
 
@@ -300,7 +301,7 @@ public class MecanumTeleop extends LinearOpMode {
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
                     if(clawWristPosition==79.5){
-                        if (clawPitchPosition == 200){
+                        if (clawPitchPosition == 205){
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
@@ -318,7 +319,7 @@ public class MecanumTeleop extends LinearOpMode {
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104) {
-                            clawPitchPosition = 200;
+                            clawPitchPosition = 205;
                         }
                     }
                 }
