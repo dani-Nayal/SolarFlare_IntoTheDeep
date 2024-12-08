@@ -30,7 +30,7 @@ public class MecanumTeleop extends LinearOpMode {
         double clawPitchPosition = 205;
         double bucketPosition = 85;
         
-        double maxExtendoPosition = 325;
+        double maxExtendoPosition = 350;
 
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
@@ -112,7 +112,12 @@ public class MecanumTeleop extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-
+            if (gamepad1.back && bucketSlidesTarget>=15){
+                bucketSlidesTarget-=15;
+            }
+            else if (gamepad1.back && bucketSlidesTarget<15){
+                bucketSlidesTarget=0;
+            }
             if (gamepad2.back){
                 bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -140,7 +145,7 @@ public class MecanumTeleop extends LinearOpMode {
 
             }
             if (isBSequenceActive) {
-                extendoPitchTarget = 1350;
+                extendoPitchTarget = 1425;
                 clawWristPosition = 79.5;
                 if (Btimer.seconds() > 0.7) {
                     extendoTarget = maxExtendoPosition;
@@ -174,6 +179,7 @@ public class MecanumTeleop extends LinearOpMode {
 
                 if (extendoPitch.getCurrentPosition()<100) {
                     clawPitchPosition = 205;
+                    clawWristPosition = 90;
                     isASequenceActive=false;
                 }
 
@@ -221,7 +227,7 @@ public class MecanumTeleop extends LinearOpMode {
             */
 
             // Extendo pitch transfer / default pos 0 ticks
-            // Extendo pitch pickup 1350
+            // Extendo pitch pickup 1425
             if (gamepad1.dpad_down && !(extendo.getCurrentPosition()>150)){
                 if (!isPressingDpad) {
                     if (extendoPitchTarget >= 0 && extendoPitchTarget<450){
@@ -344,14 +350,14 @@ public class MecanumTeleop extends LinearOpMode {
                         clawFingerPosition = 90;
                     }
                     else if (clawFingerPosition == 90){
-                        clawFingerPosition = 41;
+                        clawFingerPosition = 37;
                     }
                 }
                 isPressingTrigger1=true;
             }
             else if (gamepad2.right_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 41) {
+                    if (clawFingerPosition == 37) {
                         clawFingerPosition = 90;
                     }
                     else if (clawFingerPosition == 90) {
@@ -393,7 +399,7 @@ public class MecanumTeleop extends LinearOpMode {
 
             //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-            double botHeading = pinpoint.getHeading();
+            double botHeading = 0;
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
