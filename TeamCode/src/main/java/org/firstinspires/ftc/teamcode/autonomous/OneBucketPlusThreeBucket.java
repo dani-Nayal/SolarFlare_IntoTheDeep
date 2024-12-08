@@ -209,41 +209,40 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
-        Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
+        Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5, Math.toRadians(270)))
                 // Score preload bucket
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(-55.5,-53), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-55.5,-53, Math.toRadians(225)))
                 // Go to sample zone 1
-                .strafeToLinearHeading(new Vector2d(-55,-52.5), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-54.5,-48.8), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-55,-52.5, Math.toRadians(270)))
+        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-54.5,-48.8, Math.toRadians(270)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(-56,-53.2), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
+        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-56,-53.2, Math.toRadians(225)))
                 // Sample zone 2
-                .strafeToLinearHeading(new Vector2d(-63,-52), Math.toRadians(273))
+                .strafeToLinearHeading(new Vector2d(-63,-49.8), Math.toRadians(273))
                 .build();
-        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-63,-52, Math.toRadians(273)))
+        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-63,-49.8, Math.toRadians(273)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(-54.5,-54), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54.5,-54, Math.toRadians(225)))
                 // sample zone 3
-                .strafeToLinearHeading(new Vector2d(-67,-52), Math.toRadians(285))
+                .strafeToLinearHeading(new Vector2d(-67,-49.3), Math.toRadians(285))
                 .build();
-        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-67,-52, Math.toRadians(285)))
-                // turn and score bucket
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-67,-49.3, Math.toRadians(285)))
+                // turn and score bucke
+                .strafeToLinearHeading(new Vector2d(-54.5,-53.5), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54.5,-53.5, Math.toRadians(225)))
                 // park
                 .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
                 .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(0))
 
                 .build();
-
         extendo = initializeMechanisms.extendo;
         extendoPitch = initializeMechanisms.extendoPitch;
         hang = initializeMechanisms.hang;
@@ -261,8 +260,9 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                         GlobalPID(),
                         new SequentialAction(
                                 new ParallelAction(
-                                        // Move to scoring position
+                                        // score preload bucket
                                         onePlusThreeBucket1,
+                                        //close claw
                                         setClawFingerPosition(120)
                                 ),
                                 // Move bucketSlides up to scoring position
@@ -270,7 +270,6 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
                                 setBucketPosition(205),
-                                //wait for sample to settle in high bucket
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
                                 setBucketPosition(85),
@@ -278,6 +277,8 @@ public class OneBucketPlusThreeBucket extends LinearOpMode {
                                 new SleepAction(0.4),
                                 // Move bucketSlides back to down position
                                 setBucketSlidesTarget(0),
+                                new SleepAction(0.5),
+
                                 // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
                                 new ParallelAction(
                                         // Drive to sample zone 1

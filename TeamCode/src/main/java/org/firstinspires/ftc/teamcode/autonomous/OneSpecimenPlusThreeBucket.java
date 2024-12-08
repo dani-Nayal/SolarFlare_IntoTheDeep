@@ -211,33 +211,33 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
 
         Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5,Math.toRadians(270)))
                 // Score preload
-                .strafeToLinearHeading(new Vector2d(-3,-47), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-3,-46), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-3,-47, Math.toRadians(270)))
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-3,-46, Math.toRadians(270)))
                 // Go to sample zone 1
-                .strafeToLinearHeading(new Vector2d(-55,-51), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-54.5,-50.2), Math.toRadians(270))
                 .build();
-        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-55,-51, Math.toRadians(270)))
+        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-54.5,-50.2, Math.toRadians(270)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-55,-55), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(-56,-53.2), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-55,-55, Math.toRadians(225)))
+        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-56,-53.2, Math.toRadians(225)))
                 // Sample zone 2
-                .strafeToLinearHeading(new Vector2d(-62,-51), Math.toRadians(273))
+                .strafeToLinearHeading(new Vector2d(-63,-50.5), Math.toRadians(273))
                 .build();
-        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-62,-51, Math.toRadians(273)))
+        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-63,-50.5, Math.toRadians(273)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(-54.5,-54), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54.5,-54, Math.toRadians(225)))
                 // sample zone 3
-                .strafeToLinearHeading(new Vector2d(-67,-51), Math.toRadians(285))
+                .strafeToLinearHeading(new Vector2d(-67,-50), Math.toRadians(285))
                 .build();
-        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-67,-51, Math.toRadians(285)))
+        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-67,-50, Math.toRadians(285)))
                 // turn and score bucke
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225))
+                .strafeToLinearHeading(new Vector2d(-54.5,-53.5), Math.toRadians(225))
                 .build();
-        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54,-54, Math.toRadians(225)))
+        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54.5,-53.5, Math.toRadians(225)))
                 // park
                 .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
                 .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(0))
@@ -261,7 +261,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                         GlobalPID(),
                         new SequentialAction(
                                 // Close claw
-                                setClawFingerPosition(39),
+                                setClawFingerPosition(45),
                                 // Drive and prepare extendo pitch
                                 new SleepAction(0.4),
                                 new ParallelAction(
@@ -276,13 +276,13 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                 // Raise extendo, lower extendoPitch slightly, lower claw pitch slightly
                                 new ParallelAction(
                                         setExtendoTarget(500),
-                                        setExtendoPitchTarget(400),
+                                        setExtendoPitchTarget(500),
                                         setClawPitchPosition(100)
                                 ),
                                 new SleepAction(0.5),
                                 // Lower extendo pitch
-                                setExtendoPitchTarget(800),
-                                new SleepAction(0.5),
+                                setExtendoPitchTarget(900),
+                                new SleepAction(1),
                                 // Open claw
                                 setClawFingerPosition(90),
 
@@ -297,7 +297,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                         // Drive to sample zone 1
                                         onePlusThreeBucket2,
                                         // Extendo pitch pickup position
-                                        setExtendoPitchTarget(1350)
+                                        setExtendoPitchTarget(1425)
                                 ),
                                 // Extendo to sample zone 1
                                 setExtendoTarget(425),
@@ -346,7 +346,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                         // Drive to sample zone 2
                                         onePlusThreeBucket4,
                                         // Lower extendo pitch to pickup pos
-                                        setExtendoPitchTarget(1350)
+                                        setExtendoPitchTarget(1425)
                                 ),
                                 // Extendo to sample zone 2
                                 setExtendoTarget(425),
@@ -396,7 +396,7 @@ public class OneSpecimenPlusThreeBucket extends LinearOpMode {
                                         // Drive to sample zone 3
                                         onePlusThreeBucket6,
                                         // Lower extendo pitch to pickup pos
-                                        setExtendoPitchTarget(1350)
+                                        setExtendoPitchTarget(1425)
                                 ),
                                 // Extendo to sample zone 3
                                 setExtendoTarget(425),
