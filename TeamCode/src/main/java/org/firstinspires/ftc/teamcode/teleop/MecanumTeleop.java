@@ -36,6 +36,7 @@ public class MecanumTeleop extends LinearOpMode {
         boolean isASequenceActive = false;
         boolean isBSequenceActive = false;
         boolean isB2SequenceActive = false;
+        boolean isOp2SequenceActive = false;
         boolean isPressingY = false;
         boolean isPressingY2 = false;
         boolean isPressingA2 = false;
@@ -51,6 +52,7 @@ public class MecanumTeleop extends LinearOpMode {
         ElapsedTime Btimer = new ElapsedTime();
         ElapsedTime B2timer = new ElapsedTime();
         ElapsedTime Atimer = new ElapsedTime();
+        ElapsedTime Op2timer = new ElapsedTime();
 
         DcMotor extendo = hardwareMap.dcMotor.get("extendo");
         DcMotor extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
@@ -208,6 +210,31 @@ public class MecanumTeleop extends LinearOpMode {
                     isB2SequenceActive=false;
                 }
             }
+            //wall specimen pickup sequence
+            /*
+            if (gamepad2.options){
+                isOp2SequenceActive=true;
+                Op2timer.reset();
+            }
+            if (isOp2SequenceActive==true){
+                clawWristPosition = 79.5;
+
+                if (B2timer.seconds()>0.3){
+                    clawPitchPosition = 84;
+                    bucketPosition=205;
+                    extendoTarget=0;
+                }
+
+                if (B2timer.seconds() > 0.6) {
+                    extendoPitchTarget = 1000;
+                }
+                if (B2timer.seconds() > 1) {
+                    extendoTarget=500;
+                    isOp2SequenceActive=false;
+                }
+            }
+            */
+
             // Extendo retracted 0 ticks
             // Extendo fully extending 36050
             // Dynamic extendo control
@@ -310,7 +337,7 @@ public class MecanumTeleop extends LinearOpMode {
                         if (clawPitchPosition == 205){
                             clawPitchPosition = 104;
                         }
-                        else if (clawPitchPosition == 104 || clawPitchPosition == 67.25) {
+                        else if (clawPitchPosition == 104 || clawPitchPosition == 67.25 || clawPitchPosition==84) {
                             clawPitchPosition = 30.5;
                         }
                     }
@@ -321,7 +348,7 @@ public class MecanumTeleop extends LinearOpMode {
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
                     if (clawWristPosition==79.5){
-                        if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25) {
+                        if (clawPitchPosition == 30.5 || clawPitchPosition == 67.25 || clawPitchPosition==84) {
                             clawPitchPosition = 104;
                         }
                         else if (clawPitchPosition == 104) {
