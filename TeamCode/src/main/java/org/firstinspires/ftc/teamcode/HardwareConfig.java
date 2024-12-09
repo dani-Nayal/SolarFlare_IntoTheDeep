@@ -13,11 +13,13 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 
-// Initializes hardwareMap of all mechanisms, as well as other related values
+// Initializes hardware of all mechanisms, as well as other related values
 public class HardwareConfig {
 
-    private static HardwareConfig hardwareConfig;
+    public final double ROBOT_LENGTH = 15.0625;
+    public final double ROBOT_WIDTH = 12.4375;
 
+    private static HardwareConfig hardwareConfig;
     private final HashMap<MotorEnum,MotorConfig> motorConfigs;
     private final HashMap<ServoEnum,ServoConfig> servoConfigs;
 
@@ -73,42 +75,42 @@ public class HardwareConfig {
         motorConfigs.put(MotorEnum.LEFT_FRONT, new MotorConfig(
                 hardwareMap,
                 "leftFront",
-                0,0,0,
+                0.015,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.LEFT_BACK, new MotorConfig(
                 hardwareMap,
                 "leftBack",
-                0,0,0,
+                0.015,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.RIGHT_FRONT, new MotorConfig(
                 hardwareMap,
                 "rightFront",
-                0,0,0,
+                0.015,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.RIGHT_BACK, new MotorConfig(
                 hardwareMap,
                 "rightBack",
-                0,0,0,
+                0.015,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.HANG, new MotorConfig(
                 hardwareMap,
                 "hang",
-                0,0,0,
+                0.015,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
                 "BRAKE"));
         motorConfigs.put(MotorEnum.BUCKET_SLIDES, new MotorConfig(
                 hardwareMap,
                 "bucketSlides",
-                0,0,0,
+                0.015,0,0,
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
                 "BRAKE"));
