@@ -31,7 +31,7 @@ Do NOT make an issue on the official Roadrunner quickstart while you are using t
 
 ### Configure Hardware
 
-Configure your drive motors in MecanumDrive
+Configure your drive motorEnum in MecanumDrive
    as explained [here](https://rr.brott.dev/docs/v1-0/tuning/#drive-classes). 
 Make sure to properly reverse them using MecanumDirectionDebugger by following the official docs.
 
