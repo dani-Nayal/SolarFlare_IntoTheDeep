@@ -9,7 +9,6 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -65,7 +64,7 @@ public class CustomActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             state.setMotorTarget(motorEnum, target);
             double error = state.getMotorTarget(motorEnum) - hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
-            // Returns false when error is less than or = to 3
+            // Returns false when error is less 15
             return !(error < 15);
         }
     }
@@ -161,10 +160,21 @@ public class CustomActions {
     public Action setExtendoTarget(int target) {return new SetMotorTargetAction(MotorEnum.EXTENDO, target);}
     public Action setExtendoPitchTarget(int target) {return new SetMotorTargetAction(MotorEnum.EXTENDO_PITCH, target);}
     public Action setBucketSlidesTarget(int target) {return new SetMotorTargetAction(MotorEnum.BUCKET_SLIDES, target);}
-    public Action setClawPitchPosition(double degrees) {return new ParallelAction(new SetServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, degrees), new SetServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, degrees));}
-    public Action setClawFingerPosition(double degrees) {return new SetServoPositionAction(ServoEnum.CLAW_FINGERS, degrees);}
-    public Action setClawWristPosition(double degrees) {return new SetServoPositionAction(ServoEnum.CLAW_WRIST, degrees);}
-    public Action setBucketPosition(double degrees) {return new SetServoPositionAction(ServoEnum.BUCKET, degrees);}
+    public Action setClawPitchPosition(double degrees) {return new SequentialAction(
+            new ParallelAction(
+                    new SetServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, degrees),
+                    new SetServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, degrees)
+            ),
+            new SleepAction(0.6));}
+    public Action setClawFingerPosition(double degrees) {return new SequentialAction(
+            new SetServoPositionAction(ServoEnum.CLAW_FINGERS, degrees),
+            new SleepAction(0.3));}
+    public Action setClawWristPosition(double degrees) {return new SequentialAction(
+            new SetServoPositionAction(ServoEnum.CLAW_WRIST, degrees),
+            new SleepAction(0.3));}
+    public Action setBucketPosition(double degrees) {return new SequentialAction(
+            new SetServoPositionAction(ServoEnum.BUCKET, degrees),
+            new SleepAction(0.5));}
     public SequentialAction moveToHighChamberAndScoreSpecimen(Vector2d scoringPose, double heading) {
         return new SequentialAction(
                 new ParallelAction(
@@ -172,32 +182,22 @@ public class CustomActions {
                         setBucketPosition(bucketWhenScoringSpecimenPosition),
                         setClawFingerPosition(clawFingersClosedPosition),
 
-                        // Move extendo pitch up, move claw pitch up
+                        // Move extendo pitch up, move claw pitch up, move extendo up
                         setExtendoPitchTarget(extendoPitchSpecimenUpTarget),
                         setClawPitchPosition(clawPitchSpecimenScoringPosition),
+                        setExtendoTarget(extendoScoringSpecimenTarget),
+
+                        // Go to scoring position and heading
                         drive.actionBuilder(drive.pose)
-                                // Go to scoring position and heading
-                                .strafeToLinearHeading(scoringPose,heading).build(),
-                        setExtendoTarget(extendoScoringSpecimenTarget)
+                                .strafeToLinearHeading(scoringPose,heading).build()
                 ),
                 // Lower extendoPitch
                 setExtendoPitchTarget(extendoPitchSpecimenDownTarget),
-                new SleepAction(0.5),
                 setClawFingerPosition(clawFingersOpenPosition)
         );
     }
     public SequentialAction moveToNetZoneAndScoreHighBucket() {
         return new SequentialAction(
-                new ParallelAction(
-                        // Default positions
-                        setClawFingerPosition(clawFingersFullyOpenPosition),
-                        setExtendoPitchTarget(extendoPitchTransferTarget),
-                        setExtendoTarget(extendoRetractedTarget),
-                        setExtendoPitchTarget(extendoPitchTransferTarget),
-                        setClawWristPosition(clawWristDefaultPosition),
-                        setBucketSlidesTarget(bucketSlidesDownTarget),
-                        setBucketPosition(bucketTransferPosition)
-                ),
                 // Move to scoring position
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225)).build(),
@@ -216,12 +216,8 @@ public class CustomActions {
     public SequentialAction transferSample(){
         return new SequentialAction(
                 new ParallelAction(
-                        // Default positions
+                        // Retract extendo
                         setExtendoTarget(extendoRetractedTarget),
-                        setClawFingerPosition(clawFingersClosedPosition),
-                        setClawWristPosition(clawWristDefaultPosition),
-                        setBucketPosition(bucketTransferPosition),
-                        setBucketSlidesTarget(bucketSlidesDownTarget),
                         // Claw pitch transfer
                         setClawPitchPosition(clawPitchPitchTransferPosition),
                         // Raise extendo pitch

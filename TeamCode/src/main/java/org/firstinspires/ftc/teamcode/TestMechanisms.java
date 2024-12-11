@@ -25,7 +25,12 @@ public class TestMechanisms extends LinearOpMode {
         hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(0.2);
         hw.getMotorConfig(MotorEnum.BUCKET_SLIDES).motor.setPower(0.2);
 
-        hw.getServoConfig(ServoEnum.CLAW_WRIST);
+        hw.getServoConfig(ServoEnum.CLAW_PITCH_LEFT).servo.setPosition(30.5/270);
+        hw.getServoConfig(ServoEnum.CLAW_PITCH_RIGHT).servo.setPosition(30.5/270);
+        sleep(1000);
+        hw.getServoConfig(ServoEnum.CLAW_WRIST).servo.setPosition(0.1);
+        hw.getServoConfig(ServoEnum.CLAW_FINGERS).servo.setPosition(0.1);
+        hw.getServoConfig(ServoEnum.BUCKET).servo.setPosition(0.1);
 
 
     }

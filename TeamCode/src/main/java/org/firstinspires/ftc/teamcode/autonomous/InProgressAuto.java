@@ -21,8 +21,7 @@ public class InProgressAuto extends LinearOpMode {
         HardwareConfig.makeHardwareConfig(hardwareMap);
         hw = HardwareConfig.getHardwareConfig();
         state = new RobotState();
-        state.setAutoDefaultState();
-        actions = new CustomActions(state,hardwareMap);
+        actions = new CustomActions(state, hardwareMap);
 
         waitForStart();
 
