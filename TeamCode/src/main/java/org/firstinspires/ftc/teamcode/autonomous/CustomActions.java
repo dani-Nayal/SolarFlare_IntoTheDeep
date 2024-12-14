@@ -42,6 +42,7 @@ public class CustomActions {
     int bucketSlidesHighBasketTarget = 1100;
     int bucketSlidesDownTarget = 0;
     double clawWristDefaultPosition = 79.5;
+    int SERVO_SPEED = 400;
 
     public CustomActions(RobotState state, HardwareMap hardwareMap) {
         hw = HardwareConfig.getHardwareConfig();
@@ -70,21 +71,30 @@ public class CustomActions {
     }
     // Initial position based off preload and cycle type
     public void setInitialDrivePosition(String preloadType, String cycleType){
+        // Right side of robot is on the middle line of field, Outtake side is touching field perimeter
         if (preloadType.equals("specimen") && cycleType.equals("sample")) {
             drive = new PinpointDrive(hardwareMap, new Pose2d(-hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270)));
         }
+        // Right side of robot is touching field perimeter, Outtake side is on the left side of seam that is on the edge of field tile
+        // Barely outside of net zone
         else if (preloadType.equals("sample") && cycleType.equals("sample")) {
             drive = new PinpointDrive(hardwareMap, new Pose2d(-32.125-(hw.ROBOT_LENGTH/2), -70+(hw.ROBOT_WIDTH/2), Math.toRadians(180)));
         }
+        // Right side of robot is touching field perimeter, Outtake side is on the left side of seam that is on the edge of field tile
+        // Barely outside of net zone
         else if (preloadType.equals("sample") && cycleType.equals("specimen")) {
             drive = new PinpointDrive(hardwareMap, new Pose2d(-32.125-(hw.ROBOT_LENGTH/2), -70+(hw.ROBOT_WIDTH/2), Math.toRadians(180)));
         }
         else if (preloadType.equals("specimen") && cycleType.equals("specimen")) {
             drive = new PinpointDrive(hardwareMap, new Pose2d(hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270)));
         }
+        // Left side of robot is on the middle line of field, Outtake side is touching field perimeter
         else{
             throw new IllegalArgumentException("setInitialDrivePosition parameter incorrect");
         }
+    }
+    public PinpointDrive getDrive(){
+        return drive;
     }
 
     public class SetServoPositionAction implements Action {
@@ -100,8 +110,11 @@ public class CustomActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            double previousPosition = state.getServoPosition(servoEnum);
             state.setServoPosition(servoEnum, position);
-            // Returns false when the servo position is at the target position
+
+            // Calculates amount of time needed for the servo to reach the target position
+            new SleepAction(Math.abs(position - previousPosition) / SERVO_SPEED);
             return false;
         }
     }
@@ -192,7 +205,7 @@ public class CustomActions {
             new SleepAction(0.3));}
     public Action setBucketPosition(double degrees) {return new SequentialAction(
             new SetServoPositionAction(ServoEnum.BUCKET, degrees),
-            new SleepAction(0.5));}
+                new SleepAction(0.5));}
     public SequentialAction moveToHighChamberAndScoreSpecimen(Vector2d scoringPose, double heading) {
         return new SequentialAction(
                 new ParallelAction(
@@ -258,6 +271,7 @@ public class CustomActions {
                         setExtendoPitchTarget(extendoPitchTransferTarget),
                         setClawWristPosition(clawWristDefaultPosition),
                         setClawPitchPosition(clawPitchPitchTransferPosition),
+                        setBucketPosition(bucketTransferPosition),
                         // Move to pickup pose
                         drive.actionBuilder(drive.pose)
                                 .strafeToLinearHeading(pickUpPose,heading).build(),

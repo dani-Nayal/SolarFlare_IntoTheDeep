@@ -26,10 +26,12 @@ public class OptimizedTeleOp extends LinearOpMode {
     boolean isPressingTrigger1 = false;
     boolean isPressingDpad = false;
 
-    ElapsedTime Xtimer = new ElapsedTime();
-    ElapsedTime Btimer = new ElapsedTime();
-    ElapsedTime B2timer = new ElapsedTime();
-    ElapsedTime Atimer = new ElapsedTime();
+    int maxExtendoPosition = 350;
+
+    ElapsedTime xTimer = new ElapsedTime();
+    ElapsedTime bTimer = new ElapsedTime();
+    ElapsedTime b2Timer = new ElapsedTime();
+    ElapsedTime aTimer = new ElapsedTime();
     ElapsedTime Op2timer = new ElapsedTime();
     @Override
     public void runOpMode(){
@@ -88,58 +90,58 @@ public class OptimizedTeleOp extends LinearOpMode {
             // bucket slides retraction sequence
             if (gamepad1.x){
                 isXSequenceActive=true;
-                Xtimer.reset();
+                xTimer.reset();
             }
             if (isXSequenceActive) {
                 state.setServoPosition(ServoEnum.BUCKET, 85);
 
-                if (Xtimer.seconds()>0.3){
-                    state.setMotorTarget(MotorEnum.BUCKET_SLIDES)=0;
+                if (xTimer.seconds()>0.3){
+                    state.setMotorTarget(MotorEnum.BUCKET_SLIDES, 0);
                     isXSequenceActive=false;
                 }
             }
             // Intake sequence picking up sample in submersible (claw pitch needs to fit over sub)
             if (gamepad1.b){
                 isBSequenceActive=true;
-                Btimer.reset();
+                bTimer.reset();
 
             }
             if (isBSequenceActive) {
                 state.setMotorTarget(MotorEnum.EXTENDO_PITCH, 1425);
-                clawWristPosition = 79.5;
-                if (Btimer.seconds() > 0.7) {
-                    extendoTarget = maxExtendoPosition;
-                    clawPitchPosition = 104;
+                state.setServoPosition(ServoEnum.CLAW_WRIST, 79.5);
+                if (bTimer.seconds() > 0.7) {
+                    state.setMotorTarget(MotorEnum.EXTENDO, maxExtendoPosition);
+                    state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT,104);
                     isBSequenceActive=false;
                 }
             }
             // Transfer sample
             else if (gamepad1.a){
                 isASequenceActive=true;
-                Atimer.reset();
+                aTimer.reset();
 
             }
             if (isASequenceActive) {
 
-                clawWristPosition = 79.5;
+                state.setServoPosition(ServoEnum.CLAW_WRIST, 79.5);
                 state.setServoPosition(ServoEnum.BUCKET, 85);
-                if (Atimer.seconds() > 0.5){
-                    clawPitchPosition = 104;
+                if (aTimer.seconds() > 0.5){
+                    state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT,104);
 
                 }
-                if (Atimer.seconds() > 0.5){
-                    extendoTarget=0;
+                if (aTimer.seconds() > 0.5){
+                    state.setMotorTarget(MotorEnum.EXTENDO,0);
                 }
 
-                if (Atimer.seconds() > 0.8) {
-                    if (!(extendo.getCurrentPosition()>150)) {
+                if (aTimer.seconds() > 0.8) {
+                    if (!(hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition()>150)) {
                         state.setMotorTarget(MotorEnum.EXTENDO_PITCH,0);
                     }
                 }
 
-                if (extendoPitch.getCurrentPosition()<100) {
-                    clawPitchPosition = 205;
-                    clawWristPosition = 90;
+                if (hw.getMotorConfig(MotorEnum.EXTENDO_PITCH).motor.getCurrentPosition()<100) {
+                    state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT,205);
+                    state.setServoPosition(ServoEnum.CLAW_WRIST,90);
                     isASequenceActive=false;
                 }
 
@@ -149,23 +151,23 @@ public class OptimizedTeleOp extends LinearOpMode {
             //specimen setup sequence (including retraction of extendo after specimen pickup)
             else if (gamepad2.b){
                 isB2SequenceActive=true;
-                B2timer.reset();
+                b2Timer.reset();
             }
             if (isB2SequenceActive) {
-                clawWristPosition =79.5;
-                clawPitchPosition=205;
+                state.setServoPosition(ServoEnum.CLAW_WRIST, 79.5);
+                state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT,205);
 
-                if (B2timer.seconds()>0.3){
-                    clawPitchPosition = 104;
+                if (b2Timer.seconds()>0.3){
+                    state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT,104);
                     state.setServoPosition(ServoEnum.BUCKET, 205);
-                    extendoTarget=0;
+                    state.setMotorTarget(MotorEnum.EXTENDO,0);
                 }
 
-                if (B2timer.seconds() > 0.6) {
+                if (b2Timer.seconds() > 0.6) {
                     state.setMotorTarget(MotorEnum.EXTENDO_PITCH, 450);
                 }
-                if (B2timer.seconds() > 1) {
-                    extendoTarget=500;
+                if (b2Timer.seconds() > 1) {
+                    state.setMotorTarget(MotorEnum.EXTENDO,500);
                     isB2SequenceActive=false;
                 }
             }
@@ -178,16 +180,16 @@ public class OptimizedTeleOp extends LinearOpMode {
             if (isOp2SequenceActive==true){
                 clawWristPosition = 79.5;
 
-                if (B2timer.seconds()>0.3){
+                if (b2Timer.seconds()>0.3){
                     clawPitchPosition = 84;
                     bucketPosition=205;
                     extendoTarget=0;
                 }
 
-                if (B2timer.seconds() > 0.6) {
+                if (b2Timer.seconds() > 0.6) {
                     extendoPitchTarget = 1100;
                 }
-                if (B2timer.seconds() > 1) {
+                if (b2Timer.seconds() > 1) {
                     extendoTarget=maxExtendoPosition;
                     clawFingerPosition=120;
                     isOp2SequenceActive=false;
@@ -215,7 +217,7 @@ public class OptimizedTeleOp extends LinearOpMode {
 
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1425
-            if (gamepad1.dpad_down && !(extendo.getCurrentPosition()>150)){
+            if (gamepad1.dpad_down && !(hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition()>150)){
                 if (!isPressingDpad) {
                     if (state.getMotorTarget(MotorEnum.EXTENDO_PITCH) >= 0 && state.getMotorTarget(MotorEnum.EXTENDO_PITCH)<450){
                         state.setMotorTarget(MotorEnum.EXTENDO_PITCH, 450);
@@ -226,7 +228,7 @@ public class OptimizedTeleOp extends LinearOpMode {
                 }
                 isPressingDpad=true;
             }
-            else if (gamepad1.dpad_up && !(extendo.getCurrentPosition()>150)){
+            else if (gamepad1.dpad_up && !(hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition()>150)){
                 if (!isPressingDpad) {
                     if (state.getMotorTarget(MotorEnum.EXTENDO_PITCH) <= 1421 && state.getMotorTarget(MotorEnum.EXTENDO_PITCH) > 450) {
                         state.setMotorTarget(MotorEnum.EXTENDO_PITCH, 450);
@@ -242,10 +244,10 @@ public class OptimizedTeleOp extends LinearOpMode {
             }
 
             //dynamic extendo pitch movement - for specimen scoring
-            if (-gamepad2.right_stick_y>0&&state.getMotorTarget(MotorEnum.EXTENDO_PITCH)>=50&&!(extendo.getCurrentPosition()>150)){
+            if (-gamepad2.right_stick_y > 0 && state.getMotorTarget(MotorEnum.EXTENDO_PITCH) >= 50 &&!(hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition() > 150)){
                 state.setMotorTarget(MotorEnum.EXTENDO_PITCH, hw.getMotorConfig(MotorEnum.EXTENDO_PITCH).motor.getCurrentPosition() - 20);
             }
-            else if (-gamepad2.right_stick_y<0&&state.getMotorTarget(MotorEnum.EXTENDO_PITCH)<=1300&&!(extendo.getCurrentPosition()>150)){
+            else if (-gamepad2.right_stick_y<0&&state.getMotorTarget(MotorEnum.EXTENDO_PITCH)<=1300&&!(hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition()>150)){
                 state.setMotorTarget(MotorEnum.EXTENDO_PITCH, hw.getMotorConfig(MotorEnum.EXTENDO_PITCH).motor.getCurrentPosition() + 20);
             }
             if (gamepad2.x&&state.getMotorTarget(MotorEnum.EXTENDO_PITCH)>=215){
@@ -259,15 +261,15 @@ public class OptimizedTeleOp extends LinearOpMode {
             // Hang toggle between min and max positions
             if (gamepad2.y){
                 if (!isPressingY2) {
-                    if (hangTarget == 0) {
+                    if (state.getMotorTarget(MotorEnum.HANG) == 0) {
                         isPressingY2 = true;
-                        hangTarget = 9000;}
-                    else if (hangTarget == 9000) {
-                        hangTarget = 5400;
+                        state.setMotorTarget(MotorEnum.HANG,9000);}
+                    else if (state.getMotorTarget(MotorEnum.HANG) == 9000) {
+                        state.setMotorTarget(MotorEnum.HANG,5400);
                         isPressingY2 = true;
                     }
-                    else if (hangTarget == 5400){
-                        hangTarget = 0;
+                    else if (state.getMotorTarget(MotorEnum.HANG) == 5400){
+                        state.setMotorTarget(MotorEnum.HANG,0);
                         isPressingY2 = true;
                     }
                 }
@@ -293,12 +295,14 @@ public class OptimizedTeleOp extends LinearOpMode {
             // Claw pitch to position 0 to 1
             if (gamepad2.dpad_left){
                 if (!isPressingBumper2) {
-                    if(clawWristPosition==79.5){
-                        if (clawPitchPosition > 104){
-                            clawPitchPosition = 104;
+                    if(state.getServoPosition(ServoEnum.CLAW_WRIST) == 79.5){
+                        if (state.getServoPosition(ServoEnum.CLAW_PITCH_LEFT) > 104 && state.getServoPosition(ServoEnum.CLAW_PITCH_RIGHT) > 104){
+                            state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT, 104);
+                            state.setServoPosition(ServoEnum.CLAW_PITCH_RIGHT, 104);
                         }
-                        else if (clawPitchPosition <= 104) {
-                            clawPitchPosition = 30.5;
+                        else if (state.getServoPosition(ServoEnum.CLAW_PITCH_LEFT) <= 104 && state.getServoPosition(ServoEnum.CLAW_PITCH_RIGHT) <= 104) {
+                            state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT, 30.5);
+                            state.setServoPosition(ServoEnum.CLAW_PITCH_RIGHT, 30.5);
                         }
                     }
 
@@ -307,12 +311,14 @@ public class OptimizedTeleOp extends LinearOpMode {
             }
             else if (gamepad2.dpad_right){
                 if (!isPressingBumper2) {
-                    if (clawWristPosition==79.5){
-                        if (clawPitchPosition < 104) {
-                            clawPitchPosition = 104;
+                    if (state.getServoPosition(ServoEnum.CLAW_WRIST) == 79.5){
+                        if (state.getServoPosition(ServoEnum.CLAW_PITCH_LEFT) < 104 && state.getServoPosition(ServoEnum.CLAW_PITCH_RIGHT) < 104){
+                            state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT, 104);
+                            state.setServoPosition(ServoEnum.CLAW_PITCH_RIGHT, 104);
                         }
-                        else if (clawPitchPosition >= 104) {
-                            clawPitchPosition = 205;
+                        else if (state.getServoPosition(ServoEnum.CLAW_PITCH_LEFT) >= 104 && state.getServoPosition(ServoEnum.CLAW_PITCH_RIGHT) >= 104) {
+                            state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT, 205);
+                            state.setServoPosition(ServoEnum.CLAW_PITCH_RIGHT, 205);
                         }
                     }
                 }
@@ -323,32 +329,33 @@ public class OptimizedTeleOp extends LinearOpMode {
             }
 
             //specimen scoring pitch position
-            if ((gamepad2.options) && (clawWristPosition==79.5)){
-                clawPitchPosition = 67.25;
+            if ((gamepad2.options) && (state.getServoPosition(ServoEnum.CLAW_WRIST) == 79.5)){
+                state.setServoPosition(ServoEnum.CLAW_PITCH_LEFT, 67.5);
+                state.setServoPosition(ServoEnum.CLAW_PITCH_RIGHT, 67.5);
             }
 
             // Claw finger close 0 degrees
             // Claw finger open 50 degrees
             // Claw fingers toggle between open and closed
-            // Claw fingers fully open 80 degrees
+            // Claw fingers fully open 80 degrees) 
             if (gamepad2.left_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 120) {
-                        clawFingerPosition = 90;
+                    if (state.getServoPosition(ServoEnum.CLAW_FINGERS) == 120) {
+                        state.setServoPosition(ServoEnum.CLAW_FINGERS, 90);
                     }
-                    else if (clawFingerPosition == 90){
-                        clawFingerPosition = 37;
+                    else if (state.getServoPosition(ServoEnum.CLAW_FINGERS) == 90){
+                        state.setServoPosition(ServoEnum.CLAW_FINGERS, 37);
                     }
                 }
                 isPressingTrigger1=true;
             }
             else if (gamepad2.right_bumper){
                 if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 37) {
-                        clawFingerPosition = 90;
+                    if (state.getServoPosition(ServoEnum.CLAW_FINGERS) == 37) {
+                        state.setServoPosition(ServoEnum.CLAW_FINGERS, 90);
                     }
-                    else if (clawFingerPosition == 90) {
-                        clawFingerPosition = 120;
+                    else if (state.getServoPosition(ServoEnum.CLAW_FINGERS) == 90) {
+                        state.setServoPosition(ServoEnum.CLAW_FINGERS, 120);
                     }
                 }
                 isPressingTrigger1=true;
@@ -359,10 +366,10 @@ public class OptimizedTeleOp extends LinearOpMode {
 
             // Default perpendicular claw pos 79.5 degrees
             if (gamepad2.left_trigger>0) {
-                clawWristPosition = 79.5;
+                state.setServoPosition(ServoEnum.CLAW_WRIST, 79.5);
             }
-            else if (gamepad2.right_trigger>0 && clawWristPosition <= 143) {
-                clawWristPosition += 10;
+            else if (gamepad2.right_trigger>0 && state.getServoPosition(ServoEnum.CLAW_WRIST) <= 143) {
+                state.setServoPosition(ServoEnum.CLAW_WRIST, state.getServoPosition(ServoEnum.CLAW_WRIST) + 10);
             }
 
             // BucketTransfer / default pos 85 degrees

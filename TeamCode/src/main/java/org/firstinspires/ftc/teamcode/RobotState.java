@@ -1,7 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-import org.firstinspires.ftc.teamcode.MotorEnum;
-import org.firstinspires.ftc.teamcode.ServoEnum;
-import org.firstinspires.ftc.teamcode.HardwareConfig;
 
 import java.util.HashMap;
 

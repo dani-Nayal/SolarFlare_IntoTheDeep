@@ -29,16 +29,10 @@ public class AutoTest extends LinearOpMode {
                         actions.globalPID(),
                         actions.updateTelemetry(telemetry),
                         new SequentialAction(
-                                actions.pickUpGroundSample(
-                                        // Scoring Position
-                                        new Vector2d(-30.7,-45.1),
-                                        // Scoring heading
-                                        Math.toRadians(230),
-                                        // Extension length
-                                        425
-                                )
+                                actions.moveToNetZone()
                         )
                 )
         );
+
     }
 }
