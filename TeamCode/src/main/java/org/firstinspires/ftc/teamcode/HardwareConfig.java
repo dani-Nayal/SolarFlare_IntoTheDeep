@@ -23,8 +23,8 @@ public class HardwareConfig {
     private final HashMap<MotorEnum,MotorConfig> motorConfigs;
     private final HashMap<ServoEnum,ServoConfig> servoConfigs;
 
-    public IMUConfig imu;
-    public PinpointConfig pinpoint;
+    public IMUConfig imuConfig;
+    public PinpointConfig pinpointConfig;
 
     public static HardwareConfig getHardwareConfig() {
         if(hardwareConfig == null)
@@ -47,6 +47,13 @@ public class HardwareConfig {
             throw new IllegalArgumentException("Config is not present for " + servoEnum.name());
         }
         return servoConfig;
+    }
+
+    public PinpointConfig getPinpointConfig() {
+        return pinpointConfig;
+    }
+    public IMUConfig getImuConfig(){
+        return imuConfig;
     }
 
     public static void makeHardwareConfig(HardwareMap hardwareMap){
@@ -145,12 +152,12 @@ public class HardwareConfig {
                 "FORWARD",
                 0,
                 270));
-        this.imu = new IMUConfig(
+        this.imuConfig = new IMUConfig(
                 hardwareMap,
                 "imu",
                 "LEFT",
                 "UP");
-        this.pinpoint = new PinpointConfig(
+        this.pinpointConfig = new PinpointConfig(
                 hardwareMap,
                 "pinpoint");
     }

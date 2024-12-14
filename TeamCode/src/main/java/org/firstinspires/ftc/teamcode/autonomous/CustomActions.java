@@ -23,6 +23,7 @@ public class CustomActions {
     RobotState state;
     HardwareConfig hw;
     PinpointDrive drive;
+    HardwareMap hardwareMap;
     int extendoRetractedTarget = 0;
     int extendoScoringSpecimenTarget = 500;
     int extendoPitchPickUpTarget = 1350;
@@ -45,8 +46,7 @@ public class CustomActions {
     public CustomActions(RobotState state, HardwareMap hardwareMap) {
         hw = HardwareConfig.getHardwareConfig();
         this.state = state;
-        drive = new PinpointDrive(hardwareMap, new Pose2d(-hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270)));
-
+        this.hardwareMap = hardwareMap;
     }
 
     public class SetMotorTargetAction implements Action {
@@ -66,6 +66,24 @@ public class CustomActions {
             double error = state.getMotorTarget(motorEnum) - hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
             // Returns false when error is less 15
             return !(error < 15);
+        }
+    }
+    // Initial position based off preload and cycle type
+    public void setInitialDrivePosition(String preloadType, String cycleType){
+        if (preloadType.equals("specimen") && cycleType.equals("sample")) {
+            drive = new PinpointDrive(hardwareMap, new Pose2d(-hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270)));
+        }
+        else if (preloadType.equals("sample") && cycleType.equals("sample")) {
+            drive = new PinpointDrive(hardwareMap, new Pose2d(-32.125-(hw.ROBOT_LENGTH/2), -70+(hw.ROBOT_WIDTH/2), Math.toRadians(180)));
+        }
+        else if (preloadType.equals("sample") && cycleType.equals("specimen")) {
+            drive = new PinpointDrive(hardwareMap, new Pose2d(-32.125-(hw.ROBOT_LENGTH/2), -70+(hw.ROBOT_WIDTH/2), Math.toRadians(180)));
+        }
+        else if (preloadType.equals("specimen") && cycleType.equals("specimen")) {
+            drive = new PinpointDrive(hardwareMap, new Pose2d(hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270)));
+        }
+        else{
+            throw new IllegalArgumentException("setInitialDrivePosition parameter incorrect");
         }
     }
 
@@ -147,10 +165,10 @@ public class CustomActions {
             telemetry.addData("bucket position", hw.getServoConfig(ServoEnum.BUCKET).servo.getPosition());
 
             // Misc telemetry
-            telemetry.addData("pinpoint heading", hw.pinpoint.pinpoint.getYawScalar());
-            telemetry.addData("Control hub IMU heading", hw.imu.imu.getRobotYawPitchRollAngles().getYaw());
-            telemetry.addData("pinpoint x", hw.pinpoint.pinpoint.getPosX());
-            telemetry.addData("pinpoint y", hw.pinpoint.pinpoint.getPosY());
+            telemetry.addData("pinpoint heading", hw.pinpointConfig.pinpoint.getYawScalar());
+            telemetry.addData("Control hub IMU heading", hw.imuConfig.imu.getRobotYawPitchRollAngles().getYaw());
+            telemetry.addData("pinpoint x", hw.pinpointConfig.pinpoint.getPosX());
+            telemetry.addData("pinpoint y", hw.pinpointConfig.pinpoint.getPosY());
             telemetry.update();
             return true;
         }
@@ -165,7 +183,7 @@ public class CustomActions {
                     new SetServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, degrees),
                     new SetServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, degrees)
             ),
-            new SleepAction(0.6));}
+            new SleepAction(0.4));}
     public Action setClawFingerPosition(double degrees) {return new SequentialAction(
             new SetServoPositionAction(ServoEnum.CLAW_FINGERS, degrees),
             new SleepAction(0.3));}
@@ -196,11 +214,15 @@ public class CustomActions {
                 setClawFingerPosition(clawFingersOpenPosition)
         );
     }
-    public SequentialAction moveToNetZoneAndScoreHighBucket() {
+    public SequentialAction moveToNetZone() {
         return new SequentialAction(
                 // Move to scoring position
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225)).build(),
+                        .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(225)).build()
+        );
+    }
+    public SequentialAction scoreHighBucket(){
+        return new SequentialAction(
                 // Move bucketSlides up to scoring position
                 setBucketSlidesTarget(bucketSlidesHighBasketTarget),
                 // Rotate bucket to score
@@ -210,7 +232,7 @@ public class CustomActions {
                 // Move bucket back to default position
                 setBucketPosition(bucketTransferPosition),
                 // Move bucketSlides back to down position
-                setBucketSlidesTarget(0)
+                setBucketSlidesTarget(bucketSlidesDownTarget)
         );
     }
     public SequentialAction transferSample(){
@@ -226,7 +248,7 @@ public class CustomActions {
                 setClawFingerPosition(clawFingersFullyOpenPosition)
         );
     }
-    public Action pickUpGroundSample(Vector2d pickUpPose, double heading, int extendoPosition) {
+    public Action grabGroundSample(Vector2d pickUpPose, double heading, int extendoPosition) {
         return new SequentialAction(
                 new ParallelAction(
                         // Default positions
