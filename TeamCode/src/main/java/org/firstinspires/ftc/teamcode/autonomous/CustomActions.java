@@ -191,22 +191,45 @@ public class CustomActions {
     public Action setExtendoTarget(int target) {return new SetMotorTargetAction(MotorEnum.EXTENDO, target);}
     public Action setExtendoPitchTarget(int target) {return new SetMotorTargetAction(MotorEnum.EXTENDO_PITCH, target);}
     public Action setBucketSlidesTarget(int target) {return new SetMotorTargetAction(MotorEnum.BUCKET_SLIDES, target);}
+
+    public Action getServoSleepAction(ServoEnum servoEnum, double position) {
+        // Calculates amount of time needed for the servo to reach the target position
+        double sleepTime = Math.abs((position - state.getServoPosition(servoEnum))) / SERVO_SPEED;
+        return new SleepAction(sleepTime);
+    }
+
     public Action setClawPitchPosition(double degrees) {
+        Action sleepPLAction = getServoSleepAction(ServoEnum.CLAW_PITCH_LEFT, degrees);
+        Action sleepPRAction = getServoSleepAction(ServoEnum.CLAW_PITCH_RIGHT, degrees);
         return new ParallelAction(
-                new SetServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, degrees),
-                new SetServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, degrees)
+                new SequentialAction(
+                        new SetServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, degrees),
+                        sleepPLAction),
+                new SequentialAction(
+                        new SetServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, degrees),
+                        sleepPRAction)
             );
     }
+
     public Action setClawFingerPosition(double degrees) {
-        return new SetServoPositionAction(ServoEnum.CLAW_FINGERS, degrees);
+        Action sleepAction = getServoSleepAction(ServoEnum.CLAW_FINGERS, degrees);
+        return new SequentialAction(
+                new SetServoPositionAction(ServoEnum.CLAW_FINGERS, degrees),
+                sleepAction);
     }
 
     public Action setClawWristPosition(double degrees) {
-        return new SetServoPositionAction(ServoEnum.CLAW_WRIST, degrees);
+        Action sleepAction = getServoSleepAction(ServoEnum.CLAW_WRIST, degrees);
+        return new SequentialAction(
+                new SetServoPositionAction(ServoEnum.CLAW_WRIST, degrees),
+                sleepAction);
     }
 
     public Action setBucketPosition(double degrees) {
-        return new SetServoPositionAction(ServoEnum.BUCKET, degrees);
+        Action sleepAction = getServoSleepAction(ServoEnum.BUCKET, degrees);
+        return new SequentialAction(
+                new SetServoPositionAction(ServoEnum.BUCKET, degrees),
+                sleepAction);
     }
 
     public SequentialAction moveToHighChamberAndScoreSpecimen(Vector2d scoringPose, double heading) {
