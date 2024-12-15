@@ -191,21 +191,24 @@ public class CustomActions {
     public Action setExtendoTarget(int target) {return new SetMotorTargetAction(MotorEnum.EXTENDO, target);}
     public Action setExtendoPitchTarget(int target) {return new SetMotorTargetAction(MotorEnum.EXTENDO_PITCH, target);}
     public Action setBucketSlidesTarget(int target) {return new SetMotorTargetAction(MotorEnum.BUCKET_SLIDES, target);}
-    public Action setClawPitchPosition(double degrees) {return new SequentialAction(
-            new ParallelAction(
-                    new SetServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, degrees),
-                    new SetServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, degrees)
-            ),
-            new SleepAction(0.4));}
-    public Action setClawFingerPosition(double degrees) {return new SequentialAction(
-            new SetServoPositionAction(ServoEnum.CLAW_FINGERS, degrees),
-            new SleepAction(0.3));}
-    public Action setClawWristPosition(double degrees) {return new SequentialAction(
-            new SetServoPositionAction(ServoEnum.CLAW_WRIST, degrees),
-            new SleepAction(0.3));}
-    public Action setBucketPosition(double degrees) {return new SequentialAction(
-            new SetServoPositionAction(ServoEnum.BUCKET, degrees),
-                new SleepAction(0.5));}
+    public Action setClawPitchPosition(double degrees) {
+        return new ParallelAction(
+                new SetServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, degrees),
+                new SetServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, degrees)
+            );
+    }
+    public Action setClawFingerPosition(double degrees) {
+        return new SetServoPositionAction(ServoEnum.CLAW_FINGERS, degrees);
+    }
+
+    public Action setClawWristPosition(double degrees) {
+        return new SetServoPositionAction(ServoEnum.CLAW_WRIST, degrees);
+    }
+
+    public Action setBucketPosition(double degrees) {
+        return new SetServoPositionAction(ServoEnum.BUCKET, degrees);
+    }
+
     public SequentialAction moveToHighChamberAndScoreSpecimen(Vector2d scoringPose, double heading) {
         return new SequentialAction(
                 new ParallelAction(
