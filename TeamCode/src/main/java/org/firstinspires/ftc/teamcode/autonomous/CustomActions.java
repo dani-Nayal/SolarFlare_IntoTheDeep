@@ -112,9 +112,6 @@ public class CustomActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             double previousPosition = state.getServoPosition(servoEnum);
             state.setServoPosition(servoEnum, position);
-
-            // Calculates amount of time needed for the servo to reach the target position
-            new SleepAction(Math.abs(position - previousPosition) / SERVO_SPEED);
             return false;
         }
     }
@@ -195,7 +192,7 @@ public class CustomActions {
     public Action getServoSleepAction(ServoEnum servoEnum, double position) {
         // Calculates amount of time needed for the servo to reach the target position
         double sleepTime = Math.abs((position - state.getServoPosition(servoEnum))) / SERVO_SPEED;
-        return new SleepAction(sleepTime);
+        return new SleepAction(sleepTime+0.07);
     }
 
     public Action setClawPitchPosition(double degrees) {

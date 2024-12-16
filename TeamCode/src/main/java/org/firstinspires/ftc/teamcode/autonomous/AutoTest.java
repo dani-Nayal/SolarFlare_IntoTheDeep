@@ -29,7 +29,11 @@ public class AutoTest extends LinearOpMode {
                         actions.globalPID(),
                         actions.updateTelemetry(telemetry),
                         new SequentialAction(
-                                actions.moveToNetZone()
+                                new ParallelAction(
+                                        actions.moveToNetZone(),
+                                        actions.transferSample()
+                                )
+
                         )
                 )
         );
