@@ -39,6 +39,8 @@ public class OptimizedTeleOp extends LinearOpMode {
         hw = HardwareConfig.getHardwareConfig();
         state = new RobotState();
 
+        waitForStart();
+
         while (opModeIsActive()){
 
             // Drivetrain control
