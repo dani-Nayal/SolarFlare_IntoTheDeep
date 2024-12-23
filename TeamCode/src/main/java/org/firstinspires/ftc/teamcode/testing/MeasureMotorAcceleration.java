@@ -83,6 +83,7 @@ public class MeasureMotorAcceleration extends LinearOpMode {
         hw.getMotorConfig(motorEnum).motor.setPower(pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum)));
 
         telemetry.addData("greatest acceleration", greatestAcceleration);
+        telemetry.addData("speed", currentSpeed);
         telemetry.addData("position", currentPosition);
         telemetry.update();
 

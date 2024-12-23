@@ -36,12 +36,13 @@ public class MotorControl {
             lastTargetPosition = previousLoopTarget;
             timer.reset();
         }
+        double distance = currentTarget - lastTargetPosition;
 
         double instantTargetPosition = profiles.runTrapezoidalMotionProfile(
-                hw.getMotorConfig(motorEnum).maxVelocity,
-                hw.getMotorConfig(motorEnum).maxAcceleration,
-                currentTarget - lastTargetPosition,
-                timer.seconds());
+                hw.getMotorConfig(motorEnum).maxVelocity * Math.signum(distance),
+                hw.getMotorConfig(motorEnum).maxAcceleration * Math.signum(distance),
+                distance,
+                timer.seconds()) + lastTargetPosition;
 
         if (motorEnum == MotorEnum.EXTENDO){
             motorPower = extendoPID.getPIDOutput(motorEnum, instantTargetPosition);
