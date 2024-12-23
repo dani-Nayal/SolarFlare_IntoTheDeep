@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.PresetMechanismPositions;
 import org.firstinspires.ftc.teamcode.RobotState;
 import org.firstinspires.ftc.teamcode.ServoEnum;
+import org.firstinspires.ftc.teamcode.motorcontrol.MotorControl;
 
 // Contains all non-default roadrunner actions that are used in our autonomous routines
 public class CustomActions {
@@ -26,12 +27,20 @@ public class CustomActions {
     PinpointDrive drive;
     HardwareMap hardwareMap;
     PresetMechanismPositions presets;
+    MotorControl extendoControl;
+    MotorControl extendoPitchControl;
+    MotorControl bucketSlidesControl;
+    MotorControl hangControl;
     public int SERVO_SPEED = 400;
 
     public CustomActions(RobotState state, HardwareMap hardwareMap) {
         hw = HardwareConfig.getHardwareConfig();
         this.state = state;
         this.hardwareMap = hardwareMap;
+        extendoControl = new MotorControl();
+        extendoPitchControl = new MotorControl();
+        bucketSlidesControl = new MotorControl();
+        hangControl = new MotorControl();
     }
 
     public class SetMotorTargetAction implements Action {
@@ -127,6 +136,7 @@ public class CustomActions {
     public class GlobalPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            /*
             hw.getMotorConfig(MotorEnum.EXTENDO).motor.setPower
                     ((state.getMotorTarget(MotorEnum.EXTENDO) - hw.getMotorConfig(MotorEnum.EXTENDO).motor.getCurrentPosition()) * hw.getMotorConfig(MotorEnum.EXTENDO).kP);
 
@@ -153,6 +163,11 @@ public class CustomActions {
 
             hw.getServoConfig(ServoEnum.CLAW_WRIST).servo.setPosition
                     (state.getServoPosition(ServoEnum.CLAW_WRIST) / hw.getServoConfig(ServoEnum.CLAW_WRIST).maxServoPosition);
+            */
+            extendoControl.runTrapezoidalMotorControl(MotorEnum.EXTENDO);
+            extendoPitchControl.runTrapezoidalMotorControl(MotorEnum.EXTENDO_PITCH);
+            bucketSlidesControl.runTrapezoidalMotorControl(MotorEnum.BUCKET_SLIDES);
+            hangControl.runTrapezoidalMotorControl(MotorEnum.HANG);
 
             return true;
         }
