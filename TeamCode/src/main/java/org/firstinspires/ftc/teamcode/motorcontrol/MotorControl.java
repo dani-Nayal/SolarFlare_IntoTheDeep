@@ -31,8 +31,8 @@ public class MotorControl {
         }
 
         double instantTargetPosition = profiles.runTrapezoidalMotionProfile(
-                hw.getMotorConfig(motorEnum).maxVelocity,
-                hw.getMotorConfig(motorEnum).maxAcceleration,
+                hw.getMotorConfig(motorEnum).maxVelocity*Math.signum(currentTarget - lastTargetPosition),
+                hw.getMotorConfig(motorEnum).maxAcceleration*Math.signum(currentTarget - lastTargetPosition),
                 currentTarget - lastTargetPosition,
                 timer.seconds());
 

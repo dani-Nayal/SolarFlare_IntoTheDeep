@@ -72,7 +72,7 @@ public class HardwareConfig {
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
                 "BRAKE",
-                350));
+                350,69,420));
         motorConfigs.put(MotorEnum.EXTENDO_PITCH, new MotorConfig(
                 hardwareMap,
                 "extendoPitch",
@@ -80,7 +80,7 @@ public class HardwareConfig {
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
                 "BRAKE",
-                1350));
+                1350,69,420));
         motorConfigs.put(MotorEnum.LEFT_FRONT, new MotorConfig(
                 hardwareMap,
                 "leftFront",
@@ -88,7 +88,7 @@ public class HardwareConfig {
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
                 "BRAKE",
-                (int) Double.POSITIVE_INFINITY));
+                (int) Double.POSITIVE_INFINITY,69,420));
         motorConfigs.put(MotorEnum.LEFT_BACK, new MotorConfig(
                 hardwareMap,
                 "leftBack",
@@ -96,7 +96,7 @@ public class HardwareConfig {
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
                 "BRAKE",
-                (int) Double.POSITIVE_INFINITY));
+                (int) Double.POSITIVE_INFINITY,69,420));
         motorConfigs.put(MotorEnum.RIGHT_FRONT, new MotorConfig(
                 hardwareMap,
                 "rightFront",
@@ -104,7 +104,7 @@ public class HardwareConfig {
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
                 "BRAKE",
-                (int) Double.POSITIVE_INFINITY));
+                (int) Double.POSITIVE_INFINITY,69,420));
         motorConfigs.put(MotorEnum.RIGHT_BACK, new MotorConfig(
                 hardwareMap,
                 "rightBack",
@@ -112,7 +112,7 @@ public class HardwareConfig {
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
                 "BRAKE",
-                (int) Double.POSITIVE_INFINITY));
+                (int) Double.POSITIVE_INFINITY,69,420));
         motorConfigs.put(MotorEnum.HANG, new MotorConfig(
                 hardwareMap,
                 "hang",
@@ -120,7 +120,7 @@ public class HardwareConfig {
                 "RUN_WITHOUT_ENCODER",
                 "FORWARD",
                 "BRAKE",
-                9000));
+                9000,69,420));
         motorConfigs.put(MotorEnum.BUCKET_SLIDES, new MotorConfig(
                 hardwareMap,
                 "bucketSlides",
@@ -128,7 +128,7 @@ public class HardwareConfig {
                 "RUN_WITHOUT_ENCODER",
                 "REVERSE",
                 "BRAKE",
-                1100));
+                1100,69,420));
         // Initialize ServoConfigs
         servoConfigs.put(ServoEnum.CLAW_PITCH_LEFT, new ServoConfig(
                 hardwareMap,
@@ -178,7 +178,9 @@ public class HardwareConfig {
         public DcMotorSimple.Direction direction;
         public ZeroPowerBehavior zeroPowerBehaviour;
         public int maxTarget;
-        public MotorConfig(HardwareMap hardwareMap, String deviceName, double kP, double kI, double kD, String runMode, String direction, String zeroPowerBehaviour, int maxTarget){
+        public double maxAcceleration;
+        public double maxVelocity;
+        public MotorConfig(HardwareMap hardwareMap, String deviceName, double kP, double kI, double kD, String runMode, String direction, String zeroPowerBehaviour, int maxTarget, double maxVelocity, double maxAcceleration){
             this.motor = hardwareMap.dcMotor.get(deviceName);
             this.kP = kP;
             this.kI = kI;
@@ -191,6 +193,8 @@ public class HardwareConfig {
             motor.setDirection(this.direction);
             motor.setZeroPowerBehavior(this.zeroPowerBehaviour);
             this.maxTarget = maxTarget;
+            this.maxAcceleration=maxAcceleration;
+            this.maxVelocity=maxVelocity;
         }
     }
     public static class ServoConfig{
