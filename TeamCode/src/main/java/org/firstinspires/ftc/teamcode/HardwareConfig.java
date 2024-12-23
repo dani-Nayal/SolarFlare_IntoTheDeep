@@ -193,8 +193,8 @@ public class HardwareConfig {
             motor.setDirection(this.direction);
             motor.setZeroPowerBehavior(this.zeroPowerBehaviour);
             this.maxTarget = maxTarget;
-            this.maxAcceleration=maxAcceleration;
-            this.maxVelocity=maxVelocity;
+            this.maxAcceleration = maxAcceleration;
+            this.maxVelocity = maxVelocity;
         }
     }
     public static class ServoConfig{
