@@ -33,7 +33,7 @@ public class MotorControl {
         int currentTarget = state.getMotorTarget(motorEnum);
 
         if (currentTarget != previousLoopTarget){
-            lastTargetPosition = previousLoopTarget;
+            lastTargetPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
             timer.reset();
         }
         double distance = currentTarget - lastTargetPosition;
