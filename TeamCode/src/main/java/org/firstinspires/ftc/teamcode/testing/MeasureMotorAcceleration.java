@@ -14,9 +14,9 @@ import org.firstinspires.ftc.teamcode.motorcontrol.PID;
 
 import java.util.Objects;
 
-@Config
 @TeleOp
-public class MeasureMotorVelocity extends LinearOpMode {
+@Config
+public class MeasureMotorAcceleration extends LinearOpMode {
     HardwareConfig hw;
     RobotState state;
     PID pid;
@@ -26,6 +26,10 @@ public class MeasureMotorVelocity extends LinearOpMode {
     double currentSpeed = 0;
     int lastPosition = 0;
     int currentPosition = 0;
+    double lastSpeed = 0;
+    double currentAcceleration = 0;
+    double lastAcceleration = 0;
+    double greatestAcceleration = 0;
     ElapsedTime timer = new ElapsedTime();
     @Override
     public void runOpMode(){
@@ -55,30 +59,36 @@ public class MeasureMotorVelocity extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()){
-
-            if (gamepad1.a){
-                state.setMotorTarget(motorEnum, 0);
-                timer.reset();
-            }
-            else if (gamepad1.b){
-                state.setMotorTarget(motorEnum, hw.getMotorConfig(motorEnum).maxTarget);
-                timer.reset();
-            }
-
-            currentPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
-            currentSpeed = (currentPosition - lastPosition) / timer.seconds();
-
-            if (currentSpeed > greatestSpeed){
-                greatestSpeed = currentSpeed;
-            }
-
-            hw.getMotorConfig(motorEnum).motor.setPower(pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum)));
-            telemetry.addData("greatest speed", greatestSpeed);
-            telemetry.addData("position", currentPosition);
-            telemetry.update();
-
-            lastPosition = currentPosition;
+        if (gamepad1.a){
+            state.setMotorTarget(motorEnum, 0);
+            timer.reset();
         }
+        else if (gamepad1.b){
+            state.setMotorTarget(motorEnum, hw.getMotorConfig(motorEnum).maxTarget);
+            timer.reset();
+        }
+
+        currentPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
+        currentSpeed = (currentPosition - lastPosition) / timer.seconds();
+
+        if (currentSpeed > greatestSpeed){
+            greatestSpeed = currentSpeed;
+        }
+        if (currentAcceleration > greatestAcceleration){
+            greatestAcceleration = currentAcceleration;
+        }
+
+        currentAcceleration = currentSpeed - lastSpeed;
+
+        hw.getMotorConfig(motorEnum).motor.setPower(pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum)));
+
+        telemetry.addData("greatest acceleration", greatestAcceleration);
+        telemetry.addData("position", currentPosition);
+        telemetry.update();
+
+        lastPosition = currentPosition;
+        lastSpeed = currentSpeed;
+        lastAcceleration = currentAcceleration;
+
     }
 }
