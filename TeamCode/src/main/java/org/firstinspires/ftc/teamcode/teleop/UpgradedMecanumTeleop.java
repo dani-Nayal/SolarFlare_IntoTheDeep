@@ -584,10 +584,10 @@ public class UpgradedMecanumTeleop extends LinearOpMode {
                 frontRightPower = 0.5 * (rotY - rotX - rx) / denominator;
                 backRightPower = 0.5 * (rotY + rotX - rx) / denominator;
             }
-            double extendoMP=motionProfile(2781,2781,extendoDistance,"extendo")+oldExtendoPos;
-            double extendoPitchMP=motionProfile(2787,2787,extendoPitchDistance,"extendoPitch")+oldExtendoPitchPos;
-            double bucketSlidesMP=motionProfile(2781,2781,extendoDistance,"bucketSlides")+oldBucketSlidesPos;
-            double hangMP=motionProfile(2787,2787,extendoDistance,"hang")+oldHangPos;
+            double extendoMP=motionProfile(2781*Math.signum(extendoDistance),2781*Math.signum(extendoDistance),extendoDistance,"extendo")+oldExtendoPos;
+            double extendoPitchMP=motionProfile(2787*Math.signum(extendoPitchDistance),2787*Math.signum(extendoPitchDistance),extendoPitchDistance,"extendoPitch")+oldExtendoPitchPos;
+            double bucketSlidesMP=motionProfile(2781*Math.signum(bucketSlidesDistance),2781*Math.signum(bucketSlidesDistance),bucketSlidesDistance,"bucketSlides")+oldBucketSlidesPos;
+            double hangMP=motionProfile(2787*Math.signum(hangDistance),2787*Math.signum(hangDistance),hangDistance,"hang")+oldHangPos;
 
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);

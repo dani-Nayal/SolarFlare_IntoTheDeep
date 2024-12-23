@@ -6,7 +6,7 @@ public class MotionProfiles {
         double halfWayDistance = distance / 2;
         double accelerationDistance = 0.5 * maxMotorAcceleration * Math.pow(accelerationDT, 2);
 
-        if (accelerationDistance > halfWayDistance){
+        if (Math.abs(accelerationDistance) > Math.abs(halfWayDistance)){
             accelerationDT = Math.sqrt(halfWayDistance / (0.5 * maxMotorAcceleration));
         }
         accelerationDistance = 0.5 * maxMotorAcceleration * Math.pow(accelerationDT, 2);

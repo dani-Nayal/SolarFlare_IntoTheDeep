@@ -34,7 +34,7 @@ public class PID {
         double proportionalPower = error * hw.getMotorConfig(motorEnum).kP;
         double integralPower = integralSum * hw.getMotorConfig(motorEnum).kI;
         double derivativePower = derivative * hw.getMotorConfig(motorEnum).kD;
-        double outPower = proportionalPower + integralPower + derivativePower;
+        double outPower = Math.max(-1,Math.min(1,proportionalPower + integralPower + derivativePower));
 
         lastError = error;
         lastReference = reference;
