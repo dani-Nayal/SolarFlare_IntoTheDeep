@@ -12,8 +12,8 @@ public class MotorControl {
     PID pid;
     MotionProfiles profiles;
     public ElapsedTime timer;
-    double previousLoopTarget = 0;
-    double lastTargetPosition;
+    int previousLoopTarget = 0;
+    int lastTargetPosition;
     public MotorControl(){
         hw = HardwareConfig.getHardwareConfig();
         state = new RobotState();
@@ -23,7 +23,7 @@ public class MotorControl {
     }
     // Meant to be ran in a loop
     public void runTrapezoidalMotorControl(MotorEnum motorEnum){
-        double currentTarget = state.getMotorTarget(motorEnum);
+        int currentTarget = state.getMotorTarget(motorEnum);
 
         if (currentTarget != previousLoopTarget){
             lastTargetPosition = previousLoopTarget;

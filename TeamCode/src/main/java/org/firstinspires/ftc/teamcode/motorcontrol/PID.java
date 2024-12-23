@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.RobotState;
 public class PID {
     HardwareConfig hw;
     RobotState state;
-    double lastError = 0;
-    double lastReference = 0;
+    int lastError = 0;
+    int lastReference = 0;
     double integralSum = 0;
     double integralSumLimit = 0.25;
     ElapsedTime timer = new ElapsedTime();
@@ -18,11 +18,11 @@ public class PID {
         hw = HardwareConfig.getHardwareConfig();
         state = new RobotState();
     }
-    public double getPIDOutput(MotorEnum motorEnum, double reference){
+    public double getPIDOutput(MotorEnum motorEnum, int reference){
 
-        double encoderPosition = state.getMotorTarget(motorEnum);
+        int encoderPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
 
-        double error = reference - encoderPosition;
+        int error = reference - encoderPosition;
 
         double derivative = (error - lastError) / timer.seconds();
 
