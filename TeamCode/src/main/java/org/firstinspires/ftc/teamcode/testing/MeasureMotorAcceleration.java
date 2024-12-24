@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -24,8 +25,6 @@ public class MeasureMotorAcceleration extends LinearOpMode {
     MotorEnum motorEnum;
     double greatestSpeed = 0;
     double currentSpeed = 0;
-    int lastPosition = 0;
-    int currentPosition = 0;
     double lastSpeed = 0;
     double currentAcceleration = 0;
     double lastAcceleration = 0;
@@ -64,12 +63,10 @@ public class MeasureMotorAcceleration extends LinearOpMode {
             timer.reset();
         }
         else if (gamepad1.b){
-            state.setMotorTarget(motorEnum, hw.getMotorConfig(motorEnum).maxTarget);
+            state.setMotorTarget(motorEnum, 3500);
             timer.reset();
         }
 
-        currentPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
-        currentSpeed = (currentPosition - lastPosition) / timer.seconds();
 
         if (currentSpeed > greatestSpeed){
             greatestSpeed = currentSpeed;
@@ -81,13 +78,14 @@ public class MeasureMotorAcceleration extends LinearOpMode {
         currentAcceleration = currentSpeed - lastSpeed;
 
         hw.getMotorConfig(motorEnum).motor.setPower(pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum)));
+        DcMotorEx dcMotorEx = (DcMotorEx) (hw.getMotorConfig(motorEnum).motor);
+        currentSpeed = dcMotorEx.getVelocity();
 
         telemetry.addData("greatest acceleration", greatestAcceleration);
+        telemetry.addData("greatest speed", greatestSpeed);
         telemetry.addData("speed", currentSpeed);
-        telemetry.addData("position", currentPosition);
         telemetry.update();
 
-        lastPosition = currentPosition;
         lastSpeed = currentSpeed;
         lastAcceleration = currentAcceleration;
 
