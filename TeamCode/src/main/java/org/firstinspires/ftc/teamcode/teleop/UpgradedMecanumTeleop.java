@@ -74,24 +74,28 @@ public class UpgradedMecanumTeleop extends LinearOpMode {
         hangTarget=target;
         hangDistance=hangTarget-oldHangPos;
         hangTimer.reset();
+        integralSums.put("hang",0.0);
     }
     public void setBucketSlidesTarget(double target){
         oldBucketSlidesPos=hang.getCurrentPosition();
         bucketSlidesTarget=target;
         bucketSlidesDistance=bucketSlidesTarget-oldBucketSlidesPos;
         bucketSlidesTimer.reset();
+        integralSums.put("bucketSlides",0.0);
     }
     public void setExtendoTarget(double target){
         oldExtendoPos=hang.getCurrentPosition();
         extendoTarget=target;
         extendoDistance=extendoTarget-oldExtendoPos;
         extendoTimer.reset();
+        integralSums.put("extendo",0.0);
     }
     public void setExtendoPitchTarget(double target){
         oldExtendoPitchPos=hang.getCurrentPosition();
         extendoPitchTarget=target;
         extendoPitchDistance=extendoPitchTarget-oldExtendoPitchPos;
         extendoPitchTimer.reset();
+        integralSums.put("extendoPitch",0.0);
     }
 
     public double motionProfile(double max_acceleration, double max_velocity, double distance, String motor) {
