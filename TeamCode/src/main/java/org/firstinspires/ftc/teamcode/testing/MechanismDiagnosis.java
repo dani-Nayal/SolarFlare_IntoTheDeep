@@ -50,8 +50,14 @@ public class MechanismDiagnosis extends LinearOpMode {
             hw.getMotorConfig(motorEnum).motor.setPower(0);
 
             while (Boolean.FALSE.equals(motorMoving.get(motorEnum))){
-                if (gamepad1.a) motorMoving.put(motorEnum, true);
-                else throw new NullPointerException("Boolean not found for specified motorEnum");
+                if (gamepad1.a) {
+                    try{
+                        motorMoving.put(motorEnum, true);
+                    }
+                    catch (Exception exception){
+                        throw new NullPointerException("Boolean not found for specified motorEnum");
+                    }
+                }
                 telemetry.addLine("Press A if " + motorEnum.toString() + "motor has moved");
                 telemetry.update();
             }
