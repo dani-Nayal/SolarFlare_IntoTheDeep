@@ -58,6 +58,9 @@ public class MechanismDiagnosis extends LinearOpMode {
                         throw new NullPointerException("Boolean not found for specified motorEnum");
                     }
                 }
+                else if (gamepad1.b){
+                    break;
+                }
                 telemetry.addLine("Press A if " + motorEnum.toString() + "motor has moved");
                 telemetry.update();
             }
