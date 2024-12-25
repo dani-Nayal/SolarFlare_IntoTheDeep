@@ -3,9 +3,17 @@ package org.firstinspires.ftc.teamcode;
 import java.util.HashMap;
 
 public class RobotState {
+    private static RobotState state;
     HashMap<MotorEnum, Integer> targets = new HashMap<>(10);
     HashMap<ServoEnum, Double> positions = new HashMap<>(10);
-    public RobotState(){
+
+    public static RobotState getInstance(){
+        if (state == null){
+            state = new RobotState();
+        }
+        return state;
+    }
+    private RobotState(){
         targets.put(MotorEnum.EXTENDO, 0);
         targets.put(MotorEnum.EXTENDO_PITCH, 0);
         targets.put(MotorEnum.HANG, 0);

@@ -26,10 +26,15 @@ public class HardwareConfig {
     public IMUConfig imuConfig;
     public PinpointConfig pinpointConfig;
 
-    public static HardwareConfig getHardwareConfig() {
+    public static HardwareConfig getInstance() {
         if(hardwareConfig == null)
             throw new InvalidParameterException("HardwareConfig not initialized");
         return hardwareConfig;
+    }
+    public static void makeInstance(HardwareMap hardwareMap) {
+        if (hardwareConfig == null){
+            hardwareConfig = new HardwareConfig(hardwareMap);
+        }
     }
     // Gets MotorConfig from motorConfigs HashMap
     public MotorConfig getMotorConfig(MotorEnum motorEnum) throws IllegalArgumentException{
@@ -54,10 +59,6 @@ public class HardwareConfig {
     }
     public IMUConfig getImuConfig(){
         return imuConfig;
-    }
-
-    public static void makeHardwareConfig(HardwareMap hardwareMap){
-        hardwareConfig = new HardwareConfig(hardwareMap);
     }
 
     private HardwareConfig(HardwareMap hardwareMap){

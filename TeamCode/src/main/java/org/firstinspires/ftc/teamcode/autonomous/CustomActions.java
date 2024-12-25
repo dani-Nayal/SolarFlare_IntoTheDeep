@@ -34,7 +34,7 @@ public class CustomActions {
     public int SERVO_SPEED = 400;
 
     public CustomActions(RobotState state, HardwareMap hardwareMap) {
-        hw = HardwareConfig.getHardwareConfig();
+        hw = HardwareConfig.getInstance();
         this.state = state;
         this.hardwareMap = hardwareMap;
         extendoControl = new MotorControl();
@@ -198,9 +198,9 @@ public class CustomActions {
             telemetry.addData("bucket position", hw.getServoConfig(ServoEnum.BUCKET).servo.getPosition());
 
             // Misc telemetry
-            telemetry.addData("pinpoint heading", hw.pinpointConfig.pinpoint.getYawScalar());
             telemetry.addData("Control hub IMU heading", hw.imuConfig.imu.getRobotYawPitchRollAngles().getYaw());
-            telemetry.addData("robot pose", String.valueOf(drive.pose));
+            telemetry.addData("robot x position", drive.pose.position.x);
+            telemetry.addData("robot y position", drive.pose.position.y);
             telemetry.update();
             return true;
         }
