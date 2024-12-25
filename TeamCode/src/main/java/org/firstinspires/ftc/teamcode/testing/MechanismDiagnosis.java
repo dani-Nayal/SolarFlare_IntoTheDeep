@@ -32,12 +32,15 @@ public class MechanismDiagnosis extends LinearOpMode {
         state = RobotState.getInstance();
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,Math.toRadians(0)));
 
-        motorMoving.put(MotorEnum.EXTENDO, false);
+        for (MotorEnum motorEnum: MotorEnum.values()) {
+            motorMoving.put(motorEnum, false);
 
-        motorReadingsWorking.put(MotorEnum.EXTENDO, false);
+            motorReadingsWorking.put(motorEnum, false);
 
-        servoMoving.put(ServoEnum.CLAW_WRIST, false);
-
+        }
+        for (ServoEnum servoEnum: ServoEnum.values()) {
+            servoMoving.put(servoEnum, false);
+        }
         waitForStart();
 
         // Move all motors individually by a small amount and check for movement
