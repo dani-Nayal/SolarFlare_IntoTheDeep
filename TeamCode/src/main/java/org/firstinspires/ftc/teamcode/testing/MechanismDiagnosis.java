@@ -81,6 +81,7 @@ public class MechanismDiagnosis extends LinearOpMode {
             while (Boolean.FALSE.equals(servoMoving.get(servoEnum))){
 
                 if (gamepad1.a) servoMoving.put(servoEnum, true);
+                else if (gamepad1.b) break;
                 telemetry.addLine("Press A if " + servoEnum.toString() + "has moved");
                 telemetry.update();
             }
