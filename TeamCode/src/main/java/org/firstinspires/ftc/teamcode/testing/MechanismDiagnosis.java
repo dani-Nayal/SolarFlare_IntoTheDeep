@@ -102,7 +102,7 @@ public class MechanismDiagnosis extends LinearOpMode {
             if (drive.pose.position.y != 0) upDownOdometryWorking = true;
             else telemetry.addData("Y axis odometry reading:", drive.pose.position.y);
             if (leftRightOdometryWorking && upDownOdometryWorking) odometryReadingsWorking = true;
-
+            if (gamepad1.b) break;
             telemetry.update();
         }
 
@@ -111,6 +111,7 @@ public class MechanismDiagnosis extends LinearOpMode {
             if (hw.getImuConfig().imu.getRobotYawPitchRollAngles().getYaw() != 0)
                 imuReadingsWorking = true;
             else telemetry.addData("IMU yaw reading: ", hw.getImuConfig().imu.getRobotYawPitchRollAngles().getYaw());
+            if (gamepad1.b) break;
             telemetry.update();
         }
 
