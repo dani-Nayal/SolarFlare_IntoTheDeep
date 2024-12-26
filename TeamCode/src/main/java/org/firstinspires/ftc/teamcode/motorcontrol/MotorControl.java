@@ -9,22 +9,16 @@ import org.firstinspires.ftc.teamcode.RobotState;
 public class MotorControl {
     HardwareConfig hw;
     RobotState state;
-    PID extendoPID;
-    PID extendoPitchPID;
-    PID bucketSlidesPID;
-    PID hangPID;
+    PID pid;
     MotionProfiles profiles;
     public ElapsedTime timer;
     int previousLoopTarget = 0;
     int lastTargetPosition;
     double motorPower;
     public MotorControl(){
-        hw = HardwareConfig.getHardwareConfig();
-        state = new RobotState();
-        extendoPID = new PID();
-        extendoPitchPID = new PID();
-        bucketSlidesPID = new PID();
-        hangPID = new PID();
+        hw = HardwareConfig.getInstance();
+        state = RobotState.getInstance();
+        pid=new PID();
         profiles = new MotionProfiles();
         timer = new ElapsedTime();
     }
@@ -44,18 +38,7 @@ public class MotorControl {
                 distance,
                 timer.seconds()) + lastTargetPosition;
 
-        if (motorEnum == MotorEnum.EXTENDO){
-            motorPower = extendoPID.getPIDOutput(motorEnum, instantTargetPosition);
-        }
-        else if (motorEnum == MotorEnum.EXTENDO_PITCH){
-            motorPower = extendoPitchPID.getPIDOutput(motorEnum, instantTargetPosition);
-        }
-        else if (motorEnum == MotorEnum.BUCKET_SLIDES){
-            motorPower = bucketSlidesPID.getPIDOutput(motorEnum, instantTargetPosition);
-        }
-        else if (motorEnum == MotorEnum.HANG){
-            motorPower = hangPID.getPIDOutput(motorEnum, instantTargetPosition);
-        }
+        motorPower=pid.getPIDOutput(motorEnum, instantTargetPosition);
 
         hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
 
