@@ -187,14 +187,25 @@ public class MeepMeepTesting {
 
 
         Action oneSpecimenPlusThreeSpecimen1 = myBot.getDrive().actionBuilder(new Pose2d(12.4375/2,-70+15.0625/2,Math.toRadians(90)))
+                .waitSeconds(0.2)
                 .strafeToLinearHeading(new Vector2d(12.4375/2,-43), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(32,-39,Math.toRadians(45)),Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(38,-38,Math.toRadians(30)),Math.toRadians(0))
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(38,-44,Math.toRadians(-45)),Math.toRadians(-45))
-                .splineToSplineHeading(new Pose2d(46,-41,Math.toRadians(37)),Math.toRadians(45))
-                .splineToLinearHeading(new Pose2d(51,-44,Math.toRadians(-45)),Math.toRadians(-45))
-                .splineToSplineHeading(new Pose2d(56,-41,Math.toRadians(37)),Math.toRadians(45))
-                .splineToLinearHeading(new Pose2d(58,-44,Math.toRadians(-45)),Math.toRadians(-45))
+                .splineToLinearHeading(new Pose2d(43,-41,Math.toRadians(-50)),Math.toRadians(-45))
+                .splineToSplineHeading(new Pose2d(46,-38,Math.toRadians(37)),Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(52,-41,Math.toRadians(-55)),Math.toRadians(-45))
+                .splineToSplineHeading(new Pose2d(57,-38,Math.toRadians(25)),Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(58,-41,Math.toRadians(-10)),Math.toRadians(-80))
+                .splineToSplineHeading(new Pose2d(50,-45,Math.toRadians(-90)),Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(33,-50,Math.toRadians(-40)),Math.toRadians(225))
+                .splineToLinearHeading(new Pose2d(12.4375/2,-43,Math.toRadians(80)),Math.toRadians(110))
+                .splineToSplineHeading(new Pose2d(33,-50,Math.toRadians(-40)),Math.toRadians(-80))
+                .splineToLinearHeading(new Pose2d(12.4375/2,-43,Math.toRadians(80)),Math.toRadians(110))
+                .splineToSplineHeading(new Pose2d(33,-50,Math.toRadians(-40)),Math.toRadians(-80))
+                .splineToLinearHeading(new Pose2d(12.4375/2,-43,Math.toRadians(80)),Math.toRadians(110))
+                .splineToSplineHeading(new Pose2d(33,-50,Math.toRadians(-40)),Math.toRadians(-80))
+                .splineToLinearHeading(new Pose2d(12.4375/2,-43,Math.toRadians(80)),Math.toRadians(110))
+                .splineToSplineHeading(new Pose2d(33,-50,Math.toRadians(-40)),Math.toRadians(-80))
                 .build();
 
         myBot.runAction(new SequentialAction(oneSpecimenPlusThreeSpecimen1));
