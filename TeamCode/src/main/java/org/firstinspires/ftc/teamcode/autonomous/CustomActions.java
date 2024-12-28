@@ -26,7 +26,6 @@ public class CustomActions {
     HardwareConfig hw;
     PinpointDrive drive;
     HardwareMap hardwareMap;
-    RobotConstants presets;
     MotorControl extendoControl;
     MotorControl extendoPitchControl;
     MotorControl bucketSlidesControl;
@@ -255,21 +254,21 @@ public class CustomActions {
         return new SequentialAction(
                 new ParallelAction(
                         // Default positions
-                        setBucketPosition(presets.bucketWhenScoringSpecimenPosition),
-                        setClawFingerPosition(presets.clawFingersClosedPosition),
+                        setBucketPosition(RobotConstants.BUCKET_WHEN_SCORING_SPECIMEN_POSITION),
+                        setClawFingerPosition(RobotConstants.CLAW_FINGERS_CLOSED_POSITION),
 
                         // Move extendo pitch up, move claw pitch up, move extendo up
-                        setExtendoPitchTarget(presets.extendoPitchSpecimenUpTarget),
-                        setClawPitchPosition(presets.clawPitchSpecimenScoringPosition),
-                        setExtendoTarget(presets.extendoScoringSpecimenTarget),
+                        setExtendoPitchTarget(RobotConstants.EXTENDO_PITCH_SPECIMEN_UP_TARGET),
+                        setClawPitchPosition(RobotConstants.CLAW_PITCH_SPECIMEN_SCORING_POSITION),
+                        setExtendoTarget(RobotConstants.EXTENDO_SCORING_SPECIMEN_TARGET),
 
                         // Go to scoring position and heading
                         drive.actionBuilder(initialDrivePose)
                                 .strafeToLinearHeading(scoringPose,heading).build()
                 ),
                 // Lower extendoPitch
-                setExtendoPitchTarget(presets.extendoPitchSpecimenDownTarget),
-                setClawFingerPosition(presets.clawFingersOpenPosition)
+                setExtendoPitchTarget(RobotConstants.EXTENDO_PITCH_SPECIMEN_DOWN_TARGET),
+                setClawFingerPosition(RobotConstants.CLAW_FINGERS_OPEN_POSITION)
         );
     }
     public SequentialAction moveToNetZone(Pose2d initialDrivePose, Vector2d scoringPosition, double scoringHeading) {
@@ -282,53 +281,53 @@ public class CustomActions {
     public SequentialAction scoreHighBucket(){
         return new SequentialAction(
                 // Move bucketSlides up to scoring position
-                setBucketSlidesTarget(presets.bucketSlidesHighBasketTarget),
+                setBucketSlidesTarget(RobotConstants.BUCKET_SLIDES_HIGH_BASKET_TARGET),
                 // Rotate bucket to score
-                setBucketPosition(presets.bucketScoringPosition),
+                setBucketPosition(RobotConstants.BUCKET_SCORING_POSITION),
                 // Wait for sample slide out of bucket
                 new SleepAction(0.5),
                 // Move bucket back to default position
-                setBucketPosition(presets.bucketTransferPosition),
+                setBucketPosition(RobotConstants.BUCKET_TRANSFER_POSITION),
                 // Move bucketSlides back to down position
-                setBucketSlidesTarget(presets.bucketSlidesDownTarget)
+                setBucketSlidesTarget(RobotConstants.BUCKET_SLIDES_DOWN_TARGET)
         );
     }
     public SequentialAction transferSample(){
         return new SequentialAction(
                 new ParallelAction(
                         // Retract extendo
-                        setExtendoTarget(presets.extendoRetractedTarget),
+                        setExtendoTarget(RobotConstants.EXTENDO_RETRACTED_TARGET),
                         // Claw pitch transfer
-                        setClawPitchPosition(presets.clawPitchTransferPosition),
+                        setClawPitchPosition(RobotConstants.CLAW_PITCH_TRANSFER_POSITION),
                         // Raise extendo pitch
-                        setExtendoPitchTarget(presets.extendoPitchTransferTarget)
+                        setExtendoPitchTarget(RobotConstants.EXTENDO_PITCH_TRANSFER_TARGET)
                 ),
-                setClawFingerPosition(presets.clawFingersFullyOpenPosition)
+                setClawFingerPosition(RobotConstants.CLAW_FINGERS_FULLY_OPEN_POSITION)
         );
     }
     public Action grabGroundSample(Pose2d initialDrivePose, Vector2d pickUpPose, double heading, int extendoPosition) {
         return new SequentialAction(
                 new ParallelAction(
                         // Default positions
-                        setClawFingerPosition(presets.clawFingersOpenPosition),
-                        setBucketSlidesTarget(presets.bucketSlidesDownTarget),
-                        setExtendoTarget(presets.extendoRetractedTarget),
-                        setExtendoPitchTarget(presets.extendoPitchTransferTarget),
-                        setClawWristPosition(presets.clawWristDefaultPosition),
-                        setClawPitchPosition(presets.clawPitchTransferPosition),
-                        setBucketPosition(presets.bucketTransferPosition),
+                        setClawFingerPosition(RobotConstants.CLAW_FINGERS_OPEN_POSITION),
+                        setBucketSlidesTarget(RobotConstants.BUCKET_SLIDES_DOWN_TARGET),
+                        setExtendoTarget(RobotConstants.EXTENDO_RETRACTED_TARGET),
+                        setExtendoPitchTarget(RobotConstants.EXTENDO_PITCH_TRANSFER_TARGET),
+                        setClawWristPosition(RobotConstants.CLAW_WRIST_DEFAULT_POSITION),
+                        setClawPitchPosition(RobotConstants.CLAW_PITCH_TRANSFER_POSITION),
+                        setBucketPosition(RobotConstants.BUCKET_TRANSFER_POSITION),
                         // Move to pickup pose
                         drive.actionBuilder(initialDrivePose)
                                 .strafeToLinearHeading(pickUpPose,heading).build(),
                         // Lower extendoPitch
-                        setExtendoPitchTarget(presets.extendoPitchPickUpTarget)
+                        setExtendoPitchTarget(RobotConstants.EXTENDO_PITCH_PICK_UP_TARGET)
                 ),
                 // Extend out to custom position
                 setExtendoTarget(extendoPosition),
                 // Lower clawPitch
-                setClawPitchPosition(presets.clawPitchPickUpPosition),
+                setClawPitchPosition(RobotConstants.CLAW_PITCH_PICK_UP_POSITION),
                 // Close claw
-                setClawFingerPosition(presets.clawFingersClosedPosition)
+                setClawFingerPosition(RobotConstants.CLAW_FINGERS_CLOSED_POSITION)
         );
     }
 

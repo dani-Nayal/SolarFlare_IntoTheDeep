@@ -35,9 +35,9 @@ public class OptimizedTeleOp extends LinearOpMode {
     ElapsedTime Op2timer = new ElapsedTime();
     @Override
     public void runOpMode(){
-        HardwareConfig.makeHardwareConfig(hardwareMap);
-        hw = HardwareConfig.getHardwareConfig();
-        state = new RobotState();
+        HardwareConfig.makeInstance(hardwareMap);
+        hw = HardwareConfig.getInstance();
+        state = RobotState.getInstance();
 
         waitForStart();
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 public class RobotState {
     private static RobotState state;
+    HardwareConfig hw;
     HashMap<MotorEnum, Integer> targets = new HashMap<>(10);
     HashMap<ServoEnum, Double> positions = new HashMap<>(10);
 
@@ -14,6 +15,7 @@ public class RobotState {
         return state;
     }
     private RobotState(){
+        hw = HardwareConfig.getInstance();
         targets.put(MotorEnum.EXTENDO, 0);
         targets.put(MotorEnum.EXTENDO_PITCH, 0);
         targets.put(MotorEnum.HANG, 0);
@@ -43,8 +45,6 @@ public class RobotState {
         return position;
     }
     public void setServoPosition(ServoEnum servoEnum, double position){
-        HardwareConfig hw = HardwareConfig.getHardwareConfig();
-
         position = Math.max(position, hw.getServoConfig(servoEnum).minServoPosition);
         position = Math.min(position, hw.getServoConfig(servoEnum).maxServoPosition);
 

@@ -12,9 +12,9 @@ public class TestPID extends LinearOpMode {
     RobotState state;
     @Override
     public void runOpMode(){
-        HardwareConfig.makeHardwareConfig(hardwareMap);
-        hw = HardwareConfig.getHardwareConfig();
-        state = new RobotState();
+        HardwareConfig.makeInstance(hardwareMap);
+        hw = HardwareConfig.getInstance();
+        state = RobotState.getInstance();
 
         MotorEnum testingMotor = null;
 

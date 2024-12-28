@@ -32,9 +32,9 @@ public class MeasureMotorAcceleration extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     @Override
     public void runOpMode(){
-        HardwareConfig.makeHardwareConfig(hardwareMap);
-        hw = HardwareConfig.getHardwareConfig();
-        state = new RobotState();
+        HardwareConfig.makeInstance(hardwareMap);
+        hw = HardwareConfig.getInstance();
+        state = RobotState.getInstance();
         pid = new PID();
 
         FtcDashboard dashboard = FtcDashboard.getInstance();

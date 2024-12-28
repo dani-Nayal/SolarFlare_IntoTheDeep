@@ -68,6 +68,7 @@ public class HardwareConfig {
         servoConfigs = new HashMap<>(10);
 
         // Initialize MotorConfigs
+        /*
         motorConfigs.put(MotorEnum.EXTENDO, new MotorConfig(
                 hardwareMap,
                 "extendo",
@@ -171,6 +172,8 @@ public class HardwareConfig {
         this.pinpointConfig = new PinpointConfig(
                 hardwareMap,
                 "pinpoint");
+
+         */
         this.limelight3aConfig = new Limelight3aConfig(
                 hardwareMap,
                 "limelight",

@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import android.content.ClipboardManager;
-
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareConfig;
 
 import java.util.List;
 
+@Autonomous
 public class AutoSubmersibleCycle extends LinearOpMode {
     // top left is 0,0
     int LONG_SIDE_PIXELS = 680;
@@ -25,22 +25,15 @@ public class AutoSubmersibleCycle extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             LLResult result = hw.getLimelightConfig().limelight.getLatestResult();
 
-            List<LLResultTypes.DetectorResult> detections = result.getDetectorResults();
-
-            for (LLResultTypes.DetectorResult detection : detections) {
-
-                String className = detection.getClassName(); // What was detected
-
-                double x = detection.getTargetXDegrees(); // Where it is (left-right)
-                double y = detection.getTargetYDegrees(); // Where it is (up-down)
-                double area = detection.getTargetArea();
-                telemetry.addData("x", x);
-                telemetry.addData("y", y);
-                telemetry.addData("area percent", area);
-            }
+            telemetry.addData("x", result.getTx());
+            telemetry.addData("y", result.getTy());
+            telemetry.addData("area percent", result.getTa());
+            telemetry.addData("sample type", result.getClass());
+            telemetry.update();
         }
     }
 }
+
