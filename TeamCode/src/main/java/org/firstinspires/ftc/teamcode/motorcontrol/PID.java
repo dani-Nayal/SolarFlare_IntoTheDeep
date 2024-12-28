@@ -14,8 +14,8 @@ public class PID {
     double integralSum = 0;
     ElapsedTime timer = new ElapsedTime();
     public PID(){
-        hw = HardwareConfig.getHardwareConfig();
-        state = new RobotState();
+        hw = HardwareConfig.getInstance();
+        state = RobotState.getInstance();
     }
     public double getPIDOutput(MotorEnum motorEnum, double reference){
 

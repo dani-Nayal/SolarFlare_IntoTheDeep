@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.MotorEnum;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.PresetMechanismPositions;
+import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.RobotState;
 import org.firstinspires.ftc.teamcode.ServoEnum;
 import org.firstinspires.ftc.teamcode.motorcontrol.MotorControl;
@@ -26,7 +26,7 @@ public class CustomActions {
     HardwareConfig hw;
     PinpointDrive drive;
     HardwareMap hardwareMap;
-    PresetMechanismPositions presets;
+    RobotConstants presets;
     MotorControl extendoControl;
     MotorControl extendoPitchControl;
     MotorControl bucketSlidesControl;

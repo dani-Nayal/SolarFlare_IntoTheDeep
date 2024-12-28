@@ -20,9 +20,9 @@ public class InProgressAuto extends LinearOpMode {
     PinpointDrive drive;
     @Override
     public void runOpMode() {
-        HardwareConfig.makeHardwareConfig(hardwareMap);
-        hw = HardwareConfig.getHardwareConfig();
-        state = new RobotState();
+        HardwareConfig.makeInstance(hardwareMap);
+        hw = HardwareConfig.getInstance();
+        state = RobotState.getInstance();
         actions = new CustomActions(state, hardwareMap);
         actions.setInitialDrivePosition("specimen", "sample");
         drive = actions.getDrive();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
@@ -22,9 +23,9 @@ public class HardwareConfig {
     private static HardwareConfig hardwareConfig;
     private final HashMap<MotorEnum,MotorConfig> motorConfigs;
     private final HashMap<ServoEnum,ServoConfig> servoConfigs;
-
     public IMUConfig imuConfig;
     public PinpointConfig pinpointConfig;
+    public Limelight3aConfig limelight3aConfig;
 
     public static HardwareConfig getInstance() {
         if(hardwareConfig == null)
@@ -60,6 +61,7 @@ public class HardwareConfig {
     public IMUConfig getImuConfig(){
         return imuConfig;
     }
+    public Limelight3aConfig getLimelightConfig(){return limelight3aConfig;}
 
     private HardwareConfig(HardwareMap hardwareMap){
         motorConfigs = new HashMap<>(10);
@@ -169,6 +171,11 @@ public class HardwareConfig {
         this.pinpointConfig = new PinpointConfig(
                 hardwareMap,
                 "pinpoint");
+        this.limelight3aConfig = new Limelight3aConfig(
+                hardwareMap,
+                "limelight",
+                100
+        );
     }
     public static class MotorConfig{
         public DcMotor motor;
@@ -233,6 +240,17 @@ public class HardwareConfig {
 
         }
 
+    }
+    public static class Limelight3aConfig{
+        public Limelight3A limelight;
+        public String deviceName;
+        public int pollingRate;
+        public Limelight3aConfig(HardwareMap hardwareMap, String deviceName, int pollingRate){
+            this.limelight = hardwareMap.get(Limelight3A.class, deviceName);
+            this.deviceName = deviceName;
+            this.pollingRate = pollingRate;
+            limelight.setPollRateHz(pollingRate);
+        }
     }
 
 }
