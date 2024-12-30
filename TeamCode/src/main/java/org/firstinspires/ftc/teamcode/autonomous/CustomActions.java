@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,6 +20,16 @@ import org.firstinspires.ftc.teamcode.RobotConstants;
 import org.firstinspires.ftc.teamcode.RobotState;
 import org.firstinspires.ftc.teamcode.ServoEnum;
 import org.firstinspires.ftc.teamcode.motorcontrol.MotorControl;
+
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.HardwareConfig;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 // Contains all non-default roadrunner actions that are used in our autonomous routines
 public class CustomActions {
@@ -329,6 +340,95 @@ public class CustomActions {
                 // Close claw
                 setClawFingerPosition(RobotConstants.CLAW_FINGERS_CLOSED_POSITION)
         );
+    }
+    public class MoveToSubSamplePos implements Action {
+        public int pipeline;
+        public final double targetX=0;
+        public final double targetY=5;
+        public Vector2d initialPos;
+        public double initialHeading;
+        public Action traj;
+        public boolean isStart=true;
+        public MoveToSubSamplePos(String color,Vector2d initialPos,double initialHeading){
+            if (Objects.equals(color, "red")){
+                pipeline=0;
+            }
+            else if (Objects.equals(color, "blue")){
+                pipeline=1;
+            }
+            else{
+                pipeline=2;
+            }
+            this.initialPos=initialPos;
+            this.initialHeading=initialHeading;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            LLResult result = hw.getLimelightConfig().limelight.getLatestResult();
+            double xDiff=targetX-result.getTx();
+            double yDiff=targetY-result.getTy();
+            if (isStart){
+                traj=drive.actionBuilder(new Pose2d(initialPos.x,initialPos.y,initialHeading))
+                        .strafeToLinearHeading(
+                                new Vector2d(
+                                        initialPos.x+Math.cos(1000*Math.acos(xDiff/Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2)))),
+                                        initialPos.y+Math.sin(1000*Math.asin(yDiff/Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))))
+                                ),
+                                initialHeading
+                        )
+                        .build();
+                isStart=false;
+            }
+            if ((Math.abs(xDiff)>1||Math.abs(yDiff)>1)) {
+                traj.run(new TelemetryPacket());
+                return true;
+            }
+            else{
+                hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(0);
+                hw.getMotorConfig(MotorEnum.LEFT_FRONT).motor.setPower(0);
+                hw.getMotorConfig(MotorEnum.RIGHT_BACK).motor.setPower(0);
+                hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(0);
+                return false;
+            }
+        }
+    }
+    public Action moveToSubSamplePos(String color,Vector2d initialPos,double initialHeading){return new MoveToSubSamplePos(color,initialPos,initialHeading);}
+    public class SetWristToPickSample implements Action{
+        public double sleepTime;
+
+        public boolean run(@NonNull TelemetryPacket packet){
+            LLResult result = hw.getLimelightConfig().limelight.getLatestResult();
+            List<LLResultTypes.DetectorResult> detections = result.getDetectorResults();
+            LLResultTypes.DetectorResult targetDetection = null;
+            for (LLResultTypes.DetectorResult detection : detections){
+                if (detection.getTargetXDegrees()==result.getTx()&&detection.getTargetYDegrees()==result.getTy()){
+                    targetDetection=detection;
+                }
+            }
+            List<List<Double>> corners = targetDetection.getTargetCorners();
+            Double x1 = null; Double x2 = null; Double y1 = null; Double y2 = null;
+            for (List<Double> corner : corners){
+                if (!Objects.isNull(x1)){
+                    x1=corner.get(0);
+                }
+                else if (!x1.equals(corner.get(0))){
+                    x2=corner.get(0);
+                }
+                if (!Objects.isNull(y1)){
+                    y1=corner.get(1);
+                }
+                else if (!y1.equals(corner.get(1))){
+                    y2=corner.get(1);
+                }
+                if (Math.abs(x2-x1)>Math.abs(y2-y1)){
+                    state.setServoPosition(ServoEnum.CLAW_WRIST,143);
+                }
+                else{
+                    state.setServoPosition(ServoEnum.CLAW_WRIST,79.5);
+                }
+            }
+            return false;
+        }
     }
 
 }
