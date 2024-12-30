@@ -394,7 +394,7 @@ public class CustomActions {
     }
     public Action moveToSubSamplePos(String color,Vector2d initialPos,double initialHeading){return new MoveToSubSamplePos(color,initialPos,initialHeading);}
     public class SetWristToPickSample implements Action{
-        public double sleepTime;
+        public Action sleepAction;
 
         public boolean run(@NonNull TelemetryPacket packet){
             LLResult result = hw.getLimelightConfig().limelight.getLatestResult();
@@ -421,11 +421,18 @@ public class CustomActions {
                     y2=corner.get(1);
                 }
                 if (Math.abs(x2-x1)>Math.abs(y2-y1)){
+                    double sleepTime = Math.abs((143 - state.getServoPosition(ServoEnum.CLAW_WRIST))) / SERVO_SPEED;
+                    sleepAction=new SleepAction(sleepTime);
                     state.setServoPosition(ServoEnum.CLAW_WRIST,143);
                 }
                 else{
+                    double sleepTime = Math.abs((79.5 - state.getServoPosition(ServoEnum.CLAW_WRIST))) / SERVO_SPEED;
+                    sleepAction=new SleepAction(sleepTime);
                     state.setServoPosition(ServoEnum.CLAW_WRIST,79.5);
                 }
+            }
+            while (sleepAction.run(new TelemetryPacket())){
+
             }
             return false;
         }
