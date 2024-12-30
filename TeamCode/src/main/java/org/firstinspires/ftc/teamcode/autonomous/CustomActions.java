@@ -341,6 +341,7 @@ public class CustomActions {
                 setClawFingerPosition(RobotConstants.CLAW_FINGERS_CLOSED_POSITION)
         );
     }
+    /*
     public class MoveToSubSamplePos implements Action {
         public int pipeline;
         public final double targetX=0;
@@ -371,8 +372,8 @@ public class CustomActions {
                 traj=drive.actionBuilder(new Pose2d(initialPos.x,initialPos.y,initialHeading))
                         .strafeToLinearHeading(
                                 new Vector2d(
-                                        initialPos.x+Math.cos(1000*Math.acos(xDiff/Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2)))),
-                                        initialPos.y+Math.sin(1000*Math.asin(yDiff/Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))))
+                                        initialPos.x-Math.cos(1000*Math.acos(xDiff/Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2)))),
+                                        initialPos.y-Math.sin(1000*Math.asin(yDiff/Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))))
                                 ),
                                 initialHeading
                         )
@@ -392,7 +393,93 @@ public class CustomActions {
             }
         }
     }
-    public Action moveToSubSamplePos(String color,Vector2d initialPos,double initialHeading){return new MoveToSubSamplePos(color,initialPos,initialHeading);}
+     */
+    public class MoveToSubSamplePos implements Action {
+        public int pipeline;
+        public final double targetX=0;
+        public final double targetY=5;
+        public MoveToSubSamplePos(String color){
+            if (Objects.equals(color, "red")){
+                pipeline=0;
+            }
+            else if (Objects.equals(color, "blue")){
+                pipeline=1;
+            }
+            else{
+                pipeline=2;
+            }
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hw.getLimelightConfig().limelight.pipelineSwitch(pipeline);
+            LLResult result = hw.getLimelightConfig().limelight.getLatestResult();
+            double xDiff=-(targetX-result.getTx());
+            double yDiff=-(targetY-result.getTy());
+
+            if (xDiff>1) {
+                if (yDiff>1){
+                    hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(1);
+                    return true;
+                }
+                else if (yDiff<1){
+                    hw.getMotorConfig(MotorEnum.LEFT_FRONT).motor.setPower(-1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_BACK).motor.setPower(-1);
+                    return true;
+                }
+                else{
+                    hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(1);
+                    hw.getMotorConfig(MotorEnum.LEFT_FRONT).motor.setPower(-1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_BACK).motor.setPower(-1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(1);
+                    return true;
+                }
+            }
+            else if (xDiff<1){
+                if (yDiff>1){
+                    hw.getMotorConfig(MotorEnum.LEFT_FRONT).motor.setPower(1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_BACK).motor.setPower(1);
+                    return true;
+                }
+                else if (yDiff<1){
+                    hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(-1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(-1);
+                    return true;
+                }
+                else{
+                    hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(-1);
+                    hw.getMotorConfig(MotorEnum.LEFT_FRONT).motor.setPower(1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_BACK).motor.setPower(1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(-1);
+                    return true;
+                }
+            }
+            else{
+                if (yDiff>1){
+                    hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(1);
+                    hw.getMotorConfig(MotorEnum.LEFT_FRONT).motor.setPower(1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_BACK).motor.setPower(1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(1);
+                    return true;
+                }
+                else if (yDiff<1){
+                    hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(-1);
+                    hw.getMotorConfig(MotorEnum.LEFT_FRONT).motor.setPower(-1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_BACK).motor.setPower(-1);
+                    hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(-1);
+                    return true;
+                }
+                else{
+                    hw.getMotorConfig(MotorEnum.LEFT_BACK).motor.setPower(0);
+                    hw.getMotorConfig(MotorEnum.LEFT_FRONT).motor.setPower(0);
+                    hw.getMotorConfig(MotorEnum.RIGHT_BACK).motor.setPower(0);
+                    hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(0);
+                    return false;
+                }
+            }
+        }
+    }
+    public Action moveToSubSamplePos(String color){return new MoveToSubSamplePos(color);}
     public class SetWristToPickSample implements Action{
         public Action sleepAction;
 
