@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareConfig;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Autonomous
 public class AutoSubmersibleCycle extends LinearOpMode {
@@ -17,39 +17,76 @@ public class AutoSubmersibleCycle extends LinearOpMode {
     // When we know which detection is the target, find the corners of the detection
     // Find the longer side of the target sample detection box (detection box is never rotated)
     // If longer side is on the top / bottom of the rectangle, rotate clawWrist to x position
-    // If longer side is on left / right side of the rectagle, rotate clawWrist to y position
+    // If longer side is on left / right side of the rectangle, rotate clawWrist to y position
     // If the sides are =, rotate clawWrist to y position
 
-    // top left is 0,0
-    int LONG_SIDE_PIXELS = 680;
-    int SHORT_SIDE_PIXELS = 480;
+    // Proportional control output is relative, not absolute
+
+    double targetTX = 0;
+    double targetTY = 0;
+    double tXTolerance = 0.5;
+    double tYTolerance = 0.5;
+    double kP = 0;
     HardwareConfig hw;
+    PinpointDrive drive;
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(0)));
         HardwareConfig.makeInstance(hardwareMap);
         hw = HardwareConfig.getInstance();
 
         hw.getLimelightConfig().limelight.pipelineSwitch(4);
-        hw.getLimelightConfig().limelight.start();
 
         waitForStart();
 
+        hw.getLimelightConfig().limelight.start();
+
+        LLResultTypes.DetectorResult targetDetection = FindTargetSample.findTargetSample("red", "blue", "yellow");
+
         while (opModeIsActive()) {
-            LLResult result = hw.getLimelightConfig().limelight.getLatestResult();
 
-            if (result.isValid()){
-                double x = result.getTx();
-                double y = result.getTy();
-                double area = result.getTa();
+            if (targetDetection != null) {
 
+                double tX = targetDetection.getTargetXDegrees();
+                double tY = targetDetection.getTargetYDegrees();
+                double tXError = Math.abs(targetTX - tX);
+                double tYError = Math.abs(targetTY - tY);
 
-
-                telemetry.addData("x", x);
-                telemetry.addData("y", y);
-                telemetry.addData("area", area);
+                if (tXError < 0 && tXError > tXTolerance) {
+                    // move drivetrain left
+                    Actions.runBlocking(
+                            drive.actionBuilder(drive.pose)
+                                    .lineToX(drive.pose.position.x - kP * tXError)
+                                    .build()
+                    );
+                }
+                if (tXError > 0 && tXError > tXTolerance) {
+                    // move drivetrain right
+                    Actions.runBlocking(
+                            drive.actionBuilder(drive.pose)
+                                    .lineToX(drive.pose.position.x + kP * tXError)
+                                    .build()
+                    );
+                }
+                if (tYError < 0 && tYError > tYTolerance) {
+                    // move drivetrain down
+                    Actions.runBlocking(
+                            drive.actionBuilder(drive.pose)
+                                    .lineToY(drive.pose.position.y - kP * tYError)
+                                    .build()
+                    );
+                }
+                if (tYError > 0 && tYError > tYTolerance) {
+                    // move drivetrain up
+                    Actions.runBlocking(
+                            drive.actionBuilder(drive.pose)
+                                    .lineToY(drive.pose.position.y + kP * tYError)
+                                    .build()
+                    );
+                }
             }
-            telemetry.update();
         }
     }
 }
+
 
