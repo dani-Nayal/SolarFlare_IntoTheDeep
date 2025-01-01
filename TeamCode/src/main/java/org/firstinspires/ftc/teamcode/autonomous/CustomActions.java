@@ -518,10 +518,7 @@ public class CustomActions {
                     state.setServoPosition(ServoEnum.CLAW_WRIST,79.5);
                 }
             }
-            while (sleepAction.run(new TelemetryPacket())){
-
-            }
-            return false;
+            return sleepAction.run(packet);
         }
     }
 
