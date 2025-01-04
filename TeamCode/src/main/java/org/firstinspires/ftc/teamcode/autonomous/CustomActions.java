@@ -482,13 +482,18 @@ public class CustomActions {
     public Action moveToSubSamplePos(String color){return new MoveToSubSamplePos(color);}
     public class SetWristToPickSample implements Action{
         public Action sleepAction;
+        public double targetX;
+        public double targetY;
 
         public boolean run(@NonNull TelemetryPacket packet){
             LLResult result = hw.getLimelightConfig().limelight.getLatestResult();
             List<LLResultTypes.DetectorResult> detections = result.getDetectorResults();
             LLResultTypes.DetectorResult targetDetection = null;
+            double minDistance=Double.POSITIVE_INFINITY;
+
             for (LLResultTypes.DetectorResult detection : detections){
-                if (detection.getTargetXDegrees()==result.getTx()&&detection.getTargetYDegrees()==result.getTy()){
+                if (Math.sqrt(Math.pow(detection.getTargetXDegrees()-targetX,2)+Math.pow(detection.getTargetYDegrees()-targetY,2)) < minDistance){
+                    minDistance=Math.sqrt(Math.pow(detection.getTargetXDegrees()-targetX,2)+Math.pow(detection.getTargetYDegrees()-targetY,2));
                     targetDetection=detection;
                 }
             }
@@ -518,10 +523,7 @@ public class CustomActions {
                     state.setServoPosition(ServoEnum.CLAW_WRIST,79.5);
                 }
             }
-            while (sleepAction.run(new TelemetryPacket())){
-
-            }
-            return false;
+            return sleepAction.run(packet);
         }
     }
 
