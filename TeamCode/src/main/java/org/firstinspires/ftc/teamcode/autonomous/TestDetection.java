@@ -14,9 +14,10 @@ public class TestDetection extends LinearOpMode {
     public void runOpMode(){
         HardwareConfig.makeInstance(hardwareMap);
         hw = HardwareConfig.getInstance();
+        hw.getLimelightConfig().limelight.pipelineSwitch(4);
+        hw.getLimelightConfig().limelight.start();
 
         waitForStart();
-
 
         while (opModeIsActive()){
 

@@ -49,6 +49,5 @@ public class RobotState {
         position = Math.min(position, hw.getServoConfig(servoEnum).maxServoPosition);
 
         positions.put(servoEnum, position);
-
     }
 }

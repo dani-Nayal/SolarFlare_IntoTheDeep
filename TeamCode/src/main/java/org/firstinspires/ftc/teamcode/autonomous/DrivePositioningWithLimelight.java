@@ -10,18 +10,9 @@ import org.firstinspires.ftc.teamcode.HardwareConfig;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Autonomous
-public class AutoSubmersibleCycle extends LinearOpMode {
-
-    // First, position the robot in the optimal pickup position for the sample using tx and ty
-    // Next, find which detection is the target result by comparing result tx to detection tx
-    // When we know which detection is the target, find the corners of the detection
-    // Find the longer side of the target sample detection box (detection box is never rotated)
-    // If longer side is on the top / bottom of the rectangle, rotate clawWrist to x position
-    // If longer side is on left / right side of the rectangle, rotate clawWrist to y position
-    // If the sides are =, rotate clawWrist to y position
+public class DrivePositioningWithLimelight extends LinearOpMode {
 
     // Proportional control output is relative, not absolute
-
     double targetTX = 0;
     double targetTY = 0;
     double tXTolerance = 0.5;
@@ -46,9 +37,22 @@ public class AutoSubmersibleCycle extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (targetDetection != null) {
-
                 double tX = targetDetection.getTargetXDegrees();
                 double tY = targetDetection.getTargetYDegrees();
+                LLResultTypes.DetectorResult closestDetection = null;
+                double minDistance = Double.POSITIVE_INFINITY;
+                double dist;
+
+                for (LLResultTypes.DetectorResult detection: hw.getLimelightConfig().limelight.getLatestResult().getDetectorResults()){
+                    dist = Math.sqrt(Math.pow(detection.getTargetXDegrees()-tX,2)+Math.pow(detection.getTargetXDegrees()-tX,2));
+                    if (dist < minDistance){
+                        minDistance = dist;
+                        closestDetection = detection;
+                    }
+                }
+
+                targetDetection = closestDetection;
+
                 double tXError = Math.abs(targetTX - tX);
                 double tYError = Math.abs(targetTY - tY);
 

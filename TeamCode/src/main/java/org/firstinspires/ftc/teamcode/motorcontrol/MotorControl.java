@@ -38,7 +38,7 @@ public class MotorControl {
                 distance,
                 timer.seconds()) + lastTargetPosition;
 
-        motorPower=pid.getPIDOutput(motorEnum, instantTargetPosition);
+        motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
 
         hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
 

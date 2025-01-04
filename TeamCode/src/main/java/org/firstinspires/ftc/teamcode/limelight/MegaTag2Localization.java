@@ -22,8 +22,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 
 import java.util.List;
 
-
-
 @TeleOp
 public class MegaTag2Localization extends LinearOpMode{
     public final double METERS_TO_INCHES = 39.3701;
