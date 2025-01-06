@@ -28,6 +28,7 @@ public class MecanumTeleop extends LinearOpMode {
         double clawWristPosition = 79.5;
         double clawFingerPosition = 120;
         double clawPitchPosition = 205;
+        double clawPitch2Position = 205;
         double bucketPosition = 85;
         
         double maxExtendoPosition = 350;
@@ -448,12 +449,13 @@ public class MecanumTeleop extends LinearOpMode {
                 backRightPower = 0.5 * (rotY + rotX - rx) / denominator;
             }
 
-            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
-            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kPpitch);
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
+
+            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
+            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kPpitch);
             hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
             bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
 
