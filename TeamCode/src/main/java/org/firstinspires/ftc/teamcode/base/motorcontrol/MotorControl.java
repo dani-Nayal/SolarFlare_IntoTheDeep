@@ -12,31 +12,46 @@ public class MotorControl {
     PID pid;
     TrapezoidalMotionProfile profile;
     public ElapsedTime timer;
-    int previousLoopTarget = 0;
     int currentPosition;
     double motorPower;
-    public MotorControl(){
+    double maxAcceleration;
+    double maxVelocity;
+    int previousLoopTarget = 0;
+    double lastMaxAcceleration = 0;
+    double lastMaxVelocity = 0;
+    boolean maxVelocityChanged = false;
+    boolean maxAccelerationChanged = false;
+    MotorEnum motorEnum;
+    public MotorControl(MotorEnum motorEnum){
+        this.motorEnum = motorEnum;
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
         pid = new PID();
         profile = new TrapezoidalMotionProfile();
         timer = new ElapsedTime();
+        maxAcceleration = hw.getMotorConfig(motorEnum).maxAcceleration;
+        maxVelocity = hw.getMotorConfig(motorEnum).maxVelocity;
     }
     // Run this method in a loop
-    public void runTrapezoidalMotionProfile(MotorEnum motorEnum){
+    public void runTrapezoidalMotionProfile(){
+
         int currentTarget = state.getMotorTarget(motorEnum);
 
-        // If the target changes
-        if (currentTarget != previousLoopTarget){
+        // If the target, maxVelocity, or maxAcceleration changes
+        if (currentTarget != previousLoopTarget || maxVelocityChanged || maxAccelerationChanged){
+
             currentPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
             double distance = currentTarget - currentPosition;
+
             timer.reset();
 
             profile.resetProfile(
-                    hw.getMotorConfig(motorEnum).maxAcceleration,
-                    hw.getMotorConfig(motorEnum).maxVelocity,
+                    maxAcceleration,
+                    maxVelocity,
                     hw.getMotorConfig(motorEnum).motor.getVelocity(),
                     distance);
+            maxVelocityChanged = false;
+            maxAccelerationChanged = false;
         }
 
         double instantTargetPosition = profile.runProfile(timer.seconds());
@@ -46,6 +61,16 @@ public class MotorControl {
         hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
 
         previousLoopTarget = currentTarget;
+        lastMaxVelocity = maxVelocity;
+        lastMaxAcceleration = maxAcceleration;
+    }
+    public void setMaxAcceleration(double maxAcceleration){
+        this.maxAcceleration = maxAcceleration;
+        maxAccelerationChanged = true;
+    }
+    public void setMaxVelocity(double maxVelocity){
+        this.maxVelocity = maxVelocity;
+        maxVelocityChanged = true;
     }
 
     // Run this method in a loop

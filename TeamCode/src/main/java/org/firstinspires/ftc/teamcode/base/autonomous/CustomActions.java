@@ -27,10 +27,6 @@ public class CustomActions {
     public CustomActions() {
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
-        extendoControl = new MotorControl();
-        extendoPitchControl = new MotorControl();
-        bucketSlidesControl = new MotorControl();
-        hangControl = new MotorControl();
     }
     public class SetMotorTargetAction implements Action {
         MotorEnum motorEnum;
