@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.base.testing;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.HardwareConfig;
-import org.firstinspires.ftc.teamcode.MotorEnum;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.RobotState;
-import org.firstinspires.ftc.teamcode.ServoEnum;
+import org.firstinspires.ftc.teamcode.base.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.RobotState;
+import org.firstinspires.ftc.teamcode.base.ServoEnum;
 
 import java.util.HashMap;
 
@@ -27,8 +27,7 @@ public class MechanismDiagnosis extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        HardwareConfig.makeInstance(hardwareMap);
-        hw = HardwareConfig.getInstance();
+        hw = HardwareConfig.getInstance(hardwareMap);
         state = RobotState.getInstance();
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,Math.toRadians(0)));
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.base;
 
 import java.util.HashMap;
 
@@ -8,6 +8,8 @@ public class RobotState {
     HashMap<MotorEnum, Integer> targets = new HashMap<>(10);
     HashMap<ServoEnum, Double> positions = new HashMap<>(10);
 
+    // TODO: Store preset mechanism position values here
+
     public static RobotState getInstance(){
         if (state == null){
             state = new RobotState();
@@ -16,16 +18,7 @@ public class RobotState {
     }
     private RobotState(){
         hw = HardwareConfig.getInstance();
-        targets.put(MotorEnum.EXTENDO, 0);
-        targets.put(MotorEnum.EXTENDO_PITCH, 0);
-        targets.put(MotorEnum.HANG, 0);
-        targets.put(MotorEnum.BUCKET_SLIDES, 0);
-
-        positions.put(ServoEnum.CLAW_PITCH_LEFT, 200.0);
-        positions.put(ServoEnum.CLAW_PITCH_RIGHT, 200.0);
-        positions.put(ServoEnum.CLAW_FINGERS, 39.0);
-        positions.put(ServoEnum.CLAW_WRIST, 76.5);
-        positions.put(ServoEnum.BUCKET, 85.0);
+        // TODO: make sure to add default positions
     }
     public int getMotorTarget(MotorEnum motorEnum) throws IllegalArgumentException{
         Integer target = targets.get(motorEnum);
@@ -35,6 +28,9 @@ public class RobotState {
         return target;
     }
     public void setMotorTarget(MotorEnum motorEnum, int target){
+        target = Math.max(target, hw.getMotorConfig(motorEnum).minTarget);
+        target = Math.min(target, hw.getMotorConfig(motorEnum).maxTarget);
+
         targets.put(motorEnum, target);
     }
     public double getServoPosition(ServoEnum servoEnum) throws IllegalArgumentException{

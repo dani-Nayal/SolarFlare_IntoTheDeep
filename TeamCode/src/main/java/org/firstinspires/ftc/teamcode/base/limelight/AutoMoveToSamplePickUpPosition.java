@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.base.limelight;
 
 import androidx.annotation.NonNull;
 
@@ -7,8 +7,8 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 
-import org.firstinspires.ftc.teamcode.HardwareConfig;
-import org.firstinspires.ftc.teamcode.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.MotorEnum;
 
 import java.util.Arrays;
 
@@ -23,11 +23,11 @@ public class AutoMoveToSamplePickUpPosition implements Action {
     double targetTY = 0;
     double tXError;
     double tYError;
-    // Tune these values
+    // TODO: Tune limelight tX and tY target tolerance
     double tXTolerance = 0.5;
     double tYTolerance = 0.5;
     double targetDeviance;
-    // Tune this value, measure the furthest possible sample that can be picked up
+    // TODO: Tune minimum tA, measure the furthest possible sample that can be picked up from camera view
     double minimumTA = 0.01;
     String[] imageClassNames;
     double motorPower;
@@ -101,8 +101,14 @@ public class AutoMoveToSamplePickUpPosition implements Action {
                 hw.getMotorConfig(MotorEnum.RIGHT_FRONT).motor.setPower(motorPower);
             }
         }
-        boolean driveTrainIsPositioned = tXError < tXTolerance || tYError < tYTolerance;
+        boolean driveTrainIsPositioned = tXError < tXTolerance && tYError < tYTolerance;
 
-        return !driveTrainIsPositioned;
+        if (driveTrainIsPositioned){
+            hw.getLimelightConfig().limelight.stop();
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }

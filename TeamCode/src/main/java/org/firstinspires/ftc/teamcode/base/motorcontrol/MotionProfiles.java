@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.motorcontrol;
+package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
 public class MotionProfiles {
     public double runTrapezoidalMotionProfile(double maxMotorVelocity, double maxMotorAcceleration, double distance, double elapsedTime){
@@ -37,7 +37,7 @@ public class MotionProfiles {
         else {
             accelerationDistance = 0.5 * maxMotorAcceleration * Math.pow(accelerationDT, 2);
             cruiseDistance = maxMotorVelocity * cruiseDT;
-            return accelerationDistance + cruiseDistance + maxMotorVelocity * decelerationDT - 0.5 * maxMotorAcceleration * Math.pow(decelerationDT, 2);
+            return accelerationDistance + cruiseDistance + maxMotorVelocity * cruiseDT - 0.5 * maxMotorAcceleration * Math.pow(decelerationDT, 2);
         }
     }
 }

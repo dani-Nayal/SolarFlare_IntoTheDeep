@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.base.measurevalues;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -7,9 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.HardwareConfig;
-import org.firstinspires.ftc.teamcode.MotorEnum;
-import org.firstinspires.ftc.teamcode.RobotState;
+import org.firstinspires.ftc.teamcode.base.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.RobotState;
+
 @Config
 @TeleOp
 public class TunePIDCoefficients extends LinearOpMode {
@@ -22,7 +23,7 @@ public class TunePIDCoefficients extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        hw = HardwareConfig.getInstance();
+        hw = HardwareConfig.getInstance(hardwareMap);
         state = RobotState.getInstance();
 
         FtcDashboard dashboard = FtcDashboard.getInstance();

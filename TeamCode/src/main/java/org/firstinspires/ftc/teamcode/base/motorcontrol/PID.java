@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.motorcontrol;
+package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.HardwareConfig;
-import org.firstinspires.ftc.teamcode.MotorEnum;
-import org.firstinspires.ftc.teamcode.RobotState;
+import org.firstinspires.ftc.teamcode.base.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.RobotState;
 
 public class PID {
     HardwareConfig hw;

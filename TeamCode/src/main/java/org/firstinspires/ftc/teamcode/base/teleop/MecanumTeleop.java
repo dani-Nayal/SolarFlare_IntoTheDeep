@@ -1,8 +1,6 @@
 
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.base.teleop;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -10,9 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.InitializeMechanisms;
-import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
