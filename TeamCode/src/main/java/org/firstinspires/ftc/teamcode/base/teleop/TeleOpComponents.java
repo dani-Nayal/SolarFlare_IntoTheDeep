@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -118,7 +117,7 @@ public abstract class TeleOpComponents {
                 this.maxVelocity = maxVelocity;
                 Arrays.sort(positions);
                 Double[] newPositions = new Double[positions.length];
-                for (int i=0;i<=positions.length;i++){
+                for (int i=0;i<positions.length;i++){
                     newPositions[i]= positions[i];
                 }
                 this.positions=Arrays.asList(newPositions);
@@ -247,7 +246,7 @@ public abstract class TeleOpComponents {
             return new SetTargetAction(targetFun,MAX_ACCELERATION,MAX_VELOCITY);
         }
         public class StallResetAction implements TeleOpAction{
-            public boolean isStart;
+            public boolean isStart = true;
             public boolean run(@NonNull TelemetryPacket packet){
                 if (isStart) {
                     initiateStallReset();
@@ -273,10 +272,10 @@ public abstract class TeleOpComponents {
             return new StallResetAction();
         }
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change,double maxAcceleration, double maxVelocity){
-            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change),maxAcceleration,maxVelocity),new SetTargetAction(()->(target+change),maxAcceleration,maxVelocity)});
+            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change),maxAcceleration,maxVelocity),new SetTargetAction(()->(target-change),maxAcceleration,maxVelocity)});
         }
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change){
-            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change)),new SetTargetAction(()->(target+change))});
+            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change)),new SetTargetAction(()->(target-change))});
         }
         public PressTrigger triggeredMoveToTargetAction(Condition condition, double target, double maxAcceleration, double maxVelocity){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetTargetAction(target,maxAcceleration,maxVelocity)});
@@ -447,7 +446,7 @@ public abstract class TeleOpComponents {
 
             setDirection(direction);
 
-            hardwareMap.put(deviceName,this);
+            //hardwareMap.put(deviceName,this);
             servos.add(this);
         }
         @Override
@@ -459,34 +458,40 @@ public abstract class TeleOpComponents {
             return super.getPosition() * RANGE;
         }
         public class SetPositionAction implements TeleOpAction {
-            boolean isStart;
+            boolean isStart = true;
             DoubleFunction posFun;
-            double startPos = getPosition();
+            double startPos = -1;
             ElapsedTime timer = new ElapsedTime();
             double time=0;
             public SetPositionAction(double pos){
                 this.posFun = () -> (pos);
-                time=Math.abs(posFun.call()-getPosition())/SERVO_SPEED;
+                time=Math.abs(posFun.call()-getPosition())/SERVO_SPEED+0.07;
             }
             public SetPositionAction(DoubleFunction posFun) {
                 this.posFun = posFun;
-
+                time=Math.abs(posFun.call()-getPosition())/SERVO_SPEED+0.07;
             }
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (isStart) {
                     isStart=false;
-                    time=Math.abs(posFun.call()-startPos)/SERVO_SPEED;
+                    if (startPos==-1){
+                        startPos=getPosition();
+                    }
+                    else {
+                        startPos = Math.signum(getPosition() - startPos) * SERVO_SPEED * Math.min(time, timer.time()) + startPos;
+                    }
+                    time=Math.abs(posFun.call()-startPos)/SERVO_SPEED+0.07;
                     setPosition(posFun.call());
                     timer.reset();
+
                 }
-                return (time-timer.time())<=0;
+                return (time-timer.time())>=0;
             }
 
             @Override
             public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
                 isStart=true;
-                startPos = Math.signum(getPosition()-startPos)*SERVO_SPEED*Math.min(time,timer.time())+startPos;
                 return run(packet);
             }
 
@@ -502,7 +507,7 @@ public abstract class TeleOpComponents {
             return new SetPositionAction(posFun);
         }
         public class UpwardFSMAction implements TeleOpAction{
-            double startPos = getPosition();
+            double startPos = -1;
             ElapsedTime timer = new ElapsedTime();
             double time=0;
             private final double[] positions;
@@ -515,7 +520,6 @@ public abstract class TeleOpComponents {
             @Override
             public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
                 isStart=true;
-                startPos = Math.signum(getPosition()-startPos)*SERVO_SPEED*Math.min(time,timer.time())+startPos;
                 return run(packet);
             }
 
@@ -535,23 +539,29 @@ public abstract class TeleOpComponents {
                             break;
                         }
                     }
-                    time=Math.abs(pos-startPos)/SERVO_SPEED;
+                    if (startPos==-1){
+                        startPos=getPosition();
+                    }
+                    else {
+                        startPos = Math.signum(getPosition() - startPos) * SERVO_SPEED * Math.min(time, timer.time()) + startPos;
+                    }
+                    time=Math.abs(pos-startPos)/SERVO_SPEED+0.07;
                     setPosition(pos);
                     timer.reset();
                 }
-                return (time-timer.time())<=0;
+                return (time-timer.time())>=0;
             }
         }
         public class DownwardFSMAction implements TeleOpAction{
             private final List<Double> positions;
             boolean isStart=true;
-            double startPos = getPosition();
+            double startPos = -1;
             ElapsedTime timer = new ElapsedTime();
             double time=0;
             public DownwardFSMAction(double...positions) {
                 Arrays.sort(positions);
                 Double[] newPositions = new Double[positions.length];
-                for (int i=0;i<=positions.length;i++){
+                for (int i=0;i<positions.length;i++){
                     newPositions[i]= positions[i];
                 }
                 this.positions=Arrays.asList(newPositions);
@@ -560,7 +570,6 @@ public abstract class TeleOpComponents {
             @Override
             public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
                 isStart=true;
-                startPos = Math.signum(getPosition()-startPos)*SERVO_SPEED*Math.min(time,timer.time())+startPos;
                 return run(packet);
             }
 
@@ -580,18 +589,24 @@ public abstract class TeleOpComponents {
                             break;
                         }
                     }
-                    time=Math.abs(pos-startPos)/SERVO_SPEED;
+                    if (startPos==-1){
+                        startPos=getPosition();
+                    }
+                    else {
+                        startPos = Math.signum(getPosition() - startPos) * SERVO_SPEED * Math.min(time, timer.time()) + startPos;
+                    }
+                    time=Math.abs(pos-startPos)/SERVO_SPEED+0.07;
                     setPosition(pos);
                     timer.reset();
                 }
-                return (time-timer.time())<=0;
+                return (time-timer.time())>=0;
             }
         }
         public PressTrigger triggeredFSMAction(Condition upCondition, Condition downCondition,double...positions){
             return new PressTrigger(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new UpwardFSMAction(positions),new DownwardFSMAction(positions)});
         }
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change){
-            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetPositionAction(()->(getPosition()+change)),new SetPositionAction(()->(getPosition()+change))});
+            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetPositionAction(()->(getPosition()+change)),new SetPositionAction(()->(getPosition()-change))});
         }
         public PressTrigger triggeredMoveToPositionAction(Condition condition, double target){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetPositionAction(target)});
@@ -609,16 +624,16 @@ public abstract class TeleOpComponents {
     public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry){
         TeleOpComponents.hardwareMap=hardwareMap;
         TeleOpComponents.telemetry=telemetry;
-        TeleOpComponents.drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,Math.toRadians(90)));
+        //TeleOpComponents.drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,Math.toRadians(90)));
         //initialize mechanism variables here
         clawFingers = new BotServo(
                 hardwareMap.get(Servo.class, "clawFingers").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawFingers").getController(),
                 hardwareMap.get(Servo.class, "clawFingers").getPortNumber(),
-                new String[]{},
-                new double[]{},
-                180,
-                0,
+                new String[]{"closedPosition","openPosition"},
+                new double[]{20,92},
+                92,
+                20,
                 180,
                 422,
                 Servo.Direction.FORWARD
@@ -627,10 +642,10 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawWrist").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawWrist").getController(),
                 hardwareMap.get(Servo.class, "clawWrist").getPortNumber(),
-                new String[]{},
-                new double[]{},
-                270,
-                0,
+                new String[]{"normalPosition"},
+                new double[]{95},
+                185,
+                95,
                 270,
                 422,
                 Servo.Direction.FORWARD
@@ -639,8 +654,8 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchLeft").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getController(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getPortNumber(),
-                new String[]{},
-                new double[]{},
+                new String[]{"pickUpPosition", "hoverPosition"},
+                new double[]{22,73},
                 270,
                 0,
                 270,
@@ -651,8 +666,8 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchRight").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawPitchRight").getController(),
                 hardwareMap.get(Servo.class, "clawPitchRight").getPortNumber(),
-                new String[]{},
-                new double[]{},
+                new String[]{"pickUpPosition", "hoverPosition"},
+                new double[]{22,73},
                 270,
                 0,
                 270,
@@ -663,13 +678,13 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "innerClawPitch").getDeviceName(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getController(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
-                new String[]{},
-                new double[]{},
+                new String[]{"pickUpPosition", "hoverPosition","transferPosition"},
+                new double[]{65,0,160},
                 270,
                 0,
                 270,
                 422,
-                Servo.Direction.FORWARD
+                Servo.Direction.REVERSE
         );
         bucket = new BotServo(
                 hardwareMap.get(Servo.class, "bucket").getDeviceName(),

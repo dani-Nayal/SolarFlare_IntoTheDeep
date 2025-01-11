@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 
 
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.drive;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.telemetry;
 
 import androidx.annotation.NonNull;
 
@@ -9,7 +10,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.WaitSeconds;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.TurnTo;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.RoadrunnerFunction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotMotor;
+import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotServo;
 
 
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public abstract class TeleOpActions{
     }
 
     public static class UninterruptibleConditionalAction implements TeleOpAction{
-        LinkedHashMap<Condition,TeleOpAction> actions;
+        LinkedHashMap<Condition,TeleOpAction> actions = new LinkedHashMap<>();
         TeleOpAction currentAction = null;
         public UninterruptibleConditionalAction(Condition[] conditions, TeleOpAction[] actions){
             for (int i=0;i<conditions.length;i++){
@@ -212,6 +213,7 @@ public abstract class TeleOpActions{
             else{
                 return false;
             }
+
         }
         @Override
         public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
@@ -234,7 +236,6 @@ public abstract class TeleOpActions{
         public TeleOpParallelAction(TeleOpAction...actions){
             this.actions = Arrays.asList(actions);
             this.remainingActions=new ArrayList<>(this.actions);
-
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -447,11 +448,13 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("clawPitchRight pos",TeleOpComponents.clawPitchRight.getPosition());
             TeleOpComponents.telemetry.addData("innerClawPitch pos",TeleOpComponents.innerClawPitch.getPosition());
             TeleOpComponents.telemetry.addData("bucket pos",TeleOpComponents.bucket.getPosition());
-
+            /*
             TeleOpComponents.telemetry.addData("extendo pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"extendo").getCurrentPosition());
             TeleOpComponents.telemetry.addData("extendoPitch pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"extendoPitch").getCurrentPosition());
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"bucketSlides").getCurrentPosition());
+            */
             TeleOpComponents.telemetry.update();
+
             return true;
         }
     }
@@ -518,6 +521,7 @@ public abstract class TeleOpActions{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             if (isStart){
+                stop();
                 isStart=false;
                 drive.updatePoseEstimate();
                 trajBuilder = drive.actionBuilder(drive.pose);
@@ -553,7 +557,7 @@ public abstract class TeleOpActions{
         }
     }
 
-    public static void runLoop(Condition opModeIsActive, Condition isStopRequested, TeleOpAction...actions){
+    public static void runLoop(Condition opModeIsActive, Condition isStopRequested, TeleOpAction...actions) throws InterruptedException{
         while (opModeIsActive.call()) {
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
@@ -562,6 +566,9 @@ public abstract class TeleOpActions{
                 if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE") && !motor.isStallResetting){
                     motor.runMotionProfileOnce();
                 }
+            }
+            for (BotServo servo : TeleOpComponents.servos){
+                servo.setPosition(servo.getPosition());
             }
             if (isStopRequested.call()) return;
         }
