@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
@@ -38,8 +37,12 @@ public abstract class TeleOpComponents {
     public static ArrayList<BotServo> servos = new ArrayList<>();
 
     //create mechanism variables here
-    public static BotMotor ryanNemesis;
-    public static BotServo tetsyWetsy;
+    public static BotServo clawFingers;
+    public static BotServo clawPitchLeft;
+    public static BotServo clawPitchRight;
+    public static BotServo innerClawPitch;
+    public static BotServo clawWrist;
+    public static BotServo bucket;
     public static class BotMotor extends DcMotorImplEx {
         public double kP; public double kI; public double kD;
         public HashMap<String,Double> KEY_POSITIONS;
@@ -296,7 +299,8 @@ public abstract class TeleOpComponents {
                         @NonNull MotorConfigurationType motorType,
 
                         double kP,double kI,double kD,
-                        HashMap<String,Double> keyPositions,
+                        String[] keyPositionKeys,
+                        double[] keyPositionValues,
                         double maxPosition, double minPosition,
                         double maxAcceleration, double maxVelocity,
                         RunMode runMode, Direction direction, ZeroPowerBehavior zeroPowerBehaviour,
@@ -305,7 +309,10 @@ public abstract class TeleOpComponents {
             super(controller, portNumber, DcMotor.Direction.FORWARD,motorType);
 
             this.kP=kP; this.kI=kI; this.kD=kD;
-            this.KEY_POSITIONS=keyPositions;
+            this.KEY_POSITIONS = new HashMap<>();
+            for (int i=0;i<keyPositionKeys.length;i++){
+                this.KEY_POSITIONS.put(keyPositionKeys[i],keyPositionValues[i]);
+            }
             this.MAX_POSITION=maxPosition; this.MIN_POSITION = minPosition;
             this.MAX_ACCELERATION=maxAcceleration; this.MAX_VELOCITY=maxVelocity;
             this.RUN_MODE = runMode;
@@ -420,7 +427,8 @@ public abstract class TeleOpComponents {
         public BotServo(String deviceName,
                         ServoController controller,
                         int portNumber,
-                        HashMap<String,Double> keyPositions,
+                        String[] keyPositionKeys,
+                        double[] keyPositionValues,
                         double maxPosition,
                         double minPosition,
                         double range,
@@ -429,7 +437,10 @@ public abstract class TeleOpComponents {
         {
             super(controller, portNumber);
 
-            this.KEY_POSITIONS = keyPositions;
+            this.KEY_POSITIONS = new HashMap<>();
+            for (int i=0;i<keyPositionKeys.length;i++){
+                this.KEY_POSITIONS.put(keyPositionKeys[i],keyPositionValues[i]);
+            }
             this.MAXIMUM_POSITION = maxPosition; this.MINIMUM_POSITION =minPosition;
             this.RANGE = range;
             this.SERVO_SPEED = servoSpeed;
@@ -600,28 +611,74 @@ public abstract class TeleOpComponents {
         TeleOpComponents.telemetry=telemetry;
         TeleOpComponents.drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,Math.toRadians(90)));
         //initialize mechanism variables here
-        ryanNemesis =new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "motor-1").getDeviceName(),
-                hardwareMap.get(DcMotorEx.class, "motor-1").getController(),
-                hardwareMap.get(DcMotorEx.class, "motor-1").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "motor-1").getMotorType(),
-                0.0427,0,0.000325,
-                new HashMap<>(),
-                Double.POSITIVE_INFINITY,
-                Double.NEGATIVE_INFINITY,
-                277408.169,1500,
-                DcMotor.RunMode.RUN_WITHOUT_ENCODER,
-                DcMotor.Direction.FORWARD,
-                DcMotor.ZeroPowerBehavior.BRAKE,
-                "MOTION_PROFILE"
+        clawFingers = new BotServo(
+                hardwareMap.get(Servo.class, "clawFingers").getDeviceName(),
+                hardwareMap.get(Servo.class, "clawFingers").getController(),
+                hardwareMap.get(Servo.class, "clawFingers").getPortNumber(),
+                new String[]{},
+                new double[]{},
+                180,
+                0,
+                180,
+                422,
+                Servo.Direction.FORWARD
         );
-        tetsyWetsy=new BotServo(
-                hardwareMap.get(Servo.class, "tets").getDeviceName(),
-                hardwareMap.get(Servo.class, "tets").getController(),
-                hardwareMap.get(Servo.class, "tets").getPortNumber(),
-                new HashMap<>(),
+        clawWrist = new BotServo(
+                hardwareMap.get(Servo.class, "clawWrist").getDeviceName(),
+                hardwareMap.get(Servo.class, "clawWrist").getController(),
+                hardwareMap.get(Servo.class, "clawWrist").getPortNumber(),
+                new String[]{},
+                new double[]{},
+                270,
                 0,
                 270,
+                422,
+                Servo.Direction.FORWARD
+        );
+        clawPitchLeft = new BotServo(
+                hardwareMap.get(Servo.class, "clawPitchLeft").getDeviceName(),
+                hardwareMap.get(Servo.class, "clawPitchLeft").getController(),
+                hardwareMap.get(Servo.class, "clawPitchLeft").getPortNumber(),
+                new String[]{},
+                new double[]{},
+                270,
+                0,
+                270,
+                422,
+                Servo.Direction.FORWARD
+        );
+        clawPitchRight = new BotServo(
+                hardwareMap.get(Servo.class, "clawPitchRight").getDeviceName(),
+                hardwareMap.get(Servo.class, "clawPitchRight").getController(),
+                hardwareMap.get(Servo.class, "clawPitchRight").getPortNumber(),
+                new String[]{},
+                new double[]{},
+                270,
+                0,
+                270,
+                422,
+                Servo.Direction.REVERSE
+        );
+        innerClawPitch = new BotServo(
+                hardwareMap.get(Servo.class, "innerClawPitch").getDeviceName(),
+                hardwareMap.get(Servo.class, "innerClawPitch").getController(),
+                hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
+                new String[]{},
+                new double[]{},
+                270,
+                0,
+                270,
+                422,
+                Servo.Direction.FORWARD
+        );
+        bucket = new BotServo(
+                hardwareMap.get(Servo.class, "bucket").getDeviceName(),
+                hardwareMap.get(Servo.class, "bucket").getController(),
+                hardwareMap.get(Servo.class, "bucket").getPortNumber(),
+                new String[]{},
+                new double[]{},
+                270,
+                0,
                 270,
                 422,
                 Servo.Direction.FORWARD

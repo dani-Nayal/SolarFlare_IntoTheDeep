@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -40,7 +41,7 @@ public abstract class TeleOpActions{
         LinkedHashMap<Condition,TeleOpAction> actions = new LinkedHashMap<>();
         TeleOpAction currentAction = null;
         public ConditionalAction(Condition[] conditions, TeleOpAction[] actions){
-            for (int i=0;i<=conditions.length;i++){
+            for (int i=0;i<conditions.length;i++){
                 this.actions.put(conditions[i],actions[i]);
             }
         }
@@ -123,7 +124,7 @@ public abstract class TeleOpActions{
         LinkedHashMap<Condition,TeleOpAction> actions;
         TeleOpAction currentAction = null;
         public UninterruptibleConditionalAction(Condition[] conditions, TeleOpAction[] actions){
-            for (int i=0;i<=conditions.length;i++){
+            for (int i=0;i<conditions.length;i++){
                 this.actions.put(conditions[i],actions[i]);
             }
         }
@@ -281,7 +282,7 @@ public abstract class TeleOpActions{
         public PressTrigger(Condition[] conditions, TeleOpAction[] actions) {
             super(conditions, actions);
             this.actions.clear();
-            for (int i=0;i<= conditions.length;i++){
+            for (int i=0;i<conditions.length;i++){
                 this.actions.put(modifyCondition(conditions[i]),actions[i]);
             }
         }
@@ -307,7 +308,7 @@ public abstract class TeleOpActions{
         public UninterruptiblePressTrigger(Condition[] conditions, TeleOpAction[] actions) {
             super(conditions, actions);
             this.actions.clear();
-            for (int i=0;i<= conditions.length;i++){
+            for (int i=0;i<conditions.length;i++){
                 this.actions.put(modifyCondition(conditions[i]),actions[i]);
             }
         }
@@ -440,7 +441,16 @@ public abstract class TeleOpActions{
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            TeleOpComponents.telemetry.addData("servo pos",TeleOpComponents.tetsyWetsy.getPosition());
+            TeleOpComponents.telemetry.addData("clawFingers pos",TeleOpComponents.clawFingers.getPosition());
+            TeleOpComponents.telemetry.addData("clawWrist pos",TeleOpComponents.clawWrist.getPosition());
+            TeleOpComponents.telemetry.addData("clawPitchLeft pos",TeleOpComponents.clawPitchLeft.getPosition());
+            TeleOpComponents.telemetry.addData("clawPitchRight pos",TeleOpComponents.clawPitchRight.getPosition());
+            TeleOpComponents.telemetry.addData("innerClawPitch pos",TeleOpComponents.innerClawPitch.getPosition());
+            TeleOpComponents.telemetry.addData("bucket pos",TeleOpComponents.bucket.getPosition());
+
+            TeleOpComponents.telemetry.addData("extendo pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"extendo").getCurrentPosition());
+            TeleOpComponents.telemetry.addData("extendoPitch pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"extendoPitch").getCurrentPosition());
+            TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"bucketSlides").getCurrentPosition());
             TeleOpComponents.telemetry.update();
             return true;
         }
