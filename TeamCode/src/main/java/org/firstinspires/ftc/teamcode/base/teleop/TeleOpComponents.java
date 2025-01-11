@@ -273,10 +273,10 @@ public abstract class TeleOpComponents {
             return new StallResetAction();
         }
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change,double maxAcceleration, double maxVelocity){
-            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(target+change,maxAcceleration,maxVelocity),new SetTargetAction(target-change,maxAcceleration,maxVelocity)});
+            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change),maxAcceleration,maxVelocity),new SetTargetAction(()->(target+change),maxAcceleration,maxVelocity)});
         }
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change){
-            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(target+change),new SetTargetAction(target-change)});
+            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change)),new SetTargetAction(()->(target+change))});
         }
         public PressTrigger triggeredMoveToTargetAction(Condition condition, double target, double maxAcceleration, double maxVelocity){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetTargetAction(target,maxAcceleration,maxVelocity)});
@@ -591,7 +591,7 @@ public abstract class TeleOpComponents {
             return new PressTrigger(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new UpwardFSMAction(positions),new DownwardFSMAction(positions)});
         }
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change){
-            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetPositionAction(getPosition()+change),new SetPositionAction(getPosition()-change)});
+            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetPositionAction(()->(getPosition()+change)),new SetPositionAction(()->(getPosition()+change))});
         }
         public PressTrigger triggeredMoveToPositionAction(Condition condition, double target){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetPositionAction(target)});
