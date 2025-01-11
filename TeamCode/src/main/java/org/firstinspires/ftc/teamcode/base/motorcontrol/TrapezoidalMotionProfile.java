@@ -8,7 +8,7 @@ public class TrapezoidalMotionProfile {
     double decelerationDistance;
     double decelerationTime;
     double totalTime;
-    double maxAcceleration;
+    double maxAcceleration ;
     double maxVelocity;
     double initialVelocity;
     double distance;

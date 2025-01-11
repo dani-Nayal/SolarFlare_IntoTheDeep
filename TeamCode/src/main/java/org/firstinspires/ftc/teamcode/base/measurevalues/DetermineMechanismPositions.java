@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
 public class DetermineMechanismPositions extends LinearOpMode {
     HardwareConfig hw;
     RobotState state;
-    MotorControl motorControl = new MotorControl();
     MotorEnum testingMotor;
     ServoEnum testingServo;
+    MotorControl motorControl = new MotorControl(testingMotor);
     int target = 0;
     double position = 0;
     @Override
@@ -42,7 +42,7 @@ public class DetermineMechanismPositions extends LinearOpMode {
                 state.setServoPosition(testingServo, position);
             }
 
-            motorControl.runTrapezoidalMotionProfile(testingMotor);
+            motorControl.runTrapezoidalMotionProfile();
             hw.getServoConfig(testingServo).servo.setPosition(state.getServoPosition(testingServo));
         }
     }
