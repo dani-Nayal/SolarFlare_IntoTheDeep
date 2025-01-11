@@ -16,15 +16,25 @@ public abstract class TetsyWetsyUwURevamped extends LinearOpMode {
     public void runOpMode(){
         TeleOpComponents.initializeMechanisms(hardwareMap,telemetry);
         waitForStart();
+        clawFingers.setPosition(0);
+        /*
+        clawWrist.setPosition(0);
+        clawPitchLeft.setPosition0();
+        clawPitchRight.setPosition(0);
+        innerClawPitch.setPosition(0);
+        bucket.setPosition(0);
+         */
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 this::isStopRequested,
                 clawFingers.triggeredDynamicAction(()->(gamepad1.dpad_up),()->(gamepad1.dpad_down),1),
+                /*
                 clawWrist.triggeredDynamicAction(()->(gamepad1.dpad_right),()->(gamepad1.dpad_left),1),
                 clawPitchLeft.triggeredDynamicAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),1),
                 clawPitchRight.triggeredDynamicAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),1),
                 innerClawPitch.triggeredDynamicAction(()->(gamepad1.a),()->(gamepad1.b),1),
                 bucket.triggeredDynamicAction(()->(gamepad1.right_stick_y>0),()->(gamepad1.right_stick_y<0),1),
+                */
                 new UpdateTelemetryAction()
         );
     }
