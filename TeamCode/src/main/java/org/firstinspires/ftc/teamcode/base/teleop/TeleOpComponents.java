@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
@@ -39,7 +38,7 @@ public abstract class TeleOpComponents {
 
     //create mechanism variables here
     public static BotServo clawFingers;
-    public static BotServo clawPitchLeft;
+    public static BotServo clawPitch;
     public static BotServo clawPitchRight;
     public static BotServo innerClawPitch;
     public static BotServo clawWrist;
@@ -165,7 +164,7 @@ public abstract class TeleOpComponents {
             }
         }
 
-        public PressTrigger triggeredFSMAction(Condition upCondition, Condition downCondition, double maxAcceleration, double maxVelocity, double...positions){
+        public PressTrigger triggeredFSMAction( double maxAcceleration, double maxVelocity, Condition upCondition, Condition downCondition, double...positions){
             return new PressTrigger(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new UpwardFSMAction(maxAcceleration,maxVelocity,positions),new DownwardFSMAction(maxAcceleration,maxVelocity,positions)});
         }
         public PressTrigger triggeredFSMAction(Condition upCondition, Condition downCondition,double...positions){
@@ -302,6 +301,9 @@ public abstract class TeleOpComponents {
 
             });
         }
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
+            return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
+        }
         public BotMotor(String deviceName,
                         DcMotorController controller,
                         int portNumber,
@@ -395,7 +397,7 @@ public abstract class TeleOpComponents {
             previousError=error;
             setPower(Math.min(1,Math.max(-1,kpPower+kiPower+kdPower)));
         }
-        public double get(String key){
+        public double getPos(String key){
             return KEY_POSITIONS.get(key);
         }
         public void setMotorTarget(double target, double maxVelocity, double maxAcceleration){
@@ -476,7 +478,7 @@ public abstract class TeleOpComponents {
         public double getPosition(){
             return super.getPosition() * RANGE;
         }
-        public double get(String key){
+        public double getPos(String key){
             return KEY_POSITIONS.get(key);
         }
         public class SetPositionAction implements TeleOpAction {
@@ -708,6 +710,7 @@ public abstract class TeleOpComponents {
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "MOTION_PROFILE"
         );
+        /*
         rightFront = new BotMotor(
                 hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
                 hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
@@ -764,6 +767,7 @@ public abstract class TeleOpComponents {
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "soogma"
         );
+        */
         clawFingers = new BotServo(
                 hardwareMap.get(Servo.class, "clawFingers").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawFingers").getController(),
@@ -788,7 +792,7 @@ public abstract class TeleOpComponents {
                 422,
                 Servo.Direction.FORWARD
         );
-        clawPitchLeft = new BotServo(
+        clawPitch = new BotServo(
                 hardwareMap.get(Servo.class, "clawPitchLeft").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getController(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getPortNumber(),
@@ -836,7 +840,7 @@ public abstract class TeleOpComponents {
                 422,
                 Servo.Direction.FORWARD
         );
-        synchronizeServos(clawPitchLeft,clawPitchRight);
+        synchronizeServos(clawPitch,clawPitchRight);
     }
     public static void synchronizeServos(BotServo...servos){
         for (BotServo servo : servos){

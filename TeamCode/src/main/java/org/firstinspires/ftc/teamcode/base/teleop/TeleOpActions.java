@@ -446,18 +446,17 @@ public abstract class TeleOpActions{
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             TeleOpComponents.telemetry.addData("clawFingers pos",TeleOpComponents.clawFingers.getPosition());
             TeleOpComponents.telemetry.addData("clawWrist pos",TeleOpComponents.clawWrist.getPosition());
-            TeleOpComponents.telemetry.addData("clawPitchLeft pos",TeleOpComponents.clawPitchLeft.getPosition());
+            TeleOpComponents.telemetry.addData("clawPitchLeft pos",TeleOpComponents.clawPitch.getPosition());
             TeleOpComponents.telemetry.addData("clawPitchRight pos",TeleOpComponents.clawPitchRight.getPosition());
             TeleOpComponents.telemetry.addData("innerClawPitch pos",TeleOpComponents.innerClawPitch.getPosition());
             TeleOpComponents.telemetry.addData("bucket pos",TeleOpComponents.bucket.getPosition());
-            /*
+
             TeleOpComponents.telemetry.addData("extendo target",TeleOpComponents.extendo.target);
             TeleOpComponents.telemetry.addData("extendo pos",TeleOpComponents.extendo.getCurrentPosition());
             TeleOpComponents.telemetry.addData("extendoPitch target",TeleOpComponents.extendoPitch.target);
             TeleOpComponents.telemetry.addData("extendoPitch pos",TeleOpComponents.extendoPitch.getCurrentPosition());
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
-            */
             TeleOpComponents.telemetry.update();
 
             return true;

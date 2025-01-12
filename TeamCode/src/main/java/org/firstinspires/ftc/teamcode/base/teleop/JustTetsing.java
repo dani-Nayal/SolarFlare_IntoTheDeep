@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.base.teleop;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawFingers;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitchLeft;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitch;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.innerClawPitch;
 
@@ -23,12 +23,12 @@ public class JustTetsing extends LinearOpMode {
         TeleOpSequentialAction sequence = new TeleOpSequentialAction(
                 new TeleOpParallelAction(
                         clawFingers.setPositionAction(clawFingers.KEY_POSITIONS.get("openPosition")),
-                        clawPitchLeft.setPositionAction(clawPitchLeft.KEY_POSITIONS.get("pickUpPosition")),
+                        clawPitch.setPositionAction(clawPitch.KEY_POSITIONS.get("pickUpPosition")),
                         innerClawPitch.setPositionAction(innerClawPitch.KEY_POSITIONS.get("pickUpPosition"))
                 ),
                 clawFingers.setPositionAction(clawFingers.KEY_POSITIONS.get("closedPosition")),
                 new TeleOpParallelAction(
-                    clawPitchLeft.setPositionAction(clawPitchLeft.KEY_POSITIONS.get("hoverPosition")),
+                    clawPitch.setPositionAction(clawPitch.KEY_POSITIONS.get("hoverPosition")),
                     innerClawPitch.setPositionAction(innerClawPitch.KEY_POSITIONS.get("hoverPosition"))
                 )
 
@@ -37,14 +37,14 @@ public class JustTetsing extends LinearOpMode {
 
         waitForStart();
         clawFingers.setPosition(92);
-        clawPitchLeft.setPosition(clawPitchLeft.KEY_POSITIONS.get("hoverPosition"));
+        clawPitch.setPosition(clawPitch.KEY_POSITIONS.get("hoverPosition"));
         innerClawPitch.setPosition(innerClawPitch.KEY_POSITIONS.get("hoverPosition"));
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 this::isStopRequested,
                 new UpdateTelemetryAction(),
                 trigger,
-                clawPitchLeft.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),clawPitchLeft.KEY_POSITIONS.get("pickUpPosition"),clawPitchLeft.KEY_POSITIONS.get("hoverPosition"),130),
+                clawPitch.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper), clawPitch.KEY_POSITIONS.get("pickUpPosition"), clawPitch.KEY_POSITIONS.get("hoverPosition"),130),
                 extendo.triggeredDynamicAction(()->(gamepad1.right_trigger>0),()->(gamepad1.left_trigger>0),15,6000,3000)
         );
     }

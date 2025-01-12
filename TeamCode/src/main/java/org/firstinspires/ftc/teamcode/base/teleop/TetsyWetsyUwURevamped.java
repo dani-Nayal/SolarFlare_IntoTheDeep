@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucket;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucketSlides;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawFingers;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitchLeft;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitch;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawWrist;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendoPitch;
@@ -22,7 +22,7 @@ public class TetsyWetsyUwURevamped extends LinearOpMode {
         waitForStart();
         bucket.setPosition(0);
         clawFingers.setPosition(92);
-        clawPitchLeft.setPosition(73);
+        clawPitch.setPosition(73);
         clawWrist.setPosition(95);
         innerClawPitch.setPosition(0);
         extendo.setMotorDisable();
@@ -32,7 +32,7 @@ public class TetsyWetsyUwURevamped extends LinearOpMode {
                 this::opModeIsActive,
                 this::isStopRequested,
                 bucket.triggeredDynamicAction(()->(gamepad1.left_bumper),()->(gamepad1.right_bumper),0.25),
-                clawPitchLeft.triggeredDynamicAction(()->(gamepad1.left_trigger>0),()->(gamepad1.right_trigger>0),0.25),
+                clawPitch.triggeredDynamicAction(()->(gamepad1.left_trigger>0),()->(gamepad1.right_trigger>0),0.25),
                 clawFingers.triggeredDynamicAction(()->(gamepad1.dpad_left),()->(gamepad1.dpad_right),0.25),
                 clawWrist.triggeredDynamicAction(()->(gamepad1.dpad_up),()->(gamepad1.dpad_down),0.25),
                 innerClawPitch.triggeredDynamicAction(()->(gamepad1.right_stick_y>0),()->(gamepad1.right_stick_y<0),0.25),
