@@ -32,7 +32,7 @@ public class HardwareConfig {
 
     public static HardwareConfig getInstance() {
         if(hardwareConfig == null)
-            throw new IllegalStateException("HardwardConfig has not been initialized");
+            throw new IllegalStateException("HardwareConfig has not been initialized");
         return hardwareConfig;
     }
 
@@ -53,22 +53,29 @@ public class HardwareConfig {
     }
 
     public PinpointConfig getPinpointConfig() {
+        if(pinpointConfig == null)
+            throw new IllegalStateException("PinpointConfig not initialized");
         return pinpointConfig;
     }
 
-    public IMUConfig getImuConfig(){
+    public IMUConfig getImuConfig() {
+        if(imuConfig == null)
+            throw new IllegalStateException("PinpointConfig not initialized");
         return imuConfig;
     }
 
-    public Limelight3aConfig getLimelightConfig(){return limelight3aConfig;}
+    public Limelight3aConfig getLimelightConfig(){
+        if(limelight3aConfig == null)
+            throw new IllegalStateException("Limelight3aConfig not initialized");
+    return limelight3aConfig;}
 
     private HardwareConfig(HardwareMap hardwareMap){
-        motorConfigs = new HashMap<>(8);
-        servoConfigs = new HashMap<>(12);
+        motorConfigs      = new HashMap<>(8);
+        servoConfigs      = new HashMap<>(12);
 
         // TODO: Assign config variables here and determine their parameters
 
-        pinpointConfig = new PinpointConfig(hardwareMap, "pinpoint");
+        pinpointConfig    = new PinpointConfig(hardwareMap, "pinpoint");
         limelight3aConfig = new Limelight3aConfig(hardwareMap, "limelight", 11);
     }
     public static class MotorConfig{
