@@ -6,10 +6,10 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.base.HardwareConfig;
-import org.firstinspires.ftc.teamcode.base.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.RobotState;
-import org.firstinspires.ftc.teamcode.base.ServoEnum;
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.RobotState;
+import org.firstinspires.ftc.teamcode.base.config.ServoEnum;
 
 import java.util.HashMap;
 
