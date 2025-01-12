@@ -486,7 +486,13 @@ public abstract class TeleOpComponents {
                     timer.reset();
 
                 }
-                return (time-timer.time())>=0;
+                if (timer.time()<time){
+                    return true;
+                }
+                else{
+                    startPos=-1;
+                    return false;
+                }
             }
 
             @Override
@@ -549,7 +555,13 @@ public abstract class TeleOpComponents {
                     setPosition(pos);
                     timer.reset();
                 }
-                return (time-timer.time())>=0;
+                if (timer.time()<time){
+                    return true;
+                }
+                else{
+                    startPos=-1;
+                    return false;
+                }
             }
         }
         public class DownwardFSMAction implements TeleOpAction{
@@ -599,7 +611,13 @@ public abstract class TeleOpComponents {
                     setPosition(pos);
                     timer.reset();
                 }
-                return (time-timer.time())>=0;
+                if (timer.time()<time){
+                    return true;
+                }
+                else{
+                    startPos=-1;
+                    return false;
+                }
             }
         }
         public PressTrigger triggeredFSMAction(Condition upCondition, Condition downCondition,double...positions){
