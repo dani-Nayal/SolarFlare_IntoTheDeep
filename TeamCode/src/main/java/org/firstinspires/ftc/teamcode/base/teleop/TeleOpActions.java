@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 
 
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.drive;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.telemetry;
 
 import androidx.annotation.NonNull;
 
@@ -264,18 +263,18 @@ public abstract class TeleOpActions{
     }
 
     public static class PressTrigger extends ConditionalAction{
-        public boolean isPressed=false;
-        public Condition modifyCondition(Condition condition){
+        public boolean[] isPressed;
+        public Condition modifyCondition(Condition condition,int i){
             return () -> {
                 if (condition.call()){
-                    if (!isPressed) {
-                        isPressed = true;
+                    if (!isPressed[i]) {
+                        isPressed[i] = true;
                         return true;
                     }
                     else return false;
                 }
                 else{
-                    isPressed=false;
+                    isPressed[i]=false;
                     return false;
                 }
             };
@@ -283,25 +282,25 @@ public abstract class TeleOpActions{
         public PressTrigger(Condition[] conditions, TeleOpAction[] actions) {
             super(conditions, actions);
             this.actions.clear();
+            isPressed = new boolean[conditions.length];
             for (int i=0;i<conditions.length;i++){
-                this.actions.put(modifyCondition(conditions[i]),actions[i]);
+                this.actions.put(modifyCondition(conditions[i],i),actions[i]);
             }
         }
     }
     public static class UninterruptiblePressTrigger extends UninterruptibleConditionalAction{
-        public boolean isPressed=false;
-
-        public Condition modifyCondition(Condition condition){
+        public boolean[] isPressed;
+        public Condition modifyCondition(Condition condition,int i){
             return () -> {
                 if (condition.call()){
-                    if (!isPressed) {
-                        isPressed = true;
+                    if (!isPressed[i]) {
+                        isPressed[i] = true;
                         return true;
                     }
                     else return false;
                 }
                 else{
-                    isPressed=false;
+                    isPressed[i]=false;
                     return false;
                 }
             };
@@ -310,7 +309,7 @@ public abstract class TeleOpActions{
             super(conditions, actions);
             this.actions.clear();
             for (int i=0;i<conditions.length;i++){
-                this.actions.put(modifyCondition(conditions[i]),actions[i]);
+                this.actions.put(modifyCondition(conditions[i],i),actions[i]);
             }
         }
     }

@@ -60,7 +60,7 @@ public class TetsyWetsyUwURevamped extends LinearOpMode {
                 //new UpdateTelemetryAction()
                 trigger,
                 clawPitchLeft.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),clawPitchLeft.KEY_POSITIONS.get("pickUpPosition"),clawPitchLeft.KEY_POSITIONS.get("hoverPosition"),130),
-                clawPitchRight.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),clawPitchLeft.KEY_POSITIONS.get("hoverPosition"),clawPitchLeft.KEY_POSITIONS.get("pickUpPosition"),130)
+                clawPitchRight.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),clawPitchLeft.KEY_POSITIONS.get("pickUpPosition"),clawPitchLeft.KEY_POSITIONS.get("hoverPosition"),130)
         );
     }
 }
