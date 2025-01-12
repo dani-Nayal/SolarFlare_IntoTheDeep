@@ -55,6 +55,8 @@ public abstract class TeleOpActions{
                 if (condition.call()){
                     if (currentAction != null && actions.get(condition)!=currentAction){
                         currentAction.stop();
+                    }
+                    if (actions.get(condition)!=currentAction){
                         diffAction=true;
                     }
                     currentAction=actions.get(condition);
@@ -133,21 +135,32 @@ public abstract class TeleOpActions{
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            boolean newAction=false;
             if (currentAction == null) {
                 for (Condition condition : actions.keySet()) {
                     if (condition.call()) {
                         currentAction = actions.get(condition);
+                        newAction=true;
                         break;
                     }
                 }
             }
             if (currentAction != null) {
-                if(!currentAction.run(packet)){
-                    currentAction = null;
-                    return false;
+                if (newAction){
+                    if (!currentAction.repeatFromStart(packet)) {
+                        currentAction = null;
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
-                else{
-                    return true;
+                else {
+                    if (!currentAction.run(packet)) {
+                        currentAction = null;
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
             }
             return false;
