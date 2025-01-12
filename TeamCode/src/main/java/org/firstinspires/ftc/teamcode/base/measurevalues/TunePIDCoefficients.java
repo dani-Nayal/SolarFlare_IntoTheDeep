@@ -23,7 +23,7 @@ public class TunePIDCoefficients extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        hw = HardwareConfig.getInstance(hardwareMap);
+        hw = HardwareConfig.makeHardwareConfig(hardwareMap);
         state = RobotState.getInstance();
 
         FtcDashboard dashboard = FtcDashboard.getInstance();

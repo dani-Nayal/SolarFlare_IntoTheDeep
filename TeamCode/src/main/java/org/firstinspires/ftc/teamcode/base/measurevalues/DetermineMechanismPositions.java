@@ -18,7 +18,7 @@ public class DetermineMechanismPositions extends LinearOpMode {
     double position = 0;
     @Override
     public void runOpMode(){
-        hw = HardwareConfig.getInstance(hardwareMap);
+        hw    = HardwareConfig.makeHardwareConfig(hardwareMap);
         state = RobotState.getInstance();
 
         waitForStart();
