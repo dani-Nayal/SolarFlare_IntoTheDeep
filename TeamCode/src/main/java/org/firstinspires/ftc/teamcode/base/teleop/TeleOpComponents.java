@@ -43,6 +43,7 @@ public abstract class TeleOpComponents {
     public static BotServo clawWrist;
     public static BotServo bucket;
     public static class BotMotor extends DcMotorImplEx {
+        public ArrayList<BotMotor> synchronizedMotors = new ArrayList<>();
         public double kP; public double kI; public double kD;
         public HashMap<String,Double> KEY_POSITIONS;
         public RunMode RUN_MODE;
@@ -393,6 +394,9 @@ public abstract class TeleOpComponents {
                 MOVEMENT_TIMER.reset();
                 LOOP_TIMER.reset();
                 createMotionProfile(maxVelocity, maxAcceleration);
+                for (BotMotor motor : synchronizedMotors){
+                    motor.setMotorTarget(target,maxVelocity,maxAcceleration);
+                }
             }
         }
         public void setMotorTarget(double target){
@@ -418,7 +422,7 @@ public abstract class TeleOpComponents {
     }
 
     public static class BotServo extends ServoImpl {
-
+        public ArrayList<BotServo> synchronizedServos = new ArrayList<>();
         public HashMap<String,Double> KEY_POSITIONS;
         public double MAXIMUM_POSITION; public double MINIMUM_POSITION;
         public double RANGE;
@@ -452,6 +456,9 @@ public abstract class TeleOpComponents {
         @Override
         public void setPosition(double position){
             super.setPosition(Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position)) / RANGE);
+            for (BotServo servo : synchronizedServos){
+                servo.setPosition(position);
+            }
         }
         @Override
         public double getPosition(){
@@ -716,6 +723,23 @@ public abstract class TeleOpComponents {
                 422,
                 Servo.Direction.FORWARD
         );
+        synchronizeServos(clawPitchLeft,clawPitchRight);
+    }
+    public static void synchronizeServos(BotServo...servos){
+        for (BotServo servo : servos){
+            for (BotServo servo2 : servos)
+                if (servo!=servo2) {
+                    servo.synchronizedServos.add(servo2);
+                }
+        }
+    }
+    public static void synchronizeServos(BotMotor...motors){
+        for (BotMotor motor : motors){
+            for (BotMotor motor2 : motors)
+                if (motor!=motor2) {
+                    motor.synchronizedMotors.add(motor2);
+                }
+        }
     }
 }
 

@@ -27,13 +27,13 @@ public class TetsyWetsyUwURevamped extends LinearOpMode {
                 new TeleOpParallelAction(
                         clawFingers.setPositionAction(clawFingers.KEY_POSITIONS.get("openPosition")),
                         clawPitchLeft.setPositionAction(clawPitchLeft.KEY_POSITIONS.get("pickUpPosition")),
-                        clawPitchRight.setPositionAction(clawPitchRight.KEY_POSITIONS.get("pickUpPosition")),
+                        //clawPitchRight.setPositionAction(clawPitchRight.KEY_POSITIONS.get("pickUpPosition")),
                         innerClawPitch.setPositionAction(innerClawPitch.KEY_POSITIONS.get("pickUpPosition"))
                 ),
                 clawFingers.setPositionAction(clawFingers.KEY_POSITIONS.get("closedPosition")),
                 new TeleOpParallelAction(
                     clawPitchLeft.setPositionAction(clawPitchLeft.KEY_POSITIONS.get("hoverPosition")),
-                    clawPitchRight.setPositionAction(clawPitchRight.KEY_POSITIONS.get("hoverPosition")),
+                    //clawPitchRight.setPositionAction(clawPitchRight.KEY_POSITIONS.get("hoverPosition")),
                     innerClawPitch.setPositionAction(innerClawPitch.KEY_POSITIONS.get("hoverPosition"))
                 )
 
@@ -45,7 +45,7 @@ public class TetsyWetsyUwURevamped extends LinearOpMode {
         clawFingers.setPosition(92);
         //clawWrist.setPosition(0);
         clawPitchLeft.setPosition(130);
-        clawPitchRight.setPosition(130);
+        //clawPitchRight.setPosition(130);
         innerClawPitch.setPosition(innerClawPitch.KEY_POSITIONS.get("hoverPosition"));
         //bucket.setPosition(0);
         TeleOpActions.runLoop(
@@ -59,8 +59,8 @@ public class TetsyWetsyUwURevamped extends LinearOpMode {
                 //bucket.triggeredDynamicAction(()->(gamepad1.right_stick_y>0),()->(gamepad1.right_stick_y<0),1),
                 //new UpdateTelemetryAction()
                 trigger,
-                clawPitchLeft.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),clawPitchLeft.KEY_POSITIONS.get("pickUpPosition"),clawPitchLeft.KEY_POSITIONS.get("hoverPosition"),130),
-                clawPitchRight.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),clawPitchLeft.KEY_POSITIONS.get("pickUpPosition"),clawPitchLeft.KEY_POSITIONS.get("hoverPosition"),130)
+                clawPitchLeft.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),clawPitchLeft.KEY_POSITIONS.get("pickUpPosition"),clawPitchLeft.KEY_POSITIONS.get("hoverPosition"),130)
+                //clawPitchRight.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),clawPitchLeft.KEY_POSITIONS.get("pickUpPosition"),clawPitchLeft.KEY_POSITIONS.get("hoverPosition"),130)
         );
     }
 }
