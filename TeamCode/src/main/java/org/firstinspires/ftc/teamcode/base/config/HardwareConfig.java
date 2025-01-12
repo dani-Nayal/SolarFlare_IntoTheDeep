@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import java.security.InvalidParameterException;
 import java.util.HashMap;
 
 public class HardwareConfig {
@@ -25,7 +24,7 @@ public class HardwareConfig {
     public PinpointConfig pinpointConfig;
     public Limelight3aConfig limelight3aConfig;
 
-    public static HardwareConfig makeHardwareConfig(HardwareMap hardwareMap) {
+    public static HardwareConfig createInstance(HardwareMap hardwareMap) {
         hardwareConfig = new HardwareConfig(hardwareMap);
         return hardwareConfig;
     }
