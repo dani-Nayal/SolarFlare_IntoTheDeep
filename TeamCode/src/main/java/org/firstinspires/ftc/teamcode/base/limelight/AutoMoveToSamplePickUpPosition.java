@@ -7,8 +7,8 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 
-import org.firstinspires.ftc.teamcode.base.HardwareConfig;
-import org.firstinspires.ftc.teamcode.base.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 
 import java.util.Arrays;
 

@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.base.HardwareConfig;
-import org.firstinspires.ftc.teamcode.base.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.RobotState;
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.PID;
 
 import java.util.Objects;
@@ -32,7 +32,7 @@ public class MeasureMotorAcceleration extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     @Override
     public void runOpMode(){
-        hw = HardwareConfig.getInstance(hardwareMap);
+        hw = HardwareConfig.makeHardwareConfig(hardwareMap);
         state = RobotState.getInstance();
         pid = new PID();
 

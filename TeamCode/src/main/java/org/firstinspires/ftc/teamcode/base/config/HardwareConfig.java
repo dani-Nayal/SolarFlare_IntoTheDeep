@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.base;
+package org.firstinspires.ftc.teamcode.base.config;
 
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -25,13 +25,14 @@ public class HardwareConfig {
     public PinpointConfig pinpointConfig;
     public Limelight3aConfig limelight3aConfig;
 
-    public static HardwareConfig getInstance(HardwareMap... hardwareMap) {
-        if (hardwareConfig == null) {
-            if (hardwareMap.length == 0 || hardwareMap[0] == null) {
-                throw new InvalidParameterException("HardwareConfig has not been initialized");
-            }
-            hardwareConfig = new HardwareConfig(hardwareMap[0]);
-        }
+    public static HardwareConfig makeHardwareConfig(HardwareMap hardwareMap) {
+        hardwareConfig = new HardwareConfig(hardwareMap);
+        return hardwareConfig;
+    }
+
+    public static HardwareConfig getInstance() {
+        if(hardwareConfig == null)
+            throw new IllegalStateException("HardwareConfig has not been initialized");
         return hardwareConfig;
     }
 
@@ -52,22 +53,29 @@ public class HardwareConfig {
     }
 
     public PinpointConfig getPinpointConfig() {
+        if(pinpointConfig == null)
+            throw new IllegalStateException("PinpointConfig not initialized");
         return pinpointConfig;
     }
 
-    public IMUConfig getImuConfig(){
+    public IMUConfig getImuConfig() {
+        if(imuConfig == null)
+            throw new IllegalStateException("PinpointConfig not initialized");
         return imuConfig;
     }
 
-    public Limelight3aConfig getLimelightConfig(){return limelight3aConfig;}
+    public Limelight3aConfig getLimelightConfig(){
+        if(limelight3aConfig == null)
+            throw new IllegalStateException("Limelight3aConfig not initialized");
+    return limelight3aConfig;}
 
     private HardwareConfig(HardwareMap hardwareMap){
-        motorConfigs = new HashMap<>(8);
-        servoConfigs = new HashMap<>(12);
+        motorConfigs      = new HashMap<>(8);
+        servoConfigs      = new HashMap<>(12);
 
         // TODO: Assign config variables here and determine their parameters
 
-        pinpointConfig = new PinpointConfig(hardwareMap, "pinpoint");
+        pinpointConfig    = new PinpointConfig(hardwareMap, "pinpoint");
         limelight3aConfig = new Limelight3aConfig(hardwareMap, "limelight", 11);
     }
     public static class MotorConfig{

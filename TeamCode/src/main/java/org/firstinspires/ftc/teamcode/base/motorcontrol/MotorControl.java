@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.base.HardwareConfig;
-import org.firstinspires.ftc.teamcode.base.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.RobotState;
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.RobotState;
 
 public class MotorControl {
     HardwareConfig hw;
