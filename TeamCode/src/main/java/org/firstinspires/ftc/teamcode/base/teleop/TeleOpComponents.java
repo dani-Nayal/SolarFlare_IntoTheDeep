@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
@@ -42,6 +44,13 @@ public abstract class TeleOpComponents {
     public static BotServo innerClawPitch;
     public static BotServo clawWrist;
     public static BotServo bucket;
+    public static BotMotor extendo;
+    public static BotMotor extendoPitch;
+    public static BotMotor bucketSlides;
+    public static BotMotor rightFront; public static BotMotor rightBack; public static BotMotor leftFront; public static BotMotor leftBack;
+
+
+
     public static class BotMotor extends DcMotorImplEx {
         public ArrayList<BotMotor> synchronizedMotors = new ArrayList<>();
         public double kP; public double kI; public double kD;
@@ -386,6 +395,9 @@ public abstract class TeleOpComponents {
             previousError=error;
             setPower(Math.min(1,Math.max(-1,kpPower+kiPower+kdPower)));
         }
+        public double get(String key){
+            return KEY_POSITIONS.get(key);
+        }
         public void setMotorTarget(double target, double maxVelocity, double maxAcceleration){
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
                 this.target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
@@ -463,6 +475,9 @@ public abstract class TeleOpComponents {
         @Override
         public double getPosition(){
             return super.getPosition() * RANGE;
+        }
+        public double get(String key){
+            return KEY_POSITIONS.get(key);
         }
         public class SetPositionAction implements TeleOpAction {
             boolean isStart = true;
@@ -651,6 +666,104 @@ public abstract class TeleOpComponents {
         TeleOpComponents.telemetry=telemetry;
         //TeleOpComponents.drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,Math.toRadians(90)));
         //initialize mechanism variables here
+        extendo = new BotMotor(
+                hardwareMap.get(DcMotorEx.class, "extendo").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "extendo").getController(),
+                hardwareMap.get(DcMotorEx.class, "extendo").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "extendo").getMotorType(),
+                0.015,0,0,
+                new String[]{},new double[]{},
+                Double.POSITIVE_INFINITY,0,
+                200000,3000,
+                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
+                DcMotorEx.Direction.FORWARD,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
+                "MOTION_PROFILE"
+        );
+        extendoPitch = new BotMotor(
+                hardwareMap.get(DcMotorEx.class, "extendoPitch").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "extendoPitch").getController(),
+                hardwareMap.get(DcMotorEx.class, "extendoPitch").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
+                0.015,0,0,
+                new String[]{},new double[]{},
+                Double.POSITIVE_INFINITY,0,
+                200000,3000,
+                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
+                DcMotorEx.Direction.FORWARD,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
+                "MOTION_PROFILE"
+        );
+        bucketSlides = new BotMotor(
+                hardwareMap.get(DcMotorEx.class, "bucketSlides").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "bucketSlides").getController(),
+                hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
+                0.015,0,0,
+                new String[]{},new double[]{},
+                Double.POSITIVE_INFINITY,0,
+                200000,3000,
+                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
+                DcMotorEx.Direction.FORWARD,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
+                "MOTION_PROFILE"
+        );
+        rightFront = new BotMotor(
+                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                0.015,0,0,
+                new String[]{},new double[]{},
+                Double.POSITIVE_INFINITY,0,
+                200000,3000,
+                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
+                DcMotorEx.Direction.FORWARD,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
+                "soogma"
+        );
+        rightBack = new BotMotor(
+                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                0.015,0,0,
+                new String[]{},new double[]{},
+                Double.POSITIVE_INFINITY,0,
+                200000,3000,
+                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
+                DcMotorEx.Direction.FORWARD,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
+                "soogma"
+        );
+        leftFront = new BotMotor(
+                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                0.015,0,0,
+                new String[]{},new double[]{},
+                Double.POSITIVE_INFINITY,0,
+                200000,3000,
+                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
+                DcMotorEx.Direction.REVERSE,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
+                "soogma"
+        );
+        leftBack = new BotMotor(
+                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                0.015,0,0,
+                new String[]{},new double[]{},
+                Double.POSITIVE_INFINITY,0,
+                200000,3000,
+                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
+                DcMotorEx.Direction.REVERSE,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
+                "soogma"
+        );
         clawFingers = new BotServo(
                 hardwareMap.get(Servo.class, "clawFingers").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawFingers").getController(),

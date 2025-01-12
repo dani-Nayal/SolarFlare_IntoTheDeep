@@ -451,9 +451,12 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("innerClawPitch pos",TeleOpComponents.innerClawPitch.getPosition());
             TeleOpComponents.telemetry.addData("bucket pos",TeleOpComponents.bucket.getPosition());
             /*
-            TeleOpComponents.telemetry.addData("extendo pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"extendo").getCurrentPosition());
-            TeleOpComponents.telemetry.addData("extendoPitch pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"extendoPitch").getCurrentPosition());
-            TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.hardwareMap.get(DcMotorEx.class,"bucketSlides").getCurrentPosition());
+            TeleOpComponents.telemetry.addData("extendo target",TeleOpComponents.extendo.target);
+            TeleOpComponents.telemetry.addData("extendo pos",TeleOpComponents.extendo.getCurrentPosition());
+            TeleOpComponents.telemetry.addData("extendoPitch target",TeleOpComponents.extendoPitch.target);
+            TeleOpComponents.telemetry.addData("extendoPitch pos",TeleOpComponents.extendoPitch.getCurrentPosition());
+            TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
+            TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
             */
             TeleOpComponents.telemetry.update();
 
