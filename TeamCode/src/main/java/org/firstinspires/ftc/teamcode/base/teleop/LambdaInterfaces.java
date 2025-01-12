@@ -22,4 +22,7 @@ public abstract class LambdaInterfaces {
     public interface TurnTo extends RoadrunnerFunction {
         TrajectoryActionBuilder call(double heading);
     }
+    public interface Turn extends RoadrunnerFunction {
+        TrajectoryActionBuilder call(double headingChange);
+    }
 }

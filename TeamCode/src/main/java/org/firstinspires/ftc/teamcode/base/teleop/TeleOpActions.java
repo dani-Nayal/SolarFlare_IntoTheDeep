@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.StrafeToLinea
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.WaitSeconds;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.TurnTo;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.RoadrunnerFunction;
+import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Turn;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotMotor;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotServo;
 
@@ -554,9 +555,14 @@ public abstract class TeleOpActions{
             funcs.put(func,new Object[]{heading});
             return this;
         }
+        public TeleOpTrajectoryAction turn(double headingChange){
+            Turn func = trajBuilder::turn;
+            funcs.put(func,new Object[]{headingChange});
+            return this;
+        }
     }
 
-    public static void runLoop(Condition opModeIsActive, Condition isStopRequested, TeleOpAction...actions) throws InterruptedException{
+    public static void runLoop(Condition opModeIsActive, Condition isStopRequested, TeleOpAction...actions){
         while (opModeIsActive.call()) {
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
