@@ -7,8 +7,8 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 
-import org.firstinspires.ftc.teamcode.base.HardwareConfig;
-import org.firstinspires.ftc.teamcode.base.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 
 import java.util.Arrays;
 
@@ -62,11 +62,11 @@ public class AutoMoveToSamplePickUpPosition implements Action {
                     if (targetDeviance < smallestTargetDeviance) {
                         smallestTargetDeviance = targetDeviance;
                         targetDetection = detection;
-                        tXError = targetTX - targetDetection.getTargetXDegrees();
-                        tYError = targetTY - targetDetection.getTargetYDegrees();
                     }
                 }
             }
+            tXError = targetTX - targetDetection.getTargetXDegrees();
+            tYError = targetTY - targetDetection.getTargetYDegrees();
         }
         if (tXError < 0){
             // Move drivetrain left

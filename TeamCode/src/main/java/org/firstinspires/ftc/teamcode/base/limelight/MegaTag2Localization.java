@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.teamcode.base.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 
 @Autonomous
 public class MegaTag2Localization extends LinearOpMode{
