@@ -5,5 +5,6 @@ public enum MotorEnum {
     LEFT_BACK,
     RIGHT_BACK,
     LEFT_FRONT,
-    RIGHT_FRONT
+    RIGHT_FRONT,
+    TESTING_MOTOR
 }

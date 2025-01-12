@@ -24,6 +24,28 @@ public class HardwareConfig {
     public PinpointConfig pinpointConfig;
     public Limelight3aConfig limelight3aConfig;
 
+    private HardwareConfig(HardwareMap hardwareMap){
+        motorConfigs = new HashMap<>(8);
+        servoConfigs = new HashMap<>(12);
+
+        // TODO: Assign config variables here and determine their parameters
+
+        motorConfigs.put(MotorEnum.TESTING_MOTOR, new MotorConfig(
+                hardwareMap,
+                "motor-1",
+                0.0427,0,0.00043,
+                "RUN_WITHOUT_ENCODER",
+                "FORWARD",
+                "BRAKE",
+                0,
+                10000,
+                4000,
+                2960));
+
+        pinpointConfig    = new PinpointConfig(hardwareMap, "pinpoint");
+        limelight3aConfig = new Limelight3aConfig(hardwareMap, "limelight", 11);
+    }
+
     public static HardwareConfig createInstance(HardwareMap hardwareMap) {
         hardwareConfig = new HardwareConfig(hardwareMap);
         return hardwareConfig;
@@ -68,15 +90,6 @@ public class HardwareConfig {
             throw new IllegalStateException("Limelight3aConfig not initialized");
     return limelight3aConfig;}
 
-    private HardwareConfig(HardwareMap hardwareMap){
-        motorConfigs      = new HashMap<>(8);
-        servoConfigs      = new HashMap<>(12);
-
-        // TODO: Assign config variables here and determine their parameters
-
-        pinpointConfig    = new PinpointConfig(hardwareMap, "pinpoint");
-        limelight3aConfig = new Limelight3aConfig(hardwareMap, "limelight", 11);
-    }
     public static class MotorConfig{
         public DcMotorEx motor;
         public double kP;

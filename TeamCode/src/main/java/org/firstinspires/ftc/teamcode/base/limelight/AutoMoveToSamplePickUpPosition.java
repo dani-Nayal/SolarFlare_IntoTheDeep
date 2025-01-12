@@ -62,11 +62,11 @@ public class AutoMoveToSamplePickUpPosition implements Action {
                     if (targetDeviance < smallestTargetDeviance) {
                         smallestTargetDeviance = targetDeviance;
                         targetDetection = detection;
-                        tXError = targetTX - targetDetection.getTargetXDegrees();
-                        tYError = targetTY - targetDetection.getTargetYDegrees();
                     }
                 }
             }
+            tXError = targetTX - targetDetection.getTargetXDegrees();
+            tYError = targetTY - targetDetection.getTargetYDegrees();
         }
         if (tXError < 0){
             // Move drivetrain left
