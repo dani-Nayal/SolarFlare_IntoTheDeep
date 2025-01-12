@@ -12,8 +12,14 @@ public abstract class LambdaInterfaces {
     public interface DoubleFunction{
         double call();
     }
+    public interface Vector2dFunction{
+        Vector2d call();
+    }
     public interface RoadrunnerFunction {}
     public interface StrafeToLinearHeading extends RoadrunnerFunction {
+        TrajectoryActionBuilder call(Vector2d vector, double heading);
+    }
+    public interface StrafeAndTurn extends RoadrunnerFunction {
         TrajectoryActionBuilder call(Vector2d vector, double heading);
     }
     public interface WaitSeconds extends RoadrunnerFunction {

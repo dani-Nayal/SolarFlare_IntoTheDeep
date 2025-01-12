@@ -17,10 +17,12 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.DoubleFunction;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.ShortFunction;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.StrafeToLinearHeading;
+import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.StrafeAndTurn;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.WaitSeconds;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.TurnTo;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.RoadrunnerFunction;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Turn;
+import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Vector2dFunction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotMotor;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotServo;
 
@@ -534,6 +536,18 @@ public abstract class TeleOpActions{
                         WaitSeconds castedAction = (WaitSeconds) action;
                         trajBuilder = castedAction.call((double) Objects.requireNonNull(funcs.get(action))[0]);
                     }
+                    else if (action instanceof TurnTo){
+                        TurnTo castedAction = (TurnTo) action;
+                        trajBuilder = castedAction.call((double) Objects.requireNonNull(funcs.get(action))[0]);
+                    }
+                    else if (action instanceof Turn){
+                        Turn castedAction = (Turn) action;
+                        trajBuilder = castedAction.call((double) Objects.requireNonNull(funcs.get(action))[0]);
+                    }
+                    else if (action instanceof StrafeAndTurn){
+                        StrafeAndTurn castedAction = (StrafeAndTurn) action;
+                        trajBuilder = castedAction.call(((Vector2dFunction) Objects.requireNonNull(funcs.get(action))[0]).call(),((DoubleFunction) Objects.requireNonNull(funcs.get(action))[1]).call());
+                    }
                 }
                 traj = trajBuilder.build();
             }
@@ -543,6 +557,13 @@ public abstract class TeleOpActions{
         public TeleOpTrajectoryAction strafeToLinearHeading(Vector2d vector, double heading){
             StrafeToLinearHeading func = trajBuilder::strafeToLinearHeading;
             funcs.put(func,new Object[]{vector,heading});
+            return this;
+        }
+        public TeleOpTrajectoryAction strafeAndTurn(Vector2d vector, double headingChange){
+            StrafeAndTurn func = trajBuilder::strafeToLinearHeading;
+            Vector2dFunction param = ()->(new Vector2d(drive.pose.position.x + vector.x,drive.pose.position.y + vector.y));
+            DoubleFunction param2 = ()->(drive.pose.heading.toDouble()+headingChange);
+            funcs.put(func,new Object[]{param,param2});
             return this;
         }
         public TeleOpTrajectoryAction waitSeconds(double time){
