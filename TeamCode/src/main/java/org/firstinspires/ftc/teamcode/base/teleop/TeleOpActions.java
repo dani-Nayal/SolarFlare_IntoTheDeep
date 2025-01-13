@@ -36,7 +36,7 @@ import java.util.Objects;
 public abstract class TeleOpActions{
     public static TelemetryPacket packet = new TelemetryPacket();
     public static boolean isRRActive=false;
-    public interface TeleOpAction extends Action {
+    public interface TeleOpAction extends Action{
         boolean repeatFromStart(@NonNull TelemetryPacket packet);
         void stop();
     }
@@ -212,16 +212,29 @@ public abstract class TeleOpActions{
     public static class TeleOpSequentialAction implements TeleOpAction{
         public List<TeleOpAction> remainingActions;
         public List<TeleOpAction> actions;
+        public boolean[] isStarts;
         public TeleOpSequentialAction(TeleOpAction...actions){
             this.actions = Arrays.asList(actions);
             this.remainingActions=new ArrayList<>(this.actions);
+            isStarts = new boolean[actions.length];
+            for (int i=0;i<actions.length;i++){
+                isStarts[i]=true;
+            }
 
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!remainingActions.isEmpty()){
-                if (!remainingActions.get(0).run(packet)){
-                    remainingActions.remove(0);
+                if (isStarts[this.actions.size() - this.remainingActions.size()]) {
+                    isStarts[this.actions.size()-this.remainingActions.size()]=false;
+                    if (!remainingActions.get(0).repeatFromStart(packet)) {
+                        remainingActions.remove(0);
+                    }
+                }
+                else{
+                    if (!remainingActions.get(0).run(packet)) {
+                        remainingActions.remove(0);
+                    }
                 }
                 return true;
             }
@@ -232,10 +245,10 @@ public abstract class TeleOpActions{
         }
         @Override
         public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
-            if (!this.remainingActions.isEmpty()){
-                this.remainingActions.get(0).stop();
-            }
             this.remainingActions=new ArrayList<>(this.actions);
+            for (int i=0;i<this.isStarts.length;i++){
+                isStarts[i]=true;
+            }
             return run(packet);
         }
         @Override
@@ -264,11 +277,14 @@ public abstract class TeleOpActions{
         }
         @Override
         public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
-            for (TeleOpAction action : remainingActions){
-                action.stop();
-            }
             this.remainingActions=new ArrayList<>(this.actions);
-            return run(packet);
+            if (!remainingActions.isEmpty()){
+                remainingActions.removeIf(action -> !action.repeatFromStart(packet));
+                return true;
+            }
+            else{
+                return false;
+            }
         }
         @Override
         public void stop() {
@@ -300,6 +316,7 @@ public abstract class TeleOpActions{
             this.actions.clear();
             isPressed = new boolean[conditions.length];
             for (int i=0;i<conditions.length;i++){
+                isPressed[i]=false;
                 this.actions.put(modifyCondition(conditions[i],i),actions[i]);
             }
         }
@@ -324,7 +341,9 @@ public abstract class TeleOpActions{
         public UninterruptiblePressTrigger(Condition[] conditions, TeleOpAction[] actions) {
             super(conditions, actions);
             this.actions.clear();
+            isPressed=new boolean[conditions.length];
             for (int i=0;i<conditions.length;i++){
+                isPressed[i]=false;
                 this.actions.put(modifyCondition(conditions[i],i),actions[i]);
             }
         }
@@ -463,7 +482,6 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("clawPitchRight pos",TeleOpComponents.clawPitchRight.getPosition());
             TeleOpComponents.telemetry.addData("innerClawPitch pos",TeleOpComponents.innerClawPitch.getPosition());
             TeleOpComponents.telemetry.addData("bucket pos",TeleOpComponents.bucket.getPosition());
-
             TeleOpComponents.telemetry.addData("extendo target",TeleOpComponents.extendo.target);
             TeleOpComponents.telemetry.addData("extendo pos",TeleOpComponents.extendo.getCurrentPosition());
             TeleOpComponents.telemetry.addData("extendoPitch target",TeleOpComponents.extendoPitch.target);
@@ -471,7 +489,6 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
             TeleOpComponents.telemetry.update();
-
             return true;
         }
     }

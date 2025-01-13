@@ -3,6 +3,7 @@ import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucket
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucketSlides;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawFingers;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitch;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitchRight;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawWrist;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendoPitch;
@@ -25,9 +26,6 @@ public class TetsyWetsyUwURevamped extends LinearOpMode {
         clawPitch.setPosition(73);
         clawWrist.setPosition(95);
         innerClawPitch.setPosition(0);
-        extendo.setMotorDisable();
-        extendoPitch.setMotorDisable();
-        bucketSlides.setMotorDisable();
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 this::isStopRequested,

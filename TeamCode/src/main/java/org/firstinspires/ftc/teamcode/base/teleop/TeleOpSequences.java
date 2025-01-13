@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.base.teleop;
-
+/*
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -88,3 +88,4 @@ public class TeleOpSequences {
             }
     }
 }
+*/

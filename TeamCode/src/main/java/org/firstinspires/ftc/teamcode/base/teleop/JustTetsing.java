@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.base.teleop;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawFingers;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitch;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitchRight;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.innerClawPitch;
 
@@ -44,7 +45,7 @@ public class JustTetsing extends LinearOpMode {
                 this::isStopRequested,
                 new UpdateTelemetryAction(),
                 trigger,
-                clawPitch.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper), clawPitch.KEY_POSITIONS.get("pickUpPosition"), clawPitch.KEY_POSITIONS.get("hoverPosition"),130),
+                clawPitch.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper), clawPitch.KEY_POSITIONS.get("pickUpPosition"), clawPitch.KEY_POSITIONS.get("hoverPosition"),clawPitch.KEY_POSITIONS.get("transferPosition")),
                 extendo.triggeredDynamicAction(()->(gamepad1.right_trigger>0),()->(gamepad1.left_trigger>0),15,6000,3000)
         );
     }
