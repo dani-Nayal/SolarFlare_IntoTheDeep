@@ -68,6 +68,14 @@ public class RobotConfig {
         return instance;
     }
 
+    public RobotDimensions getRobotDimensions()
+            throws JSONException {
+        JSONObject jsonDimensions  = json.getJSONObject("robotDimensions");
+        double     length          = jsonDimensions.getDouble("length");
+        double     width           = jsonDimensions.getDouble("width");
+        return new RobotDimensions(length, width);
+    }
+
     public String[] getMotorNames() throws JSONException {
         // An alternative to
         // JSONObject.getNames(json.getJSONObject("Motors"));
@@ -219,6 +227,8 @@ public class RobotConfig {
             PrintStream out = System.out;
             RobotConfig config = RobotConfig.createInstance("RobotConfig");
 
+            // Robot Dimensions
+            out.println("Robot Dimensions="+config.getRobotDimensions());
             // Motor names, Enums
             String[]    motorNames = config.getMotorNames();
             out.println("MotorNames: " + Arrays.toString(motorNames));

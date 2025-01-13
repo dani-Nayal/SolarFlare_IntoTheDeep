@@ -6,11 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 public class HardwareConfig {
-    // TODO: Measure robot length and width
-    public final double ROBOT_LENGTH = 15.0625;
-    public final double ROBOT_WIDTH = 12.4375;
-
     private static HardwareConfig                 hardwareConfig;
+    public  final  RobotDimensions                robotDimensions;
     private final  EnumMap<MotorEnum,MotorConfig> motorConfigs;
     private final  EnumMap<ServoEnum,ServoConfig> servoConfigs;
     public  final  IMUConfig                      imuConfig;
@@ -19,6 +16,7 @@ public class HardwareConfig {
 
     private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
+        robotDimensions   = robotConfig.getRobotDimensions();
         motorConfigs      = new EnumMap<>(MotorEnum.class);
         servoConfigs      = new EnumMap<>(ServoEnum.class);
         for(MotorEnum motorEnum: robotConfig.getMotorEnums()) {
