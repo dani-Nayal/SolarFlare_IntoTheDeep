@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.base.config;
 
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.json.JSONException;
 
@@ -33,6 +30,7 @@ public class HardwareConfig {
             servoConfigs.put(servoEnum, new ServoConfig(servoEnum, hardwareMap, robotConfig));
         }
 
+        imuConfig         = new IMUConfig(hardwareMap, robotConfig);
         pinpointConfig    = new PinpointConfig(hardwareMap, "pinpoint");
         limelight3aConfig = new Limelight3aConfig(hardwareMap, "limelight", 11);
     }
@@ -82,21 +80,7 @@ public class HardwareConfig {
             throw new IllegalStateException("Limelight3aConfig not initialized");
     return limelight3aConfig;}
 
-    public static class IMUConfig{
-        public IMU imu;
-        public RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
-        public RevHubOrientationOnRobot.UsbFacingDirection usbDirection;
-        public IMUConfig(HardwareMap hardwareMap, String deviceName, String logoDirection, String usbDirection){
-            this.imu = hardwareMap.get(IMU.class, deviceName);
-            this.logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.valueOf(logoDirection);
-            this.usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.valueOf(usbDirection);
 
-            IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                    this.logoDirection,
-                    this.usbDirection));
-            imu.initialize(parameters);
-        }
-    }
     public static class PinpointConfig{
         public GoBildaPinpointDriverRR pinpoint;
         public PinpointConfig(HardwareMap hardwareMap, String deviceName){

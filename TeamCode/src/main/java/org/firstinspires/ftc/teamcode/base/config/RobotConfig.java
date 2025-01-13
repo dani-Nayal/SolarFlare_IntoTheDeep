@@ -13,10 +13,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotConfig {
@@ -176,6 +182,14 @@ public class RobotConfig {
         return json.getJSONObject("IMU").getDouble(propertyName);
     }
 
+    public LogoFacingDirection getIMULogoFacingDirection() throws JSONException {
+        return LogoFacingDirection.valueOf(getIMUString("LogoFacingDirection"));
+    }
+
+    public UsbFacingDirection getIMULUSBFacingDirection() throws JSONException {
+        return UsbFacingDirection.valueOf(getIMUString("usbFacingDirection"));
+    }
+
     public String getPinPointString(String propertyName) throws JSONException {
         return json.getJSONObject("PinPoint").getString(propertyName);
     }
@@ -228,11 +242,16 @@ public class RobotConfig {
                 out.println("Servo(" + servoEnum + ").degreesPerSecond=" + config.getServoDouble(servoEnum, "degreesPerSecond"));
             }
             out.println("IMU.deviceName=" + config.getIMUString("deviceName"));
+            out.println("IMU.LogoFacingDirection="+config.getIMULogoFacingDirection());
+            out.println("IMU.USBFacingDirection="+config.getIMULUSBFacingDirection());
             out.println("IMU.testVariable=" + config.getIMUDouble("testVariable"));
+
             out.println("PinPoint.deviceName=" + config.getPinPointString("deviceName"));
             out.println("PinPoint.testVariable=" + config.getPinPointDouble("testVariable"));
+
             out.println("LimeLight.deviceName=" + config.getLimeLightString("deviceName"));
             out.println("LimeLight.pollingRate=" + config.getLimeLightDouble("pollingRate"));
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -4,9 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.config.ServoEnum;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
+import org.json.JSONException;
 
 public class DetermineMechanismPositions extends LinearOpMode {
     HardwareConfig hw;
@@ -18,7 +20,13 @@ public class DetermineMechanismPositions extends LinearOpMode {
     double position = 0;
     @Override
     public void runOpMode(){
-        hw    = HardwareConfig.createInstance(hardwareMap);
+        try {
+            RobotConfig robotConfig = RobotConfig.createInstance("IntoTheDeep-V2");
+            hw    = HardwareConfig.createInstance(hardwareMap, robotConfig);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
         state = RobotState.getInstance();
 
         waitForStart();

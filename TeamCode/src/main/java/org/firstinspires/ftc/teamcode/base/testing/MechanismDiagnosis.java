@@ -8,8 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.config.ServoEnum;
+import org.json.JSONException;
 
 import java.util.HashMap;
 
@@ -26,8 +28,13 @@ public class MechanismDiagnosis extends LinearOpMode {
     HashMap <ServoEnum, Boolean> servoMoving = new HashMap<>(10);
 
     @Override
-    public void runOpMode(){
-        hw = HardwareConfig.createInstance(hardwareMap);
+    public void runOpMode() {
+        try {
+            RobotConfig robotConfig = RobotConfig.createInstance("IntoTheDeep-V2");
+            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         state = RobotState.getInstance();
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,Math.toRadians(0)));
 

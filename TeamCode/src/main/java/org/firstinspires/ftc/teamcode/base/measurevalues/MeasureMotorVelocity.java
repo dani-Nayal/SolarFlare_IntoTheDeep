@@ -9,8 +9,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.PID;
+import org.json.JSONException;
 
 import java.util.Objects;
 
@@ -28,8 +30,13 @@ public class MeasureMotorVelocity extends LinearOpMode {
     int currentPosition = 0;
     ElapsedTime timer = new ElapsedTime();
     @Override
-    public void runOpMode(){
-        hw = HardwareConfig.createInstance(hardwareMap);
+    public void runOpMode() {
+        try {
+            RobotConfig robotConfig = RobotConfig.createInstance("IntoTheDeep-V2");
+            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         state = RobotState.getInstance();
         pid = new PID();
 

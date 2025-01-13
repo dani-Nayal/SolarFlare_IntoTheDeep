@@ -9,7 +9,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
+import org.json.JSONException;
 
 @Config
 @TeleOp
@@ -23,7 +25,12 @@ public class TunePIDCoefficients extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        hw = HardwareConfig.createInstance(hardwareMap);
+        try {
+            RobotConfig robotConfig = RobotConfig.createInstance("IntoTheDeep-V2");
+            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         state = RobotState.getInstance();
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
