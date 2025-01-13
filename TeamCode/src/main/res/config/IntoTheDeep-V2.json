@@ -71,13 +71,13 @@
     "Pose1": {
     }
   },
-  "PinPoint": {
-    "deviceName": "PinPointDevice",
+  "Pinpoint": {
+    "deviceName": "pinpoint",
     "testVariable": 1.0
   },
-  "LimeLight": {
-    "deviceName": "LimeLightDevice",
-    "pollingRate": 1
+  "Limelight": {
+    "deviceName": "LimelightDevice",
+    "pollingRate": 11
   },
   "IMU": {
     "deviceName": "IMUDevice",

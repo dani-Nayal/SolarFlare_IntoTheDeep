@@ -1,28 +1,24 @@
 package org.firstinspires.ftc.teamcode.base.config;
 
-import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
+import java.util.EnumMap;
+import org.json.JSONException;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.json.JSONException;
-
-import java.util.HashMap;
 
 public class HardwareConfig {
-    // TODO: Measure robot length and width
-    public final double ROBOT_LENGTH = 15.0625;
-    public final double ROBOT_WIDTH = 12.4375;
-    private static HardwareConfig hardwareConfig;
-    private final HashMap<MotorEnum,MotorConfig> motorConfigs;
-    private final HashMap<ServoEnum,ServoConfig> servoConfigs;
-    public IMUConfig imuConfig;
-    public PinpointConfig pinpointConfig;
-    public Limelight3aConfig limelight3aConfig;
+    private static HardwareConfig                 hardwareConfig;
+    public  final  RobotDimensions                robotDimensions;
+    private final  EnumMap<MotorEnum,MotorConfig> motorConfigs;
+    private final  EnumMap<ServoEnum,ServoConfig> servoConfigs;
+    public  final  IMUConfig                      imuConfig;
+    public  final  PinpointConfig                 pinpointConfig;
+    public  final  LimelightConfig                limelightConfig;
 
     private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
-        motorConfigs = new HashMap<>(8);
-        servoConfigs = new HashMap<>(12);
+        robotDimensions   = robotConfig.getRobotDimensions();
+        motorConfigs      = new EnumMap<>(MotorEnum.class);
+        servoConfigs      = new EnumMap<>(ServoEnum.class);
         for(MotorEnum motorEnum: robotConfig.getMotorEnums()) {
             motorConfigs.put(motorEnum, new MotorConfig(motorEnum, hardwareMap, robotConfig));
         }
@@ -30,9 +26,9 @@ public class HardwareConfig {
             servoConfigs.put(servoEnum, new ServoConfig(servoEnum, hardwareMap, robotConfig));
         }
 
-        imuConfig         = new IMUConfig(hardwareMap, robotConfig);
-        pinpointConfig    = new PinpointConfig(hardwareMap, "pinpoint");
-        limelight3aConfig = new Limelight3aConfig(hardwareMap, "limelight", 11);
+        imuConfig         = new IMUConfig(hardwareMap,       robotConfig);
+        pinpointConfig    = new PinpointConfig(hardwareMap,  robotConfig);
+        limelightConfig   = new LimelightConfig(hardwareMap, robotConfig);
     }
 
     public static HardwareConfig createInstance(HardwareMap hardwareMap, RobotConfig robotConfig)
@@ -75,27 +71,8 @@ public class HardwareConfig {
         return imuConfig;
     }
 
-    public Limelight3aConfig getLimelightConfig(){
-        if(limelight3aConfig == null)
+    public LimelightConfig getLimelightConfig(){
+        if(limelightConfig == null)
             throw new IllegalStateException("Limelight3aConfig not initialized");
-    return limelight3aConfig;}
-
-
-    public static class PinpointConfig{
-        public GoBildaPinpointDriverRR pinpoint;
-        public PinpointConfig(HardwareMap hardwareMap, String deviceName){
-            pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class, deviceName);
-        }
-    }
-    public static class Limelight3aConfig{
-        public Limelight3A limelight;
-        public String deviceName;
-        public int pollingRate;
-        public Limelight3aConfig(HardwareMap hardwareMap, String deviceName, int pollingRate){
-            this.limelight = hardwareMap.get(Limelight3A.class, deviceName);
-            this.deviceName = deviceName;
-            this.pollingRate = pollingRate;
-            limelight.setPollRateHz(pollingRate);
-        }
-    }
+    return limelightConfig;}
 }

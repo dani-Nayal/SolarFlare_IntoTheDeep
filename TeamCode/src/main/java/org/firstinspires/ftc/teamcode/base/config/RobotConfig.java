@@ -68,6 +68,14 @@ public class RobotConfig {
         return instance;
     }
 
+    public RobotDimensions getRobotDimensions()
+            throws JSONException {
+        JSONObject jsonDimensions  = json.getJSONObject("robotDimensions");
+        double     length          = jsonDimensions.getDouble("length");
+        double     width           = jsonDimensions.getDouble("width");
+        return new RobotDimensions(length, width);
+    }
+
     public String[] getMotorNames() throws JSONException {
         // An alternative to
         // JSONObject.getNames(json.getJSONObject("Motors"));
@@ -190,20 +198,28 @@ public class RobotConfig {
         return UsbFacingDirection.valueOf(getIMUString("usbFacingDirection"));
     }
 
-    public String getPinPointString(String propertyName) throws JSONException {
+    public String getPinpointString(String propertyName) throws JSONException {
         return json.getJSONObject("PinPoint").getString(propertyName);
     }
 
-    public double getPinPointDouble(String propertyName) throws JSONException {
+    public double getPinpointDouble(String propertyName) throws JSONException {
         return json.getJSONObject("PinPoint").getDouble(propertyName);
     }
 
-    public String getLimeLightString(String propertyName) throws JSONException {
-        return json.getJSONObject("LimeLight").getString(propertyName);
+    public int getPinpointInt(String propertyName) throws JSONException {
+        return json.getJSONObject("PinPoint").getInt(propertyName);
     }
 
-    public double getLimeLightDouble(String propertyName) throws JSONException {
-        return json.getJSONObject("LimeLight").getDouble(propertyName);
+    public String getLimelightString(String propertyName) throws JSONException {
+        return json.getJSONObject("Limelight").getString(propertyName);
+    }
+
+    public double getLimelightDouble(String propertyName) throws JSONException {
+        return json.getJSONObject("Limelight").getDouble(propertyName);
+    }
+
+    public int getLimelightInt(String propertyName) throws JSONException {
+        return json.getJSONObject("Limelight").getInt(propertyName);
     }
 
     public static void main(String[] args) {
@@ -211,6 +227,8 @@ public class RobotConfig {
             PrintStream out = System.out;
             RobotConfig config = RobotConfig.createInstance("RobotConfig");
 
+            // Robot Dimensions
+            out.println("Robot Dimensions="+config.getRobotDimensions());
             // Motor names, Enums
             String[]    motorNames = config.getMotorNames();
             out.println("MotorNames: " + Arrays.toString(motorNames));
@@ -246,11 +264,11 @@ public class RobotConfig {
             out.println("IMU.USBFacingDirection="+config.getIMULUSBFacingDirection());
             out.println("IMU.testVariable=" + config.getIMUDouble("testVariable"));
 
-            out.println("PinPoint.deviceName=" + config.getPinPointString("deviceName"));
-            out.println("PinPoint.testVariable=" + config.getPinPointDouble("testVariable"));
+            out.println("PinPoint.deviceName=" + config.getPinpointString("deviceName"));
+            out.println("PinPoint.testVariable=" + config.getPinpointDouble("testVariable"));
 
-            out.println("LimeLight.deviceName=" + config.getLimeLightString("deviceName"));
-            out.println("LimeLight.pollingRate=" + config.getLimeLightDouble("pollingRate"));
+            out.println("Limelight.deviceName=" + config.getLimelightString("deviceName"));
+            out.println("Limelight.pollingRate=" + config.getLimelightDouble("pollingRate"));
 
         } catch (Exception e) {
             e.printStackTrace();
