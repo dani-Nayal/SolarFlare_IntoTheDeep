@@ -71,8 +71,8 @@
     "Pose1": {
     }
   },
-  "PinPoint": {
-    "deviceName": "PinPointDevice",
+  "Pinpoint": {
+    "deviceName": "pinpoint",
     "testVariable": 1.0
   },
   "Limelight": {

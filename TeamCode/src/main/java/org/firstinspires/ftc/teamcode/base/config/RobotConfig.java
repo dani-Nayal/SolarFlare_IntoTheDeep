@@ -190,12 +190,16 @@ public class RobotConfig {
         return UsbFacingDirection.valueOf(getIMUString("usbFacingDirection"));
     }
 
-    public String getPinPointString(String propertyName) throws JSONException {
+    public String getPinpointString(String propertyName) throws JSONException {
         return json.getJSONObject("PinPoint").getString(propertyName);
     }
 
-    public double getPinPointDouble(String propertyName) throws JSONException {
+    public double getPinpointDouble(String propertyName) throws JSONException {
         return json.getJSONObject("PinPoint").getDouble(propertyName);
+    }
+
+    public int getPinpointInt(String propertyName) throws JSONException {
+        return json.getJSONObject("PinPoint").getInt(propertyName);
     }
 
     public String getLimelightString(String propertyName) throws JSONException {
@@ -205,7 +209,7 @@ public class RobotConfig {
     public double getLimelightDouble(String propertyName) throws JSONException {
         return json.getJSONObject("Limelight").getDouble(propertyName);
     }
-
+    
     public int getLimelightInt(String propertyName) throws JSONException {
         return json.getJSONObject("Limelight").getInt(propertyName);
     }
@@ -250,8 +254,8 @@ public class RobotConfig {
             out.println("IMU.USBFacingDirection="+config.getIMULUSBFacingDirection());
             out.println("IMU.testVariable=" + config.getIMUDouble("testVariable"));
 
-            out.println("PinPoint.deviceName=" + config.getPinPointString("deviceName"));
-            out.println("PinPoint.testVariable=" + config.getPinPointDouble("testVariable"));
+            out.println("PinPoint.deviceName=" + config.getPinpointString("deviceName"));
+            out.println("PinPoint.testVariable=" + config.getPinpointDouble("testVariable"));
 
             out.println("Limelight.deviceName=" + config.getLimelightString("deviceName"));
             out.println("Limelight.pollingRate=" + config.getLimelightDouble("pollingRate"));
