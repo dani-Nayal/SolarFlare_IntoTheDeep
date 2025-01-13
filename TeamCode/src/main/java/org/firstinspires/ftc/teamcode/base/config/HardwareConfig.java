@@ -19,8 +19,8 @@ public class HardwareConfig {
 
     private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
-        motorConfigs = new EnumMap<>(MotorEnum.class);
-        servoConfigs = new EnumMap<>(ServoEnum.class);
+        motorConfigs      = new EnumMap<>(MotorEnum.class);
+        servoConfigs      = new EnumMap<>(ServoEnum.class);
         for(MotorEnum motorEnum: robotConfig.getMotorEnums()) {
             motorConfigs.put(motorEnum, new MotorConfig(motorEnum, hardwareMap, robotConfig));
         }
