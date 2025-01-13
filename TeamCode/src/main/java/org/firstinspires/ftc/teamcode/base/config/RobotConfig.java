@@ -198,12 +198,16 @@ public class RobotConfig {
         return json.getJSONObject("PinPoint").getDouble(propertyName);
     }
 
-    public String getLimeLightString(String propertyName) throws JSONException {
-        return json.getJSONObject("LimeLight").getString(propertyName);
+    public String getLimelightString(String propertyName) throws JSONException {
+        return json.getJSONObject("Limelight").getString(propertyName);
     }
 
-    public double getLimeLightDouble(String propertyName) throws JSONException {
-        return json.getJSONObject("LimeLight").getDouble(propertyName);
+    public double getLimelightDouble(String propertyName) throws JSONException {
+        return json.getJSONObject("Limelight").getDouble(propertyName);
+    }
+
+    public int getLimelightInt(String propertyName) throws JSONException {
+        return json.getJSONObject("Limelight").getInt(propertyName);
     }
 
     public static void main(String[] args) {
@@ -249,8 +253,8 @@ public class RobotConfig {
             out.println("PinPoint.deviceName=" + config.getPinPointString("deviceName"));
             out.println("PinPoint.testVariable=" + config.getPinPointDouble("testVariable"));
 
-            out.println("LimeLight.deviceName=" + config.getLimeLightString("deviceName"));
-            out.println("LimeLight.pollingRate=" + config.getLimeLightDouble("pollingRate"));
+            out.println("Limelight.deviceName=" + config.getLimelightString("deviceName"));
+            out.println("Limelight.pollingRate=" + config.getLimelightDouble("pollingRate"));
 
         } catch (Exception e) {
             e.printStackTrace();
