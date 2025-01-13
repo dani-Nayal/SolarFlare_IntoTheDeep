@@ -443,7 +443,7 @@ public abstract class TeleOpComponents {
         public double RANGE;
         public double SERVO_SPEED;
         public ElapsedTime MOVEMENT_TIMER = null;
-        public double startPos = 0;
+        public double startPos = -1;
         public double time;
         public BotServo(String deviceName,
                         ServoController controller,
@@ -478,7 +478,12 @@ public abstract class TeleOpComponents {
                 startPos=0;
             }
             else {
-                startPos = Math.signum(getPosition() - startPos) * SERVO_SPEED * Math.min(time, MOVEMENT_TIMER.time()) + startPos;
+                if (startPos == -1){
+                    startPos=getPosition();
+                }
+                else{
+                    startPos = Math.signum(getPosition() - startPos) * SERVO_SPEED * Math.min(time, MOVEMENT_TIMER.time()) + startPos;
+                }
             }
             super.setPosition(Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position)) / RANGE);
             for (BotServo servo : synchronizedServos){
@@ -510,7 +515,13 @@ public abstract class TeleOpComponents {
                     setPosition(posFun.call());
 
                 }
-                return MOVEMENT_TIMER.time() < time;
+                if (MOVEMENT_TIMER.time() < time){
+                    return true;
+                }
+                else{
+                    startPos=-1;
+                    return false;
+                }
             }
 
             @Override
@@ -558,7 +569,13 @@ public abstract class TeleOpComponents {
                     }
                     setPosition(pos);
                 }
-                return MOVEMENT_TIMER.time() < time;
+                if (MOVEMENT_TIMER.time() < time){
+                    return true;
+                }
+                else{
+                    startPos=-1;
+                    return false;
+                }
             }
         }
         public class DownwardFSMAction implements TeleOpAction{
@@ -595,7 +612,13 @@ public abstract class TeleOpComponents {
                     }
                     setPosition(pos);
                 }
-                return MOVEMENT_TIMER.time() < time;
+                if (MOVEMENT_TIMER.time() < time){
+                    return true;
+                }
+                else{
+                    startPos=-1;
+                    return false;
+                }
             }
         }
         public PressTrigger triggeredFSMAction(Condition upCondition, Condition downCondition,double...positions){

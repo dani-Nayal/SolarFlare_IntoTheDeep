@@ -79,9 +79,33 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                                 ),
                                 clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
                                 new TeleOpParallelAction(
-                                        clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
-                                        innerClawPitch.setPositionAction(clawPitch.getPos("hoverPosition"))
+                                        clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
+                                        innerClawPitch.setPositionAction(clawPitch.getPos("backOffPosition"))
                                 )
+                        )
+                });
+        UninterruptiblePressTrigger specimenGrabSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad1.y)},
+                new TeleOpAction[]{
+                            new TeleOpParallelAction(
+                                    extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenGrabPosition")),
+                                    clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
+                                    extendo.moveToPositionAction(extendo.MAX_POSITION),
+                                    clawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition")),
+                                    innerClawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition"))
+                            )
+                });
+        UninterruptiblePressTrigger setUpSpecimenDepositSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad1.options)},
+                new TeleOpAction[]{
+                        new TeleOpSequentialAction(
+                            clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
+                            extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenGrabPosition")+50),
+                            new TeleOpParallelAction(
+                                    extendo.moveToPositionAction(extendo.MIN_POSITION),
+                                    clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
+                                    innerClawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition"))
+                            ),
+                            extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenDepositPosition")),
+                            extendo.moveToPositionAction(extendo.MAX_POSITION)
                         )
                 });
 
@@ -98,6 +122,8 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 lowerIntakeSequence,
                 pickUpSequence,
                 transferSequence,
+                specimenGrabSequence,
+                setUpSpecimenDepositSequence,
                 new ConditionalAction(new Condition[]{()->(!isRRActive)}, new TeleOpAction[]{
                         new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_trigger>0.2))
                 }),
