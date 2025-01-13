@@ -338,6 +338,7 @@ public abstract class TeleOpComponents {
             motors.add(this);
         }
         private void createMotionProfile(double max_velocity, double max_acceleration) {
+            profileStartPos=getCurrentPosition();
             double distance=target-profileStartPos;
             startVelocity = getVelocity();
             currentMaxVelocity = max_velocity*Math.signum(distance);
