@@ -72,7 +72,8 @@
     }
   },
   "PinPoint": {
-    "deviceName": "PinPointDevice"
+    "deviceName": "PinPointDevice",
+    "testVariable": 1.0
   },
   "LimeLight": {
     "deviceName": "LimeLightDevice",
@@ -81,6 +82,7 @@
   "IMU": {
     "deviceName": "IMUDevice",
     "logoFacingDirection": "",
-    "usbFacingDirection": ""
+    "usbFacingDirection": "",
+    "testVariable": 1.0
   }
 }

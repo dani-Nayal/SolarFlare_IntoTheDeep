@@ -8,9 +8,13 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Objects;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
 public class RobotConfig {
     private static RobotConfig instance = null;
@@ -56,7 +60,15 @@ public class RobotConfig {
     }
 
     public String[] getMotorNames() throws JSONException {
-        return JSONObject.getNames(json.getJSONObject("Motors"));
+        // An alternative to
+        // JSONObject.getNames(json.getJSONObject("Motors"));
+        //
+        JSONArray motorJSONNames = json.getJSONObject("Motors").names();
+        assert motorJSONNames != null;
+        String[]  motorNames     = new String[motorJSONNames.length()];
+        for(int i=0; i<motorNames.length; i++)
+            motorNames[i] = motorJSONNames.getString(i);
+        return motorNames;
     }
 
     public MotorEnum[] getMotorEnums() throws JSONException {
@@ -89,7 +101,15 @@ public class RobotConfig {
     }
 
     public String[] getServoNames() throws JSONException {
-        return JSONObject.getNames(json.getJSONObject("Servos"));
+        // An alternative to
+        // JSONObject.getNames(json.getJSONObject("Servos"));
+        //
+        JSONArray servoJSONNames = json.getJSONObject("Servos").names();
+        assert  servoJSONNames != null;
+        String[]  servoNames     = new String[servoJSONNames.length()];
+        for(int i=0; i<servoNames.length; i++)
+            servoNames[i] = servoJSONNames.getString(i);
+        return servoNames;
     }
 
     public ServoEnum[] getServoEnums() throws JSONException {
@@ -174,7 +194,9 @@ public class RobotConfig {
                 out.println("Servo(" + servoEnum + ").degreesPerSecond=" + config.getServoDouble(servoEnum, "degreesPerSecond"));
             }
             out.println("IMU.deviceName=" + config.getIMUString("deviceName"));
+            out.println("IMU.testVariable=" + config.getIMUDouble("testVariable"));
             out.println("PinPoint.deviceName=" + config.getPinPointString("deviceName"));
+            out.println("PinPoint.testVariable=" + config.getPinPointDouble("testVariable"));
             out.println("LimeLight.deviceName=" + config.getLimeLightString("deviceName"));
             out.println("LimeLight.pollingRate=" + config.getLimeLightDouble("pollingRate"));
         } catch (Exception e) {
