@@ -27,7 +27,7 @@ public class MechanismDiagnosis extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        hw = HardwareConfig.makeHardwareConfig(hardwareMap);
+        hw = HardwareConfig.createInstance(hardwareMap);
         state = RobotState.getInstance();
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,Math.toRadians(0)));
 
