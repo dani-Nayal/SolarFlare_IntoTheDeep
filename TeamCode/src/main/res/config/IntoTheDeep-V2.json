@@ -1,0 +1,86 @@
+{
+  "robotName": "IntoTheDeep-V2",
+  "robotDimensions": {
+    "length": 15.0625,
+    "width": 12.4375
+  },
+  "Motors": {
+    "LEFT_BACK": {
+      "deviceName": "",
+      "kP": 1.0,
+      "kI": 0.0,
+      "kD": 0.0,
+      "runMode": "",
+      "direction": "FORWARD",
+      "zeroPowerBehaviour": "",
+      "minTarget": 0.0,
+      "maxTarget": 0.0,
+      "maxAcceleration": 0.0,
+      "maxVelocity": 0.0
+    },
+    "RIGHT_BACK": {
+      "deviceName": "",
+      "kP": 1.0,
+      "kI": 0.0,
+      "kD": 0.0,
+      "runMode": "",
+      "direction": "FORWARD",
+      "zeroPowerBehaviour": "",
+      "minTarget": 0.0,
+      "maxTarget": 0.0,
+      "maxAcceleration": 0.0,
+      "maxVelocity": 0.0
+    },
+    "LEFT_FRONT": {
+      "deviceName": "",
+      "kP": 1.0,
+      "kI": 0.0,
+      "kD": 0.0,
+      "runMode": "",
+      "direction": "FORWARD",
+      "zeroPowerBehaviour": "",
+      "minTarget": 0.0,
+      "maxTarget": 0.0,
+      "maxAcceleration": 0.0,
+      "maxVelocity": 0.0
+    },
+    "RIGHT_FRONT": {
+      "deviceName": "",
+      "kP": 1.0,
+      "kI": 0.0,
+      "kD": 0.0,
+      "runMode": "",
+      "direction": "FORWARD",
+      "zeroPowerBehaviour": "",
+      "minTarget": 0.0,
+      "maxTarget": 0.0,
+      "maxAcceleration": 0.0,
+      "maxVelocity": 0.0
+    }
+  },
+  "Servos": {
+    "EXTENDO": {
+      "deviceName": "",
+      "direction": "FORWARD",
+      "minServoPosition": 0.0,
+      "maxServoPosition": 0.0,
+      "degreesPerSecond": 0.0
+    }
+  },
+  "Poses": {
+    "Pose1": {
+    }
+  },
+  "PinPoint": {
+    "deviceName": "PinPointDevice"
+  },
+  "LimeLight": {
+    "deviceName": "LimeLightDevice",
+    "pollingRate": 1
+  },
+  "IMU": {
+    "deviceName": "IMUDevice",
+    "logoFacingDirection": "",
+    "usbFacingDirection": ""
+  }
+}
