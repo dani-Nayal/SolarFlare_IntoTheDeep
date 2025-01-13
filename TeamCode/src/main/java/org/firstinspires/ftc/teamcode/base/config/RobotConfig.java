@@ -15,6 +15,7 @@ import org.json.JSONTokener;
 
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 
 public class RobotConfig {
     private static RobotConfig instance = null;
@@ -100,6 +101,17 @@ public class RobotConfig {
         return getMotorDouble(motorEnum.toString(), propertyName);
     }
 
+    public Direction getMotorDirection(MotorEnum motorEum) throws JSONException {
+        return Direction.valueOf(getMotorString(motorEum, "direction"));
+    }
+
+    public RunMode getMotorRunMode(MotorEnum motorEum) throws JSONException {
+        return RunMode.valueOf(getMotorString(motorEum, "runMode"));
+    }
+    public ZeroPowerBehavior getMotorZeroPowerBehavior(MotorEnum motorEum) throws JSONException {
+        return ZeroPowerBehavior.valueOf(getMotorString(motorEum, "zeroPowerBehavior"));
+    }
+
     public String[] getServoNames() throws JSONException {
         // An alternative to
         // JSONObject.getNames(json.getJSONObject("Servos"));
@@ -176,10 +188,13 @@ public class RobotConfig {
             MotorEnum[] motorEnums = config.getMotorEnums();
             out.println("MotorEnums: " + Arrays.toString(motorEnums));
             for (MotorEnum motorEnum : motorEnums) {
-                out.println("Motor(" + motorEnum + ").direction=" + config.getMotorString(motorEnum, "direction"));
-                out.println("Motor(" + motorEnum + ").kP=" + config.getMotorDouble(motorEnum, "kP"));
-                out.println("Motor(" + motorEnum + ").kI=" + config.getMotorDouble(motorEnum, "kI"));
-                out.println("Motor(" + motorEnum + ").kD=" + config.getMotorDouble(motorEnum, "kD"));
+                out.println("Motor("+motorEnum+").direction="+config.getMotorString(motorEnum,"direction"));
+                out.println("Motor("+motorEnum+").direction="+config.getMotorDirection(motorEnum));
+                out.println("Motor("+motorEnum+").kP="+config.getMotorDouble(motorEnum,"kP"));
+                out.println("Motor("+motorEnum+").kI="+config.getMotorDouble(motorEnum,"kI"));
+                out.println("Motor("+motorEnum+").kD="+config.getMotorDouble(motorEnum,"kD"));
+                out.println("Motor("+motorEnum+").runMode="+config.getMotorRunMode(motorEnum));
+                out.println("Motor("+motorEnum+").zeroPowerBehavior="+config.getMotorZeroPowerBehavior(motorEnum));
             }
 
             // Servo names, Enums
