@@ -209,7 +209,7 @@ public class RobotConfig {
     public double getLimelightDouble(String propertyName) throws JSONException {
         return json.getJSONObject("Limelight").getDouble(propertyName);
     }
-    
+
     public int getLimelightInt(String propertyName) throws JSONException {
         return json.getJSONObject("Limelight").getInt(propertyName);
     }

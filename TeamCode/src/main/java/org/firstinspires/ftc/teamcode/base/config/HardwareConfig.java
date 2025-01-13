@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.base.config;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import org.json.JSONException;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -11,16 +11,16 @@ public class HardwareConfig {
     public final double ROBOT_WIDTH = 12.4375;
 
     private static HardwareConfig                 hardwareConfig;
-    private final HashMap<MotorEnum,MotorConfig> motorConfigs;
-    private final  HashMap<ServoEnum,ServoConfig> servoConfigs;
+    private final  EnumMap<MotorEnum,MotorConfig> motorConfigs;
+    private final  EnumMap<ServoEnum,ServoConfig> servoConfigs;
     public  final  IMUConfig                      imuConfig;
     public  final  PinpointConfig                 pinpointConfig;
     public  final  LimelightConfig                limelightConfig;
 
     private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
-        motorConfigs = new HashMap<>(8);
-        servoConfigs = new HashMap<>(12);
+        motorConfigs = new EnumMap<>(MotorEnum.class);
+        servoConfigs = new EnumMap<>(ServoEnum.class);
         for(MotorEnum motorEnum: robotConfig.getMotorEnums()) {
             motorConfigs.put(motorEnum, new MotorConfig(motorEnum, hardwareMap, robotConfig));
         }
