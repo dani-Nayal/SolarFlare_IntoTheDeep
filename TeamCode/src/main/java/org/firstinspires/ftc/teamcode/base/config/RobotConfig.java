@@ -15,7 +15,9 @@ import org.json.JSONTokener;
 
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotConfig {
     private static RobotConfig instance = null;
@@ -101,13 +103,22 @@ public class RobotConfig {
         return getMotorDouble(motorEnum.toString(), propertyName);
     }
 
-    public Direction getMotorDirection(MotorEnum motorEum) throws JSONException {
-        return Direction.valueOf(getMotorString(motorEum, "direction"));
+    public int getMotorInt(String motorName, String propertyName) throws JSONException {
+        return json.getJSONObject("Motors").getJSONObject(motorName).getInt(propertyName);
+    }
+
+    public int getMotorInt(MotorEnum motorEnum, String propertyName) throws JSONException {
+        return getMotorInt(motorEnum.toString(), propertyName);
+    }
+
+    public DcMotorSimple.Direction getMotorDirection(MotorEnum motorEum) throws JSONException {
+        return DcMotorSimple.Direction.valueOf(getMotorString(motorEum, "direction"));
     }
 
     public RunMode getMotorRunMode(MotorEnum motorEum) throws JSONException {
         return RunMode.valueOf(getMotorString(motorEum, "runMode"));
     }
+
     public ZeroPowerBehavior getMotorZeroPowerBehavior(MotorEnum motorEum) throws JSONException {
         return ZeroPowerBehavior.valueOf(getMotorString(motorEum, "zeroPowerBehavior"));
     }
@@ -153,6 +164,10 @@ public class RobotConfig {
         return getServoDouble(servoEnum.toString(), propertyName);
     }
 
+    public Servo.Direction getServoDirection(ServoEnum servoEnum) throws JSONException {
+        return Servo.Direction.valueOf(getServoString(servoEnum, "direction"));
+    }
+
     public String getIMUString(String propertyName) throws JSONException {
         return json.getJSONObject("IMU").getString(propertyName);
     }
@@ -195,6 +210,10 @@ public class RobotConfig {
                 out.println("Motor("+motorEnum+").kD="+config.getMotorDouble(motorEnum,"kD"));
                 out.println("Motor("+motorEnum+").runMode="+config.getMotorRunMode(motorEnum));
                 out.println("Motor("+motorEnum+").zeroPowerBehavior="+config.getMotorZeroPowerBehavior(motorEnum));
+                out.println("Motor("+motorEnum+").minTarget="+config.getMotorInt(motorEnum,"minTarget"));
+                out.println("Motor("+motorEnum+").maxTarget="+config.getMotorInt(motorEnum,"maxTarget"));
+                out.println("Motor("+motorEnum+").maxAcceleration="+config.getMotorInt(motorEnum,"maxAcceleration"));
+                out.println("Motor("+motorEnum+").maxVelocity="+config.getMotorInt(motorEnum,"maxVelocity"));
             }
 
             // Servo names, Enums
