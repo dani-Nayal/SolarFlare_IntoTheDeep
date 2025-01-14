@@ -775,7 +775,7 @@ public abstract class TeleOpComponents {
                 new String[]{"normalPosition"},
                 new double[]{95},
                 185,
-                95,
+                5,
                 270,
                 422,
                 Servo.Direction.FORWARD
@@ -809,7 +809,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "innerClawPitch").getController(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition"},
-                new double[]{65,0,186,170.5},
+                new double[]{62,0,186,170.5},
                 270,
                 0,
                 270,

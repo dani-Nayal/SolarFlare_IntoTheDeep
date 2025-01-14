@@ -16,17 +16,17 @@ public class MecanumTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        double hangTarget = 0;
+        //double hangTarget = 0;
         double extendoPitchTarget = 0;
         double extendoTarget = 0;
         double bucketSlidesTarget = 0;
-        double clawWristPosition = 79.5;
-        double clawFingerPosition = 120;
-        double clawPitchPosition = 205;
-        double clawPitch2Position = 205;
-        double bucketPosition = 85;
+        double clawWristPosition = 95;
+        double clawFingerPosition = 92;
+        double clawPitchPosition = 115;
+        double innerClawPitchPosition = 186;
+        double bucketPosition = 46;
         
-        double maxExtendoPosition = 350;
+        double maxExtendoPosition = 800;
 
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
@@ -36,7 +36,7 @@ public class MecanumTeleop extends LinearOpMode {
         boolean isPressingY = false;
         boolean isPressingY2 = false;
         boolean isPressingA2 = false;
-        boolean isPressingX2 = false;
+        boolean isX2SequenceActive = false;
         boolean isPressingBumper2 = false;
         boolean isPressingTrigger1 = false;
         boolean isPressingDpad = false;
@@ -47,6 +47,8 @@ public class MecanumTeleop extends LinearOpMode {
         ElapsedTime Xtimer = new ElapsedTime();
         ElapsedTime Btimer = new ElapsedTime();
         ElapsedTime B2timer = new ElapsedTime();
+        ElapsedTime X2timer = new ElapsedTime();
+
         ElapsedTime Atimer = new ElapsedTime();
         ElapsedTime Op2timer = new ElapsedTime();
 
@@ -56,11 +58,13 @@ public class MecanumTeleop extends LinearOpMode {
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
-        DcMotor hang = hardwareMap.dcMotor.get("hang");
+        //DcMotor hang = hardwareMap.dcMotor.get("hang");
         DcMotor bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
 
         Servo clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
         Servo clawPitchRight = hardwareMap.servo.get("clawPitchRight");
+        Servo innerClawPitch = hardwareMap.servo.get("innerClawPitch");
+
         Servo clawFingers = hardwareMap.servo.get("clawFingers");
         Servo clawWrist = hardwareMap.servo.get("clawWrist");
         Servo bucket = hardwareMap.servo.get("bucket");
@@ -85,15 +89,13 @@ public class MecanumTeleop extends LinearOpMode {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bucketSlides.setDirection(DcMotor.Direction.REVERSE);
         bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        clawPitchLeft.setDirection(Servo.Direction.REVERSE);
+        clawPitchRight.setDirection(Servo.Direction.REVERSE);
+        innerClawPitch.setDirection(Servo.Direction.REVERSE);
+
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
@@ -129,7 +131,7 @@ public class MecanumTeleop extends LinearOpMode {
                 Xtimer.reset();
             }
             if (isXSequenceActive) {
-                bucketPosition=85;
+                bucketPosition=46;
 
                 if (Xtimer.seconds()>0.3){
                     bucketSlidesTarget=0;
@@ -143,11 +145,14 @@ public class MecanumTeleop extends LinearOpMode {
 
             }
             if (isBSequenceActive) {
-                extendoPitchTarget = 1425;
-                clawWristPosition = 79.5;
-                if (Btimer.seconds() > 0.7) {
+                extendoPitchTarget = -991;
+                clawWristPosition = 95;
+                clawFingerPosition = 92;
+                clawPitchPosition = 73;
+                innerClawPitchPosition = 0;
+                if (Btimer.seconds() > 0.6) {
                     extendoTarget = maxExtendoPosition;
-                    clawPitchPosition = 104;
+
                     isBSequenceActive=false;
                 }
             }
@@ -159,13 +164,12 @@ public class MecanumTeleop extends LinearOpMode {
             }
             if (isASequenceActive) {
 
-                clawWristPosition = 79.5;
-                bucketPosition=85;
-                if (Atimer.seconds() > 0.5){
-                    clawPitchPosition = 104;
+                clawWristPosition = 95;
+                clawPitchPosition = 73;
+                innerClawPitchPosition = 186;
+                bucketPosition=46;
 
-                }
-                if (Atimer.seconds() > 0.5){
+                if (Atimer.seconds() > 0.3){
                     extendoTarget=0;
                 }
 
@@ -175,16 +179,51 @@ public class MecanumTeleop extends LinearOpMode {
                     }
                 }
 
-                if (extendoPitch.getCurrentPosition()<100) {
-                    clawPitchPosition = 205;
-                    clawWristPosition = 90;
+                if (extendoPitch.getCurrentPosition()<50) {
+                    clawPitchPosition = 115;
                     isASequenceActive=false;
                 }
 
+                if (Atimer.seconds() > 1.4) {
+                    clawFingerPosition = 92;
+                }
+
+                if (Atimer.seconds() > 1.8) {
+                    clawPitchPosition = 77.4;
+                    innerClawPitchPosition = 170.5;
+                }
+
+
             }
 
+            //dropdown intake
+            if (gamepad2.x){
+                isXSequenceActive=true;
+                X2timer.reset();
+            }
+            if (isX2SequenceActive) {
+
+                clawWristPosition = 95;
+                clawPitchPosition = 22;
+                innerClawPitchPosition = 62;
+                bucketPosition=46;
+
+                if (X2timer.seconds() > 0.3){
+                    clawFingerPosition = 20;
+                }
+
+                if (Atimer.seconds() > 0.6) {
+                    clawWristPosition = 95;
+                    clawPitchPosition = 73;
+                    innerClawPitchPosition = 0;
+                    bucketPosition=46;
+                }
+
+
+            }
             
             //specimen setup sequence (including retraction of extendo after specimen pickup)
+            /*
             else if (gamepad2.b){
                 isB2SequenceActive=true;
                 B2timer.reset();
@@ -208,7 +247,7 @@ public class MecanumTeleop extends LinearOpMode {
                 }
             }
             //wall specimen pickup sequence
-            /*
+
             if (gamepad2.options){
                 isOp2SequenceActive=true;
                 Op2timer.reset();
@@ -233,10 +272,11 @@ public class MecanumTeleop extends LinearOpMode {
             }
             */
 
+
             // Extendo retracted 0 ticks
             // Extendo fully extending 36050
             // Dynamic extendo control
-            /*
+
             if ((gamepad1.right_bumper) && (extendoTarget <= maxExtendoPosition-30)){
                 extendoTarget += 30;
             }
@@ -249,10 +289,11 @@ public class MecanumTeleop extends LinearOpMode {
             else if ((gamepad1.left_bumper) && (extendoTarget <= 30)){
                 extendoTarget = 0;
             }
-            */
+
 
             // Extendo pitch transfer / default pos 0 ticks
             // Extendo pitch pickup 1425
+            /*
             if (gamepad1.dpad_down && !(extendo.getCurrentPosition()>150)){
                 if (!isPressingDpad) {
                     if (extendoPitchTarget >= 0 && extendoPitchTarget<450){
@@ -312,11 +353,13 @@ public class MecanumTeleop extends LinearOpMode {
             }
             else isPressingY2=false;
 
+             */
+
             // Bucket Slides toggle between min and max positions
             if (gamepad1.y){
                 if (!isPressingY) {
                     if (bucketSlidesTarget == 0) {
-                        bucketSlidesTarget = 1100;}
+                        bucketSlidesTarget = 1030;}
                     else {
                         bucketSlidesTarget = 0;
                     }
@@ -329,78 +372,20 @@ public class MecanumTeleop extends LinearOpMode {
             // Claw transfer pos 215 degrees
             // Claw pitch going into sub 104 degrees
             // Claw pitch to position 0 to 1
-            if (gamepad2.dpad_left){
-                if (!isPressingBumper2) {
-                    if(clawWristPosition==79.5){
-                        if (clawPitchPosition > 104){
-                            clawPitchPosition = 104;
-                        }
-                        else if (clawPitchPosition <= 104) {
-                            clawPitchPosition = 30.5;
-                        }
-                    }
 
-                }
-                isPressingBumper2=true;
-            }
-            else if (gamepad2.dpad_right){
-                if (!isPressingBumper2) {
-                    if (clawWristPosition==79.5){
-                        if (clawPitchPosition < 104) {
-                            clawPitchPosition = 104;
-                        }
-                        else if (clawPitchPosition >= 104) {
-                            clawPitchPosition = 205;
-                        }
-                    }
-                }
-                isPressingBumper2=true;
-            }
-            else{
-                isPressingBumper2=false;
-            }
-
-            //specimen scoring pitch position
-            if ((gamepad2.options) && (clawWristPosition==79.5)){
-                clawPitchPosition = 67.25;
-            }
 
             // Claw finger close 0 degrees
             // Claw finger open 50 degrees
             // Claw fingers toggle between open and closed
             // Claw fingers fully open 80 degrees
-            if (gamepad2.left_bumper){
-                if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 120) {
-                        clawFingerPosition = 90;
-                    }
-                    else if (clawFingerPosition == 90){
-                        clawFingerPosition = 37;
-                    }
-                }
-                isPressingTrigger1=true;
-            }
-            else if (gamepad2.right_bumper){
-                if (!isPressingTrigger1) {
-                    if (clawFingerPosition == 37) {
-                        clawFingerPosition = 90;
-                    }
-                    else if (clawFingerPosition == 90) {
-                        clawFingerPosition = 120;
-                    }
-                }
-                isPressingTrigger1=true;
-            }
-            else{
-                isPressingTrigger1=false;
-            }
+
 
             // Default perpendicular claw pos 79.5 degrees
-            if (gamepad2.left_trigger>0) {
-                clawWristPosition = 79.5;
+            if (gamepad2.left_trigger>0 && clawWristPosition >= 15) {
+                clawWristPosition -= 5;
             }
-            else if (gamepad2.right_trigger>0 && clawWristPosition <= 143) {
-                clawWristPosition += 10;
+            else if (gamepad2.right_trigger>0 && clawWristPosition <= 175) {
+                clawWristPosition += 5;
             }
 
             // BucketTransfer / default pos 85 degrees
@@ -408,7 +393,7 @@ public class MecanumTeleop extends LinearOpMode {
             if (gamepad2.a){
                 if (!isPressingA2){
                     isPressingA2=true;
-                    if (bucketPosition==85) {bucketPosition=205;} else {bucketPosition=85;}
+                    if (bucketPosition==46) {bucketPosition=158;} else {bucketPosition=46;}
                 }
             }
             else isPressingA2=false;
@@ -451,21 +436,21 @@ public class MecanumTeleop extends LinearOpMode {
 
             extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
             extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * kPpitch);
-            hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
+            //hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
             bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
 
             clawPitchLeft.setPosition(clawPitchPosition/270);
             clawPitchRight.setPosition(clawPitchPosition/270);
             clawFingers.setPosition(clawFingerPosition/180);
-            clawWrist.setPosition(clawWristPosition/180);
+            clawWrist.setPosition(clawWristPosition/270);
             bucket.setPosition(bucketPosition/270);
 
             telemetry.addData("extendo position", extendo.getCurrentPosition());
             telemetry.addData("extendo target", extendoTarget);
             telemetry.addData("extendo pitch position", extendoPitch.getCurrentPosition());
             telemetry.addData("extendo pitch target", extendoPitchTarget);
-            telemetry.addData("hang pos", hang.getCurrentPosition());
-            telemetry.addData("hang target", hangTarget);
+            //telemetry.addData("hang pos", hang.getCurrentPosition());
+            //telemetry.addData("hang target", hangTarget);
             telemetry.addData("bucketSlides pos", bucketSlides.getCurrentPosition());
             telemetry.addData("bucketSlides target", bucketSlidesTarget);
 
