@@ -76,20 +76,28 @@ public class CustomActions {
     public void setInitialDrivePosition(String preloadType, String cycleType){
         // Right side of robot is on the middle line of field, Outtake side is touching field perimeter
         if (preloadType.equals("specimen") && cycleType.equals("sample")) {
-            drive = new PinpointDrive(hardwareMap, new Pose2d(-hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270)));
+            drive = new PinpointDrive(hardwareMap, new Pose2d(
+                    -hw.robotDimensions.width/2,
+                    -70+(hw.robotDimensions.length/2), Math.toRadians(270)));
         }
         // Right side of robot is touching field perimeter, Outtake side is on the left side of seam that is on the edge of field tile
         // Barely outside of net zone
         else if (preloadType.equals("sample") && cycleType.equals("sample")) {
-            drive = new PinpointDrive(hardwareMap, new Pose2d(-32.125-(hw.ROBOT_LENGTH/2), -70+(hw.ROBOT_WIDTH/2), Math.toRadians(180)));
+            drive = new PinpointDrive(hardwareMap, new Pose2d(
+                    -32.125-(hw.robotDimensions.length/2),
+                    -70+(hw.robotDimensions.width/2), Math.toRadians(180)));
         }
         // Right side of robot is touching field perimeter, Outtake side is on the left side of seam that is on the edge of field tile
         // Barely outside of net zone
         else if (preloadType.equals("sample") && cycleType.equals("specimen")) {
-            drive = new PinpointDrive(hardwareMap, new Pose2d(-32.125-(hw.ROBOT_LENGTH/2), -70+(hw.ROBOT_WIDTH/2), Math.toRadians(180)));
+            drive = new PinpointDrive(hardwareMap, new Pose2d(
+                    -32.125-(hw.robotDimensions.length/2),
+                    -70+(hw.robotDimensions.width/2), Math.toRadians(180)));
         }
         else if (preloadType.equals("specimen") && cycleType.equals("specimen")) {
-            drive = new PinpointDrive(hardwareMap, new Pose2d(hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270)));
+            drive = new PinpointDrive(hardwareMap, new Pose2d(
+                    hw.robotDimensions.width/2,
+                    -70+(hw.robotDimensions.length/2), Math.toRadians(270)));
         }
         // Left side of robot is on the middle line of field, Outtake side is touching field perimeter
         else{
@@ -98,18 +106,25 @@ public class CustomActions {
     }
     public Pose2d getInitialDrivePosition(String preloadType, String cycleType){
         if (preloadType.equals("specimen") && cycleType.equals("sample")) {
-            return new Pose2d(-hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270));
+            return new Pose2d(-hw.robotDimensions.width/2,
+                    -70+(hw.robotDimensions.length/2), Math.toRadians(270));
         }
 
         else if (preloadType.equals("sample") && cycleType.equals("sample")) {
-            return new Pose2d(-32.125-(hw.ROBOT_LENGTH/2), -70+(hw.ROBOT_WIDTH/2), Math.toRadians(180));
+            return new Pose2d(
+                    -32.125-(hw.robotDimensions.length/2),
+                    -70+(hw.robotDimensions.width/2), Math.toRadians(180));
         }
 
         else if (preloadType.equals("sample") && cycleType.equals("specimen")) {
-            return new Pose2d(-32.125-(hw.ROBOT_LENGTH/2), -70+(hw.ROBOT_WIDTH/2), Math.toRadians(180));
+            return new Pose2d(
+                    -32.125-(hw.robotDimensions.length/2),
+                    -70+(hw.robotDimensions.width/2), Math.toRadians(180));
         }
         else if (preloadType.equals("specimen") && cycleType.equals("specimen")) {
-            return new Pose2d(hw.ROBOT_WIDTH/2, -70+(hw.ROBOT_LENGTH/2), Math.toRadians(270));
+            return new Pose2d(
+                    hw.robotDimensions.width/2,
+                    -70+(hw.robotDimensions.length/2), Math.toRadians(270));
         }
 
         else{
