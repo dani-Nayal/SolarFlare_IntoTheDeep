@@ -52,6 +52,7 @@ public abstract class TeleOpComponents {
 
 
     public static class BotMotor extends DcMotorImplEx {
+        double instantTargetPosition = 0;
         public ArrayList<BotMotor> synchronizedMotors = new ArrayList<>();
         public double kP; public double kI; public double kD;
         public HashMap<String,Double> KEY_POSITIONS;
@@ -379,7 +380,6 @@ public abstract class TeleOpComponents {
             }
         }
         public void runMotionProfileOnce(){
-            double instantTargetPosition = 0;
             double elapsedTime = MOVEMENT_TIMER.time();
             if (elapsedTime > accelDT+decelDT+cruiseDT){
                 instantTargetPosition=target;
@@ -669,7 +669,7 @@ public abstract class TeleOpComponents {
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
-                DcMotorEx.ZeroPowerBehavior.FLOAT,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "MOTION_PROFILE"
         );
         extendoPitch = new BotMotor(
@@ -677,13 +677,13 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getController(),
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
-                0.015,0,0,
+                0.005,0,0.000378,
                 new String[]{"transferPosition","pickUpPosition"},new double[]{0,-991},
                 0,-991,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
-                DcMotorEx.ZeroPowerBehavior.FLOAT,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "MOTION_PROFILE"
         );
         bucketSlides = new BotMotor(
@@ -691,13 +691,13 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getController(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
-                0.015,0,0,
+                0.005,0,0.000378,
                 new String[]{"depositPosition","transferPosition"},new double[]{1030,0},
                 1030,0,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
-                DcMotorEx.ZeroPowerBehavior.FLOAT,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "MOTION_PROFILE"
         );
         rightFront = new BotMotor(
@@ -715,10 +715,10 @@ public abstract class TeleOpComponents {
                 "soogma"
         );
         rightBack = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                hardwareMap.get(DcMotorEx.class, "rightBack").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "rightBack").getController(),
+                hardwareMap.get(DcMotorEx.class, "rightBack").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "rightBack").getMotorType(),
                 0.015,0,0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
@@ -729,10 +729,10 @@ public abstract class TeleOpComponents {
                 "soogma"
         );
         leftFront = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                hardwareMap.get(DcMotorEx.class, "leftFront").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "leftFront").getController(),
+                hardwareMap.get(DcMotorEx.class, "leftFront").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "leftFront").getMotorType(),
                 0.015,0,0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
@@ -743,10 +743,10 @@ public abstract class TeleOpComponents {
                 "soogma"
         );
         leftBack = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                hardwareMap.get(DcMotorEx.class, "leftBack").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "leftBack").getController(),
+                hardwareMap.get(DcMotorEx.class, "leftBack").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "leftBack").getMotorType(),
                 0.015,0,0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
@@ -775,7 +775,7 @@ public abstract class TeleOpComponents {
                 new String[]{"normalPosition"},
                 new double[]{95},
                 185,
-                95,
+                5,
                 270,
                 422,
                 Servo.Direction.FORWARD
@@ -809,7 +809,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "innerClawPitch").getController(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition"},
-                new double[]{65,0,186,170.5},
+                new double[]{62,0,186,170.5},
                 270,
                 0,
                 270,
