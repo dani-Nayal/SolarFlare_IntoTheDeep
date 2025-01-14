@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
@@ -317,7 +318,7 @@ public abstract class TeleOpComponents {
                         RunMode runMode, Direction direction, ZeroPowerBehavior zeroPowerBehaviour,
                         String movementMode)
         {
-            super(controller, portNumber, DcMotor.Direction.FORWARD,motorType);
+            super(controller, portNumber, Direction.FORWARD,motorType);
 
             this.kP=kP; this.kI=kI; this.kD=kD;
             this.KEY_POSITIONS = new HashMap<>();
@@ -337,66 +338,73 @@ public abstract class TeleOpComponents {
             hardwareMap.put(deviceName,this);
             motors.add(this);
         }
-        private void createMotionProfile(double max_velocity, double max_acceleration) {
+        public void createMotionProfile(double max_velocity, double max_acceleration) {
             profileStartPos=getCurrentPosition();
             double distance=target-profileStartPos;
-            startVelocity = getVelocity();
-            currentMaxVelocity = max_velocity*Math.signum(distance);
-            currentMaxAcceleration = max_acceleration*Math.signum(currentMaxVelocity - startVelocity);
-            currentMaxDeceleration = -max_acceleration*Math.signum(distance);
+            if (distance!=0) {
+                startVelocity = getVelocity();
+                currentMaxVelocity = max_velocity * Math.signum(distance);
+                currentMaxAcceleration = max_acceleration * Math.signum(currentMaxVelocity - startVelocity);
+                currentMaxDeceleration = -max_acceleration * Math.signum(distance);
 
-            accelDT = (currentMaxVelocity - startVelocity) / currentMaxAcceleration;
-            decelDT = (0-currentMaxVelocity) / currentMaxDeceleration;
-            accelDistance = startVelocity*accelDT + 0.5 * currentMaxAcceleration * Math.pow(accelDT, 2);
-            decelDistance = currentMaxVelocity * decelDT + 0.5 * currentMaxDeceleration * Math.pow(decelDT, 2);
+                accelDT = (currentMaxVelocity - startVelocity) / currentMaxAcceleration;
+                decelDT = (0 - currentMaxVelocity) / currentMaxDeceleration;
+                accelDistance = startVelocity * accelDT + 0.5 * currentMaxAcceleration * Math.pow(accelDT, 2);
+                decelDistance = currentMaxVelocity * decelDT + 0.5 * currentMaxDeceleration * Math.pow(decelDT, 2);
 
-            if (Math.abs(accelDistance+decelDistance) > Math.abs(distance)){
-                double halfExceededDistance = (distance-accelDistance-decelDistance)/2;
-                accelDistance = accelDistance+halfExceededDistance;
-                accelDT = Math.max(
-                        (-startVelocity + Math.sqrt(Math.abs(Math.pow(startVelocity,2) + 2*currentMaxAcceleration*accelDistance)))/(currentMaxAcceleration),
-                        (-startVelocity - Math.sqrt(Math.abs(Math.pow(startVelocity,2) + 2*currentMaxAcceleration*accelDistance)))/(currentMaxAcceleration)
-                );
-                currentMaxVelocity = currentMaxAcceleration * accelDT + startVelocity;
-                decelDistance = decelDistance+halfExceededDistance;
-                decelDT = Math.max(
-                        (-currentMaxVelocity + Math.sqrt(Math.abs(Math.pow(currentMaxVelocity,2) + 2*currentMaxDeceleration*decelDistance)))/(currentMaxDeceleration),
-                        (-currentMaxVelocity - Math.sqrt(Math.abs(Math.pow(currentMaxVelocity,2) + 2*currentMaxDeceleration*decelDistance)))/(currentMaxDeceleration)
-                );
+                if (Math.abs(accelDistance + decelDistance) > Math.abs(distance)) {
+                    double halfExceededDistance = (distance - accelDistance - decelDistance) / 2;
+                    accelDistance = accelDistance + halfExceededDistance;
+                    accelDT = Math.max(
+                            (-startVelocity + Math.sqrt(Math.abs(Math.pow(startVelocity, 2) + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration),
+                            (-startVelocity - Math.sqrt(Math.abs(Math.pow(startVelocity, 2) + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration)
+                    );
+                    currentMaxVelocity = currentMaxAcceleration * accelDT + startVelocity;
+                    decelDistance = decelDistance + halfExceededDistance;
+                    decelDT = Math.max(
+                            (-currentMaxVelocity + Math.sqrt(Math.abs(Math.pow(currentMaxVelocity, 2) + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration),
+                            (-currentMaxVelocity - Math.sqrt(Math.abs(Math.pow(currentMaxVelocity, 2) + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration)
+                    );
+                }
+                cruiseDistance = distance - accelDistance - decelDistance;
+                cruiseDT = cruiseDistance / currentMaxVelocity;
             }
-            cruiseDistance = distance - accelDistance - decelDistance;
-            cruiseDT = cruiseDistance / currentMaxVelocity;
+            else{
+                accelDT=0;
+                cruiseDT=0;
+                decelDT=0;
+                accelDistance=0;
+                cruiseDistance=0;
+                decelDistance=0;
+            }
         }
         public void runMotionProfileOnce(){
-            double instantTargetPosition;
+            double instantTargetPosition = 0;
             double elapsedTime = MOVEMENT_TIMER.time();
             if (elapsedTime > accelDT+decelDT+cruiseDT){
                 instantTargetPosition=target;
             }
 
-            if (elapsedTime < accelDT){
+            else if (elapsedTime < accelDT){
                 instantTargetPosition=profileStartPos + startVelocity * elapsedTime + 0.5 * currentMaxAcceleration * Math.pow(elapsedTime, 2);
-
-
             }
             else if (elapsedTime < accelDT+cruiseDT){
                 double cruiseCurrentDT = elapsedTime - accelDT;
                 instantTargetPosition=profileStartPos + accelDistance + currentMaxVelocity * cruiseCurrentDT;
             }
 
-            else {
+            else if (elapsedTime < accelDT+cruiseDT+decelDT){
                 double decelCurrentDT = elapsedTime - accelDT - cruiseDT;
                 instantTargetPosition = profileStartPos + accelDistance + cruiseDistance + currentMaxVelocity * decelCurrentDT + 0.5 * currentMaxDeceleration * Math.pow(decelCurrentDT, 2);
             }
-
             double error=instantTargetPosition-getCurrentPosition();
             double kpPower = kP*error;
             integralSum += LOOP_TIMER.time()*error;
             double kiPower = kI*integralSum;
-            double kdPower = kD*(error-previousError)/ LOOP_TIMER.time();
-            LOOP_TIMER.reset();
-            previousError=error;
+            double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
             setPower(Math.min(1,Math.max(-1,kpPower+kiPower+kdPower)));
+            previousError=error;
+            LOOP_TIMER.reset();
         }
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
@@ -445,6 +453,7 @@ public abstract class TeleOpComponents {
         public ElapsedTime MOVEMENT_TIMER = null;
         public double startPos = -1;
         public double time;
+        public double currPos;
         public BotServo(String deviceName,
                         ServoController controller,
                         int portNumber,
@@ -490,6 +499,7 @@ public abstract class TeleOpComponents {
         }
         @Override
         public void setPosition(double position){
+            currPos=position;
             super.setPosition(Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position)) / RANGE);
             for (BotServo servo : synchronizedServos){
                 servo.setPosition(position);
@@ -497,7 +507,7 @@ public abstract class TeleOpComponents {
         }
         @Override
         public double getPosition(){
-            return super.getPosition() * RANGE;
+            return currPos;
         }
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
@@ -653,7 +663,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendo").getController(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getMotorType(),
-                0.015,0,0,
+                0.005,0,0.000378,
                 new String[]{},new double[]{},
                 800,0,
                 200000,3000,
@@ -668,7 +678,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
                 0.015,0,0,
-                new String[]{},new double[]{},
+                new String[]{"transferPosition","pickUpPosition"},new double[]{0,-991},
                 0,-991,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
@@ -682,7 +692,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
                 0.015,0,0,
-                new String[]{},new double[]{},
+                new String[]{"depositPosition","transferPosition"},new double[]{1030,0},
                 1030,0,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
@@ -690,7 +700,6 @@ public abstract class TeleOpComponents {
                 DcMotorEx.ZeroPowerBehavior.FLOAT,
                 "MOTION_PROFILE"
         );
-        /*
         rightFront = new BotMotor(
                 hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
                 hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
@@ -747,7 +756,6 @@ public abstract class TeleOpComponents {
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "soogma"
         );
-        */
         clawFingers = new BotServo(
                 hardwareMap.get(Servo.class, "clawFingers").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawFingers").getController(),

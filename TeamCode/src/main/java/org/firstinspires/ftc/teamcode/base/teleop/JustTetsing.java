@@ -40,6 +40,7 @@ public class JustTetsing extends LinearOpMode {
         clawFingers.setPosition(92);
         clawPitch.setPosition(clawPitch.KEY_POSITIONS.get("hoverPosition"));
         innerClawPitch.setPosition(innerClawPitch.KEY_POSITIONS.get("hoverPosition"));
+        extendo.createMotionProfile(extendo.MAX_VELOCITY, extendo.MAX_ACCELERATION);
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 this::isStopRequested,
