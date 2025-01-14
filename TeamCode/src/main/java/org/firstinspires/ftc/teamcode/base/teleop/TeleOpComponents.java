@@ -52,6 +52,7 @@ public abstract class TeleOpComponents {
 
 
     public static class BotMotor extends DcMotorImplEx {
+        double instantTargetPosition = 0;
         public ArrayList<BotMotor> synchronizedMotors = new ArrayList<>();
         public double kP; public double kI; public double kD;
         public HashMap<String,Double> KEY_POSITIONS;
@@ -379,7 +380,6 @@ public abstract class TeleOpComponents {
             }
         }
         public void runMotionProfileOnce(){
-            double instantTargetPosition = 0;
             double elapsedTime = MOVEMENT_TIMER.time();
             if (elapsedTime > accelDT+decelDT+cruiseDT){
                 instantTargetPosition=target;

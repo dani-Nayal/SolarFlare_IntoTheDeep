@@ -484,10 +484,14 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucket pos",TeleOpComponents.bucket.getPosition());
             TeleOpComponents.telemetry.addData("extendo target",TeleOpComponents.extendo.target);
             TeleOpComponents.telemetry.addData("extendo pos",TeleOpComponents.extendo.getCurrentPosition());
+            TeleOpComponents.telemetry.addData("extendo instant target",TeleOpComponents.extendo.instantTargetPosition);
             TeleOpComponents.telemetry.addData("extendoPitch target",TeleOpComponents.extendoPitch.target);
             TeleOpComponents.telemetry.addData("extendoPitch pos",TeleOpComponents.extendoPitch.getCurrentPosition());
+            TeleOpComponents.telemetry.addData("extendoPitch instant target",TeleOpComponents.extendoPitch.instantTargetPosition);
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
+            TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.getCurrentPosition());
+
             TeleOpComponents.telemetry.update();
             return true;
         }
