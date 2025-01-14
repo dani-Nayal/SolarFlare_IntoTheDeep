@@ -1,0 +1,42 @@
+{
+  "robotName": "Rig1Motor",
+  "robotDimensions": {
+    "length": 1.0,
+    "width": 1.0
+  },
+  "Motors": {
+    "TESTING_MOTOR": {
+      "deviceName": "motor-1",
+      "kP": 1.0,
+      "kI": 0.0,
+      "kD": 0.0,
+      "runMode": "STOP_AND_RESET_ENCODER",
+      "direction": "FORWARD",
+      "zeroPowerBehaviour": "BRAKE",
+      "minTarget": 0,
+      "maxTarget": 10000,
+      "maxAcceleration": 4000,
+      "maxVelocity": 2960
+    }
+  },
+  "Servos": {
+  },
+  "Poses": {
+    "Pose1": {
+    }
+  },
+  "Pinpoint": {
+    "deviceName": "pinpoint",
+    "testVariable": 1.0
+  },
+  "Limelight": {
+    "deviceName": "LimelightDevice",
+    "pollingRate": 11
+  },
+  "IMU": {
+    "deviceName": "IMUDevice",
+    "logoFacingDirection": "",
+    "usbFacingDirection": "",
+    "testVariable": 1.0
+  }
+}
