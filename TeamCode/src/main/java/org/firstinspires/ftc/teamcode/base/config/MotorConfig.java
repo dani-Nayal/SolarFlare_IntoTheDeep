@@ -32,11 +32,12 @@ public class MotorConfig{
         this.runMode           = robotConfig.getMotorRunMode(motorEnum);
         this.direction         = robotConfig.getMotorDirection(motorEnum);
         this.zeroPowerBehavior = robotConfig.getMotorZeroPowerBehavior(motorEnum);
-        this.minTarget         = robotConfig.getMotorInt(motorEnum,"minTarget");
+        this.minTarget         = robotConfig.getMotorInt(motorEnum, "minTarget");
         this.maxTarget         = robotConfig.getMotorInt(motorEnum, "maxTarget");
         this.maxAcceleration   = robotConfig.getMotorInt(motorEnum, "maxAcceleration");
         this.maxVelocity       = robotConfig.getMotorInt(motorEnum, "maxVelocity");
 
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(this.runMode);
         motor.setDirection(this.direction);
         motor.setZeroPowerBehavior(this.zeroPowerBehavior);

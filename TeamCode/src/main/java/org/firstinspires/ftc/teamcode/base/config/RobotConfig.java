@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,18 +23,22 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
 public class RobotConfig {
     private static RobotConfig instance = null;
-    JSONObject json = null;
+    public  static Logger      logger;
+
+    private JSONObject json = null;
+
+    static {
+        logger = RobotLogger.getConfigLogger();
+    }
 
     private RobotConfig(String robotName) {
         initialize(robotName);
     }
 
     private void initialize(String robotName) {
+        Logger.getGlobal().severe("RobotConfig.initialize");
+        logger.entering("RobotConfig", "initialize", robotName);
         String configFileName = robotName + ".json";
-        /*
-        try(InputStream input = Objects.requireNonNull(RobotConfig.class.getClassLoader())
-                .getResourceAsStream(configFileName))
-        */
         try(InputStream input = RobotConfig.class.getResourceAsStream(configFileName))
         {
             if (input == null)
@@ -48,15 +53,18 @@ public class RobotConfig {
                 JSONTokener tokener = new JSONTokener(sb.toString());
                 json                = new JSONObject(tokener);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.throwing("RobotConfig", "initialize", e );
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.throwing("RobotConfig", "initialize", ex);
         }
+        logger.exiting("RobotConfig", "initialize");
     }
 
     public static RobotConfig createInstance(String robotName) {
+        logger.entering("RobotConfig", "createInstance", robotName);
         instance = new RobotConfig(robotName);
+        logger.exiting("RobotConfig", "createInstance", instance);
         return instance;
     }
 
@@ -68,80 +76,130 @@ public class RobotConfig {
 
     public RobotDimensions getRobotDimensions()
             throws JSONException {
-        JSONObject jsonDimensions  = json.getJSONObject("robotDimensions");
-        double     length          = jsonDimensions.getDouble("length");
-        double     width           = jsonDimensions.getDouble("width");
-        return new RobotDimensions(length, width);
+        logger.entering("RobotConfig", "getRobotDimensions");
+        JSONObject jsonDimensions       = json.getJSONObject("robotDimensions");
+        double     length               = jsonDimensions.getDouble("length");
+        double     width                = jsonDimensions.getDouble("width");
+        RobotDimensions robotDimensions = new RobotDimensions(length, width);
+        logger.exiting("RobotConfig", "getRobotDimensions", robotDimensions);
+        return robotDimensions;
     }
 
     public String[] getMotorNames() throws JSONException {
         // An alternative to
         // JSONObject.getNames(json.getJSONObject("Motors"));
         //
+        logger.entering("RobotConfig", "getMotorNames");
         JSONArray motorJSONNames = json.getJSONObject("Motors").names();
-        assert motorJSONNames != null;
+        if(motorJSONNames == null)
+            return new String[] {};
         String[]  motorNames     = new String[motorJSONNames.length()];
         for(int i=0; i<motorNames.length; i++)
             motorNames[i] = motorJSONNames.getString(i);
+        logger.exiting("RobotConfig", "getMotorNames", motorNames);
         return motorNames;
     }
 
     public MotorEnum[] getMotorEnums() throws JSONException {
+        logger.entering("RobotConfig", "getMotorEnums");
         String[]    motorNames = getMotorNames();
         MotorEnum[] motorEnums = new MotorEnum[motorNames.length];
         for(int i=0; i<motorNames.length; i++) {
             motorEnums[i] = getMotorEnum(motorNames[i]);
         }
+        logger.exiting("RobotConfig", "getMotorEnums", motorEnums);
         return motorEnums;
     }
 
     public static MotorEnum getMotorEnum(String motorName) {
-        return MotorEnum.valueOf(motorName);
+        logger.entering("RobotConfig", "getMotorEnum", motorName);
+        MotorEnum motorEnum = MotorEnum.valueOf(motorName);
+        logger.exiting("RobotConfig", "getMotorEnum", motorEnum);
+        return motorEnum;
     }
 
     public String getMotorString(String motorName, String propertyName)
             throws JSONException {
-        return json.getJSONObject("Motors").getJSONObject(motorName).getString(propertyName);
+        logger.entering("RobotConfig",
+                "getMotorString",
+                new String[] {motorName, propertyName});
+        String motorString = json.getJSONObject("Motors").getJSONObject(motorName).getString(propertyName);
+        logger.exiting("RobotConfig", "getMotorString", motorString);
+        return motorString;
     }
 
     public String getMotorString(MotorEnum motorEnum, String propertyName)
             throws JSONException {
-        return getMotorString(motorEnum.toString(), propertyName);
+        logger.entering("RobotConfig",
+                "getMotorString",
+                new String[] {motorEnum.name(), propertyName});
+        String motorString = getMotorString(motorEnum.toString(), propertyName);
+        logger.exiting("RobotConfig", "getMotorString", motorString);
+        return motorString;
     }
 
     public double getMotorDouble(String motorName, String propertyName)
             throws JSONException {
-        return json.getJSONObject("Motors").getJSONObject(motorName).getDouble(propertyName);
+        logger.entering("RobotConfig",
+                "getMotorDouble",
+                new String[] {motorName, propertyName});
+        double motorDouble = json.getJSONObject("Motors").getJSONObject(motorName).getDouble(propertyName);
+        logger.exiting("RobotConfig", "getMotorDouble", motorDouble);
+        return motorDouble;
     }
 
     public double getMotorDouble(MotorEnum motorEnum, String propertyName)
             throws JSONException {
-        return getMotorDouble(motorEnum.toString(), propertyName);
+        logger.entering("RobotConfig",
+                "getMotorDouble",
+                new String[] {motorEnum.name(), propertyName});
+        double motorDouble = getMotorDouble(motorEnum.toString(), propertyName);
+        logger.exiting("RobotConfig", "getMotorDouble", motorDouble);
+        return motorDouble;
     }
 
     public int getMotorInt(String motorName, String propertyName)
             throws JSONException {
-        return json.getJSONObject("Motors").getJSONObject(motorName).getInt(propertyName);
+        logger.entering("RobotConfig",
+                "getMotorInt",
+                new String[] {motorName, propertyName});
+        int motorInt = json.getJSONObject("Motors").getJSONObject(motorName).getInt(propertyName);
+        logger.exiting("RobotConfig", "getMotorInt", motorInt);
+        return motorInt;
     }
 
     public int getMotorInt(MotorEnum motorEnum, String propertyName)
             throws JSONException {
-        return getMotorInt(motorEnum.toString(), propertyName);
+        logger.entering("RobotConfig",
+                "getMotorInt",
+                new String[] {motorEnum.name(), propertyName});
+        int motorInt = getMotorInt(motorEnum.toString(), propertyName);
+        logger.exiting("RobotConfig", "getMotorInt", motorInt);
+        return motorInt;
     }
 
     public DcMotorSimple.Direction getMotorDirection(MotorEnum motorEum)
             throws JSONException {
-        return DcMotorSimple.Direction.valueOf(getMotorString(motorEum, "direction"));
+        logger.entering("RobotConfig", "getMotorDirection", motorEum);
+        DcMotorSimple.Direction direction = DcMotorSimple.Direction.valueOf(getMotorString(motorEum, "direction"));
+        logger.exiting("RobotConfig", "getMotorDirection", direction);
+        return direction;
     }
 
     public RunMode getMotorRunMode(MotorEnum motorEum)
             throws JSONException {
-        return RunMode.valueOf(getMotorString(motorEum, "runMode"));
+        logger.entering("RobotConfig", "getMotorRunMode", motorEum);
+        RunMode motorRunMode = RunMode.valueOf(getMotorString(motorEum, "runMode"));
+        logger.exiting("RobotConfig", "getMotorRunMode", motorRunMode);
+        return motorRunMode;
     }
 
     public ZeroPowerBehavior getMotorZeroPowerBehavior(MotorEnum motorEum)
             throws JSONException {
-        return ZeroPowerBehavior.valueOf(getMotorString(motorEum, "zeroPowerBehavior"));
+        logger.entering("RobotConfig", "getMotorZeroPowerBehavior", motorEum);
+        ZeroPowerBehavior zpb = ZeroPowerBehavior.valueOf(getMotorString(motorEum, "zeroPowerBehavior"));
+        logger.exiting("RobotConfig", "getMotorZeroPowerBehavior", zpb);
+        return zpb;
     }
 
     public String[] getServoNames()
@@ -149,100 +207,217 @@ public class RobotConfig {
         // An alternative to
         // JSONObject.getNames(json.getJSONObject("Servos"));
         //
+        logger.entering("RobotConfig", "getServoNames");
         JSONArray servoJSONNames = json.getJSONObject("Servos").names();
-        assert  servoJSONNames != null;
+        if(servoJSONNames == null)
+            return new String[] {};
         String[]  servoNames     = new String[servoJSONNames.length()];
         for(int i=0; i<servoNames.length; i++)
             servoNames[i] = servoJSONNames.getString(i);
+        logger.exiting("RobotConfig", "getServoNames", servoJSONNames);
         return servoNames;
     }
 
     public ServoEnum[] getServoEnums() throws JSONException {
+        logger.entering("RobotConfig", "getServoEnums");
         String[]    servoNames    = getServoNames();
         ServoEnum[] servoEnums    = new ServoEnum[servoNames.length];
         for(int i=0; i<servoNames.length; i++) {
             servoEnums[i] = getServoEnum(servoNames[i]);
         }
+        logger.exiting("RobotConfig", "getServoEnums", servoEnums);
         return servoEnums;
     }
 
     public static ServoEnum getServoEnum(String servoName) {
-        return ServoEnum.valueOf(servoName);
+        logger.entering("RobotConfig", "getServoEnum", servoName);
+        ServoEnum servoEnum = ServoEnum.valueOf(servoName);
+        logger.exiting("RobotConfig", "getServoEnum", servoEnum);
+        return servoEnum;
     }
 
     public String getServoString(String servoName, String propertyName)
             throws JSONException {
-        return json.getJSONObject("Servos").getJSONObject(servoName).getString(propertyName);
+        logger.entering("RobotConfig",
+                "getServoString",
+                new String[] {servoName, propertyName});
+        String servoString = json.getJSONObject("Servos").getJSONObject(servoName).getString(propertyName);
+        logger.exiting("RobotConfig", "getServoString", servoString);
+        return servoString;
     }
 
     public String getServoString(ServoEnum servoEnum, String propertyName)
             throws JSONException {
-        return getServoString(servoEnum.toString(), propertyName);
+        logger.entering("RobotConfig",
+                "getServoString",
+                new String[] {servoEnum.name(), propertyName});
+        String servoString = getServoString(servoEnum.toString(), propertyName);
+        logger.exiting("RobotConfig", "getServoString", servoString);
+        return servoString;
     }
 
     public double getServoDouble(String servoName, String propertyName)
             throws JSONException {
-        return json.getJSONObject("Servos").getJSONObject(servoName).getDouble(propertyName);
+        logger.entering("RobotConfig",
+                "getServoDouble",
+                new String[] {servoName, propertyName});
+        double servoDouble = json.getJSONObject("Servos").getJSONObject(servoName).getDouble(propertyName);
+        logger.exiting("RobotConfig", "getServoDouble", servoDouble);
+        return servoDouble;
     }
 
     public double getServoDouble(ServoEnum servoEnum, String propertyName)
             throws JSONException {
-        return getServoDouble(servoEnum.toString(), propertyName);
+        logger.entering("RobotConfig",
+                "getServoDouble",
+                new String[] {servoEnum.name(), propertyName});
+        double servoDouble = getServoDouble(servoEnum.toString(), propertyName);
+        logger.exiting("RobotConfig", "getServoDouble", servoDouble);
+        return servoDouble;
     }
 
     public Servo.Direction getServoDirection(ServoEnum servoEnum)
             throws JSONException {
-        return Servo.Direction.valueOf(getServoString(servoEnum, "direction"));
+        logger.entering("RobotConfig", "getServoDirection");
+        Servo.Direction direction = Servo.Direction.valueOf(getServoString(servoEnum, "direction"));
+        logger.exiting("RobotConfig", "getServoDirection", direction);
+        return direction;
     }
 
     public String getIMUString(String propertyName)
             throws JSONException {
-        return json.getJSONObject("IMU").getString(propertyName);
+        logger.entering("RobotConfig", "getIMUString", propertyName);
+        String imuString = json.getJSONObject("IMU").getString(propertyName);
+        logger.exiting("RobotConfig", "getIMUString", imuString);
+        return imuString;
     }
 
     public double getIMUDouble(String propertyName)
             throws JSONException {
-        return json.getJSONObject("IMU").getDouble(propertyName);
+        logger.entering("RobotConfig", "getIMUDouble", propertyName);
+        double imuDouble = json.getJSONObject("IMU").getDouble(propertyName);
+        logger.exiting("RobotConfig", "getIMUDouble", imuDouble);
+        return imuDouble;
     }
 
+    /**
+     * Returns the direction the REV Control Hub Logo is facing on the robot
+     * @return Possible values are:
+     *  - UP
+     *  - DOWN
+     *  - FORWARD
+     *  - BACKWARD
+     *  - LEFT
+     *  - RIGHT
+     */
     public LogoFacingDirection getIMULogoFacingDirection()
             throws JSONException {
-        return LogoFacingDirection.valueOf(getIMUString("LogoFacingDirection"));
+        logger.entering("RobotConfig", "getIMULogoFacingDirection");
+        LogoFacingDirection lfd = LogoFacingDirection.valueOf(getIMUString("LogoFacingDirection"));
+        logger.exiting("RobotConfig", "getIMULogoFacingDirection", lfd);
+        return lfd;
     }
 
+    /**
+     * Returns the direction the REV Control Hub USB is facing on the robot
+     * @return Possible values are:
+     *  - UP
+     *  - DOWN
+     *  - FORWARD
+     *  - BACKWARD
+     *  - LEFT
+     *  - RIGHT
+     */
     public UsbFacingDirection getIMULUSBFacingDirection()
             throws JSONException {
-        return UsbFacingDirection.valueOf(getIMUString("usbFacingDirection"));
+        logger.entering("RobotConfig", "getIMUUSBFacingDirection");
+        UsbFacingDirection ufd = UsbFacingDirection.valueOf(getIMUString("UsbFacingDirection"));
+        logger.exiting("RobotConfig", "getIMUUSBFacingDirection", ufd);
+        return ufd;
     }
 
     public String getPinpointString(String propertyName)
             throws JSONException {
-        return json.getJSONObject("PinPoint").getString(propertyName);
+        logger.entering("RobotConfig", "getPinpointString", propertyName);
+        String pinpointString = null;
+        try {
+            pinpointString = json.getJSONObject("Pinpoint").getString(propertyName);;
+        } catch(JSONException e) {
+            logger.throwing("RobotConfig", "getPinpointString", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getPinpointString", pinpointString);
+        return pinpointString;
     }
 
-    public double getPinpointDouble(String propertyName)
+    public Double getPinpointDouble(String propertyName)
             throws JSONException {
-        return json.getJSONObject("PinPoint").getDouble(propertyName);
+        logger.entering("RobotConfig", "getPinpointDouble", propertyName);
+        Double pinpointDouble = null;
+        try {
+            pinpointDouble = json.getJSONObject("Pinpoint").getDouble(propertyName);
+        } catch(JSONException e) {
+            logger.throwing("RobotConfig", "getPinpointDouble", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getPinpointDouble", pinpointDouble);
+        return pinpointDouble;
     }
 
-    public int getPinpointInt(String propertyName)
+    public Integer getPinpointInt(String propertyName)
             throws JSONException {
-        return json.getJSONObject("PinPoint").getInt(propertyName);
+        logger.entering("RobotConfig", "getPinpointInt", propertyName);
+        Integer pinpointInt = null;
+        try {
+            pinpointInt = json.getJSONObject("Pinpoint").getInt(propertyName);;
+        } catch(JSONException e) {
+            logger.throwing("RobotConfig", "getPinpointInt", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getPinpointInt", pinpointInt);
+        return pinpointInt;
     }
 
     public String getLimelightString(String propertyName)
             throws JSONException {
-        return json.getJSONObject("Limelight").getString(propertyName);
+        logger.entering("RobotConfig", "getLimelightString", propertyName);
+        String limelightString = null;
+        try {
+            limelightString = json.getJSONObject("Limelight").getString(propertyName);
+        } catch (JSONException e) {
+            logger.throwing("RobotConfig", "getLimelightString", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getLimelightString", limelightString);
+        return limelightString;
     }
 
-    public double getLimelightDouble(String propertyName)
+    public Double getLimelightDouble(String propertyName)
             throws JSONException {
-        return json.getJSONObject("Limelight").getDouble(propertyName);
+        logger.entering("RobotConfig", "getLimelightDouble", propertyName);
+        Double limelightDouble = null;
+        try {
+            limelightDouble = json.getJSONObject("Limelight").getDouble(propertyName);
+        } catch(JSONException e) {
+            logger.throwing("RobotConfig", "getLimelightDouble", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getLimelightDouble", limelightDouble);
+        return limelightDouble;
     }
 
-    public int getLimelightInt(String propertyName)
+    public Integer getLimelightInt(String propertyName)
             throws JSONException {
-        return json.getJSONObject("Limelight").getInt(propertyName);
+        logger.entering("RobotConfig", "getLimelightInt", propertyName);
+        Integer limelightInt = null;
+        try {
+            limelightInt = json.getJSONObject("Limelight").getInt(propertyName);
+        } catch(JSONException e) {
+            logger.throwing("RobotConfig", "getLimelightInt", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getLimelightInt", limelightInt);
+        return limelightInt;
     }
 
     public static void main(String[] args) {
@@ -294,7 +469,7 @@ public class RobotConfig {
             out.println("Limelight.pollingRate=" + config.getLimelightDouble("pollingRate"));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.throwing("RobotConfig", "main", e);
         }
     }
 }

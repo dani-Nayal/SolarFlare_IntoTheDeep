@@ -11,7 +11,9 @@ public class PinpointConfig{
 
     public PinpointConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
-        this.deviceName = robotConfig.getPinpointString("deviceName");
-        pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class, deviceName);
+        deviceName = robotConfig.getPinpointString("deviceName");
+        if (deviceName != null) {
+            pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class, deviceName);
+        }
     }
 }

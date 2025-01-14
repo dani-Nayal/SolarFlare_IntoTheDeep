@@ -12,9 +12,11 @@ public class LimelightConfig {
 
     public LimelightConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
-        this.deviceName = robotConfig.getLimelightString("deviceName");
-        this.limelight  = hardwareMap.get(Limelight3A.class, this.deviceName);
-        this.pollingRate = robotConfig.getLimelightInt("pollingRate");
-        limelight.setPollRateHz(pollingRate);
+        deviceName      = robotConfig.getLimelightString("deviceName");
+        if(deviceName != null) {
+            limelight   = hardwareMap.get(Limelight3A.class, this.deviceName);
+            pollingRate = robotConfig.getLimelightInt("pollingRate");
+            limelight.setPollRateHz(pollingRate);
+        }
     }
 }

@@ -26,17 +26,13 @@
     }
   },
   "Pinpoint": {
-    "deviceName": "pinpoint",
-    "testVariable": 1.0
   },
   "Limelight": {
-    "deviceName": "LimelightDevice",
-    "pollingRate": 11
   },
   "IMU": {
-    "deviceName": "IMUDevice",
-    "logoFacingDirection": "",
-    "usbFacingDirection": "",
+    "deviceName": "imu",
+    "LogoFacingDirection": "FORWARD",
+    "UsbFacingDirection": "UP",
     "testVariable": 1.0
   }
 }

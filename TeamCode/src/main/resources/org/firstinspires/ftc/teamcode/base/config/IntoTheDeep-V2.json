@@ -76,13 +76,13 @@
     "testVariable": 1.0
   },
   "Limelight": {
-    "deviceName": "LimelightDevice",
+    "deviceName": "limelight",
     "pollingRate": 11
   },
   "IMU": {
-    "deviceName": "IMUDevice",
-    "logoFacingDirection": "",
-    "usbFacingDirection": "",
+    "deviceName": "imu",
+    "LogoFacingDirection": "FORWARD",
+    "UsbFacingDirection": "UP",
     "testVariable": 1.0
   }
 }
