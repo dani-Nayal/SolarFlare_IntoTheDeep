@@ -715,10 +715,10 @@ public abstract class TeleOpComponents {
                 "soogma"
         );
         rightBack = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                hardwareMap.get(DcMotorEx.class, "rightBack").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "rightBack").getController(),
+                hardwareMap.get(DcMotorEx.class, "rightBack").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "rightBack").getMotorType(),
                 0.015,0,0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
@@ -729,10 +729,10 @@ public abstract class TeleOpComponents {
                 "soogma"
         );
         leftFront = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                hardwareMap.get(DcMotorEx.class, "leftFront").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "leftFront").getController(),
+                hardwareMap.get(DcMotorEx.class, "leftFront").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "leftFront").getMotorType(),
                 0.015,0,0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
@@ -743,10 +743,10 @@ public abstract class TeleOpComponents {
                 "soogma"
         );
         leftBack = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "rightFront").getDeviceName(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
+                hardwareMap.get(DcMotorEx.class, "leftBack").getDeviceName(),
+                hardwareMap.get(DcMotorEx.class, "leftBack").getController(),
+                hardwareMap.get(DcMotorEx.class, "leftBack").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "leftBack").getMotorType(),
                 0.015,0,0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
