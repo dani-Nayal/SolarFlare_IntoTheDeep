@@ -471,8 +471,7 @@ public abstract class TeleOpComponents {
             //hardwareMap.put(deviceName,this);
             servos.add(this);
         }
-        @Override
-        public void setPosition(double position){
+        public void setPositionWithDelay(double position){
             if (MOVEMENT_TIMER == null){
                 MOVEMENT_TIMER = new ElapsedTime();
                 startPos=0;
@@ -485,12 +484,16 @@ public abstract class TeleOpComponents {
                     startPos = Math.signum(getPosition() - startPos) * SERVO_SPEED * Math.min(time, MOVEMENT_TIMER.time()) + startPos;
                 }
             }
+            setPosition(position);
+            time=Math.abs(getPosition()-startPos)/SERVO_SPEED+0.07;
+            MOVEMENT_TIMER.reset();
+        }
+        @Override
+        public void setPosition(double position){
             super.setPosition(Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position)) / RANGE);
             for (BotServo servo : synchronizedServos){
                 servo.setPosition(position);
             }
-            time=Math.abs(getPosition()-startPos)/SERVO_SPEED+0.07;
-            MOVEMENT_TIMER.reset();
         }
         @Override
         public double getPosition(){
@@ -512,7 +515,7 @@ public abstract class TeleOpComponents {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (isStart) {
                     isStart=false;
-                    setPosition(posFun.call());
+                    setPositionWithDelay(posFun.call());
 
                 }
                 if (MOVEMENT_TIMER.time() < time){
@@ -567,7 +570,7 @@ public abstract class TeleOpComponents {
                             break;
                         }
                     }
-                    setPosition(pos);
+                    setPositionWithDelay(pos);
                 }
                 if (MOVEMENT_TIMER.time() < time){
                     return true;
@@ -610,7 +613,7 @@ public abstract class TeleOpComponents {
                             break;
                         }
                     }
-                    setPosition(pos);
+                    setPositionWithDelay(pos);
                 }
                 if (MOVEMENT_TIMER.time() < time){
                     return true;
