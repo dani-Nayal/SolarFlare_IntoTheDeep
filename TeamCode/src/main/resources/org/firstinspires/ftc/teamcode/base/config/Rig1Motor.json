@@ -12,7 +12,7 @@
       "kD": 0.0,
       "runMode": "STOP_AND_RESET_ENCODER",
       "direction": "FORWARD",
-      "zeroPowerBehaviour": "BRAKE",
+      "zeroPowerBehavior": "BRAKE",
       "minTarget": 0,
       "maxTarget": 10000,
       "maxAcceleration": 4000,

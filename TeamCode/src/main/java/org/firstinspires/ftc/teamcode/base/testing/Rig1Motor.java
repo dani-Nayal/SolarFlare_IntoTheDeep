@@ -18,14 +18,32 @@ public class Rig1Motor extends LinearOpMode {
     MotorControl   motorControl;
 
     public void runOpMode(){
+        telemetry.addData("Starting OpMode", "");
+        telemetry.update();
+        sleep(10000);
         try {
-            robotConfig  = RobotConfig.createInstance("Rig2Motor");
+            robotConfig  = RobotConfig.createInstance("Rig1Motor");
+            telemetry.addData("After RobotConfig", "");
+            telemetry.update();
+            sleep(5000);
             hw           = HardwareConfig.createInstance(hardwareMap, robotConfig);
+            telemetry.addData("After HardwareConfig", "");
+            telemetry.update();
+            sleep(5000);
             motorControl = new MotorControl(MotorEnum.TESTING_MOTOR);
+            telemetry.addData("After MotorControl", "");
+            telemetry.update();
+            sleep(5000);
             state        = RobotState.getInstance();
-        } catch (JSONException e) {
+            telemetry.addData("After RobotState", "");
+            telemetry.update();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        telemetry.addData("After initialization", "");
+        telemetry.update();
+        sleep(5000);
 
         waitForStart();
 

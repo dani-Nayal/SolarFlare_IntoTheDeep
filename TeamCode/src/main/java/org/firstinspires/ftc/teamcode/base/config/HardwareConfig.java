@@ -4,7 +4,6 @@ import java.util.EnumMap;
 import org.json.JSONException;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-
 public class HardwareConfig {
     private static HardwareConfig                 hardwareConfig;
     public  final  RobotDimensions                robotDimensions;

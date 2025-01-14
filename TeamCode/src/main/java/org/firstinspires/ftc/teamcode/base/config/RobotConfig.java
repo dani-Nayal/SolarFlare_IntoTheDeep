@@ -6,24 +6,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.Objects;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotConfig {
     private static RobotConfig instance = null;
@@ -35,8 +30,11 @@ public class RobotConfig {
 
     private void initialize(String robotName) {
         String configFileName = robotName + ".json";
+        /*
         try(InputStream input = Objects.requireNonNull(RobotConfig.class.getClassLoader())
                 .getResourceAsStream(configFileName))
+        */
+        try(InputStream input = RobotConfig.class.getResourceAsStream(configFileName))
         {
             if (input == null)
                 throw new IllegalArgumentException("No configuration available for " + robotName);
@@ -101,43 +99,53 @@ public class RobotConfig {
         return MotorEnum.valueOf(motorName);
     }
 
-    public String getMotorString(String motorName, String propertyName) throws JSONException {
+    public String getMotorString(String motorName, String propertyName)
+            throws JSONException {
         return json.getJSONObject("Motors").getJSONObject(motorName).getString(propertyName);
     }
 
-    public String getMotorString(MotorEnum motorEnum, String propertyName) throws JSONException {
+    public String getMotorString(MotorEnum motorEnum, String propertyName)
+            throws JSONException {
         return getMotorString(motorEnum.toString(), propertyName);
     }
 
-    public double getMotorDouble(String motorName, String propertyName) throws JSONException {
+    public double getMotorDouble(String motorName, String propertyName)
+            throws JSONException {
         return json.getJSONObject("Motors").getJSONObject(motorName).getDouble(propertyName);
     }
 
-    public double getMotorDouble(MotorEnum motorEnum, String propertyName) throws JSONException {
+    public double getMotorDouble(MotorEnum motorEnum, String propertyName)
+            throws JSONException {
         return getMotorDouble(motorEnum.toString(), propertyName);
     }
 
-    public int getMotorInt(String motorName, String propertyName) throws JSONException {
+    public int getMotorInt(String motorName, String propertyName)
+            throws JSONException {
         return json.getJSONObject("Motors").getJSONObject(motorName).getInt(propertyName);
     }
 
-    public int getMotorInt(MotorEnum motorEnum, String propertyName) throws JSONException {
+    public int getMotorInt(MotorEnum motorEnum, String propertyName)
+            throws JSONException {
         return getMotorInt(motorEnum.toString(), propertyName);
     }
 
-    public DcMotorSimple.Direction getMotorDirection(MotorEnum motorEum) throws JSONException {
+    public DcMotorSimple.Direction getMotorDirection(MotorEnum motorEum)
+            throws JSONException {
         return DcMotorSimple.Direction.valueOf(getMotorString(motorEum, "direction"));
     }
 
-    public RunMode getMotorRunMode(MotorEnum motorEum) throws JSONException {
+    public RunMode getMotorRunMode(MotorEnum motorEum)
+            throws JSONException {
         return RunMode.valueOf(getMotorString(motorEum, "runMode"));
     }
 
-    public ZeroPowerBehavior getMotorZeroPowerBehavior(MotorEnum motorEum) throws JSONException {
+    public ZeroPowerBehavior getMotorZeroPowerBehavior(MotorEnum motorEum)
+            throws JSONException {
         return ZeroPowerBehavior.valueOf(getMotorString(motorEum, "zeroPowerBehavior"));
     }
 
-    public String[] getServoNames() throws JSONException {
+    public String[] getServoNames()
+            throws JSONException {
         // An alternative to
         // JSONObject.getNames(json.getJSONObject("Servos"));
         //
@@ -162,63 +170,78 @@ public class RobotConfig {
         return ServoEnum.valueOf(servoName);
     }
 
-    public String getServoString(String servoName, String propertyName) throws JSONException {
+    public String getServoString(String servoName, String propertyName)
+            throws JSONException {
         return json.getJSONObject("Servos").getJSONObject(servoName).getString(propertyName);
     }
 
-    public String getServoString(ServoEnum servoEnum, String propertyName) throws JSONException {
+    public String getServoString(ServoEnum servoEnum, String propertyName)
+            throws JSONException {
         return getServoString(servoEnum.toString(), propertyName);
     }
 
-    public double getServoDouble(String servoName, String propertyName) throws JSONException {
+    public double getServoDouble(String servoName, String propertyName)
+            throws JSONException {
         return json.getJSONObject("Servos").getJSONObject(servoName).getDouble(propertyName);
     }
 
-    public double getServoDouble(ServoEnum servoEnum, String propertyName) throws JSONException {
+    public double getServoDouble(ServoEnum servoEnum, String propertyName)
+            throws JSONException {
         return getServoDouble(servoEnum.toString(), propertyName);
     }
 
-    public Servo.Direction getServoDirection(ServoEnum servoEnum) throws JSONException {
+    public Servo.Direction getServoDirection(ServoEnum servoEnum)
+            throws JSONException {
         return Servo.Direction.valueOf(getServoString(servoEnum, "direction"));
     }
 
-    public String getIMUString(String propertyName) throws JSONException {
+    public String getIMUString(String propertyName)
+            throws JSONException {
         return json.getJSONObject("IMU").getString(propertyName);
     }
 
-    public double getIMUDouble(String propertyName) throws JSONException {
+    public double getIMUDouble(String propertyName)
+            throws JSONException {
         return json.getJSONObject("IMU").getDouble(propertyName);
     }
 
-    public LogoFacingDirection getIMULogoFacingDirection() throws JSONException {
+    public LogoFacingDirection getIMULogoFacingDirection()
+            throws JSONException {
         return LogoFacingDirection.valueOf(getIMUString("LogoFacingDirection"));
     }
 
-    public UsbFacingDirection getIMULUSBFacingDirection() throws JSONException {
+    public UsbFacingDirection getIMULUSBFacingDirection()
+            throws JSONException {
         return UsbFacingDirection.valueOf(getIMUString("usbFacingDirection"));
     }
 
-    public String getPinpointString(String propertyName) throws JSONException {
+    public String getPinpointString(String propertyName)
+            throws JSONException {
         return json.getJSONObject("PinPoint").getString(propertyName);
     }
 
-    public double getPinpointDouble(String propertyName) throws JSONException {
+    public double getPinpointDouble(String propertyName)
+            throws JSONException {
         return json.getJSONObject("PinPoint").getDouble(propertyName);
     }
 
-    public int getPinpointInt(String propertyName) throws JSONException {
+    public int getPinpointInt(String propertyName)
+            throws JSONException {
         return json.getJSONObject("PinPoint").getInt(propertyName);
     }
 
-    public String getLimelightString(String propertyName) throws JSONException {
+    public String getLimelightString(String propertyName)
+            throws JSONException {
         return json.getJSONObject("Limelight").getString(propertyName);
     }
 
-    public double getLimelightDouble(String propertyName) throws JSONException {
+    public double getLimelightDouble(String propertyName)
+            throws JSONException {
         return json.getJSONObject("Limelight").getDouble(propertyName);
     }
 
-    public int getLimelightInt(String propertyName) throws JSONException {
+    public int getLimelightInt(String propertyName)
+            throws JSONException {
         return json.getJSONObject("Limelight").getInt(propertyName);
     }
 
