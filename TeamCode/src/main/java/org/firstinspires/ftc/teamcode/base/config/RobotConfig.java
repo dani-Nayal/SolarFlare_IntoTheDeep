@@ -336,12 +336,11 @@ public class RobotConfig {
         return ufd;
     }
 
-    public String getPinpointString(String propertyName)
-            throws JSONException {
+    public String getPinpointString(String propertyName) {
         logger.entering("RobotConfig", "getPinpointString", propertyName);
-        String pinpointString = null;
+        String pinpointString;
         try {
-            pinpointString = json.getJSONObject("Pinpoint").getString(propertyName);;
+            pinpointString = json.getJSONObject("Pinpoint").getString(propertyName);
         } catch(JSONException e) {
             logger.throwing("RobotConfig", "getPinpointString", e);
             return null;
@@ -350,10 +349,9 @@ public class RobotConfig {
         return pinpointString;
     }
 
-    public Double getPinpointDouble(String propertyName)
-            throws JSONException {
+    public Double getPinpointDouble(String propertyName) {
         logger.entering("RobotConfig", "getPinpointDouble", propertyName);
-        Double pinpointDouble = null;
+        Double pinpointDouble;
         try {
             pinpointDouble = json.getJSONObject("Pinpoint").getDouble(propertyName);
         } catch(JSONException e) {
@@ -364,12 +362,11 @@ public class RobotConfig {
         return pinpointDouble;
     }
 
-    public Integer getPinpointInt(String propertyName)
-            throws JSONException {
+    public Integer getPinpointInt(String propertyName) {
         logger.entering("RobotConfig", "getPinpointInt", propertyName);
-        Integer pinpointInt = null;
+        Integer pinpointInt;
         try {
-            pinpointInt = json.getJSONObject("Pinpoint").getInt(propertyName);;
+            pinpointInt = json.getJSONObject("Pinpoint").getInt(propertyName);
         } catch(JSONException e) {
             logger.throwing("RobotConfig", "getPinpointInt", e);
             return null;
@@ -378,10 +375,9 @@ public class RobotConfig {
         return pinpointInt;
     }
 
-    public String getLimelightString(String propertyName)
-            throws JSONException {
+    public String getLimelightString(String propertyName) {
         logger.entering("RobotConfig", "getLimelightString", propertyName);
-        String limelightString = null;
+        String limelightString;
         try {
             limelightString = json.getJSONObject("Limelight").getString(propertyName);
         } catch (JSONException e) {
@@ -392,10 +388,9 @@ public class RobotConfig {
         return limelightString;
     }
 
-    public Double getLimelightDouble(String propertyName)
-            throws JSONException {
+    public Double getLimelightDouble(String propertyName) {
         logger.entering("RobotConfig", "getLimelightDouble", propertyName);
-        Double limelightDouble = null;
+        Double limelightDouble;
         try {
             limelightDouble = json.getJSONObject("Limelight").getDouble(propertyName);
         } catch(JSONException e) {
@@ -406,10 +401,9 @@ public class RobotConfig {
         return limelightDouble;
     }
 
-    public Integer getLimelightInt(String propertyName)
-            throws JSONException {
+    public Integer getLimelightInt(String propertyName) {
         logger.entering("RobotConfig", "getLimelightInt", propertyName);
-        Integer limelightInt = null;
+        Integer limelightInt;
         try {
             limelightInt = json.getJSONObject("Limelight").getInt(propertyName);
         } catch(JSONException e) {
@@ -464,9 +458,11 @@ public class RobotConfig {
 
             out.println("PinPoint.deviceName=" + config.getPinpointString("deviceName"));
             out.println("PinPoint.testVariable=" + config.getPinpointDouble("testVariable"));
+            out.println("PinPoint.testVariable=" + config.getPinpointInt("testVariable"));
 
             out.println("Limelight.deviceName=" + config.getLimelightString("deviceName"));
             out.println("Limelight.pollingRate=" + config.getLimelightDouble("pollingRate"));
+            out.println("Limelight.pollingRate=" + config.getLimelightInt("testVariable"));
 
         } catch (Exception e) {
             logger.throwing("RobotConfig", "main", e);

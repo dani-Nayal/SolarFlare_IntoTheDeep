@@ -77,7 +77,8 @@
   },
   "Limelight": {
     "deviceName": "limelight",
-    "pollingRate": 11
+    "pollingRate": 11,
+    "testVariable": 1
   },
   "IMU": {
     "deviceName": "imu",
