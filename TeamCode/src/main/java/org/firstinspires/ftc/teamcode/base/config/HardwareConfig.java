@@ -28,6 +28,15 @@ public class HardwareConfig {
         imuConfig         = new IMUConfig(hardwareMap,       robotConfig);
         pinpointConfig    = new PinpointConfig(hardwareMap,  robotConfig);
         limelightConfig   = new LimelightConfig(hardwareMap, robotConfig);
+        // TODO: Assign config variables here and determine their parameters
+
+        motorConfigs.put(MotorEnum.TESTING_MOTOR, new MotorConfig(MotorEnum.TESTING_MOTOR, hardwareMap, robotConfig));
+
+        /*
+        pinpointConfig    = new PinpointConfig(hardwareMap, "pinpoint");
+        limelight3aConfig = new Limelight3aConfig(hardwareMap, "limelight", 11);
+
+         */
     }
 
     public static HardwareConfig createInstance(HardwareMap hardwareMap, RobotConfig robotConfig)

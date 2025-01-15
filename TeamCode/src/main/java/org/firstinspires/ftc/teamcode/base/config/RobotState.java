@@ -18,6 +18,7 @@ public class RobotState {
     }
     private RobotState(){
         hw = HardwareConfig.getInstance();
+        targets.put(MotorEnum.TESTING_MOTOR, 0);
         // TODO: make sure to add default positions
     }
     public int getMotorTarget(MotorEnum motorEnum) throws IllegalArgumentException{

@@ -18,7 +18,7 @@ import org.json.JSONException;
 public class TunePIDCoefficients extends LinearOpMode {
     HardwareConfig hw;
     RobotState state;
-    static MotorEnum testingMotor = null;
+    static MotorEnum testingMotor = MotorEnum.TESTING_MOTOR;
     static double kP;
     static double kI;
     static double kD;
