@@ -50,7 +50,7 @@ public class DetermineMechanismPositions extends LinearOpMode {
                 state.setServoPosition(testingServo, position);
             }
 
-            motorControl.runTrapezoidalMotionProfile();
+            motorControl.runTrapezoidalMotionProfile(telemetry);
             hw.getServoConfig(testingServo).servo.setPosition(state.getServoPosition(testingServo));
         }
     }

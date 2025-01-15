@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class TrapezoidalMotionProfile {
     double accelerationDistance;
     double accelerationTime;
@@ -8,58 +10,67 @@ public class TrapezoidalMotionProfile {
     double decelerationDistance;
     double decelerationTime;
     double totalTime;
-    double maxAcceleration ;
+    double maxAcceleration;
+    double maxDeceleration;
     double maxVelocity;
     double initialVelocity;
     double distance;
-    public void resetProfile(double maxAcceleration, double maxVelocity, double initialVelocity, double distance){
-        this.maxAcceleration = maxAcceleration;
-        this.maxVelocity = maxVelocity;
+    int initialPosition;
+    public void resetProfile(double maxAcceleration, double maxVelocity, double initialVelocity, double distance, int initialPosition){
+        this.maxVelocity = maxVelocity * Math.signum(distance);
         this.initialVelocity = initialVelocity;
         this.distance = distance;
-        accelerationTime = (maxVelocity - initialVelocity) / maxAcceleration;
-        accelerationDistance = initialVelocity * accelerationTime + 0.5 * maxAcceleration * Math.pow(accelerationTime, 2);
+        this.initialPosition = initialPosition;
+        this.maxAcceleration = maxAcceleration * Math.signum(maxVelocity - initialVelocity);
+        this.maxDeceleration = -maxAcceleration * Math.signum(distance);
 
-        decelerationTime = maxVelocity / maxAcceleration;
-        decelerationDistance = maxVelocity * decelerationTime + 0.5 * maxAcceleration + Math.pow(decelerationTime, 2);
 
-        cruiseDistance = distance - accelerationDistance - decelerationDistance;
-        cruiseTime = cruiseDistance / maxVelocity;
+        accelerationTime = Math.abs((this.maxVelocity - this.initialVelocity) / this.maxAcceleration);
+        accelerationDistance = this.initialVelocity * accelerationTime + 0.5 * this.maxAcceleration * Math.pow(accelerationTime, 2);
 
-        if (cruiseDistance <= 0){
-            double exceededDistance = (accelerationDistance + decelerationDistance) - distance;
+        decelerationTime = Math.abs(this.maxVelocity / maxDeceleration);
+        decelerationDistance = this.maxVelocity * decelerationTime + 0.5 * maxDeceleration * Math.pow(decelerationTime, 2);
 
-            accelerationDistance = initialVelocity * accelerationTime + 0.5 * maxAcceleration * Math.pow(accelerationTime, 2) - (exceededDistance / 2);
-            decelerationDistance = maxVelocity * decelerationTime + 0.5 * maxAcceleration + Math.pow(decelerationTime, 2) - (exceededDistance / 2);
+        cruiseDistance = this.distance - accelerationDistance - decelerationDistance;
+        cruiseTime = Math.abs(cruiseDistance / this.maxVelocity);
 
-            accelerationTime = calculateKinematicTime(initialVelocity, maxAcceleration, accelerationDistance);
+        if (accelerationDistance + decelerationDistance > this.distance){
+            double exceededDistance = (accelerationDistance + decelerationDistance) - this.distance;
 
-            maxVelocity = accelerationTime * maxAcceleration;
+            accelerationDistance = accelerationDistance + (exceededDistance / 2);
+            decelerationDistance = decelerationDistance + (exceededDistance / 2);
 
-            decelerationTime = calculateKinematicTime(maxVelocity, maxAcceleration, distance);
+            accelerationTime = Math.abs(calculateKinematicTime(this.initialVelocity, this.maxAcceleration, accelerationDistance));
+
+            this.maxVelocity = this.initialVelocity + accelerationTime * this.maxAcceleration;
+
+            decelerationTime = Math.abs(calculateKinematicTime(this.maxVelocity, this.maxDeceleration, decelerationDistance));
         }
-        totalTime = accelerationTime + cruiseTime + decelerationTime;
+        cruiseDistance = this.distance - accelerationDistance - decelerationDistance;
+        cruiseTime = cruiseDistance / this.maxVelocity;
+        totalTime = Math.max(0, accelerationTime) + Math.max(0, cruiseTime) + Math.max(0, decelerationTime);
+
     }
     // Run this method in a loop
     public double runProfile(double elapsedTime){
         if (elapsedTime < accelerationTime) {
-            return initialVelocity * elapsedTime + 0.5 * maxAcceleration * Math.pow(elapsedTime, 2);
+            return initialPosition + initialVelocity * elapsedTime + 0.5 * maxAcceleration * Math.pow(elapsedTime, 2);
         }
         else if (elapsedTime < (accelerationTime + cruiseTime)){
             double cruiseElapsedTime = elapsedTime - accelerationTime;
-            return accelerationDistance + maxVelocity * cruiseElapsedTime;
+            return initialPosition + accelerationDistance + maxVelocity * cruiseElapsedTime;
         }
         else if (elapsedTime < totalTime){
             double decelerateElapsedTime = elapsedTime - accelerationTime - cruiseTime;
-            return accelerationDistance + cruiseDistance + maxVelocity * decelerateElapsedTime - 0.5 * maxAcceleration * Math.pow(decelerateElapsedTime, 2);
+            return initialPosition + accelerationDistance + cruiseDistance + maxVelocity * decelerateElapsedTime + 0.5 * maxDeceleration * Math.pow(decelerateElapsedTime, 2);
         }
         else{
-            return distance;
+            return initialPosition + distance;
         }
     }
     public double calculateKinematicTime(double initialVelocity, double acceleration, double displacement){
-        double firstRoot = (-initialVelocity + Math.sqrt(Math.pow(initialVelocity, 2) - acceleration + 2 * displacement)) / acceleration;
-        double secondRoot = (-initialVelocity - Math.abs(Math.pow(initialVelocity, 2) - acceleration + 2 * displacement));
+        double firstRoot = (-initialVelocity + Math.sqrt(Math.abs(Math.pow(initialVelocity, 2) + 2 * displacement * acceleration))) / acceleration;
+        double secondRoot = (-initialVelocity - Math.sqrt(Math.abs(Math.pow(initialVelocity, 2) +  2 * displacement * acceleration))) / acceleration;
         return Math.max(firstRoot, secondRoot);
     }
 }

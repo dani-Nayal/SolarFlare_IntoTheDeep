@@ -24,6 +24,7 @@ public class Test1Motor extends LinearOpMode {
             throw new RuntimeException(e);
         }
         hw = HardwareConfig.getInstance();
+        state = RobotState.getInstance();
         motorControl = new MotorControl(MotorEnum.TESTING_MOTOR);
 
         waitForStart();
@@ -33,16 +34,16 @@ public class Test1Motor extends LinearOpMode {
                 state.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
             }
             else if (gamepad1.b){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 500);
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 800);
             }
             else if (gamepad1.y){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1000);
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1321);
             }
             else if (gamepad1.x){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1500);
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
             }
 
-            motorControl.runTrapezoidalMotionProfile();
+            motorControl.runTrapezoidalMotionProfile(telemetry);
         }
     }
 }

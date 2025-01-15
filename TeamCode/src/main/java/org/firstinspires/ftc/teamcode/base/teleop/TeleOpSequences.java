@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.base.HardwareConfig;
-import org.firstinspires.ftc.teamcode.base.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.RobotState;
-import org.firstinspires.ftc.teamcode.base.ServoEnum;
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.RobotState;
+import org.firstinspires.ftc.teamcode.base.config.ServoEnum;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
 
 import java.util.List;
@@ -18,8 +18,8 @@ public class TeleOpSequences {
     ServoEnum servoEnum;
     MotorControl motorControl;
     int currentPositionIndex;
-    double shortestTargetDifference;
-    double leastShortestTargetDifference;
+    double targetDifference;
+    double leastTargetDifference = Double.POSITIVE_INFINITY;
     int closestPositionIndex;
 
     public TeleOpSequences(MotorEnum motorEnum){
@@ -46,46 +46,20 @@ public class TeleOpSequences {
                 currentPositionIndex = positions[i];
             }
 
-            shortestTargetDifference = state.getMotorTarget(motorEnum) - positions[i];
-            if (shortestTargetDifference < leastShortestTargetDifference){
-                leastShortestTargetDifference = shortestTargetDifference;
-                closestPositionIndex = i;
-            }
+            else {
 
-            else{
-                if (gamePadInput){
-                    state.setMotorTarget(motorEnum, positions[closestPositionIndex]);
+                targetDifference = state.getMotorTarget(motorEnum) - positions[i];
+                if (targetDifference < leastTargetDifference){
+                    leastTargetDifference = targetDifference;
+                    closestPositionIndex = i;
                 }
             }
         }
+
         if (gamePadInput){
             state.setMotorTarget(motorEnum, positions[currentPositionIndex + 1]);
             currentPositionIndex += 1;
         }
-    }
-
-    public void finiteStateMotor(boolean gamePadInput1, boolean gamePadInput2, int[] positions){
-            for (int i = 0; i < positions.length; i++ ){
-                if (state.getMotorTarget(motorEnum) == positions[i]) {
-                    currentPositionIndex = positions[i];
-                }
-
-                shortestTargetDifference = state.getMotorTarget(motorEnum) - positions[i];
-                if (shortestTargetDifference < leastShortestTargetDifference){
-                    leastShortestTargetDifference = shortestTargetDifference;
-                    closestPositionIndex = i;
-                }
-
-                if (state.getMotorTarget(motorEnum) != positions[i]){
-                    if (gamePadInput1 && ){
-                        state.setMotorTarget(motorEnum, positions[closestPositionIndex]);
-                    }
-                }
-            }
-            if (gamePadInput2){
-                state.setMotorTarget(motorEnum, positions[currentPositionIndex + 1]);
-                currentPositionIndex += 1;
-            }
     }
 }
 */

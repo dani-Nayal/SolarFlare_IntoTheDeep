@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
@@ -11,6 +12,7 @@ public class MotorControl {
     RobotState state;
     PID pid;
     TrapezoidalMotionProfile profile;
+    MotionProfiles badProfile;
     public ElapsedTime timer;
     int currentPosition;
     double motorPower;
@@ -19,8 +21,10 @@ public class MotorControl {
     int previousLoopTarget = 0;
     double lastMaxAcceleration = 0;
     double lastMaxVelocity = 0;
-    boolean maxVelocityChanged = false;
-    boolean maxAccelerationChanged = false;
+    boolean isMaxVelocityChanged = false;
+    boolean isMaxAccelerationChanged = false;
+    double initialVelocity;
+    double distance;
     MotorEnum motorEnum;
     public MotorControl(MotorEnum motorEnum){
         this.motorEnum = motorEnum;
@@ -28,30 +32,34 @@ public class MotorControl {
         state = RobotState.getInstance();
         pid = new PID();
         profile = new TrapezoidalMotionProfile();
+        badProfile = new MotionProfiles();
         timer = new ElapsedTime();
         maxAcceleration = hw.getMotorConfig(motorEnum).maxAcceleration;
         maxVelocity = hw.getMotorConfig(motorEnum).maxVelocity;
     }
     // Run this method in a loop
-    public void runTrapezoidalMotionProfile(){
+    public void runTrapezoidalMotionProfile(Telemetry telemetry){
 
         int currentTarget = state.getMotorTarget(motorEnum);
 
         // If the target, maxVelocity, or maxAcceleration changes
-        if (currentTarget != previousLoopTarget || maxVelocityChanged || maxAccelerationChanged){
+        if (currentTarget != previousLoopTarget || isMaxVelocityChanged || isMaxAccelerationChanged){
 
             currentPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
-            double distance = currentTarget - currentPosition;
+            distance = currentTarget - currentPosition;
+            initialVelocity = hw.getMotorConfig(motorEnum).motor.getVelocity();
 
             timer.reset();
 
             profile.resetProfile(
                     maxAcceleration,
                     maxVelocity,
-                    hw.getMotorConfig(motorEnum).motor.getVelocity(),
-                    distance);
-            maxVelocityChanged = false;
-            maxAccelerationChanged = false;
+                    initialVelocity,
+                    distance,
+                    currentPosition);
+
+            isMaxVelocityChanged = false;
+            isMaxAccelerationChanged = false;
         }
 
         double instantTargetPosition = profile.runProfile(timer.seconds());
@@ -63,18 +71,54 @@ public class MotorControl {
         previousLoopTarget = currentTarget;
         lastMaxVelocity = maxVelocity;
         lastMaxAcceleration = maxAcceleration;
+        telemetry.addData("instant target pos", instantTargetPosition);
+        telemetry.addData("distance", distance );
+        telemetry.addData("initial speed", initialVelocity);
+        telemetry.addData("acceleration time", profile.accelerationTime);
+        telemetry.addData("acceleration distance", profile.accelerationDistance);
+        telemetry.addData("cruise time", profile.cruiseTime);
+        telemetry.addData("cruise distance", profile.cruiseDistance);
+        telemetry.addData("decceleration time", profile.decelerationTime);
+        telemetry.addData("decceleration distance", profile.decelerationDistance);
+        telemetry.addData("max accel", maxAcceleration);
+        telemetry.addData("max velocity", maxVelocity);
+        telemetry.addData("current velocity", hw.getMotorConfig(motorEnum).motor.getVelocity());
+
+        telemetry.update();
+
+
+
+
+
+    }
+    public void runOldTrapezoidalMotionProfile(){
+        int currentTarget = state.getMotorTarget(motorEnum);
+
+        int currentPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
+
+        double distance = currentTarget - currentPosition;
+
+        if (previousLoopTarget != currentTarget){
+            timer.reset();
+        }
+        double instantTargetPosition = badProfile.runTrapezoidalMotionProfile(hw.getMotorConfig(motorEnum).maxVelocity, hw.getMotorConfig(motorEnum).maxAcceleration, distance, timer.seconds());
+
+        double motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
+
+        hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
+        previousLoopTarget = currentTarget;
     }
     public void setMaxAcceleration(double maxAcceleration){
         this.maxAcceleration = maxAcceleration;
-        maxAccelerationChanged = true;
+        isMaxAccelerationChanged = true;
     }
     public void setMaxVelocity(double maxVelocity){
         this.maxVelocity = maxVelocity;
-        maxVelocityChanged = true;
+        isMaxVelocityChanged = true;
     }
 
     // Run this method in a loop
-    public void runPIDMotorControl(MotorEnum motorEnum){
+    public void runPIDMotorControl(){
         motorPower = pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum));
         hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
     }
