@@ -499,7 +499,7 @@ public abstract class TeleOpComponents {
         }
         @Override
         public void setPosition(double position){
-            currPos=position;
+            currPos=Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position));
             super.setPosition(Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position)) / RANGE);
             for (BotServo servo : synchronizedServos){
                 servo.setPosition(position);
