@@ -4,10 +4,15 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
@@ -24,7 +29,9 @@ public class CustomActions {
     MotorControl extendoPitchControl;
     MotorControl bucketSlidesControl;
     MotorControl hangControl;
-    public CustomActions() {
+    Telemetry telemetry;
+    public CustomActions(Telemetry telemetry) {
+        this.telemetry = telemetry;
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
     }
@@ -138,14 +145,46 @@ public class CustomActions {
         throw new NullPointerException("drive variable is null");
     }
     // TODO: Create custom actions
-    public class GlobalPID implements Action {
+    public class GlobalMechanismControl implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
+            extendoControl.runTrapezoidalMotionProfile(telemetry);
+            bucketSlidesControl.runTrapezoidalMotionProfile(telemetry);
+            extendoPitchControl.runTrapezoidalMotionProfile(telemetry);
+            hangControl.runPIDMotorControl();
             return true;
         }
     }
-    public Action globalPID() {return new GlobalPID();}
+    public Action globalMechanismControl() {return new GlobalMechanismControl();}
+    public SequentialAction moveToHighChamberAndScoreSpecimen(Pose2d initialDrivePose, Vector2d scoringPose, double heading) {
+        return new SequentialAction(
+            drive.actionBuilder(initialDrivePose)
+                    .strafeToLinearHeading(scoringPose, heading).build()
+        );
+    }
+    public SequentialAction moveToNetZone(Pose2d initialDrivePose, Vector2d scoringPosition, double scoringHeading) {
+        return new SequentialAction(
+                // Move to scoring position
+                drive.actionBuilder(initialDrivePose)
+                        .strafeToLinearHeading(scoringPosition, scoringHeading).build()
+        );
+    }
+    public SequentialAction scoreHighBucket(){
+        return new SequentialAction(
+
+        );
+    }
+    public SequentialAction transferSample(){
+        return new SequentialAction(
+
+        );
+    }
+    public Action grabGroundSample(Pose2d initialDrivePose, Vector2d pickUpPose, double heading, int extendoPosition) {
+        return new SequentialAction(
+
+        );
+    }
+
 }
 
 

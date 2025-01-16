@@ -25,7 +25,7 @@ public class RobotConfig {
     private static RobotConfig instance = null;
     public  static Logger      logger;
 
-    private JSONObject json = null;
+    private        JSONObject  json     = null;
 
     static {
         logger = RobotLogger.getConfigLogger();
@@ -36,7 +36,6 @@ public class RobotConfig {
     }
 
     private void initialize(String robotName) {
-        Logger.getGlobal().severe("RobotConfig.initialize");
         logger.entering("RobotConfig", "initialize", robotName);
         String configFileName = robotName + ".json";
         try(InputStream input = RobotConfig.class.getResourceAsStream(configFileName))
@@ -62,9 +61,7 @@ public class RobotConfig {
     }
 
     public static RobotConfig createInstance(String robotName) {
-        logger.entering("RobotConfig", "createInstance", robotName);
         instance = new RobotConfig(robotName);
-        logger.exiting("RobotConfig", "createInstance", instance);
         return instance;
     }
 
