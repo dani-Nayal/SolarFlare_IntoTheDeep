@@ -493,6 +493,11 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.getCurrentPosition());
 
             TeleOpComponents.telemetry.update();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             return true;
         }
     }
