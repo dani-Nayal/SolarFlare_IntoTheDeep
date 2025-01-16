@@ -407,6 +407,13 @@ public class BackUpTeleOp extends LinearOpMode {
                 }
             }
             else isPressingA2=false;
+            if (gamepad2.y){
+                if (!isPressingY2){
+                    isPressingY2=true;
+                    if (clawFingerPosition==92) {clawFingerPosition=0;} else {clawFingerPosition=92;}
+                }
+            }
+            else isPressingY2=false;
 
             if (gamepad1.options) {
                 imu.resetYaw();
