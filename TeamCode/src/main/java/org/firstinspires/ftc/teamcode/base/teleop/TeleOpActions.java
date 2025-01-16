@@ -491,9 +491,8 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
             TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.getCurrentPosition());
-
             TeleOpComponents.telemetry.update();
-            return true;
+            return false;
         }
     }
     public static class ShortAction implements TeleOpAction{

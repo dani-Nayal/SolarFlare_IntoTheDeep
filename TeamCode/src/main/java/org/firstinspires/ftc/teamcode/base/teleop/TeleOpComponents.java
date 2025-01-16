@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -661,7 +662,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendo").getController(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getMotorType(),
-                0.005,0,0.000378,
+                0.005,0,0.0,
                 new String[]{},new double[]{},
                 800,0,
                 200000,3000,
@@ -675,7 +676,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getController(),
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
-                0.005,0,0.000378,
+                0.005,0,0.0,
                 new String[]{"transferPosition","pickUpPosition"},new double[]{0,-991},
                 0,-991,
                 200000,3000,
@@ -689,7 +690,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getController(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
-                0.005,0,0.000378,
+                0.005,0,0.0,
                 new String[]{"depositPosition","transferPosition"},new double[]{1030,0},
                 1030,0,
                 200000,3000,
