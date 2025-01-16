@@ -26,9 +26,6 @@ public class TetsyWetsyUwURevamped extends LinearOpMode {
         clawPitch.setPosition(73);
         clawWrist.setPosition(95);
         innerClawPitch.setPosition(0);
-        extendo.setMotorDisable();
-        extendoPitch.setMotorDisable();
-        bucketSlides.setMotorDisable();
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 this::isStopRequested,
