@@ -145,7 +145,7 @@ public class BackUpTeleOp extends LinearOpMode {
 
             }
             if (isBSequenceActive) {
-                extendoPitchTarget = -991;
+                extendoPitchTarget = -960;
                 clawWristPosition = 95;
                 clawFingerPosition = 92;
                 clawPitchPosition = 68;
@@ -157,7 +157,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 }
             }
             // Transfer sample
-            else if (gamepad1.a){
+            if (gamepad1.a){
                 isASequenceActive=true;
                 Atimer.reset();
 
@@ -225,27 +225,27 @@ public class BackUpTeleOp extends LinearOpMode {
 
             }
             
-            //specimen setup sequence (including retraction of extendo after specimen pickup)
-            /*
-            else if (gamepad2.b){
+            //specimen setup sequence (including retraction of extendo after specimen pickup
+            if (gamepad2.b){
                 isB2SequenceActive=true;
                 B2timer.reset();
             }
             if (isB2SequenceActive) {
-                clawWristPosition =79.5;
-                clawPitchPosition=205;
+                clawFingerPosition = 0;
+                innerClawPitchPosition = 93;
 
                 if (B2timer.seconds()>0.3){
-                    clawPitchPosition = 104;
-                    bucketPosition=205;
+                    bucketPosition=158;
                     extendoTarget=0;
                 }
 
                 if (B2timer.seconds() > 0.6) {
-                    extendoPitchTarget = 450;
+                    clawPitchPosition = 127;
+                    innerClawPitchPosition = 179;
+                    extendoPitchTarget = -620;
                 }
                 if (B2timer.seconds() > 1) {
-                    extendoTarget=500;
+                    extendoTarget=793;
                     isB2SequenceActive=false;
                 }
             }
@@ -255,25 +255,25 @@ public class BackUpTeleOp extends LinearOpMode {
                 isOp2SequenceActive=true;
                 Op2timer.reset();
             }
-            if (isOp2SequenceActive==true){
-                clawWristPosition = 79.5;
+            if (isOp2SequenceActive){
+                clawWristPosition = 95;
 
                 if (B2timer.seconds()>0.3){
-                    clawPitchPosition = 84;
-                    bucketPosition=205;
+                    clawPitchPosition = 151;
+                    innerClawPitchPosition = 73;
+                    bucketPosition=168;
                     extendoTarget=0;
                 }
 
                 if (B2timer.seconds() > 0.6) {
-                    extendoPitchTarget = 1100;
+                    extendoPitchTarget = -960;
                 }
                 if (B2timer.seconds() > 1) {
-                    extendoTarget=maxExtendoPosition;
-                    clawFingerPosition=120;
+                    extendoTarget=0;
+                    clawFingerPosition=92;
                     isOp2SequenceActive=false;
                 }
             }
-            */
 
 
             // Extendo retracted 0 ticks

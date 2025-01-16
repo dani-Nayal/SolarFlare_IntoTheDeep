@@ -496,13 +496,11 @@ public abstract class TeleOpActions{
             if (TeleOpActions.phase!=3) TeleOpActions.phase++; else TeleOpActions.phase=1;
 
             TeleOpComponents.telemetry.update();
-            /*
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            */
             return false;
         }
     }
@@ -634,13 +632,11 @@ public abstract class TeleOpActions{
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
             }
-            /*
             for (BotMotor motor : TeleOpComponents.motors){
                 if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE") && !motor.isStallResetting){
                     motor.runMotionProfileOnce();
                 }
             }
-            */
             for (BotServo servo : TeleOpComponents.servos){
                 servo.setPosition(servo.getPosition());
             }
