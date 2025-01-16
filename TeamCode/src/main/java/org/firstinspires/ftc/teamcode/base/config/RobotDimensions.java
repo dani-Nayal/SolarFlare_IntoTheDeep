@@ -7,8 +7,8 @@ public class RobotDimensions {
     public double width  = 0.0;
 
     public RobotDimensions() {
-        this.length = 0.0;
-        this.width  = 0.0;
+        this.length = 15.364;
+        this.width  = 14.375;
     }
     public RobotDimensions(double length, double width) {
         this.length = length;

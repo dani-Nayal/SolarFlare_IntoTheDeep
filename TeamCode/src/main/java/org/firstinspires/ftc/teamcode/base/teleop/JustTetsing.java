@@ -46,8 +46,10 @@ public class JustTetsing extends LinearOpMode {
                 this::isStopRequested,
                 new UpdateTelemetryAction(),
                 trigger,
+                new UpdateTelemetryAction(),
                 clawPitch.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper), clawPitch.KEY_POSITIONS.get("pickUpPosition"), clawPitch.KEY_POSITIONS.get("hoverPosition"),clawPitch.KEY_POSITIONS.get("transferPosition")),
-                extendo.triggeredDynamicAction(()->(gamepad1.right_trigger>0),()->(gamepad1.left_trigger>0),15,6000,3000)
+                extendo.triggeredDynamicAction(()->(gamepad1.right_trigger>0),()->(gamepad1.left_trigger>0),15,6000,3000),
+                new UpdateTelemetryAction()
         );
     }
 }
