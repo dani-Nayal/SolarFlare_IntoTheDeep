@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class TeleOpActions{
-    public static double phase = 1;
     public static TelemetryPacket packet = new TelemetryPacket();
     public static boolean isRRActive=false;
     public interface TeleOpAction extends Action{
@@ -492,15 +491,7 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
             TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.getCurrentPosition());
-            TeleOpComponents.telemetry.addData("phase",TeleOpActions.phase);
-            if (TeleOpActions.phase!=3) TeleOpActions.phase++; else TeleOpActions.phase=1;
-
             TeleOpComponents.telemetry.update();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             return false;
         }
     }
