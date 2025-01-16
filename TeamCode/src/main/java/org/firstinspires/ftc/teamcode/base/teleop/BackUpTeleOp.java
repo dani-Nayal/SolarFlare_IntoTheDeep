@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class MecanumTeleop extends LinearOpMode {
+public class BackUpTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
