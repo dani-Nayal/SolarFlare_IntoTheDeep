@@ -22,7 +22,7 @@ public class MecanumTeleop extends LinearOpMode {
         double bucketSlidesTarget = 0;
         double clawWristPosition = 95;
         double clawFingerPosition = 92;
-        double clawPitchPosition = 115;
+        double clawPitchPosition = 110;
         double innerClawPitchPosition = 200;
         double bucketPosition = 46;
         
@@ -148,7 +148,7 @@ public class MecanumTeleop extends LinearOpMode {
                 extendoPitchTarget = -991;
                 clawWristPosition = 95;
                 clawFingerPosition = 92;
-                clawPitchPosition = 73;
+                clawPitchPosition = 68;
                 innerClawPitchPosition = 0;
                 if (Btimer.seconds() > 0.6) {
                     extendoTarget = maxExtendoPosition;
@@ -165,7 +165,7 @@ public class MecanumTeleop extends LinearOpMode {
             if (isASequenceActive) {
 
                 clawWristPosition = 95;
-                clawPitchPosition = 115;
+                clawPitchPosition = 110;
                 innerClawPitchPosition = 200;
                 bucketPosition=46;
 
@@ -184,7 +184,7 @@ public class MecanumTeleop extends LinearOpMode {
                 }
 
                 if (Atimer.seconds() > 1.45) {
-                    clawPitchPosition = 77.4;
+                    clawPitchPosition = 72.4;
                     innerClawPitchPosition = 160;
 
                 }
@@ -205,7 +205,7 @@ public class MecanumTeleop extends LinearOpMode {
             if (isX2SequenceActive) {
 
                 //clawWristPosition = 95;
-                clawPitchPosition = 22;
+                clawPitchPosition = 17;
                 innerClawPitchPosition = 65;
                 bucketPosition=46;
                 clawFingerPosition=92;
@@ -216,7 +216,7 @@ public class MecanumTeleop extends LinearOpMode {
 
                 if (X2timer.seconds() > 1) {
                     //clawWristPosition = 95;
-                    clawPitchPosition = 73;
+                    clawPitchPosition = 68;
                     innerClawPitchPosition = 5;
                     bucketPosition=46;
                     isX2SequenceActive=false;
