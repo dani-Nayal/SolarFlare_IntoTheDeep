@@ -64,7 +64,7 @@ public class Rig1Motor extends LinearOpMode {
                     break;
             }
 
-            motorControl.runTrapezoidalMotionProfile();
+            motorControl.runTrapezoidalMotionProfile(telemetry);
         }
     }
 }

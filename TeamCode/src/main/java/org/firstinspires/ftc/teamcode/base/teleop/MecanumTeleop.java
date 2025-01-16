@@ -23,7 +23,7 @@ public class MecanumTeleop extends LinearOpMode {
         double clawWristPosition = 95;
         double clawFingerPosition = 92;
         double clawPitchPosition = 115;
-        double innerClawPitchPosition = 186;
+        double innerClawPitchPosition = 200;
         double bucketPosition = 46;
         
         double maxExtendoPosition = 800;
@@ -86,8 +86,8 @@ public class MecanumTeleop extends LinearOpMode {
         extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendoPitch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bucketSlides.setDirection(DcMotor.Direction.REVERSE);
@@ -165,8 +165,8 @@ public class MecanumTeleop extends LinearOpMode {
             if (isASequenceActive) {
 
                 clawWristPosition = 95;
-                clawPitchPosition = 73;
-                innerClawPitchPosition = 186;
+                clawPitchPosition = 115;
+                innerClawPitchPosition = 200;
                 bucketPosition=46;
 
                 if (Atimer.seconds() > 0.3){
@@ -179,18 +179,19 @@ public class MecanumTeleop extends LinearOpMode {
                     }
                 }
 
-                if (extendoPitch.getCurrentPosition()<50) {
-                    clawPitchPosition = 115;
-                    isASequenceActive=false;
-                }
-
-                if (Atimer.seconds() > 1.4) {
+                if (Atimer.seconds() > 1.3) {
                     clawFingerPosition = 92;
                 }
 
-                if (Atimer.seconds() > 1.8) {
+                if (Atimer.seconds() > 1.45) {
                     clawPitchPosition = 77.4;
-                    innerClawPitchPosition = 170.5;
+                    innerClawPitchPosition = 160;
+
+                }
+                if (Atimer.seconds() > 1.75) {
+                    bucketSlidesTarget=1060;
+                    isASequenceActive=false;
+
                 }
 
 
@@ -198,25 +199,27 @@ public class MecanumTeleop extends LinearOpMode {
 
             //dropdown intake
             if (gamepad2.x){
-                isXSequenceActive=true;
+                isX2SequenceActive=true;
                 X2timer.reset();
             }
             if (isX2SequenceActive) {
 
-                clawWristPosition = 95;
+                //clawWristPosition = 95;
                 clawPitchPosition = 22;
-                innerClawPitchPosition = 62;
+                innerClawPitchPosition = 65;
                 bucketPosition=46;
+                clawFingerPosition=92;
 
                 if (X2timer.seconds() > 0.3){
                     clawFingerPosition = 20;
                 }
 
-                if (Atimer.seconds() > 0.6) {
-                    clawWristPosition = 95;
+                if (X2timer.seconds() > 1) {
+                    //clawWristPosition = 95;
                     clawPitchPosition = 73;
-                    innerClawPitchPosition = 0;
+                    innerClawPitchPosition = 5;
                     bucketPosition=46;
+                    isX2SequenceActive=false;
                 }
 
 
@@ -359,7 +362,7 @@ public class MecanumTeleop extends LinearOpMode {
             if (gamepad1.y){
                 if (!isPressingY) {
                     if (bucketSlidesTarget == 0) {
-                        bucketSlidesTarget = 1030;}
+                        bucketSlidesTarget = 1070;}
                     else {
                         bucketSlidesTarget = 0;
                     }
@@ -388,6 +391,13 @@ public class MecanumTeleop extends LinearOpMode {
                 clawWristPosition += 5;
             }
 
+            if (gamepad1.left_trigger>0) {
+                innerClawPitchPosition -= 1;
+            }
+            else if (gamepad1.right_trigger>0) {
+                innerClawPitchPosition += 1;
+            }
+
             // BucketTransfer / default pos 85 degrees
             // Bucket Deposit pos 205 degrees
             if (gamepad2.a){
@@ -405,7 +415,7 @@ public class MecanumTeleop extends LinearOpMode {
 
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
-            double rx = gamepad1.right_stick_x;
+            double rx = -gamepad1.right_stick_x;
 
             //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
@@ -443,6 +453,7 @@ public class MecanumTeleop extends LinearOpMode {
             clawPitchRight.setPosition(clawPitchPosition/270);
             clawFingers.setPosition(clawFingerPosition/180);
             clawWrist.setPosition(clawWristPosition/270);
+            innerClawPitch.setPosition(innerClawPitchPosition/270);
             bucket.setPosition(bucketPosition/270);
 
             telemetry.addData("extendo position", extendo.getCurrentPosition());
@@ -461,6 +472,12 @@ public class MecanumTeleop extends LinearOpMode {
             telemetry.addData("claw wrist position", clawWrist.getPosition());
             telemetry.addData("bucket pos", bucket.getPosition());
             telemetry.addData("bucket target", bucketPosition);
+            telemetry.addData("inc pos", innerClawPitchPosition);
+
+            telemetry.addData("b seq", isBSequenceActive);
+            telemetry.addData("aseq", isASequenceActive);
+            telemetry.addData("x2seq", isX2SequenceActive);
+
 
             telemetry.addData("bot heading", botHeading);
             telemetry.addData("pinpoint heading", pinpoint.getHeading());
