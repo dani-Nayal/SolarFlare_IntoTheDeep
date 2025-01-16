@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
+import org.firstinspires.ftc.teamcode.base.config.RobotLogger;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
-import org.json.JSONException;
 
 @Autonomous
 public class Rig1Motor extends LinearOpMode {
@@ -52,6 +52,7 @@ public class Rig1Motor extends LinearOpMode {
             switch(choice) {
                 case 0:
                     state.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
+                    RobotLogger.getInstance().addData("information", "Theone", 1, 2.0);
                     break;
                 case 500:
                     state.setMotorTarget(MotorEnum.TESTING_MOTOR, 500);
