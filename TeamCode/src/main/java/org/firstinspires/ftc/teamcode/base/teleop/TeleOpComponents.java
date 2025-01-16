@@ -668,7 +668,7 @@ public abstract class TeleOpComponents {
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
-                DcMotorEx.ZeroPowerBehavior.FLOAT,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "MOTION_PROFILE"
         );
         extendoPitch = new BotMotor(
@@ -682,7 +682,7 @@ public abstract class TeleOpComponents {
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
-                DcMotorEx.ZeroPowerBehavior.FLOAT,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "MOTION_PROFILE"
         );
         bucketSlides = new BotMotor(
@@ -696,7 +696,7 @@ public abstract class TeleOpComponents {
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
-                DcMotorEx.ZeroPowerBehavior.FLOAT,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "MOTION_PROFILE"
         );
         rightFront = new BotMotor(
