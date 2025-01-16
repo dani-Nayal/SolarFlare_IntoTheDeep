@@ -13,6 +13,7 @@
       "runMode": "STOP_AND_RESET_ENCODER",
       "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
+      "maxPower": 1.0,
       "minTarget": 0,
       "maxTarget": 10000,
       "maxAcceleration": 4000,
