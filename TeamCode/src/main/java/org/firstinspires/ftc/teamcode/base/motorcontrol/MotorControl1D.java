@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
@@ -99,6 +101,12 @@ public class MotorControl1D {
 
         targetMotorPower             = pid.getPIDOutput(motorEnum, targetMotorPosition);
         motor.setPower(targetMotorPower);
+        try {
+            Thread.currentThread().sleep(100);
+        } catch(InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
         Integer motorPosition        = motor.getCurrentPosition();
         Double  motorPower           = motor.getPower();
         Double  motorVelocity        = motor.getVelocity();
@@ -130,6 +138,20 @@ public class MotorControl1D {
         telemetry.addData("max accel",           profile.Amax);
         telemetry.addData("max decl",            profile.Dmax);
         telemetry.addData("max velocity",        profile.Vmax);
+
+        telemetry.addData("motor.getDirection()", motor.getDirection());
+        telemetry.addData("motor.isBusy()",       motor.isBusy());
+        telemetry.addData("motor.ZPB",            motor.getZeroPowerBehavior());
+        telemetry.addData("motor.getPowerFloat()", motor.getPowerFloat());
+        telemetry.addData("motor.getMode()", motor.getMode());
+        telemetry.addData("motor.getCurrent()", motor.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("motor.isMotorEnabled", motor.isMotorEnabled());
+        telemetry.addData("motor.getConnectionInfo()", motor.getConnectionInfo());
+        telemetry.addData("motor.getPortNumber()", motor.getPortNumber());
+        telemetry.addData("motor.isOverCurrent()", motor.isOverCurrent());
+        telemetry.addData("motor.getCurrentAlert()", motor.getCurrentAlert(CurrentUnit.AMPS));
+        telemetry.addData("motor.getDirection()", motor.getDirection());
+
         telemetry.addData("target pos",          targetPosition);
         telemetry.addData("targetMotorPosition", targetMotorPosition);
         telemetry.addData("motorPosition",       motorPosition);
