@@ -102,7 +102,6 @@ public class MotorControl1D {
         Integer motorPosition        = motor.getCurrentPosition();
         Double  motorPower           = motor.getPower();
         Double  motorVelocity        = motor.getVelocity();
-        Double  testVariable         = 12345.9876543;
 
         metricsFile.addData(
                 iter,
@@ -110,8 +109,7 @@ public class MotorControl1D {
                 motorPosition,
                 targetMotorPower,
                 motorPower,
-                motorVelocity,
-                testVariable);
+                motorVelocity);
 
         previousLoopTarget           = targetPosition;
         lastVmax                     = Vmax;
