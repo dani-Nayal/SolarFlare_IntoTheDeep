@@ -10,6 +10,36 @@ public class RobotState {
 
     // TODO: Store preset mechanism position values here
 
+    public int EXTENDO_PITCH_TRANSFER = 0;
+    public int EXTENDO_PITCH_PICK_UP = -960;
+    public int BUCKET_SLIDES_HIGH_BUCKET = 1030;
+    public int BUCKET_SLIDES_TRANSFER = 0;
+    public int CLAW_FINGERS_OPEN = 20;
+    public int CLAW_FINGERS_CLOSED = 92;
+    public int CLAW_WRIST_DEFAULT = 95;
+    public int CLAW_PITCH_PICK_UP = 22;
+    public int CLAW_PITCH_HOVER = 73;
+    public int CLAW_PITCH_TRANSFER = 115;
+    public int CLAW_PITCH_BACK_OFF = 77;
+    public int INNER_CLAW_PITCH_PICK_UP = 62;
+    public int INNER_CLAW_PITCH_HOVER = 0;
+    public int INNER_CLAW_PITCH_TRANSFER = 186;
+    public int INNER_CLAW_PITCH_BACK_OFF = 170;
+    public int BUCKET_TRANSFER = 46;
+    public int BUCKET_DEPOSIT = 158;
+
+    // Specimen stuff
+
+    public int EXTENDO_SCORE_SPECIMEN = 800;
+    public int EXTENDO_PITCH_SCORE_SPECIMEN = -620;
+    public double CLAW_PITCH_SCORE_SPECIMEN = 127;
+    public double INNER_CLAW_PITCH_SCORE_SPECIMEN = 179;
+
+    public int EXTENDO_RETRACTED = 0;
+    public int EXTENDO_PITCH_GRAB_SPECIMEN = -960;
+    public int CLAW_PITCH_GRAB_SPECIMEN = 151;
+    public int INNER_CLAW_PITCH_GRAB_SPECIMEN = 73;
+
     public static RobotState getInstance(){
         if (state == null){
             state = new RobotState();

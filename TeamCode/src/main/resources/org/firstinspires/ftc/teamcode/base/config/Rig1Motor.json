@@ -7,16 +7,16 @@
   "Motors": {
     "TESTING_MOTOR": {
       "deviceName": "motor-1",
-      "kP": 1.0,
+      "kP": 0.0427,
       "kI": 0.0,
-      "kD": 0.0,
+      "kD": 0.00043,
       "runMode": "STOP_AND_RESET_ENCODER",
       "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
       "minTarget": 0,
       "maxTarget": 10000,
-      "maxAcceleration": 4000,
-      "maxVelocity": 2960
+      "maxAcceleration": 10,
+      "maxVelocity": 500
     }
   },
   "Servos": {

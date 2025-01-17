@@ -71,6 +71,9 @@ public class MotorControl {
         previousLoopTarget = currentTarget;
         lastMaxVelocity = maxVelocity;
         lastMaxAcceleration = maxAcceleration;
+        telemetry.addData("motor power", motorPower);
+        telemetry.addData("state target position", state.getMotorTarget(motorEnum));
+        telemetry.addData("current position", hw.getMotorConfig(motorEnum).motor.getCurrentPosition());
         telemetry.addData("instant target pos", instantTargetPosition);
         telemetry.addData("distance", distance );
         telemetry.addData("initial speed", initialVelocity);
@@ -78,10 +81,12 @@ public class MotorControl {
         telemetry.addData("acceleration distance", profile.accelerationDistance);
         telemetry.addData("cruise time", profile.cruiseTime);
         telemetry.addData("cruise distance", profile.cruiseDistance);
-        telemetry.addData("decceleration time", profile.decelerationTime);
-        telemetry.addData("decceleration distance", profile.decelerationDistance);
-        telemetry.addData("max accel", maxAcceleration);
-        telemetry.addData("max velocity", maxVelocity);
+        telemetry.addData("deceleration time", profile.decelerationTime);
+        telemetry.addData("deceleration distance", profile.decelerationDistance);
+        telemetry.addData("total time", profile.totalTime);
+        telemetry.addData("max accel", profile.maxAcceleration);
+        telemetry.addData("max decel", profile.maxDeceleration);
+        telemetry.addData("max velocity", profile.maxVelocity);
         telemetry.addData("current velocity", hw.getMotorConfig(motorEnum).motor.getVelocity());
 
         telemetry.update();

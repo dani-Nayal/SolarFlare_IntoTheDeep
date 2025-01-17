@@ -6,5 +6,9 @@ public enum MotorEnum {
     RIGHT_BACK,
     LEFT_FRONT,
     RIGHT_FRONT,
-    TESTING_MOTOR
+    TESTING_MOTOR,
+    EXTENDO,
+    EXTENDO_PITCH,
+    BUCKET_SLIDES,
+    HANG
 }
