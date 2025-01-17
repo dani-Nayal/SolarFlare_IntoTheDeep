@@ -22,16 +22,14 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
 
 public class RobotConfig {
-    private static RobotConfig instance = null;
-    public  static Logger      logger;
+    private static       RobotConfig instance = null;
 
-    private        JSONObject  json     = null;
+    public         final Logger       logger;
+    private              JSONObject   json     = null;
 
-    static {
-        logger = RobotLogger.getConfigLogger();
-    }
 
     private RobotConfig(String robotName) {
+        logger = RobotLogger.getInstance().getConfigLogger();
         initialize(robotName);
     }
 
@@ -148,10 +146,7 @@ public class RobotConfig {
     }
 
     public static MotorEnum getMotorEnum(String motorName) {
-        logger.entering("RobotConfig", "getMotorEnum", motorName);
-        MotorEnum motorEnum = MotorEnum.valueOf(motorName);
-        logger.exiting("RobotConfig", "getMotorEnum", motorEnum);
-        return motorEnum;
+        return MotorEnum.valueOf(motorName);
     }
 
     public String getMotorString(String motorName, String propertyName)
@@ -251,10 +246,7 @@ public class RobotConfig {
     }
 
     public static ServoEnum getServoEnum(String servoName) {
-        logger.entering("RobotConfig", "getServoEnum", servoName);
-        ServoEnum servoEnum = ServoEnum.valueOf(servoName);
-        logger.exiting("RobotConfig", "getServoEnum", servoEnum);
-        return servoEnum;
+        return ServoEnum.valueOf(servoName);
     }
 
     public String getServoString(String servoName, String propertyName)
@@ -499,7 +491,7 @@ public class RobotConfig {
             out.println("Limelight.pollingRate=" + config.getLimelightInt("testVariable"));
 
         } catch (Exception e) {
-            logger.throwing("RobotConfig", "main", e);
+            Logger.getGlobal().throwing("RobotConfig", "main", e);
         }
     }
 }

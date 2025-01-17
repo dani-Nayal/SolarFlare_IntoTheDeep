@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.base.config;
 
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -11,22 +10,36 @@ import java.util.logging.Logger;
 
 public class RobotLogger {
     private static final RobotLogger                   instance;
-    private static final Level                         configLoggerLevel = Level.ALL;
-    private static final String                        configLoggerName  = "robot.config";
-    private static final Logger                        configLogger;
-    public static        PrintWriter                   writer;
-    private final        Map<String, RobotMetricsFile> metricsFiles = new HashMap<String, RobotMetricsFile>();
+
+    private        final Level                         configLoggerLevel = Level.ALL;
+    private        final String                        configLoggerName  = "robot.config";
+    private              Logger                        configLogger;
+    private        final Map<String, RobotMetricsFile> metricsFiles = new HashMap<>();
 
     static {
         instance               = new RobotLogger();
 
+
+    }
+
+    public static RobotLogger getInstance() {
+        return instance;
+    }
+
+    private RobotLogger() {
+        initializeConfigLogger();
+        initializeMetricsFile("information",
+                "%1$s,%2$d,%3$f%n",
+                "variable1", "variable2", "variable3"
+                );
+    }
+
+    private void initializeConfigLogger() {
         ConsoleHandler handler = new ConsoleHandler() {
             @Override
             public synchronized void publish(final LogRecord record) {
                 super.publish(record);
                 flush();
-                if(writer != null)
-                    writer.println(record);
             }
         };
         handler.setLevel(configLoggerLevel);
@@ -37,23 +50,11 @@ public class RobotLogger {
         configLogger.addHandler(handler);
     }
 
-    public static RobotLogger getInstance() {
-        return instance;
-    }
-
-    private RobotLogger() {
-        createMetricsFile("information",
-                "%1$s,%2$d,%3$f%n",
-                "variable1", "variable2", "variable3"
-                );
-    }
-
-
-    public static Logger getConfigLogger() {
+    public Logger getConfigLogger() {
         return configLogger;
     }
 
-    public void createMetricsFile(String tableName, String formatString, String... fieldNames) {
+    public void initializeMetricsFile(String tableName, String formatString, String... fieldNames) {
         RobotMetricsFile metricsFile = new RobotMetricsFile(tableName, formatString, fieldNames);
         if(metricsFile.isActive()) {
             metricsFiles.put(tableName, metricsFile);

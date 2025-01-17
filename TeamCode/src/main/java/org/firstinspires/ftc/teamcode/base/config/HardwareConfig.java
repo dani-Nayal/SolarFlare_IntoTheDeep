@@ -20,7 +20,7 @@ public class HardwareConfig {
 
     private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
-        logger            = RobotLogger.getConfigLogger();
+        logger            = RobotLogger.getInstance().getConfigLogger();
         robotDimensions   = robotConfig.getRobotDimensions();
         motorConfigs      = new EnumMap<>(MotorEnum.class);
         servoConfigs      = new EnumMap<>(ServoEnum.class);
