@@ -80,7 +80,7 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
                              double Vmax_in,
                              double Vi_in,
                              double dist_in,
-                             int Pi_in){
+                             int Pi_in) {
         dist                    = dist_in;
         Pi                      = Pi_in;
         Vi                      = Vi_in;
@@ -116,7 +116,7 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
     }
 
     // Run this method in a loop
-    public double runTrapezoidalMotionProfile(double t) {
+    public double runProfile(double t) {
         if (t < Ta) {
             return Pi + Vi * t + 0.5 * Amax*t*t;
         } else if (t < (Ta + Tc)){

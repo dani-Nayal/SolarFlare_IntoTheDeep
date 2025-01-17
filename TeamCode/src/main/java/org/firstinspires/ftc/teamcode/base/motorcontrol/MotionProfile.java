@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 public interface MotionProfile {
-    abstract  void runTrapezoidalMotionProfile(Telemetry telemetry);
+    abstract double runProfile(double time);
+    abstract void   resetProfile(double Amax_in,
+                                 double Vmax_in,
+                                 double Vi_in,
+                                 double dist_in,
+                                 int Pi_in);
 }
