@@ -43,14 +43,14 @@ public class MotorControl1D {
 
     public MotorControl1D(MotorEnum motorEnum_in) {
         motorEnum         = motorEnum_in;
-        motorConfig       = hw.getMotorConfig(motorEnum);
         hw                = HardwareConfig.getInstance();
+        motorConfig       = hw.getMotorConfig(motorEnum);
         state             = RobotState.getInstance();
         pid               = new PID();
         profile           = new TrapezoidalMotionProfile1D();
         timer             = new ElapsedTime();
-        Amax              = hw.getMotorConfig(motorEnum).maxAcceleration;
-        Vmax              = hw.getMotorConfig(motorEnum).maxVelocity;
+        Amax              = motorConfig.maxAcceleration;
+        Vmax              = motorConfig.maxVelocity;
     }
 
     /**
@@ -78,7 +78,7 @@ public class MotorControl1D {
 
         motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
 
-        hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
+        motorConfig.motor.setPower(motorPower);
 
         previousLoopTarget = currentTarget;
 

@@ -9,20 +9,16 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class RobotLogger {
-    private static final RobotLogger                   instance;
+    private static       RobotLogger                   instance;
 
     private        final Level                         configLoggerLevel = Level.ALL;
     private        final String                        configLoggerName  = "robot.config";
     private              Logger                        configLogger;
     private        final Map<String, RobotMetricsFile> metricsFiles = new HashMap<>();
 
-    static {
-        instance               = new RobotLogger();
-
-
-    }
-
     public static RobotLogger getInstance() {
+        if(instance == null)
+            instance = new RobotLogger();
         return instance;
     }
 
@@ -44,7 +40,7 @@ public class RobotLogger {
         };
         handler.setLevel(configLoggerLevel);
 
-        configLogger = Logger.getLogger(configLoggerName);
+        configLogger           = Logger.getLogger(configLoggerName);
         configLogger.setLevel(configLoggerLevel);
         configLogger.setUseParentHandlers(false);
         configLogger.addHandler(handler);

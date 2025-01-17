@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class HardwareConfig {
     private static HardwareConfig                 hardwareConfig;
-    private static Logger                         logger;
 
+    private final  Logger                         logger;
     public  final  RobotDimensions                robotDimensions;
     private final  EnumMap<MotorEnum,MotorConfig> motorConfigs;
     private final  EnumMap<ServoEnum,ServoConfig> servoConfigs;
@@ -58,9 +58,6 @@ public class HardwareConfig {
 
     public static HardwareConfig createInstance(HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
-        logger.entering("HardwareConfig",
-                "createInstance",
-                new Object[] {hardwareMap, robotConfig});
         hardwareConfig = new HardwareConfig(hardwareMap, robotConfig);
         return hardwareConfig;
     }
