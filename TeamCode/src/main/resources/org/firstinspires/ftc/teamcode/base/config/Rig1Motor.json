@@ -10,7 +10,7 @@
       "kP": 0.0427,
       "kI": 0.0,
       "kD": 0.00043,
-      "runMode": "RUN_USING_ENCODERS",
+      "runMode": "RUN_WITHOUT_ENCODER",
       "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
       "maxPower": 1.0,
