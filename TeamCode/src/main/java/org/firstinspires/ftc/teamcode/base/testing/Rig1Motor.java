@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.base.testing;
 
+
+import java.util.logging.Logger;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import static java.util.logging.Level.INFO;
 
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
@@ -12,18 +16,25 @@ import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl1D;
 
 @Autonomous
 public class Rig1Motor extends LinearOpMode {
+    Logger         logger;
     RobotConfig    robotConfig;
-    HardwareConfig hw;
-    RobotState     state;
+    HardwareConfig hardwareConfig;
+    RobotState     robotState;
     MotorControl1D motorControl;
 
     public void runOpMode(){
         sleep(3000);
         try {
-            robotConfig  = RobotConfig.createInstance("Rig1Motor");
-            hw           = HardwareConfig.createInstance(hardwareMap, robotConfig);
-            motorControl = new MotorControl1D(MotorEnum.TESTING_MOTOR);
-            state        = RobotState.getInstance();
+            logger         = RobotLogger.getInstance().getConfigLogger();
+            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created configLogger");
+            robotConfig    = RobotConfig.createInstance("Rig1Motor");
+            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created robotConfig");
+            hardwareConfig = HardwareConfig.createInstance(hardwareMap, robotConfig);
+            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created hardwareConfig");
+            motorControl   = new MotorControl1D(MotorEnum.TESTING_MOTOR);
+            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created motorControl");
+            robotState     = RobotState.getInstance();
+            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created robotState");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -35,16 +46,16 @@ public class Rig1Motor extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.a){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
+                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
             }
             else if (gamepad1.b){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 800);
+                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 800);
             }
             else if (gamepad1.y){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1321);
+                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 1321);
             }
             else if (gamepad1.x){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
+                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
             }
 
             motorControl.runTrapezoidalMotionProfile(telemetry);
