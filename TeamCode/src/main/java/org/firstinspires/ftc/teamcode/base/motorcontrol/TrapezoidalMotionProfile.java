@@ -23,16 +23,16 @@ public class TrapezoidalMotionProfile {
         this.maxDeceleration = -maxAcceleration * Math.signum(distance);
 
 
-        accelerationTime = Math.abs((this.maxVelocity - this.initialVelocity) / this.maxAcceleration);
+        accelerationTime = (this.maxVelocity - this.initialVelocity) / this.maxAcceleration;
         accelerationDistance = this.initialVelocity * accelerationTime + 0.5 * this.maxAcceleration * Math.pow(accelerationTime, 2);
 
-        decelerationTime = Math.abs(this.maxVelocity / maxDeceleration);
+        decelerationTime = (0- this.maxVelocity) / maxDeceleration;
         decelerationDistance = this.maxVelocity * decelerationTime + 0.5 * maxDeceleration * Math.pow(decelerationTime, 2);
 
         cruiseDistance = this.distance - accelerationDistance - decelerationDistance;
         cruiseTime = Math.abs(cruiseDistance / this.maxVelocity);
 
-        if (accelerationDistance + decelerationDistance > this.distance){
+        if (Math.abs(accelerationDistance + decelerationDistance) > Math.abs(this.distance)){
             double exceededDistance = (accelerationDistance + decelerationDistance) - this.distance;
 
             accelerationDistance -= (Math.abs(accelerationDistance) / (Math.abs(accelerationDistance) + Math.abs(decelerationDistance))) * exceededDistance;

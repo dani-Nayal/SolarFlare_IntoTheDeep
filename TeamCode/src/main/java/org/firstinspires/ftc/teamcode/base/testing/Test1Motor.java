@@ -43,7 +43,7 @@ public class Test1Motor extends LinearOpMode {
                 state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
             }
 
-            motorControl.runTrapezoidalMotionProfile(telemetry);
+            motorControl.runOldTrapezoidalMotionProfile();
         }
     }
 }
