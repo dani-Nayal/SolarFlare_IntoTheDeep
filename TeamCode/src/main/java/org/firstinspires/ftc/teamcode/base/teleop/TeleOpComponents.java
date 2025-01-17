@@ -379,6 +379,7 @@ public abstract class TeleOpComponents {
                 cruiseDistance=0;
                 decelDistance=0;
             }
+            MOVEMENT_TIMER.reset();
         }
         public void runMotionProfileOnce(){
             double elapsedTime = MOVEMENT_TIMER.time();
@@ -415,12 +416,11 @@ public abstract class TeleOpComponents {
                 this.target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
                 integralSum = 0;
                 previousError = 0;
-                MOVEMENT_TIMER.reset();
-                LOOP_TIMER.reset();
                 isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
                 for (BotMotor motor : synchronizedMotors){
                     motor.setMotorTarget(target,maxVelocity,maxAcceleration);
                 }
+                LOOP_TIMER.reset();
             }
         }
         public void createPendingMotionProfiles(){
@@ -676,7 +676,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendo").getMotorType(),
                 0.005,0,0.0,
                 new String[]{},new double[]{},
-                800,0,
+                793,0,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
@@ -689,7 +689,8 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
                 0.005,0,0.0,
-                new String[]{"transferPosition","pickUpPosition"},new double[]{0,-991},
+                new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
+                new double[]{0,-991,-960,-620},
                 0,-991,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
@@ -795,8 +796,8 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchLeft").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getController(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getPortNumber(),
-                new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition"},
-                new double[]{22,73,115,77.4},
+                new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
+                new double[]{22,73,115,77.4,151.011,127.008},
                 270,
                 0,
                 270,
@@ -807,8 +808,8 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchRight").getDeviceName(),
                 hardwareMap.get(Servo.class, "clawPitchRight").getController(),
                 hardwareMap.get(Servo.class, "clawPitchRight").getPortNumber(),
-                new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition"},
-                new double[]{22,73,115,77.4},
+                new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
+                new double[]{22,73,115,77.4,151.011,127.008},
                 270,
                 0,
                 270,
@@ -819,8 +820,8 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(Servo.class, "innerClawPitch").getDeviceName(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getController(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
-                new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition"},
-                new double[]{62,0,186,170.5},
+                new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
+                new double[]{62,0,186,170.5,73,179},
                 270,
                 0,
                 270,
