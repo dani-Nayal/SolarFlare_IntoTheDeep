@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.base.Calibration;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
+package org.firstinspires.ftc.teamcode.base.calibration;
 
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 
