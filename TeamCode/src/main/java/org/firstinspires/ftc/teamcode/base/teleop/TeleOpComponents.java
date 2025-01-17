@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -51,6 +50,9 @@ public abstract class TeleOpComponents {
 
 
     public static class BotMotor extends DcMotorImplEx {
+        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
+        double maxVelocityParam;
+        double maxAccelerationParam;
         double instantTargetPosition = 0;
         public ArrayList<BotMotor> synchronizedMotors = new ArrayList<>();
         public double kP; public double kI; public double kD;
@@ -415,11 +417,21 @@ public abstract class TeleOpComponents {
                 previousError = 0;
                 MOVEMENT_TIMER.reset();
                 LOOP_TIMER.reset();
-                createMotionProfile(maxVelocity, maxAcceleration);
+                isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
                 for (BotMotor motor : synchronizedMotors){
                     motor.setMotorTarget(target,maxVelocity,maxAcceleration);
                 }
             }
+        }
+        public void createPendingMotionProfiles(){
+            if (isProfilePending) {
+                if (profileDelayCounter==1){
+                createMotionProfile(maxVelocityParam, maxAccelerationParam);
+                isProfilePending=false;
+                }
+                if (profileDelayCounter<profileDelayFactor) profileDelayCounter++; else profileDelayCounter=1;
+            }
+            else profileDelayCounter=1;
         }
         public void setMotorTarget(double target){
             this.setMotorTarget(target, MAX_VELOCITY, MAX_ACCELERATION);

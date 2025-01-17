@@ -24,7 +24,6 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.RoadrunnerFun
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Turn;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Vector2dFunction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotMotor;
-import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotServo;
 
 
 import java.util.ArrayList;
@@ -623,13 +622,15 @@ public abstract class TeleOpActions{
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
             }
-            for (BotMotor motor : TeleOpComponents.motors){
+            for (int i=0;i<TeleOpComponents.motors.size();i++){
+                BotMotor motor = TeleOpComponents.motors.get(i);
                 if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE") && !motor.isStallResetting){
+                    motor.createPendingMotionProfiles();
                     motor.runMotionProfileOnce();
                 }
             }
-            for (BotServo servo : TeleOpComponents.servos){
-                servo.setPosition(servo.getPosition());
+            for (int i=0;i<TeleOpComponents.servos.size();i++){
+                TeleOpComponents.servos.get(i).setPosition(TeleOpComponents.servos.get(i).getPosition());
             }
             if (isStopRequested.call()) return;
         }
