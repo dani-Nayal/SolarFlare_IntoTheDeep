@@ -28,6 +28,16 @@ public class RobotLogger {
                 "%1$s,%2$d,%3$f%n",
                 "variable1", "variable2", "variable3"
                 );
+        initializeMetricsFile("motion_profile",
+                "%1$d,%2$d,%3$d,%4$10.5f,%5$10.5f,%6$10.5f,%7$10.5f%n",
+                "iter",
+                "targetMotorPosition",
+                "motorPosition",
+                "targetMotorPower",
+                "motorPower",
+                "motorVelocity",
+                "testVariable"
+        );
     }
 
     private void initializeConfigLogger() {
@@ -55,6 +65,22 @@ public class RobotLogger {
         if(metricsFile.isActive()) {
             metricsFiles.put(tableName, metricsFile);
         }
+    }
+
+    public RobotMetricsFile getMetricsFile(String tableName) {
+        RobotMetricsFile file = null;
+        try {
+            file = Objects.requireNonNull(metricsFiles.get(tableName));
+        } catch (NullPointerException e) {
+            Logger.getGlobal().logp(
+                    Level.SEVERE,
+                    "RobotLogger",
+                    "getMetricsFile",
+                    "Table name: " + tableName + " not available",
+                    e
+            );
+        }
+        return file;
     }
 
     public void addData(String tableName, Object... data) {

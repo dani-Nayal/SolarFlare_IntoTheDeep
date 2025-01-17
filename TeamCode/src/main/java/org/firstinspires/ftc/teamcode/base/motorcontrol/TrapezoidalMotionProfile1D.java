@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
+import static java.lang.Math.round;
 import static org.firstinspires.ftc.teamcode.base.calibration.Math.solveQuadraticEquation;
 
 import org.firstinspires.ftc.teamcode.base.calibration.CalculationException;
@@ -116,17 +117,17 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
     }
 
     // Run this method in a loop
-    public double runProfile(double t) {
+    public int runProfile(double t) {
         if (t < Ta) {
-            return Pi + Vi * t + 0.5 * Amax*t*t;
+            return (int) round(Pi + Vi * t + 0.5 * Amax*t*t);
         } else if (t < (Ta + Tc)){
-            return Pi + Sa + Vc * (t - Ta);
+            return (int) round(Pi + Sa + Vc * (t - Ta));
         } else if (t < Tt){
             double tDec         = t - Ta - Tc;
-            return Pi + Sa + Sc + Vc*tDec + 0.5*Dmax*tDec*tDec;
+            return (int) round(Pi + Sa + Sc + Vc*tDec + 0.5*Dmax*tDec*tDec);
         }
         else{
-            return Pi + dist;
+            return (int) round(Pi + dist);
         }
     }
 }
