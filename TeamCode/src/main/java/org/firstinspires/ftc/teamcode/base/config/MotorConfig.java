@@ -8,19 +8,21 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.json.JSONException;
 
 public class MotorConfig{
-    public MotorEnum motorEnum;
-    public String deviceName;
-    public DcMotorEx motor;
-    public double kP;
-    public double kI;
-    public double kD;
-    public DcMotor.RunMode runMode;
-    public DcMotorSimple.Direction direction;
+    public MotorEnum                 motorEnum;
+    public String                    deviceName;
+    public DcMotorEx                 motor;
+    public double                    kP;
+    public double                    kI;
+    public double                    kD;
+    public DcMotor.RunMode           runMode;
+    public DcMotorSimple.Direction   direction;
     public DcMotor.ZeroPowerBehavior zeroPowerBehavior;
-    public int minTarget;
-    public int maxTarget;
-    public double maxAcceleration;
-    public double maxVelocity;
+    public int                       motorProfileResolution;
+    public double                    maxPower;
+    public int                       minTarget;
+    public int                       maxTarget;
+    public double                    maxAcceleration;
+    public double                    maxVelocity;
     public MotorConfig(MotorEnum motorEnum, HardwareMap hardwareMap, RobotConfig robotConfig)
             throws JSONException {
         this.motorEnum         = motorEnum;
@@ -32,6 +34,7 @@ public class MotorConfig{
         this.runMode           = robotConfig.getMotorRunMode(motorEnum);
         this.direction         = robotConfig.getMotorDirection(motorEnum);
         this.zeroPowerBehavior = robotConfig.getMotorZeroPowerBehavior(motorEnum);
+        this.maxPower          = robotConfig.getMotorInt(motorEnum, "maxPower");
         this.minTarget         = robotConfig.getMotorInt(motorEnum, "minTarget");
         this.maxTarget         = robotConfig.getMotorInt(motorEnum, "maxTarget");
         this.maxAcceleration   = robotConfig.getMotorInt(motorEnum, "maxAcceleration");

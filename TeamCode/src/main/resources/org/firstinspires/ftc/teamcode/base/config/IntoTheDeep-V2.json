@@ -4,6 +4,9 @@
     "length": 15.0625,
     "width": 12.4375
   },
+  "Calibration": {
+    "motorProfileResolution": 100
+  },
   "Motors": {
     "LEFT_BACK": {
       "deviceName": "",
@@ -13,6 +16,7 @@
       "runMode": "STOP_AND_RESET_ENCODER",
       "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
+      "maxPower": 1.0,
       "minTarget": 0,
       "maxTarget": 10000,
       "maxAcceleration": 4000,
@@ -26,6 +30,7 @@
       "runMode": "STOP_AND_RESET_ENCODER",
       "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
+      "maxPower": 1.0,
       "minTarget": 0,
       "maxTarget": 10000,
       "maxAcceleration": 4000,
@@ -39,6 +44,7 @@
       "runMode": "STOP_AND_RESET_ENCODER",
       "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
+      "maxPower": 1.0,
       "minTarget": 0,
       "maxTarget": 10000,
       "maxAcceleration": 4000,
@@ -52,6 +58,7 @@
       "runMode": "STOP_AND_RESET_ENCODER",
       "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
+      "maxPower": 1.0,
       "minTarget": 0,
       "maxTarget": 10000,
       "maxAcceleration": 4000,

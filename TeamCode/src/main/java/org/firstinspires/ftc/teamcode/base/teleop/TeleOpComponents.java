@@ -50,6 +50,9 @@ public abstract class TeleOpComponents {
 
 
     public static class BotMotor extends DcMotorImplEx {
+        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
+        double maxVelocityParam;
+        double maxAccelerationParam;
         double instantTargetPosition = 0;
         public ArrayList<BotMotor> synchronizedMotors = new ArrayList<>();
         public double kP; public double kI; public double kD;
@@ -414,11 +417,21 @@ public abstract class TeleOpComponents {
                 previousError = 0;
                 MOVEMENT_TIMER.reset();
                 LOOP_TIMER.reset();
-                createMotionProfile(maxVelocity, maxAcceleration);
+                isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
                 for (BotMotor motor : synchronizedMotors){
                     motor.setMotorTarget(target,maxVelocity,maxAcceleration);
                 }
             }
+        }
+        public void createPendingMotionProfiles(){
+            if (isProfilePending) {
+                if (profileDelayCounter==1){
+                createMotionProfile(maxVelocityParam, maxAccelerationParam);
+                isProfilePending=false;
+                }
+                if (profileDelayCounter<profileDelayFactor) profileDelayCounter++; else profileDelayCounter=1;
+            }
+            else profileDelayCounter=1;
         }
         public void setMotorTarget(double target){
             this.setMotorTarget(target, MAX_VELOCITY, MAX_ACCELERATION);
@@ -661,7 +674,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendo").getController(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getMotorType(),
-                0.005,0,0.000378,
+                0.005,0,0.0,
                 new String[]{},new double[]{},
                 800,0,
                 200000,3000,
@@ -675,7 +688,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getController(),
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
-                0.005,0,0.000378,
+                0.005,0,0.0,
                 new String[]{"transferPosition","pickUpPosition"},new double[]{0,-991},
                 0,-991,
                 200000,3000,
@@ -689,7 +702,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getController(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
-                0.005,0,0.000378,
+                0.005,0,0.0,
                 new String[]{"depositPosition","transferPosition"},new double[]{1030,0},
                 1030,0,
                 200000,3000,

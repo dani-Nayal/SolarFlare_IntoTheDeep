@@ -82,6 +82,46 @@ public class RobotConfig {
         return robotDimensions;
     }
 
+    public String getCalibrationString(String propertyName) {
+        logger.entering("RobotConfig", "getCalibrationString", propertyName);
+        String calibrationString;
+        try {
+            calibrationString = json.getJSONObject("Calibration").getString(propertyName);
+        } catch(JSONException e) {
+            logger.throwing("RobotConfig", "getCalibrationString", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getCalibrationString", calibrationString);
+        return calibrationString;
+    }
+
+    public Double getCalibrationDouble(String propertyName) {
+        logger.entering("RobotConfig", "getCalibrationDouble", propertyName);
+        Double pinpointDouble;
+        try {
+            pinpointDouble = json.getJSONObject("Pinpoint").getDouble(propertyName);
+        } catch(JSONException e) {
+            logger.throwing("RobotConfig", "getCalibrationDouble", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getCalibrationDouble", pinpointDouble);
+        return pinpointDouble;
+    }
+
+    public Integer getCalibrationInt(String propertyName) {
+        logger.entering("RobotConfig", "getCalibrationInt", propertyName);
+        Integer pinpointInt;
+        try {
+            pinpointInt = json.getJSONObject("Pinpoint").getInt(propertyName);
+        } catch(JSONException e) {
+            logger.throwing("RobotConfig", "getCalibrationInt", e);
+            return null;
+        }
+        logger.exiting("RobotConfig", "getPinpointInt", pinpointInt);
+        return pinpointInt;
+    }
+
+
     public String[] getMotorNames() throws JSONException {
         // An alternative to
         // JSONObject.getNames(json.getJSONObject("Motors"));
@@ -295,6 +335,14 @@ public class RobotConfig {
         double imuDouble = json.getJSONObject("IMU").getDouble(propertyName);
         logger.exiting("RobotConfig", "getIMUDouble", imuDouble);
         return imuDouble;
+    }
+
+    public int getIMUInt(String propertyName)
+            throws JSONException {
+        logger.entering("RobotConfig", "getIMUDouble", propertyName);
+        int imuInt = json.getJSONObject("IMU").getInt(propertyName);
+        logger.exiting("RobotConfig", "getIMUInt", imuInt);
+        return imuInt;
     }
 
     /**
