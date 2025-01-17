@@ -29,14 +29,13 @@ public class RobotLogger {
                 "variable1", "variable2", "variable3"
                 );
         initializeMetricsFile("motion_profile",
-                "%1$d,%2$d,%3$d,%4$10.5f,%5$10.5f,%6$10.5f,%7$10.5f%n",
+                "%1$d,%2$d,%3$d,%4$10.5f,%5$10.5f,%6$10.5f%n",
                 "iter",
                 "targetMotorPosition",
                 "motorPosition",
                 "targetMotorPower",
                 "motorPower",
-                "motorVelocity",
-                "testVariable"
+                "motorVelocity"
         );
     }
 

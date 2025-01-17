@@ -104,13 +104,6 @@ public class MotorControl1D {
         Double  motorVelocity        = motor.getVelocity();
         Double  testVariable         = 12345.9876543;
 
-        logger.severe(iter.getClass().getName() + "," +
-                targetMotorPosition.getClass().getName() + "," +
-                motorPosition.getClass().getName() + "," +
-                targetMotorPower.getClass().getName() + "," +
-                motorPower.getClass().getName() + "," +
-                motorVelocity.getClass().getName());
-
         metricsFile.addData(
                 iter,
                 targetMotorPosition,
