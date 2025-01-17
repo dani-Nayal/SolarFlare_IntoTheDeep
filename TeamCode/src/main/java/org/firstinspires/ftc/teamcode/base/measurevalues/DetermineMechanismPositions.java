@@ -21,7 +21,7 @@ public class DetermineMechanismPositions extends LinearOpMode {
     @Override
     public void runOpMode(){
         try {
-            RobotConfig robotConfig = RobotConfig.createInstance("IntoTheDeep-V2");
+            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
             hw    = HardwareConfig.createInstance(hardwareMap, robotConfig);
         } catch (JSONException e) {
             throw new RuntimeException(e);

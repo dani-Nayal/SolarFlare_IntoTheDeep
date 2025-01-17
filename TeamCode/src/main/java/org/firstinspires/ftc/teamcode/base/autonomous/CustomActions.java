@@ -50,6 +50,8 @@ public class CustomActions {
             return !(error == 0);
         }
     }
+    public SetMotorTargetAction setMotorTargetAction(MotorEnum motorEnum, int target) {return new SetMotorTargetAction(motorEnum, target);}
+    public SetServoPositionAction setServoPositionAction(ServoEnum servoEnum, double position) {return new SetServoPositionAction(servoEnum, position);}
     public class SetServoPositionAction implements Action {
         private final ServoEnum servoEnum;
         private final double position;
@@ -158,8 +160,26 @@ public class CustomActions {
     public Action globalMechanismControl() {return new GlobalMechanismControl();}
     public SequentialAction moveToHighChamberAndScoreSpecimen(Pose2d initialDrivePose, Vector2d scoringPose, double heading) {
         return new SequentialAction(
-            drive.actionBuilder(initialDrivePose)
-                    .strafeToLinearHeading(scoringPose, heading).build()
+                new ParallelAction(
+                setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_CLOSED),
+                setServoPositionAction(ServoEnum.BUCKET, state.BUCKET_DEPOSIT),
+                setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_SCORE_SPECIMEN),
+                setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_SCORE_SPECIMEN),
+                setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_SCORE_SPECIMEN),
+                setServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, state.CLAW_PITCH_SCORE_SPECIMEN),
+                setServoPositionAction(ServoEnum.INNER_CLAW_PITCH, state.INNER_CLAW_PITCH_SCORE_SPECIMEN),
+                        drive.actionBuilder(initialDrivePose).strafeToLinearHeading(scoringPose, heading).build()
+                ),
+                drive.actionBuilder(new Pose2d(scoringPose.x, scoringPose.y, heading)).strafeToLinearHeading(new Vector2d(scoringPose.x, scoringPose.y + 9), heading).build(),
+                setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_OPEN),
+
+                new ParallelAction(
+                        setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_TRANSFER),
+                        setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_TRANSFER),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, state.CLAW_PITCH_TRANSFER),
+                        setServoPositionAction(ServoEnum.INNER_CLAW_PITCH, state.INNER_CLAW_PITCH_TRANSFER)
+                )
         );
     }
     public SequentialAction moveToNetZone(Pose2d initialDrivePose, Vector2d scoringPosition, double scoringHeading) {
@@ -167,20 +187,35 @@ public class CustomActions {
                 // Move to scoring position
                 drive.actionBuilder(initialDrivePose)
                         .strafeToLinearHeading(scoringPosition, scoringHeading).build()
-        );
+       );
     }
     public SequentialAction scoreHighBucket(){
         return new SequentialAction(
+                setMotorTargetAction(MotorEnum.BUCKET_SLIDES, state.BUCKET_SLIDES_HIGH_BUCKET),
+                setServoPositionAction(ServoEnum.BUCKET, state.BUCKET_DEPOSIT),
+                setServoPositionAction(ServoEnum.BUCKET, state.BUCKET_TRANSFER),
+                setMotorTargetAction(MotorEnum.BUCKET_SLIDES, state.BUCKET_SLIDES_TRANSFER)
 
         );
     }
     public SequentialAction transferSample(){
         return new SequentialAction(
+                new ParallelAction(
+                setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_CLOSED),
+                setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
+                setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_TRANSFER),
+                setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_TRANSFER),
+                setServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, state.CLAW_PITCH_TRANSFER),
+                setServoPositionAction(ServoEnum.INNER_CLAW_PITCH, state.INNER_CLAW_PITCH_TRANSFER),
+                        setServoPositionAction(ServoEnum.BUCKET, state.BUCKET_TRANSFER)
+                ),
+                setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_OPEN)
 
         );
     }
     public Action grabGroundSample(Pose2d initialDrivePose, Vector2d pickUpPose, double heading, int extendoPosition) {
         return new SequentialAction(
+
 
         );
     }
