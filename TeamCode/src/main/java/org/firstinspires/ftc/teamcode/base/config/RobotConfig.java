@@ -121,7 +121,6 @@ public class RobotConfig {
         return pinpointInt;
     }
 
-
     public String[] getMotorNames() throws JSONException {
         // An alternative to
         // JSONObject.getNames(json.getJSONObject("Motors"));
@@ -157,12 +156,7 @@ public class RobotConfig {
 
     public String getMotorString(String motorName, String propertyName)
             throws JSONException {
-        logger.entering("RobotConfig",
-                "getMotorString",
-                new String[] {motorName, propertyName});
-        String motorString = json.getJSONObject("Motors").getJSONObject(motorName).getString(propertyName);
-        logger.exiting("RobotConfig", "getMotorString", motorString);
-        return motorString;
+        return json.getJSONObject("Motors").getJSONObject(motorName).getString(propertyName);
     }
 
     public String getMotorString(MotorEnum motorEnum, String propertyName)
@@ -177,12 +171,7 @@ public class RobotConfig {
 
     public double getMotorDouble(String motorName, String propertyName)
             throws JSONException {
-        logger.entering("RobotConfig",
-                "getMotorDouble",
-                new String[] {motorName, propertyName});
-        double motorDouble = json.getJSONObject("Motors").getJSONObject(motorName).getDouble(propertyName);
-        logger.exiting("RobotConfig", "getMotorDouble", motorDouble);
-        return motorDouble;
+        return json.getJSONObject("Motors").getJSONObject(motorName).getDouble(propertyName);
     }
 
     public double getMotorDouble(MotorEnum motorEnum, String propertyName)
@@ -197,12 +186,7 @@ public class RobotConfig {
 
     public int getMotorInt(String motorName, String propertyName)
             throws JSONException {
-        logger.entering("RobotConfig",
-                "getMotorInt",
-                new String[] {motorName, propertyName});
-        int motorInt = json.getJSONObject("Motors").getJSONObject(motorName).getInt(propertyName);
-        logger.exiting("RobotConfig", "getMotorInt", motorInt);
-        return motorInt;
+        return json.getJSONObject("Motors").getJSONObject(motorName).getInt(propertyName);
     }
 
     public int getMotorInt(MotorEnum motorEnum, String propertyName)
@@ -275,12 +259,7 @@ public class RobotConfig {
 
     public String getServoString(String servoName, String propertyName)
             throws JSONException {
-        logger.entering("RobotConfig",
-                "getServoString",
-                new String[] {servoName, propertyName});
-        String servoString = json.getJSONObject("Servos").getJSONObject(servoName).getString(propertyName);
-        logger.exiting("RobotConfig", "getServoString", servoString);
-        return servoString;
+        return json.getJSONObject("Servos").getJSONObject(servoName).getString(propertyName);
     }
 
     public String getServoString(ServoEnum servoEnum, String propertyName)
@@ -295,12 +274,7 @@ public class RobotConfig {
 
     public double getServoDouble(String servoName, String propertyName)
             throws JSONException {
-        logger.entering("RobotConfig",
-                "getServoDouble",
-                new String[] {servoName, propertyName});
-        double servoDouble = json.getJSONObject("Servos").getJSONObject(servoName).getDouble(propertyName);
-        logger.exiting("RobotConfig", "getServoDouble", servoDouble);
-        return servoDouble;
+        return json.getJSONObject("Servos").getJSONObject(servoName).getDouble(propertyName);
     }
 
     public double getServoDouble(ServoEnum servoEnum, String propertyName)
@@ -311,6 +285,21 @@ public class RobotConfig {
         double servoDouble = getServoDouble(servoEnum.toString(), propertyName);
         logger.exiting("RobotConfig", "getServoDouble", servoDouble);
         return servoDouble;
+    }
+
+    public int getServoInt(String servoName, String propertyName)
+            throws JSONException {
+        return json.getJSONObject("Servos").getJSONObject(servoName).getInt(propertyName);
+    }
+
+    public int getServoInt(ServoEnum servoEnum, String propertyName)
+            throws JSONException {
+        logger.entering("RobotConfig",
+                "getServoInt",
+                new String[] {servoEnum.name(), propertyName});
+        int servoInt = getServoInt(servoEnum.toString(), propertyName);
+        logger.exiting("RobotConfig", "getServoInt", servoInt);
+        return servoInt;
     }
 
     public Servo.Direction getServoDirection(ServoEnum servoEnum)

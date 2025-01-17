@@ -103,6 +103,6 @@ public class MotorControl1D {
     // Run this method in a loop
     public void runPIDMotorControl(){
         motorPower = pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum));
-        hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
+        motorConfig.motor.setPower(motorPower);
     }
 }

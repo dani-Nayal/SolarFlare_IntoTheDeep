@@ -8,21 +8,21 @@ import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotLogger;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
-import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
+import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl1D;
 
 @Autonomous
 public class Rig1Motor extends LinearOpMode {
     RobotConfig    robotConfig;
     HardwareConfig hw;
     RobotState     state;
-    MotorControl   motorControl;
+    MotorControl1D motorControl;
 
     public void runOpMode(){
         sleep(3000);
         try {
             robotConfig  = RobotConfig.createInstance("Rig1Motor");
             hw           = HardwareConfig.createInstance(hardwareMap, robotConfig);
-            motorControl = new MotorControl(MotorEnum.TESTING_MOTOR);
+            motorControl = new MotorControl1D(MotorEnum.TESTING_MOTOR);
             state        = RobotState.getInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -33,22 +33,18 @@ public class Rig1Motor extends LinearOpMode {
 
         waitForStart();
 
-        int choice = 0;
         while (opModeIsActive()) {
-            switch(choice) {
-                case 0:
-                    state.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
-                    RobotLogger.getInstance().addData("information", "Theone", 1, 2.0);
-                    break;
-                case 500:
-                    state.setMotorTarget(MotorEnum.TESTING_MOTOR, 500);
-                    break;
-                case 1000:
-                    state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1000);
-                    break;
-                case 1500:
-                    state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1500);
-                    break;
+            if (gamepad1.a){
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
+            }
+            else if (gamepad1.b){
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 800);
+            }
+            else if (gamepad1.y){
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1321);
+            }
+            else if (gamepad1.x){
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
             }
 
             motorControl.runTrapezoidalMotionProfile(telemetry);
