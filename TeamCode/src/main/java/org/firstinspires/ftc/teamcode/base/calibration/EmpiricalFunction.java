@@ -8,9 +8,10 @@ import java.util.function.Function;
 public class EmpiricalFunction implements Function<Double, Double> {
     private final ArrayList<NumberPair> f = new ArrayList<>();
 
-    public void addDataPoint(double x, double y) {
+    public EmpiricalFunction addDataPoint(double x, double y) {
         f.add(new NumberPair(x, y));
         f.sort((a, b) -> Double.compare(a.n1, b.n1));
+        return this;
     }
 
     public Double apply(Double x) {

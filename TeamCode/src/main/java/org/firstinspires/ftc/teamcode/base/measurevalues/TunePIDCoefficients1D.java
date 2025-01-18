@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.base.calibration.EmpiricalFunction;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
@@ -33,19 +34,27 @@ public class TunePIDCoefficients1D extends LinearOpMode {
     MotorConfig            motorConfig;
     DcMotorEx              motor;
 
-    public static double kP              = 0.0335; // original
-    public static double kI              = 0.0;
-    public static double kD              = 0.0; // original
+    public static double kP          = 0.0335; // original
+    public static double kI          = 0.0;
+    public static double kD          = 0.0; // original
+    public static double errorCap    = 50.0;
+    public static double a_x1        = 5.0;
+    public static double a_y1        = 0.25;
+    public static double a_x2        = 20.0;
+    public static double a_y2        = 0.3;
+    public static double a_x3        = 50.0;
+    public static double a_y3        = 0.5;
+    public static double a_x_max     = 60.0;
     // 0.0335
 
     @Override
     public void runOpMode(){
         try {
-            robotConfig    = RobotConfig.createInstance("Rig1Motor");
-            hardwareConfig = HardwareConfig.createInstance(hardwareMap, robotConfig);
-            motorConfig    = hardwareConfig.getMotorConfig(motorEnum);
-            motor          = motorConfig.motor;
-            state          = RobotState.getInstance();
+            robotConfig              = RobotConfig.createInstance("Rig1Motor");
+            hardwareConfig           = HardwareConfig.createInstance(hardwareMap, robotConfig);
+            motorConfig              = hardwareConfig.getMotorConfig(motorEnum);
+            motor                    = motorConfig.motor;
+            state                    = RobotState.getInstance();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -53,23 +62,29 @@ public class TunePIDCoefficients1D extends LinearOpMode {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry    telemetry = dashboard.getTelemetry();
-        ElapsedTime  timer     = new ElapsedTime();
+        FtcDashboard dashboard       = FtcDashboard.getInstance();
+        Telemetry    telemetry       = dashboard.getTelemetry();
+        ElapsedTime  timer           = new ElapsedTime();
 
 
-        // double lastPosition    = 0;
-        double lastTarget      = 0;
-        double integralSum     = 0;
+        double lastPosition          = 0;
+        double lastTarget            = 0;
+        double integralSum           = 0;
 
         waitForStart();
 
-        boolean convFlag       = false;
-        double convTime        = Double.POSITIVE_INFINITY;
-        ElapsedTime convTimer  = new ElapsedTime();
+        boolean convFlag             = false;
+        double convTime              = Double.POSITIVE_INFINITY;
+        ElapsedTime convTimer        = new ElapsedTime();
         convTimer.reset();
 
-        int iteration          = 0;
+        EmpiricalFunction atten = new EmpiricalFunction();
+        atten.addDataPoint(a_x1, a_y1)
+                .addDataPoint(a_x2, a_y2)
+                .addDataPoint(a_x3, a_y3)
+                .addDataPoint(a_x_max,1.0);
+
+        int iteration                = 0;
         while (opModeIsActive()){
             if (gamepad1.a){
                 state.setMotorTarget(motorEnum, (int) (motorConfig.maxTarget * 0.25));
@@ -88,8 +103,10 @@ public class TunePIDCoefficients1D extends LinearOpMode {
             double currentPosition   = motor.getCurrentPosition();
             double dt                = timer.seconds();
             double error             = currentTarget - currentPosition;
-            // double derivative        = (currentPosition - lastPosition) / dt;
-            double derivative        = motor.getVelocity();
+            double derivative        = (currentPosition - lastPosition) / dt;
+
+            // We get better stability by asking the motor to provide speed
+            derivative               = motor.getVelocity();
 
             if (currentTarget != lastTarget) {
                 convFlag             = false;
@@ -107,13 +124,18 @@ public class TunePIDCoefficients1D extends LinearOpMode {
             double integralPower     = max(min(integralSum * kI,1),-1);
             double derivativePower   = max(min(derivative * kD,1),-1);
             double outPower          = max(min(proportionalPower+integralPower+derivativePower,1),-1);
+            double attenFactor       = atten.apply(abs(error));
+
+            outPower                *= attenFactor;
 
             motor.setPower(outPower);
 
             lastTarget               = currentTarget;
-          //  lastPosition             = currentPosition;
+            lastPosition             = currentPosition;
 
             timer.reset();
+
+            double printedError      = max(min(error,errorCap),-errorCap);
 
             telemetry.addData("Iteration", iteration++);
             telemetry.addData("K- Kp", String.format(Locale.US,"%1$15.8f", kP));
@@ -124,7 +146,8 @@ public class TunePIDCoefficients1D extends LinearOpMode {
             telemetry.addData("P- motor max target", motorConfig.maxTarget);
             telemetry.addData("P- motor target", state.getMotorTarget(motorEnum));
             telemetry.addData("P- motor position", hardwareConfig.getMotorConfig(motorEnum).motor.getCurrentPosition());
-            telemetry.addData("P- error", error);
+            telemetry.addData("P- error", printedError);
+            telemetry.addData("R- attenuation factor (x10)", 10.0*attenFactor);
             telemetry.addData("R- proportionalPower", proportionalPower);
             telemetry.addData("R- derivative", derivative);
             telemetry.addData("R- derivativePower", derivativePower);
