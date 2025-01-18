@@ -150,6 +150,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 clawFingerPosition = 92;
                 clawPitchPosition = 68;
                 innerClawPitchPosition = 0;
+                bucketSlidesTarget=0;
                 if (Btimer.seconds() > 0.6) {
                     extendoTarget = maxExtendoPosition;
 
@@ -205,8 +206,8 @@ public class BackUpTeleOp extends LinearOpMode {
             if (isX2SequenceActive) {
 
                 //clawWristPosition = 95;
-                clawPitchPosition = 17;
-                innerClawPitchPosition = 65;
+                clawPitchPosition = 13;
+                innerClawPitchPosition = 78;
                 bucketPosition=46;
                 clawFingerPosition=92;
 

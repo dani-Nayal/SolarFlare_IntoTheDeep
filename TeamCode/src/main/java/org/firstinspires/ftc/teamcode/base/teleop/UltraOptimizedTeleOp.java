@@ -84,7 +84,6 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                                 )
                         )
                 });
-        /*
         UninterruptiblePressTrigger specimenGrabSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad1.y)},
                 new TeleOpAction[]{
                             new TeleOpParallelAction(
@@ -109,7 +108,6 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                             extendo.moveToPositionAction(extendo.MAX_POSITION)
                         )
                 });
-        */
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 this::isStopRequested,
@@ -123,8 +121,8 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 lowerIntakeSequence,
                 pickUpSequence,
                 transferSequence,
-                //specimenGrabSequence,
-                //setUpSpecimenDepositSequence,
+                specimenGrabSequence,
+                setUpSpecimenDepositSequence,
                 new ConditionalAction(new Condition[]{()->(!isRRActive)}, new TeleOpAction[]{
                         new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_trigger>0.2))
                 }),

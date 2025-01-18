@@ -1,0 +1,527 @@
+package org.firstinspires.ftc.teamcode.base.autonomous;
+
+import androidx.annotation.NonNull;
+
+// RR-specific imports
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
+
+// Non-RR imports
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
+//import org.firstinspires.ftc.teamcode.PIDCoefficients;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
+
+@Config
+@Autonomous(name = "OneBucketPlusThreeBucket", group = "Autonomous")
+public class TristanBackupAuto extends LinearOpMode {
+    double kP = 0.015;
+    DcMotor extendo;
+    DcMotor extendoPitch;
+    DcMotor hang;
+    DcMotor bucketSlides;
+    Servo clawPitchLeft;
+    Servo clawPitchRight;
+    Servo clawFingers;
+    Servo clawWrist;
+    Servo bucket;
+    public double extendoTarget = 0;
+    public double extendoPitchTarget = 0;
+    public double clawPitchPosition = 77.4;
+
+    public double innerClawPitchPosition = 170.5;
+    public double clawFingerPosition = 92;
+    public double clawWristPosition = 95;
+    public double bucketSlidesTarget = 0;
+    public double bucketPosition = 46;
+    public double hangTarget = 0;
+
+    public class GlobalPID implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            extendo.setPower((extendoTarget - extendo.getCurrentPosition()) * kP);
+            extendoPitch.setPower((extendoPitchTarget - extendoPitch.getCurrentPosition()) * 0.005);
+            //hang.setPower((hangTarget - hang.getCurrentPosition()) * kP);
+            bucketSlides.setPower((bucketSlidesTarget - bucketSlides.getCurrentPosition()) * kP);
+
+            clawPitchLeft.setPosition(clawPitchPosition/270);
+            clawPitchRight.setPosition(clawPitchPosition/270);
+            clawFingers.setPosition(clawFingerPosition/180);
+            clawWrist.setPosition(clawWristPosition/270);
+            bucket.setPosition(bucketPosition/270);
+            return true;
+        }
+    }
+
+    public Action GlobalPID() {
+        return new GlobalPID();
+    }
+
+    public class SetExtendoTarget implements Action {
+        private double target;
+
+        public SetExtendoTarget(double target) {
+            this.target = target;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            extendoTarget = target;
+            return false;
+        }
+    }
+
+    public Action setExtendoTarget(double target) {
+        return new SetExtendoTarget(target);
+    }
+
+    public class SetExtendoPitchTarget implements Action {
+        private double target;
+
+        public SetExtendoPitchTarget(double target) {
+            this.target = target;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            extendoPitchTarget = target;
+            return false;
+        }
+    }
+
+    public Action setExtendoPitchTarget(double target) {
+        return new SetExtendoPitchTarget(target);
+    }
+
+    public class SetBucketSlidesTarget implements Action {
+        private double target;
+
+        public SetBucketSlidesTarget(double target) {
+            this.target = target;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            bucketSlidesTarget = target;
+            return false;
+        }
+    }
+
+    public Action setBucketSlidesTarget(double target) {
+        return new SetBucketSlidesTarget(target);
+    }
+
+    public class SetHangTarget implements Action {
+        private double target;
+
+        public SetHangTarget(double target) {
+            this.target = target;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hangTarget = target;
+            return false;
+        }
+    }
+
+    public Action setHangTarget(double target) {
+        return new SetHangTarget(target);
+    }
+
+    public class SetClawPitchPosition implements Action {
+        private double position;
+
+        public SetClawPitchPosition(double position) {
+            this.position = position;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            clawPitchPosition = position;
+            return false;
+        }
+    }
+
+    public Action setClawPitchPosition(double position) {
+        return new SetClawPitchPosition(position);
+    }
+
+    public class SetClawFingerPosition implements Action {
+        private double position;
+
+        public SetClawFingerPosition(double position) {
+            this.position = position;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            clawFingerPosition = position;
+            return false;
+        }
+    }
+
+    public Action setClawFingerPosition(double position) {
+        return new SetClawFingerPosition(position);
+    }
+
+    public class SetClawWristPosition implements Action {
+        private double position;
+
+        public SetClawWristPosition(double position) {
+            this.position = position;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            clawWristPosition = position;
+            return false;
+        }
+    }
+
+    public Action setInnerClawPitchPosition(double position) {
+        return new setInnerClawPitchPosition(position);
+    }
+
+    public class setInnerClawPitchPosition implements Action {
+        private double position;
+
+        public setInnerClawPitchPosition(double position) {
+            this.position = position;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            innerClawPitchPosition = position;
+            return false;
+        }
+    }
+
+    public Action setClawWristPosition(double position) {
+        return new SetClawWristPosition(position);
+    }
+
+    public class SetBucketPosition implements Action {
+        private double position;
+
+        public SetBucketPosition(double position) {
+            this.position = position;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            bucketPosition = position;
+            return false;
+        }
+    }
+
+    public Action setBucketPosition(double position) {
+        return new SetBucketPosition(position);
+    }
+
+    @Override
+    public void runOpMode() {
+
+
+        Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(270));
+        PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
+
+        Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5, Math.toRadians(270)))
+                // Score preload bucket
+                .strafeToLinearHeading(new Vector2d(-55.5,-53), Math.toRadians(225))
+                .build();
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-55.5,-53, Math.toRadians(225)))
+                // Go to sample zone 1
+                .strafeToLinearHeading(new Vector2d(-54.5,-48.8), Math.toRadians(270))
+                .build();
+        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-54.5,-48.8, Math.toRadians(270)))
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-56,-53.2), Math.toRadians(225))
+                .build();
+        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-56,-53.2, Math.toRadians(225)))
+                // Sample zone 2
+                .strafeToLinearHeading(new Vector2d(-63,-49.8), Math.toRadians(273))
+                .build();
+        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-63,-49.8, Math.toRadians(273)))
+                // Score bucket
+                .strafeToLinearHeading(new Vector2d(-54.5,-54), Math.toRadians(225))
+                .build();
+        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54.5,-54, Math.toRadians(225)))
+                // sample zone 3
+                .strafeToLinearHeading(new Vector2d(-67,-49.3), Math.toRadians(285))
+                .build();
+        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-67,-49.3, Math.toRadians(285)))
+                // turn and score bucke
+                .strafeToLinearHeading(new Vector2d(-54.5,-53.5), Math.toRadians(225))
+                .build();
+        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54.5,-53.5, Math.toRadians(225)))
+                // park
+                .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(0))
+
+                .build();
+
+        DcMotor extendo = hardwareMap.dcMotor.get("extendo");
+        DcMotor extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
+        DcMotor bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
+        Servo clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
+        Servo clawPitchRight = hardwareMap.servo.get("clawPitchRight");
+        Servo innerClawPitch = hardwareMap.servo.get("innerClawPitch");
+
+        Servo clawFingers = hardwareMap.servo.get("clawFingers");
+        Servo clawWrist = hardwareMap.servo.get("clawWrist");
+        Servo bucket = hardwareMap.servo.get("bucket");
+
+        extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        extendo.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extendoPitch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bucketSlides.setDirection(DcMotor.Direction.REVERSE);
+        bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        clawPitchRight.setDirection(Servo.Direction.REVERSE);
+        innerClawPitch.setDirection(Servo.Direction.REVERSE);
+
+        waitForStart();
+
+        Actions.runBlocking(
+                new ParallelAction(
+                        GlobalPID(),
+                        new SequentialAction(
+                                new ParallelAction(
+                                        // score preload bucket
+                                        onePlusThreeBucket1,
+                                        //close claw
+                                        setBucketSlidesTarget(1050)
+                                ),
+                                // Move bucketSlides up to scoring position
+
+                                new SleepAction(0.6),
+                                // Rotate bucket to score
+                                setBucketPosition(158),
+                                new SleepAction(0.7),
+                                // Move bucket back to default position
+                                setBucketPosition(46),
+                                // Avoid level 4 hang
+                                new SleepAction(0.4),
+
+                                // Drive to sample zone 1, lower extendo, retract extendo pitch when driving
+                                new ParallelAction(
+                                        // Drive to sample zone 1
+                                        onePlusThreeBucket2,
+                                        setBucketSlidesTarget(0),
+                                        setInnerClawPitchPosition(5),
+                                        setClawPitchPosition(68),
+                                        // Extendo pitch pickup position
+                                        setExtendoPitchTarget(-960)
+                                ),
+
+                                new SleepAction(0.3),
+                                // Extendo to sample zone 1
+                                setExtendoTarget(800),
+
+                                // Claw pitch picking up pos
+                                new SleepAction(0.5),
+
+                                new ParallelAction(
+                                        setInnerClawPitchPosition(78),
+                                        setClawPitchPosition(13)
+                                ),
+                                // Close Claw
+                                new SleepAction(0.3),
+
+                                setClawFingerPosition(20),
+                                new SleepAction(0.3),
+
+                                new ParallelAction(
+                                        setClawWristPosition(95),
+                                        setInnerClawPitchPosition(5),
+                                        setClawPitchPosition(68)
+                                ),
+
+                                // Retract extendo, transfer and move to scoring pos
+                                new ParallelAction(
+                                        // Move to scoring position
+                                        onePlusThreeBucket3,
+                                        new SequentialAction(
+                                                // Retract extendo
+                                                setExtendoTarget(0),
+                                                setInnerClawPitchPosition(200),
+                                                // Claw pitch transfer position
+                                                new SleepAction(0.6),
+                                                // Extendo pitch transfer position
+                                                setExtendoPitchTarget(0),
+                                                new SleepAction(0.8),
+                                                setClawPitchPosition(110),
+                                                new SleepAction(0.3),
+                                                setClawFingerPosition(92),
+                                                new SleepAction(0.4),
+                                                setClawPitchPosition(72.4),
+                                                setInnerClawPitchPosition(160)
+                                        )
+                                ),
+                                // Wait for sample to settle in bucket
+                                new SleepAction(0.4),
+                                // Move bucketSlides up to scoring position
+                                setBucketSlidesTarget(1050),
+                                new SleepAction(0.6),
+                                // Rotate bucket to score
+                                setBucketPosition(158),
+                                new SleepAction(0.4),
+                                // Move bucket back to default position
+                                setBucketPosition(46),
+                                // Avoid level 4 hang
+
+
+                                new ParallelAction(
+                                        // Drive to sample zone 2
+                                        onePlusThreeBucket4,
+                                        setBucketSlidesTarget(0),
+                                        setInnerClawPitchPosition(5),
+                                        setClawPitchPosition(68),
+                                        // Extendo pitch pickup position
+                                        setExtendoPitchTarget(-960)
+                                ),
+
+                                new SleepAction(0.3),
+                                // Extendo to sample zone 1
+                                setExtendoTarget(800),
+
+                                // Claw pitch picking up pos
+                                new SleepAction(0.5),
+
+                                new ParallelAction(
+                                        setInnerClawPitchPosition(78),
+                                        setClawPitchPosition(13)
+                                ),
+                                // Close Claw
+                                new SleepAction(0.3),
+
+                                setClawFingerPosition(20),
+                                new SleepAction(0.3),
+
+                                new ParallelAction(
+                                        setClawWristPosition(95),
+                                        setInnerClawPitchPosition(5),
+                                        setClawPitchPosition(68)
+                                ),
+
+                                // Retract extendo, transfer and move to scoring pos
+                                new ParallelAction(
+                                        // Move to scoring position
+                                        onePlusThreeBucket5,
+                                        new SequentialAction(
+                                                // Retract extendo
+                                                setExtendoTarget(0),
+                                                setInnerClawPitchPosition(200),
+                                                // Claw pitch transfer position
+                                                new SleepAction(0.6),
+                                                // Extendo pitch transfer position
+                                                setExtendoPitchTarget(0),
+                                                new SleepAction(0.8),
+                                                setClawPitchPosition(110),
+                                                new SleepAction(0.3),
+                                                setClawFingerPosition(92),
+                                                new SleepAction(0.4),
+                                                setClawPitchPosition(72.4),
+                                                setInnerClawPitchPosition(160)
+                                        )
+                                ),
+                                // Wait for sample to settle in bucket
+                                new SleepAction(0.4),
+                                // Move bucketSlides up to scoring position
+                                setBucketSlidesTarget(1050),
+                                new SleepAction(0.6),
+                                // Rotate bucket to score
+                                setBucketPosition(158),
+                                new SleepAction(0.4),
+                                // Move bucket back to default position
+                                setBucketPosition(46),
+                                // Avoid level 4 hang
+                                new SleepAction(0.4),
+                                new ParallelAction(
+                                        // Drive to sample zone 1
+                                        onePlusThreeBucket6,
+                                        setBucketSlidesTarget(0),
+                                        setInnerClawPitchPosition(5),
+                                        setClawPitchPosition(68),
+                                        // Extendo pitch pickup position
+                                        setExtendoPitchTarget(-960)
+                                ),
+
+                                new SleepAction(0.3),
+                                // Extendo to sample zone 1
+                                setExtendoTarget(800),
+
+                                // Claw pitch picking up pos
+                                new SleepAction(0.5),
+
+                                new ParallelAction(
+                                        setInnerClawPitchPosition(78),
+                                        setClawPitchPosition(13)
+                                ),
+                                // Close Claw
+                                new SleepAction(0.3),
+
+                                setClawFingerPosition(20),
+                                new SleepAction(0.3),
+
+                                new ParallelAction(
+                                        setClawWristPosition(95),
+                                        setInnerClawPitchPosition(5),
+                                        setClawPitchPosition(68)
+                                ),
+
+                                // Retract extendo, transfer and move to scoring pos
+                                new ParallelAction(
+                                        // Move to scoring position
+                                        onePlusThreeBucket7,
+                                        new SequentialAction(
+                                                // Retract extendo
+                                                setExtendoTarget(0),
+                                                setInnerClawPitchPosition(200),
+                                                // Claw pitch transfer position
+                                                new SleepAction(0.6),
+                                                // Extendo pitch transfer position
+                                                setExtendoPitchTarget(0),
+                                                new SleepAction(0.8),
+                                                setClawPitchPosition(110),
+                                                new SleepAction(0.3),
+                                                setClawFingerPosition(92),
+                                                new SleepAction(0.4),
+                                                setClawPitchPosition(72.4),
+                                                setInnerClawPitchPosition(160)
+                                        )
+                                ),
+                                // Wait for sample to settle in bucket
+                                new SleepAction(0.4),
+                                // Move bucketSlides up to scoring position
+                                setBucketSlidesTarget(1050),
+                                new SleepAction(0.6),
+                                // Rotate bucket to score
+                                setBucketPosition(158),
+                                new SleepAction(0.4),
+                                // Move bucket back to default position
+                                setBucketPosition(46),
+                                // Avoid level 4 hang
+                                new SleepAction(0.4),
+                                // Move bucketSlides back to hang position
+                                setBucketSlidesTarget(300),
+                                // Park and low rung
+
+                                onePlusThreeBucket8
+
+
+                        )
+                )
+        );
+    }
+}
