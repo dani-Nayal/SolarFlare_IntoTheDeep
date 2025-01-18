@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.PressTrigger;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.ConditionalAction;
+import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.UninterruptibleConditionalAction;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 import java.util.ArrayList;
@@ -297,7 +298,7 @@ public abstract class TeleOpComponents {
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{
-                    new ConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+                    new UninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
                             new SetTargetAction(target2,maxAcceleration,maxVelocity),
                             new SetTargetAction(target1,maxAcceleration,maxVelocity)
                     })
@@ -307,13 +308,13 @@ public abstract class TeleOpComponents {
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
             return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
         }
-        public ConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
-            return new ConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+        public UninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
+            return new UninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
                     new SetTargetAction(target2,maxAcceleration,maxVelocity),
                     new SetTargetAction(target1,maxAcceleration,maxVelocity)
             });
         }
-        public ConditionalAction toggleAction(double target1, double target2){
+        public UninterruptibleConditionalAction toggleAction(double target1, double target2){
             return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
         }
         public BotMotor(String deviceName,
@@ -665,15 +666,15 @@ public abstract class TeleOpComponents {
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{
-                    new ConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
+                    new UninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
                             new SetPositionAction(target2),
                             new SetPositionAction(target1)
                     })
 
             });
         }
-        public ConditionalAction toggleAction(double target1, double target2){
-            return new ConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
+        public UninterruptibleConditionalAction toggleAction(double target1, double target2){
+            return new UninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
                     new SetPositionAction(target2),
                     new SetPositionAction(target1)
             });
