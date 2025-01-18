@@ -11,6 +11,7 @@ public class MotorControl {
     HardwareConfig hw;
     RobotState state;
     PID pid;
+    MotionProfiles badProfile;
     OldTrapezoidalMotionProfile oldProfile;
     TrapezoidalMotionProfile profile;
     public ElapsedTime timer;
@@ -32,6 +33,7 @@ public class MotorControl {
         state = RobotState.getInstance();
         pid = new PID();
         oldProfile = new OldTrapezoidalMotionProfile();
+        badProfile = new MotionProfiles();
         profile = new TrapezoidalMotionProfile();
         timer = new ElapsedTime();
         maxAcceleration = hw.getMotorConfig(motorEnum).maxAcceleration;
@@ -102,12 +104,11 @@ public class MotorControl {
             timer.reset();
         }
 
-        double instantTargetPosition = oldProfile.runProfile(
+        double instantTargetPosition = badProfile.runTrapezoidalMotionProfile(
                 hw.getMotorConfig(motorEnum).maxVelocity,
                 hw.getMotorConfig(motorEnum).maxAcceleration,
                 distance,
-                timer.seconds(),
-                hw.getMotorConfig(motorEnum).motor.getCurrentPosition()
+                timer.seconds()
         );
 
         double motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
