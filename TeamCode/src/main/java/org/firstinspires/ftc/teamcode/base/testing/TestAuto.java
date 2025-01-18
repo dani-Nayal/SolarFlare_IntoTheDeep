@@ -23,7 +23,7 @@ public class TestAuto extends LinearOpMode {
                   actions.globalMechanismControl(),
                   new SequentialAction(
                           actions.moveToHighChamberAndScoreSpecimen(
-                                  actions.getInitialDrivePosition("specimin", "sample"),
+                                  actions.getInitialDrivePosition("specimen", "sample"),
                                   new Vector2d(-5, -40),
                                   Math.toRadians(90)
                           )

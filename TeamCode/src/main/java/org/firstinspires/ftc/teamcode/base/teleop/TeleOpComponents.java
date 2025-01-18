@@ -52,7 +52,7 @@ public abstract class TeleOpComponents {
 
 
     public static class BotMotor extends DcMotorImplEx {
-        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 10;
+        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
         double maxVelocityParam;
         double maxAccelerationParam;
         double instantTargetPosition = 0;
@@ -437,8 +437,8 @@ public abstract class TeleOpComponents {
         public void createPendingMotionProfiles(){
             if (isProfilePending) {
                 if (profileDelayCounter==1){
-                createMotionProfile(maxVelocityParam, maxAccelerationParam);
-                isProfilePending=false;
+                    createMotionProfile(maxVelocityParam, maxAccelerationParam);
+                    isProfilePending=false;
                 }
                 if (profileDelayCounter<profileDelayFactor) profileDelayCounter++; else profileDelayCounter=1;
             }
@@ -691,7 +691,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendo").getController(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getMotorType(),
-                0.005,0,0.0,
+                0.015,0,0.0,
                 new String[]{},new double[]{},
                 793,0,
                 200000,3000,
@@ -720,7 +720,7 @@ public abstract class TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getController(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
-                0.005,0,0.0,
+                0.015,0,0.0,
                 new String[]{"depositPosition","transferPosition"},new double[]{1030,0},
                 1030,0,
                 200000,3000,

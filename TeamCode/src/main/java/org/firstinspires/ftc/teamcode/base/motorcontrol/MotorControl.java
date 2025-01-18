@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -27,6 +28,7 @@ public class MotorControl {
     double initialVelocity;
     double distance;
     MotorEnum motorEnum;
+    Telemetry dashBoardTelemetry = FtcDashboard.getInstance().getTelemetry();
     public MotorControl(MotorEnum motorEnum){
         this.motorEnum = motorEnum;
         hw = HardwareConfig.getInstance();
@@ -91,6 +93,11 @@ public class MotorControl {
         telemetry.addData("max velocity", profile.maxVelocity);
         telemetry.addData("current velocity", hw.getMotorConfig(motorEnum).motor.getVelocity());
 
+        dashBoardTelemetry.addData("current position", hw.getMotorConfig(motorEnum).motor.getCurrentPosition());
+        dashBoardTelemetry.addData("target position", state.getMotorTarget(motorEnum));
+        dashBoardTelemetry.addData("speed", hw.getMotorConfig(motorEnum).motor.getVelocity());
+
+        dashBoardTelemetry.update();
         telemetry.update();
     }
     public void runOldTrapezoidalMotionProfile(){
@@ -126,8 +133,18 @@ public class MotorControl {
     }
 
     // Run this method in a loop
-    public void runPIDMotorControl(){
+    public void runPIDMotorControl(Telemetry telemetry){
         motorPower = pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum));
         hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
+
+        telemetry.addData("current position", pid.encoderPosition);
+        telemetry.addData("state position", state.getMotorTarget(motorEnum));
+        telemetry.addData("error", pid.error);
+        telemetry.addData("proportional power", pid.proportionalPower);
+        telemetry.addData("integral power", pid.integralPower);
+        telemetry.addData("derivative power", pid.derivativePower);
+        telemetry.addData("derivative", pid.derivativePower);
+        telemetry.addData("out power", pid.outPower);
+        telemetry.update();
     }
 }

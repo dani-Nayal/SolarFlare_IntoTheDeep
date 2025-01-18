@@ -10,6 +10,13 @@ import org.firstinspires.ftc.teamcode.base.config.RobotState;
 public class PID {
     HardwareConfig hw;
     RobotState state;
+    public double error;
+    public int encoderPosition;
+    public double derivative;
+    public double proportionalPower;
+    public double integralPower;
+    public double derivativePower;
+    public double outPower;
     double lastError = 0;
     double lastReference = 0;
     double integralSum = 0;
@@ -20,11 +27,11 @@ public class PID {
     }
     public double getPIDOutput(MotorEnum motorEnum, double reference) {
         MotorConfig motorConfig = hw.getMotorConfig(motorEnum);
-        int encoderPosition = motorConfig.motor.getCurrentPosition();
+        encoderPosition = motorConfig.motor.getCurrentPosition();
 
-        double error = reference - encoderPosition;
+        error = reference - encoderPosition;
 
-        double derivative = (error - lastError) / timer.seconds();
+        derivative = motorConfig.motor.getVelocity();
 
         integralSum = integralSum + (error * timer.seconds());
 
@@ -32,10 +39,10 @@ public class PID {
             integralSum = 0;
         }
         
-        double proportionalPower = error * motorConfig.kP;
-        double integralPower = integralSum * motorConfig.kI;
-        double derivativePower = derivative * motorConfig.kD;
-        double outPower = Math.max(-1,Math.min(1,proportionalPower + integralPower + derivativePower));
+        proportionalPower = error * motorConfig.kP;
+        integralPower = integralSum * motorConfig.kI;
+        derivativePower = derivative * motorConfig.kD;
+        outPower = Math.max(-1, Math.min(1, proportionalPower + integralPower + derivativePower));
 
         lastError = error;
         lastReference = reference;

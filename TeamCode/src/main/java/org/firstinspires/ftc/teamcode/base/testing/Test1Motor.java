@@ -46,8 +46,8 @@ public class Test1Motor extends LinearOpMode {
             else if (gamepad1.x){
                 state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
             }
-
-            motorControl.runPIDMotorControl();
+            
+            motorControl.runTrapezoidalMotionProfile(telemetry);
         }
     }
 }

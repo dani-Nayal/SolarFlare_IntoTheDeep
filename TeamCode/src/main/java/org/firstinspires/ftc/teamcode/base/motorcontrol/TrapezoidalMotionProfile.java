@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class TrapezoidalMotionProfile {
     double accelerationDistance;
     double accelerationTime;
@@ -20,7 +24,7 @@ public class TrapezoidalMotionProfile {
         this.distance = distance;
         this.initialPosition = initialPosition;
         this.maxAcceleration = maxAcceleration * Math.signum(maxVelocity - initialVelocity);
-        this.maxDeceleration = -maxAcceleration * Math.signum(distance);
+        this.maxDeceleration = maxAcceleration * -1;
 
 
         accelerationTime = (this.maxVelocity - this.initialVelocity) / this.maxAcceleration;
@@ -32,11 +36,11 @@ public class TrapezoidalMotionProfile {
         cruiseDistance = this.distance - accelerationDistance - decelerationDistance;
         cruiseTime = Math.abs(cruiseDistance / this.maxVelocity);
 
-        if (Math.abs(accelerationDistance + decelerationDistance) > Math.abs(this.distance)){
+        if (Math.abs(accelerationDistance) + Math.abs(decelerationDistance) > Math.abs(this.distance)){
             double exceededDistance = (accelerationDistance + decelerationDistance) - this.distance;
 
-            accelerationDistance -= (Math.abs(accelerationDistance) / (Math.abs(accelerationDistance) + Math.abs(decelerationDistance))) * exceededDistance;
-            decelerationDistance -= (Math.abs(decelerationDistance) / (Math.abs(accelerationDistance) + Math.abs(decelerationDistance))) * exceededDistance;
+            accelerationDistance -= exceededDistance / 2;
+            decelerationDistance -= exceededDistance / 2;
 
             accelerationTime = Math.abs(calculateKinematicTime(this.initialVelocity, this.maxAcceleration, accelerationDistance));
 
