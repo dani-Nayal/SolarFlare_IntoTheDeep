@@ -19,14 +19,14 @@ public class TunePIDCoefficients extends LinearOpMode {
     HardwareConfig hw;
     RobotState state;
     static MotorEnum testingMotor = MotorEnum.TESTING_MOTOR;
-    static double kP;
-    static double kI;
-    static double kD;
+    public static double kP = 0.001;
+    public static double kI;
+    public static double kD;
 
     @Override
     public void runOpMode(){
         try {
-            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor ");
+            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
             hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -39,13 +39,10 @@ public class TunePIDCoefficients extends LinearOpMode {
 
         ElapsedTime timer = new ElapsedTime();
 
-        double lastError = 0;
-
         double lastReference = 0;
 
         double integralSum = 0;
-
-        double integralSumLimit = 0.25;
+        double lastError = 0;
 
         waitForStart();
 
@@ -62,24 +59,19 @@ public class TunePIDCoefficients extends LinearOpMode {
             else if (gamepad1.x){
                 state.setMotorTarget(testingMotor, hw.getMotorConfig(testingMotor).maxTarget);
             }
+
             double reference = state.getMotorTarget(testingMotor);
 
             double encoderPosition = hw.getMotorConfig(testingMotor).motor.getCurrentPosition();
 
             double error = state.getMotorTarget(testingMotor) - encoderPosition;
 
-            double derivative = (error - lastError) / timer.seconds();
+            double derivative = (error - lastError)/ timer.seconds();
 
             integralSum = integralSum + (error * timer.seconds());
 
             if (reference != lastReference){
                 integralSum = 0;
-            }
-            if (integralSum > integralSumLimit){
-                integralSum = integralSumLimit;
-            }
-            if (integralSum < -integralSumLimit){
-                integralSum = -integralSumLimit;
             }
 
             double proportionalPower = error * kP;
@@ -92,15 +84,19 @@ public class TunePIDCoefficients extends LinearOpMode {
 
             hw.getMotorConfig(testingMotor).motor.setPower(outPower);
 
-            lastError = error;
-
             lastReference = reference;
+            lastError = error;
 
             timer.reset();
 
-            telemetry.addData("motor target", state.getMotorTarget(testingMotor));
+            telemetry.addData("motor target state", state.getMotorTarget(testingMotor));
             telemetry.addData("motor position", hw.getMotorConfig(testingMotor).motor.getCurrentPosition());
+            telemetry.addData("error", error);
+            telemetry.addData("proportional power", proportionalPower);
+            telemetry.addData("integral power", integralPower);
+            telemetry.addData("derivative power", derivativePower);
             telemetry.addData("motor power", outPower);
+            telemetry.addData("derivative", derivative);
             telemetry.update();
         }
     }

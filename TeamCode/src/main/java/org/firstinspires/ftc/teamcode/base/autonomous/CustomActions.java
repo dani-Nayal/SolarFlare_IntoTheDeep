@@ -47,7 +47,7 @@ public class CustomActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             state.setMotorTarget(motorEnum, target);
             double error = Math.abs(state.getMotorTarget(motorEnum) - hw.getMotorConfig(motorEnum).motor.getCurrentPosition());
-            return !(error == 0);
+            return !(error < 10);
         }
     }
     public SetMotorTargetAction setMotorTargetAction(MotorEnum motorEnum, int target) {return new SetMotorTargetAction(motorEnum, target);}
@@ -150,10 +150,7 @@ public class CustomActions {
     public class GlobalMechanismControl implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            extendoControl.runTrapezoidalMotionProfile(telemetry);
-            bucketSlidesControl.runTrapezoidalMotionProfile(telemetry);
-            extendoPitchControl.runTrapezoidalMotionProfile(telemetry);
-            hangControl.runPIDMotorControl();
+
             return true;
         }
     }
@@ -182,11 +179,11 @@ public class CustomActions {
                 )
         );
     }
-    public SequentialAction moveToNetZone(Pose2d initialDrivePose, Vector2d scoringPosition, double scoringHeading) {
+    public SequentialAction moveToNetZone(Pose2d initialDrivePose) {
         return new SequentialAction(
                 // Move to scoring position
                 drive.actionBuilder(initialDrivePose)
-                        .strafeToLinearHeading(scoringPosition, scoringHeading).build()
+                        .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(45)).build()
        );
     }
     public SequentialAction scoreHighBucket(){
@@ -210,16 +207,50 @@ public class CustomActions {
                         setServoPositionAction(ServoEnum.BUCKET, state.BUCKET_TRANSFER)
                 ),
                 setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_OPEN)
-
         );
     }
     public Action grabGroundSample(Pose2d initialDrivePose, Vector2d pickUpPose, double heading, int extendoPosition) {
         return new SequentialAction(
-
-
+                new ParallelAction(
+                        setMotorTargetAction(MotorEnum.BUCKET_SLIDES, state.BUCKET_SLIDES_TRANSFER),
+                        setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
+                        setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_PICK_UP),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_PICK_UP),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, state.CLAW_PITCH_PICK_UP),
+                        drive.actionBuilder(initialDrivePose).strafeToLinearHeading(pickUpPose, heading).build()
+                ),
+                setMotorTargetAction(MotorEnum.EXTENDO, extendoPosition),
+                setServoPositionAction(ServoEnum.INNER_CLAW_PITCH, state.INNER_CLAW_PITCH_PICK_UP),
+                setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_CLOSED)
         );
     }
-
+    public Action grabSideSpecimen(Pose2d initialDrivePose){
+        return new SequentialAction(
+                new ParallelAction(
+                        setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
+                        setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_GRAB_SPECIMEN),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_GRAB_SPECIMEN),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, state.CLAW_PITCH_GRAB_SPECIMEN),
+                        setServoPositionAction(ServoEnum.INNER_CLAW_PITCH, state.INNER_CLAW_PITCH_GRAB_SPECIMEN),
+                        setServoPositionAction(ServoEnum.BUCKET, state.BUCKET_DEPOSIT),
+                        drive.actionBuilder(initialDrivePose).strafeToLinearHeading(new Vector2d(36, 54), 270).build()
+                ),
+                setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_CLOSED)
+        );
+    }
+    public Action parkRobotSampleSide(Pose2d initialDrivePose){
+        return new SequentialAction(
+                new ParallelAction(
+                        setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
+                        setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_TRANSFER),
+                        setMotorTargetAction(MotorEnum.BUCKET_SLIDES, state.BUCKET_SLIDES_TRANSFER),
+                        drive.actionBuilder(initialDrivePose)
+                                .strafeToLinearHeading(new Vector2d(-30,-6), Math.toRadians(0))
+                                .strafeToLinearHeading(new Vector2d(-23.4,-6), Math.toRadians(0))
+                                .build()
+                )
+        );
+    }
 }
 
 
