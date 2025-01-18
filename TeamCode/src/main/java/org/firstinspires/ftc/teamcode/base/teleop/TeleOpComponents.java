@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
@@ -51,7 +52,7 @@ public abstract class TeleOpComponents {
 
 
     public static class BotMotor extends DcMotorImplEx {
-        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
+        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 10;
         double maxVelocityParam;
         double maxAccelerationParam;
         double instantTargetPosition = 0;
@@ -724,7 +725,7 @@ public abstract class TeleOpComponents {
                 1030,0,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
-                DcMotorEx.Direction.FORWARD,
+                DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
                 "MOTION_PROFILE"
         );
