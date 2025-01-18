@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
+import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
 import org.json.JSONException;
 
 @Config
@@ -19,19 +21,22 @@ public class TunePIDCoefficients extends LinearOpMode {
     HardwareConfig hw;
     RobotState state;
     static MotorEnum testingMotor = MotorEnum.TESTING_MOTOR;
-    static double kP;
-    static double kI;
-    static double kD;
+    public static double kP;
+    public static double kI;
+    public static double kD;
 
     @Override
     public void runOpMode(){
         try {
-            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor ");
+            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
             hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         state = RobotState.getInstance();
+
+        hw.getMotorConfig(MotorEnum.TESTING_MOTOR).motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hw.getMotorConfig(MotorEnum.TESTING_MOTOR).motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -44,8 +49,6 @@ public class TunePIDCoefficients extends LinearOpMode {
         double lastReference = 0;
 
         double integralSum = 0;
-
-        double integralSumLimit = 0.25;
 
         waitForStart();
 
@@ -74,12 +77,6 @@ public class TunePIDCoefficients extends LinearOpMode {
 
             if (reference != lastReference){
                 integralSum = 0;
-            }
-            if (integralSum > integralSumLimit){
-                integralSum = integralSumLimit;
-            }
-            if (integralSum < -integralSumLimit){
-                integralSum = -integralSumLimit;
             }
 
             double proportionalPower = error * kP;
