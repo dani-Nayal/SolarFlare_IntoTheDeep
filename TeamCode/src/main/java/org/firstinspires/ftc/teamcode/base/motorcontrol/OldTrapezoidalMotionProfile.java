@@ -10,7 +10,7 @@ public class OldTrapezoidalMotionProfile {
 
         double halfWayDistance = distance / 2;
 
-        if (accelerationDistance > halfWayDistance) {
+        if (Math.abs(accelerationDistance) > Math.abs(halfWayDistance)) {
             accelerationTime = Math.sqrt(halfWayDistance / (0.5 * maxAcceleration));
             decelerationTime = accelerationTime;
             accelerationDistance = 0.5 * maxAcceleration * Math.pow(accelerationTime, 2);
@@ -27,7 +27,7 @@ public class OldTrapezoidalMotionProfile {
             return initialPosition + distance;
         }
         else if (elapsedTime < accelerationTime){
-            return 0.5 * maxAcceleration * Math.pow(elapsedTime, 2);
+            return initialPosition + 0.5 * maxAcceleration * Math.pow(elapsedTime, 2);
         }
         else if (elapsedTime < accelerationTime + cruiseTime){
             double cruiseCurrentTime = elapsedTime - accelerationTime;

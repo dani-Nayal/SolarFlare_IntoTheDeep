@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.base.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
@@ -27,6 +28,9 @@ public class Test1Motor extends LinearOpMode {
         state = RobotState.getInstance();
         motorControl = new MotorControl(MotorEnum.TESTING_MOTOR);
 
+
+        hw.getMotorConfig(MotorEnum.TESTING_MOTOR).motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hw.getMotorConfig(MotorEnum.TESTING_MOTOR).motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
 
         while (opModeIsActive()){
@@ -42,7 +46,7 @@ public class Test1Motor extends LinearOpMode {
             else if (gamepad1.x){
                 state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
             }
-
+            
             motorControl.runTrapezoidalMotionProfile(telemetry);
         }
     }
