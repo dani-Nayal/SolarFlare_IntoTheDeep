@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 public class TrapezoidalMotionProfile {
     double accelerationDistance;
     double accelerationTime;
@@ -25,31 +23,32 @@ public class TrapezoidalMotionProfile {
         this.maxDeceleration = -maxAcceleration * Math.signum(distance);
 
 
-        accelerationTime = Math.abs((this.maxVelocity - this.initialVelocity) / this.maxAcceleration);
+        accelerationTime = (this.maxVelocity - this.initialVelocity) / this.maxAcceleration;
         accelerationDistance = this.initialVelocity * accelerationTime + 0.5 * this.maxAcceleration * Math.pow(accelerationTime, 2);
 
-        decelerationTime = Math.abs(this.maxVelocity / maxDeceleration);
+        decelerationTime = (0- this.maxVelocity) / maxDeceleration;
         decelerationDistance = this.maxVelocity * decelerationTime + 0.5 * maxDeceleration * Math.pow(decelerationTime, 2);
 
         cruiseDistance = this.distance - accelerationDistance - decelerationDistance;
         cruiseTime = Math.abs(cruiseDistance / this.maxVelocity);
 
-        if (accelerationDistance + decelerationDistance > this.distance){
+        if (Math.abs(accelerationDistance + decelerationDistance) > Math.abs(this.distance)){
             double exceededDistance = (accelerationDistance + decelerationDistance) - this.distance;
 
-            accelerationDistance = accelerationDistance + (exceededDistance / 2);
-            decelerationDistance = decelerationDistance + (exceededDistance / 2);
+            accelerationDistance -= (Math.abs(accelerationDistance) / (Math.abs(accelerationDistance) + Math.abs(decelerationDistance))) * exceededDistance;
+            decelerationDistance -= (Math.abs(decelerationDistance) / (Math.abs(accelerationDistance) + Math.abs(decelerationDistance))) * exceededDistance;
 
             accelerationTime = Math.abs(calculateKinematicTime(this.initialVelocity, this.maxAcceleration, accelerationDistance));
 
             this.maxVelocity = this.initialVelocity + accelerationTime * this.maxAcceleration;
 
             decelerationTime = Math.abs(calculateKinematicTime(this.maxVelocity, this.maxDeceleration, decelerationDistance));
-        }
-        cruiseDistance = this.distance - accelerationDistance - decelerationDistance;
-        cruiseTime = cruiseDistance / this.maxVelocity;
-        totalTime = Math.max(0, accelerationTime) + Math.max(0, cruiseTime) + Math.max(0, decelerationTime);
 
+            cruiseDistance = this.distance - accelerationDistance - decelerationDistance;
+            cruiseTime = Math.abs(cruiseDistance / this.maxVelocity);
+        }
+
+        totalTime = Math.max(0, accelerationTime) + Math.max(0, cruiseTime) + Math.max(0, decelerationTime);
     }
     // Run this method in a loop
     public double runProfile(double elapsedTime){
@@ -64,7 +63,7 @@ public class TrapezoidalMotionProfile {
             double decelerateElapsedTime = elapsedTime - accelerationTime - cruiseTime;
             return initialPosition + accelerationDistance + cruiseDistance + maxVelocity * decelerateElapsedTime + 0.5 * maxDeceleration * Math.pow(decelerateElapsedTime, 2);
         }
-        else{
+        else {
             return initialPosition + distance;
         }
     }

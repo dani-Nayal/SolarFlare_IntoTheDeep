@@ -18,7 +18,7 @@ public class Test1Motor extends LinearOpMode {
 
     public void runOpMode(){
         try {
-            RobotConfig robotConfig = RobotConfig.createInstance("IntoTheDeep-V2");
+            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
             HardwareConfig.createInstance(hardwareMap, robotConfig);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -43,7 +43,7 @@ public class Test1Motor extends LinearOpMode {
                 state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
             }
 
-            motorControl.runTrapezoidalMotionProfile(telemetry);
+            motorControl.runOldTrapezoidalMotionProfile();
         }
     }
 }

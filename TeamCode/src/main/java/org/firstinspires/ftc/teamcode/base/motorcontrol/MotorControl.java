@@ -11,8 +11,8 @@ public class MotorControl {
     HardwareConfig hw;
     RobotState state;
     PID pid;
+    OldTrapezoidalMotionProfile oldProfile;
     TrapezoidalMotionProfile profile;
-    MotionProfiles badProfile;
     public ElapsedTime timer;
     int currentPosition;
     double motorPower;
@@ -31,8 +31,8 @@ public class MotorControl {
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
         pid = new PID();
+        oldProfile = new OldTrapezoidalMotionProfile();
         profile = new TrapezoidalMotionProfile();
-        badProfile = new MotionProfiles();
         timer = new ElapsedTime();
         maxAcceleration = hw.getMotorConfig(motorEnum).maxAcceleration;
         maxVelocity = hw.getMotorConfig(motorEnum).maxVelocity;
@@ -71,6 +71,9 @@ public class MotorControl {
         previousLoopTarget = currentTarget;
         lastMaxVelocity = maxVelocity;
         lastMaxAcceleration = maxAcceleration;
+        telemetry.addData("motor power", motorPower);
+        telemetry.addData("state target position", state.getMotorTarget(motorEnum));
+        telemetry.addData("current position", hw.getMotorConfig(motorEnum).motor.getCurrentPosition());
         telemetry.addData("instant target pos", instantTargetPosition);
         telemetry.addData("distance", distance );
         telemetry.addData("initial speed", initialVelocity);
@@ -78,18 +81,15 @@ public class MotorControl {
         telemetry.addData("acceleration distance", profile.accelerationDistance);
         telemetry.addData("cruise time", profile.cruiseTime);
         telemetry.addData("cruise distance", profile.cruiseDistance);
-        telemetry.addData("decceleration time", profile.decelerationTime);
-        telemetry.addData("decceleration distance", profile.decelerationDistance);
-        telemetry.addData("max accel", maxAcceleration);
-        telemetry.addData("max velocity", maxVelocity);
+        telemetry.addData("deceleration time", profile.decelerationTime);
+        telemetry.addData("deceleration distance", profile.decelerationDistance);
+        telemetry.addData("total time", profile.totalTime);
+        telemetry.addData("max acceleration", profile.maxAcceleration);
+        telemetry.addData("max deceleration", profile.maxDeceleration);
+        telemetry.addData("max velocity", profile.maxVelocity);
         telemetry.addData("current velocity", hw.getMotorConfig(motorEnum).motor.getVelocity());
 
         telemetry.update();
-
-
-
-
-
     }
     public void runOldTrapezoidalMotionProfile(){
         int currentTarget = state.getMotorTarget(motorEnum);
@@ -101,7 +101,14 @@ public class MotorControl {
         if (previousLoopTarget != currentTarget){
             timer.reset();
         }
-        double instantTargetPosition = badProfile.runTrapezoidalMotionProfile(hw.getMotorConfig(motorEnum).maxVelocity, hw.getMotorConfig(motorEnum).maxAcceleration, distance, timer.seconds());
+
+        double instantTargetPosition = oldProfile.runProfile(
+                hw.getMotorConfig(motorEnum).maxVelocity,
+                hw.getMotorConfig(motorEnum).maxAcceleration,
+                distance,
+                timer.seconds(),
+                hw.getMotorConfig(motorEnum).motor.getCurrentPosition()
+        );
 
         double motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
 

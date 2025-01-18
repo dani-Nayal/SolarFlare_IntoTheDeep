@@ -39,7 +39,7 @@ public class RobotMetricsFile {
                     e);
             return;
         }
-        formatter.format("%1$s", String.join(",", fieldNames));
+        formatter.format("%1$s", String.join(",", fieldNames) + "%n");
     }
 
     public void addData(Object... data) {
