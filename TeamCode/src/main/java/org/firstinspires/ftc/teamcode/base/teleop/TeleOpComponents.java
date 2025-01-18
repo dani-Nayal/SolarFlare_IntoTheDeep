@@ -115,7 +115,7 @@ public abstract class TeleOpComponents {
                     setMotorTarget(pos,maxAcceleration,maxVelocity);
                     isStart=false;
                 }
-                return Math.abs(target-getCurrentPosition())!=0;
+                return Math.abs(target-getCurrentPosition())>15;
             }
         }
         public class DownwardFSMAction implements TeleOpAction{
@@ -163,7 +163,7 @@ public abstract class TeleOpComponents {
                     setMotorTarget(pos,maxAcceleration,maxVelocity);
                     isStart=false;
                 }
-                return Math.abs(target-getCurrentPosition())!=0;
+                return Math.abs(target-getCurrentPosition())>15;
             }
         }
 
@@ -230,7 +230,7 @@ public abstract class TeleOpComponents {
                     setMotorTarget(targetFun.call(),maxAcceleration,maxVelocity);
                     isStart=false;
                 }
-                return Math.abs(target-getCurrentPosition())!=0;
+                return Math.abs(target-getCurrentPosition())>15;
             }
 
             @Override
@@ -306,6 +306,15 @@ public abstract class TeleOpComponents {
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
             return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
+        }
+        public ConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
+            return new ConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+                    new SetTargetAction(target2,maxAcceleration,maxVelocity),
+                    new SetTargetAction(target1,maxAcceleration,maxVelocity)
+            });
+        }
+        public ConditionalAction toggleAction(double target1, double target2){
+            return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
         }
         public BotMotor(String deviceName,
                         DcMotorController controller,
@@ -661,6 +670,12 @@ public abstract class TeleOpComponents {
                             new SetPositionAction(target1)
                     })
 
+            });
+        }
+        public ConditionalAction toggleAction(double target1, double target2){
+            return new ConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
+                    new SetPositionAction(target2),
+                    new SetPositionAction(target1)
             });
         }
     }
