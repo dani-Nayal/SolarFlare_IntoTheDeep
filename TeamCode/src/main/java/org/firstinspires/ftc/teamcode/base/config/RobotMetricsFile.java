@@ -35,7 +35,7 @@ public class RobotMetricsFile {
                     Level.SEVERE,
                     "RobotMetricsFile",
                     "open",
-                    "Failed to open file" + fullFileName,
+                    "Failed to open file:" + fullFileName,
                     e);
             return;
         }
