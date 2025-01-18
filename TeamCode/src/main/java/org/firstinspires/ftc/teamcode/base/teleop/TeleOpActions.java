@@ -491,14 +491,16 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
             TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.getCurrentPosition());
-            TeleOpComponents.telemetry.addData("phase",TeleOpActions.phase);
+            //TeleOpComponents.telemetry.addData("phase",TeleOpActions.phase);
             TeleOpComponents.telemetry.update();
             if (TeleOpActions.phase==3) TeleOpActions.phase=1; else TeleOpActions.phase++;
+            /*
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            */
             return false;
         }
     }
