@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.base.testing;
 
-
 import java.util.logging.Logger;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
