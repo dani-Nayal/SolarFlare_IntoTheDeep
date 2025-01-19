@@ -3,68 +3,76 @@ package org.firstinspires.ftc.teamcode.base.motorcontrol;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 import static java.lang.Math.round;
+
 import static org.firstinspires.ftc.teamcode.base.calibration.Math.solveQuadraticEquation;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.calibration.CalculationException;
 import org.firstinspires.ftc.teamcode.base.calibration.ComplexNumberPair;
 
 public class TrapezoidalMotionProfile1D implements MotionProfile {
     /**
+     * FTC Dashboard Telemetry
+     */
+    Telemetry telemetryDash = FtcDashboard.getInstance().getTelemetry();
+    /**
      * Max Acceleration
      */
-    double Amax;
+    double    Amax;
     /**
      * Max Deceleration
      */
-    double Dmax;
+    double    Dmax;
     /**
      * Max Velocity
      */
-    double Vmax;
+    double    Vmax;
     /**
      * Initial Velocity
      */
-    double Vi;
+    double    Vi;
     /**
      * Initial Position
      */
-    double Pi;
+    double    Pi;
     /**
      * Cruise Speed
      */
-    double Vc;
+    double    Vc;
     /**
      * Distance to travel
      */
-    double dist;
+    double    dist;
     /**
      * Acceleration Time
      */
-    double Ta;
+    double    Ta;
     /**
      * Deceleration Time
      */
-    double Td;
+    double    Td;
     /**
      * Cruise Time
      */
-    double Tc;
+    double    Tc;
     /**
      * Total Time
      */
-    double Tt;
+    double    Tt;
     /**
      * Span (distaance) while accelerating
      */
-    double Sa;
+    double    Sa;
     /**
      * Span (distance) cruising
      */
-    double Sc;
+    double    Sc;
     /**
      * Span (distance) decelerating
      */
-    double Sd;
+    double    Sd;
 
     /**
      * All parameters are positive,
@@ -114,6 +122,16 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
         Sd                      = 0.5*Vc*Td;
         Sc                      = dist - Sa - Sd;
         Tc                      = Sc / Vc;
+
+        telemetryDash.addData("Pi", Pi);
+        telemetryDash.addData("Vi", Vi);
+        telemetryDash.addData("distance", dist);
+        telemetryDash.addData("Max Velocity", Vmax);
+        telemetryDash.addData("Cruise Velocity", Vc);
+        telemetryDash.addData("Accel Span", Sa);
+        telemetryDash.addData("Cruise Span", Sc);
+        telemetryDash.addData("Decel Span", Sd);
+        telemetryDash.update();
     }
 
     // Run this method in a loop
