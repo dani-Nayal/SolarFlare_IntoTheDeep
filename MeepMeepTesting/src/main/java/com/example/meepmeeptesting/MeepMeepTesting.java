@@ -189,8 +189,10 @@ public class MeepMeepTesting {
         Action oneSpecimenPlusThreeSpecimen1 = myBot.getDrive().actionBuilder(new Pose2d(12.4375/2,-70+15.0625/2,Math.toRadians(90)))
                 .waitSeconds(0.2)
                 .strafeToLinearHeading(new Vector2d(12.4375/2,-45), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(38,-38,Math.toRadians(30)),Math.toRadians(0))
+                .waitSeconds(0.001)
+                .splineToSplineHeading(new Pose2d(38,-38,Math.toRadians(45)),Math.toRadians(0))
                 .setTangent(0)
+                .waitSeconds(0.001)
                 .splineToLinearHeading(new Pose2d(43,-41,Math.toRadians(-50)),Math.toRadians(-45))
                 .splineToSplineHeading(new Pose2d(46,-38,Math.toRadians(37)),Math.toRadians(45))
                 .splineToLinearHeading(new Pose2d(52,-41,Math.toRadians(-55)),Math.toRadians(-45))
@@ -209,7 +211,15 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(new SequentialAction(
-                onePlusThreeBucket
+                onePlusThreeBucket,
+                onePlusThreeBucket1,
+                onePlusThreeBucket2,
+                onePlusThreeBucket3,
+                onePlusThreeBucket4,
+                onePlusThreeBucket5,
+                onePlusThreeBucket6,
+                onePlusThreeBucket7,
+                onePlusThreeBucket8
         ));
     }
 }
