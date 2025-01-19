@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.base.testing;
 
-
 import java.util.logging.Logger;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -49,13 +48,13 @@ public class Rig1Motor extends LinearOpMode {
                 robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
             }
             else if (gamepad1.b){
-                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 800);
+                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 500);
             }
             else if (gamepad1.y){
-                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 1321);
+                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 1500);
             }
             else if (gamepad1.x){
-                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
+                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 2000);
             }
 
             motorControl.runTrapezoidalMotionProfile(telemetry);
