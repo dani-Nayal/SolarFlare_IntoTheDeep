@@ -90,7 +90,7 @@ public class MotorControl1D {
             Vi                       = motor.getVelocity();
             distance                 = targetPosition - Pi;
 
-            profile.resetProfile(Amax, Vmax, Vi, distance, Pi);
+            profile.resetProfile(Amax, Amax, Vmax, Vi, distance, Pi);
 
             isMaxVelocityChanged     = false;
             isMaxAccelerationChanged = false;
@@ -103,12 +103,14 @@ public class MotorControl1D {
 
         targetMotorPower             = pid.getPIDOutput(motorEnum, targetMotorPosition);
         motor.setPower(targetMotorPower);
+        /*
         try {
             Thread.currentThread().sleep(100);
         } catch(InterruptedException e) {
             e.printStackTrace();
             return;
         }
+        */
         Integer motorPosition        = motor.getCurrentPosition();
         Double  motorPower           = motor.getPower();
         Double  motorVelocity        = motor.getVelocity();
