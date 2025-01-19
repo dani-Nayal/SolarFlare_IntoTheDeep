@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
+import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -37,6 +38,7 @@ public abstract class  TeleOpComponents {
     public static ArrayList<BotMotor> motors = new ArrayList<>();
     public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
+    public static ArrayList<CRBotServo> CRBotServos = new ArrayList<>();
 
     //create mechanism variables here
     public static BotServo clawFingers;
@@ -690,6 +692,48 @@ public abstract class  TeleOpComponents {
                     new SetPositionAction(target1)
             });
         }
+    }
+    public static class CRBotServo extends CRServoImpl {
+        public ArrayList<BotServo> synchronizedServos = new ArrayList<>();
+        public double SERVO_SPEED;
+        public CRBotServo(String deviceName,
+                        ServoController controller,
+                        int portNumber,
+                        double servoSpeed,
+                        Direction direction)
+        {
+            super(controller, portNumber);
+            this.SERVO_SPEED = servoSpeed;
+            setDirection(direction);
+            //hardwareMap.put(deviceName,this);
+            CRBotServos.add(this);
+        }
+        public class SetPowerAction implements TeleOpAction{
+            public DoubleFunction powerFun;
+            public SetPowerAction(double power){
+                this.powerFun =()->(power);
+            }
+            public SetPowerAction(DoubleFunction powerFun){
+                this.powerFun = powerFun;
+            }
+            @Override
+            public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
+                return run(packet);
+            }
+
+            @Override
+            public void stop() {}
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                setPower(powerFun.call());
+                return false;
+            }
+        }
+        public SetPowerAction setPowerAction(double power){
+            return new SetPowerAction(power);
+        }
+
     }
     public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry){
         TeleOpComponents.hardwareMap=hardwareMap;
