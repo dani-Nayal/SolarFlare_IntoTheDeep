@@ -177,16 +177,23 @@ public abstract class TeleOpActions{
         }
     }
 
-    public static class sleepWhileTrue implements TeleOpAction{
+    public static class SleepWhileTrue implements TeleOpAction{
         public Condition condition;
         public double timeout;
-        private final ElapsedTime timeOutTimer = new ElapsedTime();
+        private ElapsedTime timeOutTimer = null;
         public boolean isStart = true;
-        public sleepWhileTrue(Condition condition, double timeout){
+        public Condition returnCondition;
+        public SleepWhileTrue(Condition condition, double timeout){
             this.condition=condition;
             this.timeout=timeout;
+            if (timeout!=Double.POSITIVE_INFINITY) {
+                returnCondition = () -> (condition.call() && timeOutTimer.time() < timeout);
+            }
+            else{
+                returnCondition = condition;
+            }
         }
-        public sleepWhileTrue(Condition condition){
+        public SleepWhileTrue(Condition condition){
             this(condition, Double.POSITIVE_INFINITY);
         }
         @Override
@@ -196,16 +203,17 @@ public abstract class TeleOpActions{
         }
 
         @Override
-        public void stop() {
-
-        }
+        public void stop() {timeOutTimer=null;}
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if (isStart){
-                timeOutTimer.reset();
+                isStart=false;
+                if (this.timeout!=Double.POSITIVE_INFINITY) {
+                    timeOutTimer = new ElapsedTime();
+                }
             }
-            return condition.call() && timeOutTimer.time()<timeout;
+            return returnCondition.call();
         }
     }
 
@@ -525,7 +533,7 @@ public abstract class TeleOpActions{
     public static class TeleOpSleepAction implements TeleOpAction{
         boolean isStart=true;
         double time;
-        ElapsedTime timer = new ElapsedTime();
+        ElapsedTime timer = null;
         public TeleOpSleepAction(double time){
             this.time=time;
         }
@@ -535,13 +543,13 @@ public abstract class TeleOpActions{
             return run(packet);
         }
         @Override
-        public void stop() {}
+        public void stop() {timer=null;}
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if (isStart){
                 isStart=false;
-                timer.reset();
+                timer=new ElapsedTime();
             }
             return timer.time()<time;
         }
@@ -626,7 +634,40 @@ public abstract class TeleOpActions{
             return this;
         }
     }
+    public static class LoopForDuration implements TeleOpAction{
+        public TeleOpAction action;
+        public double time;
+        public ElapsedTime timer = null;
+        public boolean isStart=true;
+        public LoopForDuration(TeleOpAction action, double time){
+            this.action=action;
+            this.time=time;
+        }
+        @Override
+        public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
+            isStart=true;
+            return run(packet);
+        }
 
+        @Override
+        public void stop() {
+            action.stop();
+            timer=null;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            if (isStart){
+                isStart=false;
+                timer=new ElapsedTime();
+                return action.repeatFromStart(packet) && timer.time()<time;
+            }
+            else{
+                return action.run(packet) && timer.time()<time;
+            }
+
+        }
+    }
     public static void runLoop(Condition opModeIsActive, Condition isStopRequested, TeleOpAction...actions){
         while (opModeIsActive.call()) {
             for (TeleOpAction action : actions) {
