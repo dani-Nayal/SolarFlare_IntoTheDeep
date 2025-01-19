@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
@@ -36,6 +35,7 @@ public abstract class  TeleOpComponents {
     public static Telemetry telemetry;
     public static PinpointDrive drive;
     public static ArrayList<BotMotor> motors = new ArrayList<>();
+    public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
 
     //create mechanism variables here
@@ -355,6 +355,9 @@ public abstract class  TeleOpComponents {
 
             hardwareMap.put(deviceName,this);
             motors.add(this);
+            if (Objects.equals(movementMode, "MOTION_PROFILE")) {
+                motionProfileMotors.add(this);
+            }
         }
         public void createMotionProfile(double max_velocity, double max_acceleration) {
             profileStartPos=getCurrentPosition();
