@@ -63,8 +63,7 @@ public class CustomActions {
             this.position = position;
             this.sleepTimer = new ElapsedTime();
             // Pre-calculate sleep time during initialization
-            this.sleepTime = Math.abs((position - state.getServoPosition(servoEnum))) /
-                    hw.getServoConfig(servoEnum).degreesPerSecond + 0.1; // TODO: Optimize additional sleeping time
+            this.sleepTime = (Math.abs((position - state.getServoPosition(servoEnum))) / hw.getServoConfig(servoEnum).degreesPerSecond) + 0.1;
         }
 
         @Override
@@ -94,9 +93,9 @@ public class CustomActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             Pose2d currentPose = drive.pose;
             double distance = Math.sqrt(Math.pow(desiredPose.position.y - currentPose.position.y, 2) + Math.pow(desiredPose.position.x - currentPose.position.x, 2));
-            double headingDifference = desiredPose.heading.toDouble() - currentPose.heading.toDouble();
+            double headingDifference = Math.abs(desiredPose.heading.toDouble() - currentPose.heading.toDouble());
 
-            return !(distance < distanceTolerance && headingDifference < headingTolerance);
+            return !(distance <= distanceTolerance && headingDifference <= headingTolerance);
         }
     }
     // Initial position based off preload and cycle type

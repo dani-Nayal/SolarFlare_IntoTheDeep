@@ -28,7 +28,7 @@
       "kI": 0.0,
       "kD": 0.0,
       "runMode": "RUN_WITHOUT_ENCODER",
-      "direction": "REVERSE",
+      "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
@@ -42,7 +42,7 @@
       "kI": 0.0,
       "kD": 0.0,
       "runMode": "RUN_WITHOUT_ENCODER",
-      "direction": "FORWARD",
+      "direction": "REVERSE",
       "zeroPowerBehavior": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
@@ -56,7 +56,7 @@
       "kI": 0.0,
       "kD": 0.0,
       "runMode": "RUN_WITHOUT_ENCODER",
-      "direction": "REVERSE",
+      "direction": "FORWARD",
       "zeroPowerBehavior": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
@@ -70,13 +70,13 @@
       "kI": 0.0,
       "kD": 0.0,
       "runMode": "RUN_WITHOUT_ENCODER",
-      "direction": "FORWARD",
+      "direction": "REVERSE",
       "zeroPowerBehaviour": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
-      "maxTarget": 100000,
-      "maxAcceleration": 0,
-      "maxVelocity": 0
+      "maxTarget": 793,
+      "maxAcceleration": 20000,
+      "maxVelocity": 3000
     },
     "EXTENDO_PITCH": {
       "deviceName": "extendoPitch",
@@ -87,10 +87,10 @@
       "direction": "FORWARD",
       "zeroPowerBehaviour": "BRAKE",
       "maxPower": 1.0,
-      "minTarget": 0,
-      "maxTarget": 100000,
-      "maxAcceleration": 0,
-      "maxVelocity": 0
+      "minTarget": -991,
+      "maxTarget": 0,
+      "maxAcceleration": 20000,
+      "maxVelocity": 3000
     },
     "BUCKET_SLIDES": {
       "deviceName": "bucketSlides",
@@ -98,13 +98,13 @@
       "kI": 0.0,
       "kD": 0.0,
       "runMode": "RUN_WITHOUT_ENCODER",
-      "direction": "FORWARD",
+      "direction": "REVERSE",
       "zeroPowerBehaviour": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
-      "maxTarget": 100000,
-      "maxAcceleration": 0,
-      "maxVelocity": 0
+      "maxTarget": 1030,
+      "maxAcceleration": 20000,
+      "maxVelocity": 3000
     }
   },
   "Servos": {
@@ -117,14 +117,14 @@
     },
     "CLAW_PITCH_RIGHT": {
       "deviceName": "clawPitchRight",
-      "direction": "FORWARD",
+      "direction": "REVERSE",
       "minServoPosition": 0.0,
       "maxServoPosition": 270.0,
       "degreesPerSecond": 0.0
     },
     "INNER_CLAW_PITCH": {
       "deviceName": "innerClawPitch",
-      "direction": "FORWARD",
+      "direction": "REVERSE",
       "minServoPosition": 0.0,
       "maxServoPosition": 270.0,
       "degreesPerSecond": 0.0
@@ -149,6 +149,20 @@
       "minServoPosition": 0.0,
       "maxServoPosition": 270.0,
       "degreesPerSecond": 0.0
+    },
+    "HANG_LEFT": {
+      "deviceName": "hangLeft",
+      "direction": "FORWARD",
+      "minServoPosition": -100000000,
+      "maxServoPosition": 1000000000,
+      "degreesPerSecond": 522
+    },
+    "HANG_RIGHT": {
+      "deviceName": "hangRight",
+      "direction": "REVERSE",
+      "minServoPosition": -100000000,
+      "maxServoPosition": 1000000000,
+      "degreesPerSecond": 522
     }
   },
   "Poses": {

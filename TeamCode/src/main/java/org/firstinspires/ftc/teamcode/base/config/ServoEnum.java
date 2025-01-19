@@ -7,5 +7,7 @@ public enum ServoEnum {
     CLAW_PITCH_RIGHT,
     INNER_CLAW_PITCH,
     CLAW_WRIST,
-    CLAW_FINGERS
+    CLAW_FINGERS,
+    HANG_LEFT,
+    HANG_RIGHT
 }

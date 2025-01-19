@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public abstract class TeleOpComponents {
+public abstract class  TeleOpComponents {
     public static HardwareMap hardwareMap;
     public static Telemetry telemetry;
     public static PinpointDrive drive;
