@@ -422,9 +422,11 @@ public abstract class  TeleOpComponents {
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
         }
+
         public void setMotorTarget(double target, double maxVelocity, double maxAcceleration){
+            target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
-                this.target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
+                this.target = target;
                 integralSum = 0;
                 previousError = 0;
                 isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
