@@ -40,6 +40,8 @@ public class BackUpTeleOp extends LinearOpMode {
         boolean isPressingBumper2 = false;
         boolean isPressingTrigger1 = false;
         boolean isPressingDpad = false;
+        boolean isDownSequenceActive=false;
+
 
         double kP = 0.015;
         double kPpitch = 0.005;
@@ -48,6 +50,9 @@ public class BackUpTeleOp extends LinearOpMode {
         ElapsedTime Btimer = new ElapsedTime();
         ElapsedTime B2timer = new ElapsedTime();
         ElapsedTime X2timer = new ElapsedTime();
+        ElapsedTime downTimer = new ElapsedTime();
+
+
 
         ElapsedTime Atimer = new ElapsedTime();
         ElapsedTime Op2timer = new ElapsedTime();
@@ -166,7 +171,7 @@ public class BackUpTeleOp extends LinearOpMode {
             if (isASequenceActive) {
 
                 clawWristPosition = 95;
-                clawPitchPosition = 110;
+                clawPitchPosition = 105;
                 innerClawPitchPosition = 200;
                 bucketPosition=46;
 
@@ -184,7 +189,7 @@ public class BackUpTeleOp extends LinearOpMode {
                     clawFingerPosition = 92;
                 }
 
-                if (Atimer.seconds() > 1.45) {
+                if (Atimer.seconds() > 1.55) {
                     clawPitchPosition = 72.4;
                     innerClawPitchPosition = 160;
 
@@ -207,7 +212,7 @@ public class BackUpTeleOp extends LinearOpMode {
 
                 //clawWristPosition = 95;
                 clawPitchPosition = 13;
-                innerClawPitchPosition = 78;
+                innerClawPitchPosition = 82;
                 bucketPosition=46;
                 clawFingerPosition=92;
 
@@ -223,6 +228,29 @@ public class BackUpTeleOp extends LinearOpMode {
                     isX2SequenceActive=false;
                 }
 
+
+            }
+
+            if (gamepad2.dpad_down){
+                isDownSequenceActive=true;
+                downTimer.reset();
+            }
+            if (isDownSequenceActive){
+                clawWristPosition = 95;
+                clawPitchPosition = 105;
+                innerClawPitchPosition = 200;
+                bucketPosition=46;
+                if (downTimer.seconds()>0.4){
+                    extendoTarget=0;
+                    isDownSequenceActive=false;
+                }
+            }
+
+            if(gamepad2.dpad_up){
+                extendoTarget=maxExtendoPosition;
+                clawPitchPosition = 68;
+                innerClawPitchPosition = 5;
+                bucketPosition=46;
 
             }
             
@@ -243,7 +271,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 if (B2timer.seconds() > 0.6) {
                     clawPitchPosition = 127;
                     innerClawPitchPosition = 179;
-                    extendoPitchTarget = -620;
+                    extendoPitchTarget = -600;
                 }
                 if (B2timer.seconds() > 1) {
                     extendoTarget=793;
