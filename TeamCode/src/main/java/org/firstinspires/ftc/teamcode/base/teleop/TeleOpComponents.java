@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
 public abstract class  TeleOpComponents {
@@ -70,7 +71,7 @@ public abstract class  TeleOpComponents {
         public double accelDistance = 0; public double decelDistance = 0; public double cruiseDistance = 0;
         public double profileStartPos = 0;
         public double startVelocity = 0;
-        final ElapsedTime MOVEMENT_TIMER = new ElapsedTime(); final ElapsedTime LOOP_TIMER = new ElapsedTime();
+        public ElapsedTime MOVEMENT_TIMER = null; public ElapsedTime LOOP_TIMER = null;
         double integralSum = 0;
         double previousError = 0;
         double previousVoltage = 0;
@@ -347,6 +348,10 @@ public abstract class  TeleOpComponents {
             setMode(runMode);
             setDirection(direction);
             setZeroPowerBehavior(zeroPowerBehaviour);
+            if (Objects.equals(movementMode, "MOTION_PROFILE")){
+                MOVEMENT_TIMER = new ElapsedTime();
+                LOOP_TIMER = new ElapsedTime();
+            }
 
             hardwareMap.put(deviceName,this);
             motors.add(this);

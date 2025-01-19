@@ -639,9 +639,11 @@ public abstract class TeleOpActions{
                     motor.runMotionProfileOnce();
                 }
             }
+            /*
             for (int i=0;i<TeleOpComponents.servos.size();i++){
                 TeleOpComponents.servos.get(i).setPosition(TeleOpComponents.servos.get(i).getPosition());
             }
+            */
             if (isStopRequested.call()) return;
         }
     }

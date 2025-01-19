@@ -21,35 +21,14 @@ public class JustTetsing extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         TeleOpComponents.initializeMechanisms(hardwareMap,telemetry);
-        TeleOpSequentialAction sequence = new TeleOpSequentialAction(
-                new TeleOpParallelAction(
-                        clawFingers.setPositionAction(clawFingers.KEY_POSITIONS.get("openPosition")),
-                        clawPitch.setPositionAction(clawPitch.KEY_POSITIONS.get("pickUpPosition")),
-                        innerClawPitch.setPositionAction(innerClawPitch.KEY_POSITIONS.get("pickUpPosition"))
-                ),
-                clawFingers.setPositionAction(clawFingers.KEY_POSITIONS.get("closedPosition")),
-                new TeleOpParallelAction(
-                    clawPitch.setPositionAction(clawPitch.KEY_POSITIONS.get("hoverPosition")),
-                    innerClawPitch.setPositionAction(innerClawPitch.KEY_POSITIONS.get("hoverPosition"))
-                )
-
-        );
-        UninterruptiblePressTrigger trigger = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad1.y)},new TeleOpAction[]{sequence});
-
         waitForStart();
-        clawFingers.setPosition(92);
-        clawPitch.setPosition(clawPitch.KEY_POSITIONS.get("hoverPosition"));
-        innerClawPitch.setPosition(innerClawPitch.KEY_POSITIONS.get("hoverPosition"));
-        extendo.createMotionProfile(extendo.MAX_VELOCITY, extendo.MAX_ACCELERATION);
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 this::isStopRequested,
                 new UpdateTelemetryAction(),
-                trigger,
-                new UpdateTelemetryAction(),
-                clawPitch.triggeredFSMAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper), clawPitch.KEY_POSITIONS.get("pickUpPosition"), clawPitch.KEY_POSITIONS.get("hoverPosition"),clawPitch.KEY_POSITIONS.get("transferPosition")),
-                extendo.triggeredDynamicAction(()->(gamepad1.right_trigger>0),()->(gamepad1.left_trigger>0),15,6000,3000),
-                new UpdateTelemetryAction()
+                extendo.moveToPositionAction(400),
+                extendo.moveToPositionAction(793),
+                extendo.triggeredDynamicAction(()->(gamepad1.right_trigger>0),()->(gamepad1.left_trigger>0),20)
         );
     }
 }
