@@ -20,7 +20,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//import org.firstinspires.ftc.teamcode.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
@@ -253,7 +252,7 @@ public class TristanBackupAuto extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-67,-49.3), Math.toRadians(285))
                 .build();
         Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-67,-49.3, Math.toRadians(285)))
-                // turn and score bucke
+                // turn and score bucket
                 .strafeToLinearHeading(new Vector2d(-54.5,-53.5), Math.toRadians(225))
                 .build();
         Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54.5,-53.5, Math.toRadians(225)))

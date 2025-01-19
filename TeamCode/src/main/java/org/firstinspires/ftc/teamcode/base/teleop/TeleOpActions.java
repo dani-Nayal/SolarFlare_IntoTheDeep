@@ -632,16 +632,18 @@ public abstract class TeleOpActions{
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
             }
-            for (int i=0;i<TeleOpComponents.motors.size();i++){
-                BotMotor motor = TeleOpComponents.motors.get(i);
-                if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE") && !motor.isStallResetting){
+            for (int i=0;i<TeleOpComponents.motionProfileMotors.size();i++){
+                BotMotor motor = TeleOpComponents.motionProfileMotors.get(i);
+                if (!motor.isStallResetting){
                     motor.createPendingMotionProfiles();
                     motor.runMotionProfileOnce();
                 }
             }
+            /*
             for (int i=0;i<TeleOpComponents.servos.size();i++){
                 TeleOpComponents.servos.get(i).setPosition(TeleOpComponents.servos.get(i).getPosition());
             }
+            */
             if (isStopRequested.call()) return;
         }
     }

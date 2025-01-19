@@ -5,10 +5,10 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
+import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -28,14 +28,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
-public abstract class TeleOpComponents {
+public abstract class  TeleOpComponents {
     public static HardwareMap hardwareMap;
     public static Telemetry telemetry;
     public static PinpointDrive drive;
     public static ArrayList<BotMotor> motors = new ArrayList<>();
+    public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
+    public static ArrayList<CRBotServo> CRBotServos = new ArrayList<>();
 
     //create mechanism variables here
     public static BotServo clawFingers;
@@ -70,7 +73,7 @@ public abstract class TeleOpComponents {
         public double accelDistance = 0; public double decelDistance = 0; public double cruiseDistance = 0;
         public double profileStartPos = 0;
         public double startVelocity = 0;
-        final ElapsedTime MOVEMENT_TIMER = new ElapsedTime(); final ElapsedTime LOOP_TIMER = new ElapsedTime();
+        public ElapsedTime MOVEMENT_TIMER = null; public ElapsedTime LOOP_TIMER = null;
         double integralSum = 0;
         double previousError = 0;
         double previousVoltage = 0;
@@ -347,9 +350,16 @@ public abstract class TeleOpComponents {
             setMode(runMode);
             setDirection(direction);
             setZeroPowerBehavior(zeroPowerBehaviour);
+            if (Objects.equals(movementMode, "MOTION_PROFILE")){
+                MOVEMENT_TIMER = new ElapsedTime();
+                LOOP_TIMER = new ElapsedTime();
+            }
 
             hardwareMap.put(deviceName,this);
             motors.add(this);
+            if (Objects.equals(movementMode, "MOTION_PROFILE")) {
+                motionProfileMotors.add(this);
+            }
         }
         public void createMotionProfile(double max_velocity, double max_acceleration) {
             profileStartPos=getCurrentPosition();
@@ -422,9 +432,11 @@ public abstract class TeleOpComponents {
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
         }
+
         public void setMotorTarget(double target, double maxVelocity, double maxAcceleration){
+            target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
-                this.target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
+                this.target = target;
                 integralSum = 0;
                 previousError = 0;
                 isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
@@ -680,6 +692,48 @@ public abstract class TeleOpComponents {
                     new SetPositionAction(target1)
             });
         }
+    }
+    public static class CRBotServo extends CRServoImpl {
+        public ArrayList<BotServo> synchronizedServos = new ArrayList<>();
+        public double SERVO_SPEED;
+        public CRBotServo(String deviceName,
+                        ServoController controller,
+                        int portNumber,
+                        double servoSpeed,
+                        Direction direction)
+        {
+            super(controller, portNumber);
+            this.SERVO_SPEED = servoSpeed;
+            setDirection(direction);
+            //hardwareMap.put(deviceName,this);
+            CRBotServos.add(this);
+        }
+        public class SetPowerAction implements TeleOpAction{
+            public DoubleFunction powerFun;
+            public SetPowerAction(double power){
+                this.powerFun =()->(power);
+            }
+            public SetPowerAction(DoubleFunction powerFun){
+                this.powerFun = powerFun;
+            }
+            @Override
+            public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
+                return run(packet);
+            }
+
+            @Override
+            public void stop() {}
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                setPower(powerFun.call());
+                return false;
+            }
+        }
+        public SetPowerAction setPowerAction(double power){
+            return new SetPowerAction(power);
+        }
+
     }
     public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry){
         TeleOpComponents.hardwareMap=hardwareMap;

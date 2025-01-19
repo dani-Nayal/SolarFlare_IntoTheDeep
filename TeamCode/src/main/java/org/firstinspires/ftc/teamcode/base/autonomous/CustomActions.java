@@ -7,7 +7,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -64,8 +63,7 @@ public class CustomActions {
             this.position = position;
             this.sleepTimer = new ElapsedTime();
             // Pre-calculate sleep time during initialization
-            this.sleepTime = Math.abs((position - state.getServoPosition(servoEnum))) /
-                    hw.getServoConfig(servoEnum).degreesPerSecond + 0.1; // TODO: Optimize additional sleeping time
+            this.sleepTime = (Math.abs((position - state.getServoPosition(servoEnum))) / hw.getServoConfig(servoEnum).degreesPerSecond) + 0.1;
         }
 
         @Override
@@ -79,6 +77,25 @@ public class CustomActions {
 
             // Check if the elapsed time has surpassed the sleep time
             return sleepTimer.seconds() <= sleepTime;
+        }
+    }
+    public class SleepUntilPose implements Action{
+        Pose2d desiredPose;
+        double distanceTolerance;
+        double headingTolerance;
+
+        public SleepUntilPose(Pose2d desiredPose, double distanceTolerance, double headingTolerance){
+            this.desiredPose = desiredPose;
+            this.distanceTolerance = distanceTolerance;
+            this.headingTolerance = headingTolerance;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket){
+            Pose2d currentPose = drive.pose;
+            double distance = Math.sqrt(Math.pow(desiredPose.position.y - currentPose.position.y, 2) + Math.pow(desiredPose.position.x - currentPose.position.x, 2));
+            double headingDifference = Math.abs(desiredPose.heading.toDouble() - currentPose.heading.toDouble());
+
+            return !(distance <= distanceTolerance && headingDifference <= headingTolerance);
         }
     }
     // Initial position based off preload and cycle type
@@ -150,7 +167,10 @@ public class CustomActions {
     public class GlobalMechanismControl implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
+            extendoControl.runPIDMotorControl(telemetry);
+            extendoPitchControl.runPIDMotorControl(telemetry);
+            bucketSlidesControl.runPIDMotorControl(telemetry);
+            hangControl.runPIDMotorControl(telemetry);
             return true;
         }
     }
