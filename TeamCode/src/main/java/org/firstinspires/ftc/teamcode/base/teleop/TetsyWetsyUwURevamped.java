@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode.base.teleop;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucket;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucketSlides;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawFingers;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitch;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitchRight;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawWrist;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendoPitch;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.innerClawPitch;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
