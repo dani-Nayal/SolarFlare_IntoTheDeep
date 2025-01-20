@@ -247,5 +247,23 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
         profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
         System.out.println("Profile 2 matched: " + profile.approxEqual(test));
         System.out.println(profile + "\n");
+
+        // profile 2 - Negative Distance + + Cruise
+        test.dist        = -39.0; // m
+        test.Vmax        = -6.0;  // m/s
+        test.Amax        = -2.0;  // m/s^2
+        test.Ta          =  3.0;  // s
+        test.Sa          = -9.0;  // m (0.5*Amax*Ta*Ta)
+        test.Vc          = -6.0;  // m/s
+        test.Tc          =  2.0;  // s
+        test.Sc          = -12.0; // m
+        test.Dmax        =  1.0;  // m/s^2
+        test.Td          =  6.0;  // s
+        test.Sd          = -18.0; // -0.5*Dmax*Td*Td
+        test.Tt          =  11.0; // s
+
+        profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
+        System.out.println("Profile 3 matched: " + profile.approxEqual(test));
+        System.out.println(profile + "\n");
     }
 }
