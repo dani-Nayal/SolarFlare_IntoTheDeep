@@ -667,7 +667,7 @@ public abstract class TeleOpActions{
 
         }
     }
-    public static void runLoop(Condition opModeIsActive, Condition isStopRequested, TeleOpAction...actions){
+    public static void runLoop(Condition opModeIsActive, TeleOpAction...actions){
         while (opModeIsActive.call()) {
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
