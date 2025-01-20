@@ -36,6 +36,7 @@ import java.util.Objects;
 public abstract class TeleOpActions{
     public static TelemetryPacket packet = new TelemetryPacket();
     public static boolean isRRActive=false;
+    public static ElapsedTime TIMER = new ElapsedTime();
     public interface TeleOpAction extends Action{
         boolean repeatFromStart(@NonNull TelemetryPacket packet);
         void stop();
@@ -499,8 +500,9 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
             TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.getCurrentPosition());
-            TeleOpComponents.telemetry.addData("loopy",LOOP_TIMER.time());
+            TeleOpComponents.telemetry.addData("loopy",TIMER.time());
             TeleOpComponents.telemetry.update();
+            TIMER.reset();
             return false;
         }
     }
