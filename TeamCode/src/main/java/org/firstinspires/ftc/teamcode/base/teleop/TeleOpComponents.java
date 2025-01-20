@@ -52,7 +52,8 @@ public abstract class  TeleOpComponents {
     public static BotMotor bucketSlides;
     public static BotMotor rightFront; public static BotMotor rightBack; public static BotMotor leftFront; public static BotMotor leftBack;
 
-
+    public static CRBotServo hang;
+    public static CRBotServo hangRight;
 
     public static class BotMotor extends DcMotorImplEx {
         boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
@@ -694,7 +695,7 @@ public abstract class  TeleOpComponents {
         }
     }
     public static class CRBotServo extends CRServoImpl {
-        public ArrayList<BotServo> synchronizedServos = new ArrayList<>();
+        public ArrayList<CRBotServo> synchronizedServos = new ArrayList<>();
         public double SERVO_SPEED;
         public CRBotServo(String deviceName,
                         ServoController controller,
@@ -707,6 +708,13 @@ public abstract class  TeleOpComponents {
             setDirection(direction);
             //hardwareMap.put(deviceName,this);
             CRBotServos.add(this);
+        }
+        @Override
+        public void setPower(double power){
+            super.setPower(power);
+            for (CRBotServo servo : synchronizedServos){
+                servo.setPower(power);
+            }
         }
         public class SetPowerAction implements TeleOpAction{
             public DoubleFunction powerFun;
@@ -913,7 +921,11 @@ public abstract class  TeleOpComponents {
         );
         synchronizeServos(clawPitch,clawPitchRight);
     }
+
     public static void synchronizeServos(BotServo servo1, BotServo servo2){
+        servo1.synchronizedServos.add(servo2);
+    }
+    public static void synchronizeServos(CRBotServo servo1, CRBotServo servo2){
         servo1.synchronizedServos.add(servo2);
     }
     public static void synchronizeMotors(BotMotor motor1, BotMotor motor2){
