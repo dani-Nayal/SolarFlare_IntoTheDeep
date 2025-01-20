@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,19 +14,117 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class BackUpTeleOp extends LinearOpMode {
+    double extendoPitchTarget = 0;
+    double extendoTarget = 0;
+    double bucketSlidesTarget = 0;
+    double clawWristPosition = 95;
+    double clawFingerPosition = 92;
+    double clawPitchPosition = 110;
+    double innerClawPitchPosition = 200;
+    double bucketPosition = 46;
+    public class MotionProfile{
+        public double kP; public double kI; public double kD;
+        public double MAX_ACCELERATION; public double MAX_VELOCITY;
+        public double currentMaxAcceleration = 0; public double currentMaxDeceleration = 0; public double currentMaxVelocity = 0;
+        public double accelDT = 0; public double decelDT = 0; public double cruiseDT = 0;
+        public double accelDistance = 0; public double decelDistance = 0; public double cruiseDistance = 0;
+        public double profileStartPos = 0;
+        public double startVelocity = 0;
+        public ElapsedTime MOVEMENT_TIMER = new ElapsedTime(); public ElapsedTime LOOP_TIMER = new ElapsedTime();
+        public DcMotorEx[] motor;
+        public double target = 0;
+        public double instantTargetPosition = 0;
+        public double integralSum;
+        public double previousError;
+        public MotionProfile(double kP, double kI, double kD,double maxVelocity, double maxAcceleration, DcMotorEx[] motor){
+            this.kP=kP;this.kD=kD;this.kI=kI;
+            this.MAX_VELOCITY=maxVelocity;
+            this.MAX_ACCELERATION=maxAcceleration;
+            this.motor=motor;
+        }
+        public void createMotionProfile(double max_velocity, double max_acceleration) {
+            profileStartPos=motor[0].getCurrentPosition();
+            double distance=target-profileStartPos;
+            if (distance!=0) {
+                startVelocity = motor[0].getVelocity();
+                currentMaxVelocity = max_velocity * Math.signum(distance);
+                currentMaxAcceleration = max_acceleration * Math.signum(currentMaxVelocity - startVelocity);
+                currentMaxDeceleration = -max_acceleration * Math.signum(distance);
+
+                accelDT = (currentMaxVelocity - startVelocity) / currentMaxAcceleration;
+                decelDT = (0 - currentMaxVelocity) / currentMaxDeceleration;
+                accelDistance = startVelocity * accelDT + 0.5 * currentMaxAcceleration * Math.pow(accelDT, 2);
+                decelDistance = currentMaxVelocity * decelDT + 0.5 * currentMaxDeceleration * Math.pow(decelDT, 2);
+
+                if (Math.abs(accelDistance + decelDistance) > Math.abs(distance)) {
+                    double halfExceededDistance = (distance - accelDistance - decelDistance) / 2;
+                    accelDistance = accelDistance + halfExceededDistance;
+                    accelDT = Math.max(
+                            (-startVelocity + Math.sqrt(Math.abs(Math.pow(startVelocity, 2) + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration),
+                            (-startVelocity - Math.sqrt(Math.abs(Math.pow(startVelocity, 2) + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration)
+                    );
+                    currentMaxVelocity = currentMaxAcceleration * accelDT + startVelocity;
+                    decelDistance = decelDistance + halfExceededDistance;
+                    decelDT = Math.max(
+                            (-currentMaxVelocity + Math.sqrt(Math.abs(Math.pow(currentMaxVelocity, 2) + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration),
+                            (-currentMaxVelocity - Math.sqrt(Math.abs(Math.pow(currentMaxVelocity, 2) + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration)
+                    );
+                }
+                cruiseDistance = distance - accelDistance - decelDistance;
+                cruiseDT = cruiseDistance / currentMaxVelocity;
+            }
+            else{
+                accelDT=0;
+                cruiseDT=0;
+                decelDT=0;
+                accelDistance=0;
+                cruiseDistance=0;
+                decelDistance=0;
+            }
+            MOVEMENT_TIMER.reset();
+        }
+        public void runMotionProfileOnce(){
+            double elapsedTime = MOVEMENT_TIMER.time();
+            if (elapsedTime > accelDT+decelDT+cruiseDT){
+                instantTargetPosition=target;
+            }
+
+            else if (elapsedTime < accelDT){
+                instantTargetPosition=profileStartPos + startVelocity * elapsedTime + 0.5 * currentMaxAcceleration * Math.pow(elapsedTime, 2);
+            }
+            else if (elapsedTime < accelDT+cruiseDT){
+                double cruiseCurrentDT = elapsedTime - accelDT;
+                instantTargetPosition=profileStartPos + accelDistance + currentMaxVelocity * cruiseCurrentDT;
+            }
+
+            else if (elapsedTime < accelDT+cruiseDT+decelDT){
+                double decelCurrentDT = elapsedTime - accelDT - cruiseDT;
+                instantTargetPosition = profileStartPos + accelDistance + cruiseDistance + currentMaxVelocity * decelCurrentDT + 0.5 * currentMaxDeceleration * Math.pow(decelCurrentDT, 2);
+            }
+            double error=instantTargetPosition-motor[0].getCurrentPosition();
+            double kpPower = kP*error;
+            integralSum += LOOP_TIMER.time()*error;
+            double kiPower = kI*integralSum;
+            double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
+            motor[0].setPower(Math.min(1,Math.max(-1,kpPower+kiPower+kdPower)));
+            previousError=error;
+            LOOP_TIMER.reset();
+        }
+        public void createAndRunProfileOnce(double target){
+            if (target!=this.target) {
+                this.target = target;
+                integralSum=0;
+                previousError = 0;
+                createMotionProfile(MAX_VELOCITY,MAX_ACCELERATION);
+                LOOP_TIMER.reset();
+            }
+            runMotionProfileOnce();
+        }
+    }
     @Override
     public void runOpMode() throws InterruptedException {
 
         //double hangTarget = 0;
-        double extendoPitchTarget = 0;
-        double extendoTarget = 0;
-        double bucketSlidesTarget = 0;
-        double clawWristPosition = 95;
-        double clawFingerPosition = 92;
-        double clawPitchPosition = 110;
-        double innerClawPitchPosition = 200;
-        double bucketPosition = 46;
-        
         double maxExtendoPosition = 800;
 
         boolean isXSequenceActive = false;
@@ -40,6 +139,8 @@ public class BackUpTeleOp extends LinearOpMode {
         boolean isPressingBumper2 = false;
         boolean isPressingTrigger1 = false;
         boolean isPressingDpad = false;
+        boolean isDownSequenceActive=false;
+
 
         double kP = 0.015;
         double kPpitch = 0.005;
@@ -48,7 +149,7 @@ public class BackUpTeleOp extends LinearOpMode {
         ElapsedTime Btimer = new ElapsedTime();
         ElapsedTime B2timer = new ElapsedTime();
         ElapsedTime X2timer = new ElapsedTime();
-
+        ElapsedTime downTimer = new ElapsedTime();
         ElapsedTime Atimer = new ElapsedTime();
         ElapsedTime Op2timer = new ElapsedTime();
 
@@ -166,7 +267,7 @@ public class BackUpTeleOp extends LinearOpMode {
             if (isASequenceActive) {
 
                 clawWristPosition = 95;
-                clawPitchPosition = 110;
+                clawPitchPosition = 105;
                 innerClawPitchPosition = 200;
                 bucketPosition=46;
 
@@ -184,7 +285,7 @@ public class BackUpTeleOp extends LinearOpMode {
                     clawFingerPosition = 92;
                 }
 
-                if (Atimer.seconds() > 1.45) {
+                if (Atimer.seconds() > 1.55) {
                     clawPitchPosition = 72.4;
                     innerClawPitchPosition = 160;
 
@@ -207,7 +308,7 @@ public class BackUpTeleOp extends LinearOpMode {
 
                 //clawWristPosition = 95;
                 clawPitchPosition = 13;
-                innerClawPitchPosition = 78;
+                innerClawPitchPosition = 82;
                 bucketPosition=46;
                 clawFingerPosition=92;
 
@@ -223,6 +324,29 @@ public class BackUpTeleOp extends LinearOpMode {
                     isX2SequenceActive=false;
                 }
 
+
+            }
+
+            if (gamepad2.dpad_down){
+                isDownSequenceActive=true;
+                downTimer.reset();
+            }
+            if (isDownSequenceActive){
+                clawWristPosition = 95;
+                clawPitchPosition = 105;
+                innerClawPitchPosition = 200;
+                bucketPosition=46;
+                if (downTimer.seconds()>0.4){
+                    extendoTarget=0;
+                    isDownSequenceActive=false;
+                }
+            }
+
+            if(gamepad2.dpad_up){
+                extendoTarget=maxExtendoPosition;
+                clawPitchPosition = 68;
+                innerClawPitchPosition = 5;
+                bucketPosition=46;
 
             }
             
@@ -243,7 +367,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 if (B2timer.seconds() > 0.6) {
                     clawPitchPosition = 127;
                     innerClawPitchPosition = 179;
-                    extendoPitchTarget = -620;
+                    extendoPitchTarget = -600;
                 }
                 if (B2timer.seconds() > 1) {
                     extendoTarget=793;
