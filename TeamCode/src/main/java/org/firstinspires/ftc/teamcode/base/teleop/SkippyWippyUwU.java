@@ -1,0 +1,28 @@
+package org.firstinspires.ftc.teamcode.base.teleop;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+
+public class SkippyWippyUwU extends LinearOpMode {
+    @Override
+    public void runOpMode() throws InterruptedException {
+        Servo clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
+        Servo clawPitchRight = hardwareMap.servo.get("clawPitchRight");
+        Servo innerClawPitch = hardwareMap.servo.get("innerClawPitch");
+
+        Servo clawFingers = hardwareMap.servo.get("clawFingers");
+        Servo clawWrist = hardwareMap.servo.get("clawWrist");
+        Servo bucket = hardwareMap.servo.get("bucket");
+        clawPitchRight.setDirection(Servo.Direction.REVERSE);
+        innerClawPitch.setDirection(Servo.Direction.REVERSE);
+        waitForStart();
+        while (opModeIsActive()) {
+            clawWrist.setPosition(95);
+            clawFingers.setPosition(92);
+            clawPitchLeft.setPosition(68);
+            clawPitchRight.setPosition(68);
+            innerClawPitch.setPosition(20);
+            bucket.setPosition(158);
+        }
+    }
+}
