@@ -357,7 +357,7 @@ public class BackUpTeleOp extends LinearOpMode {
             }
             if (isB2SequenceActive) {
                 clawFingerPosition = 0;
-                innerClawPitchPosition = 93;
+                innerClawPitchPosition = 180;
 
                 if (B2timer.seconds()>0.3){
                     bucketPosition=158;
