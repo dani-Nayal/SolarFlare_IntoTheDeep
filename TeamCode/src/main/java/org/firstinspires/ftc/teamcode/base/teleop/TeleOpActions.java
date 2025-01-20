@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.base.teleop;
 
 
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.LOOP_TIMER;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.drive;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,6 @@ import java.util.Objects;
 public abstract class TeleOpActions{
     public static TelemetryPacket packet = new TelemetryPacket();
     public static boolean isRRActive=false;
-    public static ElapsedTime timer = new ElapsedTime();
     public interface TeleOpAction extends Action{
         boolean repeatFromStart(@NonNull TelemetryPacket packet);
         void stop();
@@ -302,11 +302,11 @@ public abstract class TeleOpActions{
         }
     }
 
-    public static class PressTrigger extends ConditionalAction{
+    public static class PressTrigger extends ConditionalAction {
         public boolean[] isPressed;
         public Condition modifyCondition(Condition condition,int i){
             return () -> {
-                if (condition.call()){
+                if (condition.call()) {
                     if (!isPressed[i]) {
                         isPressed[i] = true;
                         return true;
@@ -499,9 +499,8 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
             TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.getCurrentPosition());
-            TeleOpComponents.telemetry.addData("loopy",timer.time());
+            TeleOpComponents.telemetry.addData("loopy",LOOP_TIMER.time());
             TeleOpComponents.telemetry.update();
-            timer.reset();
             return false;
         }
     }
@@ -668,6 +667,7 @@ public abstract class TeleOpActions{
         }
     }
     public static void runLoop(Condition opModeIsActive, TeleOpAction...actions){
+        LOOP_TIMER = new ElapsedTime();
         while (opModeIsActive.call()) {
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
@@ -679,6 +679,7 @@ public abstract class TeleOpActions{
                     motor.runMotionProfileOnce();
                 }
             }
+            LOOP_TIMER.reset();
             /*
             for (int i=0;i<TeleOpComponents.servos.size();i++){
                 TeleOpComponents.servos.get(i).setPosition(TeleOpComponents.servos.get(i).getPosition());

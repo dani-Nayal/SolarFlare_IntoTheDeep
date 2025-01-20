@@ -35,6 +35,7 @@ public abstract class  TeleOpComponents {
     public static HardwareMap hardwareMap;
     public static Telemetry telemetry;
     public static PinpointDrive drive;
+    public static ElapsedTime LOOP_TIMER = null;
     public static ArrayList<BotMotor> motors = new ArrayList<>();
     public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
@@ -74,7 +75,7 @@ public abstract class  TeleOpComponents {
         public double accelDistance = 0; public double decelDistance = 0; public double cruiseDistance = 0;
         public double profileStartPos = 0;
         public double startVelocity = 0;
-        public ElapsedTime MOVEMENT_TIMER = null; public ElapsedTime LOOP_TIMER = null;
+        public ElapsedTime MOVEMENT_TIMER = null;
         double integralSum = 0;
         double previousError = 0;
         double previousVoltage = 0;
@@ -353,7 +354,6 @@ public abstract class  TeleOpComponents {
             setZeroPowerBehavior(zeroPowerBehaviour);
             if (Objects.equals(movementMode, "MOTION_PROFILE")){
                 MOVEMENT_TIMER = new ElapsedTime();
-                LOOP_TIMER = new ElapsedTime();
             }
 
             hardwareMap.put(deviceName,this);
@@ -428,7 +428,6 @@ public abstract class  TeleOpComponents {
             double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
             setPower(Math.min(1,Math.max(-1,kpPower+kiPower+kdPower)));
             previousError=error;
-            LOOP_TIMER.reset();
         }
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
@@ -444,7 +443,6 @@ public abstract class  TeleOpComponents {
                 for (BotMotor motor : synchronizedMotors){
                     motor.setMotorTarget(target,maxVelocity,maxAcceleration);
                 }
-                LOOP_TIMER.reset();
             }
         }
         public void createPendingMotionProfiles(){
