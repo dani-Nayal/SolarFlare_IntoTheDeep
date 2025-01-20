@@ -123,6 +123,7 @@ public class BackUpTeleOp extends LinearOpMode {
     }
     @Override
     public void runOpMode() throws InterruptedException {
+        ElapsedTime timer = new ElapsedTime();
 
         //double hangTarget = 0;
         double maxExtendoPosition = 793;
@@ -623,8 +624,10 @@ public class BackUpTeleOp extends LinearOpMode {
             telemetry.addData("Control hub IMU heading", imu.getRobotYawPitchRollAngles().getYaw());
             telemetry.addData("pinpoint x",pinpoint.getPosX());
             telemetry.addData("pinpoint y", pinpoint.getPosY());
+            telemetry.addData("looptime", timer.time());
 
             telemetry.update();
+            timer.reset();
         }
     }
 }
