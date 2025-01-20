@@ -26,8 +26,8 @@ public class JustTetsing extends LinearOpMode {
                 this::opModeIsActive,
                 this::isStopRequested,
                 new UpdateTelemetryAction(),
-                extendo.moveToPositionAction(400),
-                extendo.moveToPositionAction(793),
+                extendo.triggeredMoveToTargetAction(()->(gamepad1.a),400),
+                extendo.triggeredMoveToTargetAction(()->(gamepad1.b),800),
                 extendo.triggeredDynamicAction(()->(gamepad1.right_trigger>0),()->(gamepad1.left_trigger>0),20)
         );
     }
