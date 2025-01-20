@@ -356,7 +356,7 @@ public abstract class  TeleOpComponents {
                 MOVEMENT_TIMER = new ElapsedTime();
             }
 
-            hardwareMap.put(deviceName,this);
+            //hardwareMap.put(deviceName,this);
             motors.add(this);
             if (Objects.equals(movementMode, "MOTION_PROFILE")) {
                 motionProfileMotors.add(this);
