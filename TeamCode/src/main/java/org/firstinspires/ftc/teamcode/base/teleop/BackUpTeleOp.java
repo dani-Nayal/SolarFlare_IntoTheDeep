@@ -368,6 +368,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 if (B2timer.seconds() > 0.6) {
                     clawPitchPosition = 13;
                     innerClawPitchPosition = 82;
+                    extendoPitchTarget=0;
                 }
                 if (B2timer.seconds() > 1) {
                     extendoTarget=793;
