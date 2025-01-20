@@ -373,21 +373,21 @@ public abstract class  TeleOpComponents {
 
                 accelDT = (currentMaxVelocity - startVelocity) / currentMaxAcceleration;
                 decelDT = (0 - currentMaxVelocity) / currentMaxDeceleration;
-                accelDistance = startVelocity * accelDT + 0.5 * currentMaxAcceleration * Math.pow(accelDT, 2);
-                decelDistance = currentMaxVelocity * decelDT + 0.5 * currentMaxDeceleration * Math.pow(decelDT, 2);
+                accelDistance = startVelocity * accelDT + 0.5 * currentMaxAcceleration * accelDT*accelDT;
+                decelDistance = currentMaxVelocity * decelDT + 0.5 * currentMaxDeceleration * decelDT*decelDT;
 
                 if (Math.abs(accelDistance + decelDistance) > Math.abs(distance)) {
                     double halfExceededDistance = (distance - accelDistance - decelDistance) / 2;
                     accelDistance = accelDistance + halfExceededDistance;
                     accelDT = Math.max(
-                            (-startVelocity + Math.sqrt(Math.abs(Math.pow(startVelocity, 2) + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration),
-                            (-startVelocity - Math.sqrt(Math.abs(Math.pow(startVelocity, 2) + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration)
+                            (-startVelocity + Math.sqrt(Math.abs(startVelocity*startVelocity + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration),
+                            (-startVelocity - Math.sqrt(Math.abs(startVelocity*startVelocity + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration)
                     );
                     currentMaxVelocity = currentMaxAcceleration * accelDT + startVelocity;
                     decelDistance = decelDistance + halfExceededDistance;
                     decelDT = Math.max(
-                            (-currentMaxVelocity + Math.sqrt(Math.abs(Math.pow(currentMaxVelocity, 2) + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration),
-                            (-currentMaxVelocity - Math.sqrt(Math.abs(Math.pow(currentMaxVelocity, 2) + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration)
+                            (-currentMaxVelocity + Math.sqrt(Math.abs(currentMaxVelocity*currentMaxVelocity + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration),
+                            (-currentMaxVelocity - Math.sqrt(Math.abs(currentMaxVelocity*currentMaxVelocity + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration)
                     );
                 }
                 cruiseDistance = distance - accelDistance - decelDistance;
@@ -405,21 +405,20 @@ public abstract class  TeleOpComponents {
         }
         public void runMotionProfileOnce(){
             double elapsedTime = MOVEMENT_TIMER.time();
-            if (elapsedTime > accelDT+decelDT+cruiseDT){
-                instantTargetPosition=target;
-            }
-
-            else if (elapsedTime < accelDT){
-                instantTargetPosition=profileStartPos + startVelocity * elapsedTime + 0.5 * currentMaxAcceleration * Math.pow(elapsedTime, 2);
+            if (elapsedTime < accelDT){
+                instantTargetPosition=profileStartPos + startVelocity * elapsedTime + 0.5 * currentMaxAcceleration * elapsedTime*elapsedTime;
             }
             else if (elapsedTime < accelDT+cruiseDT){
                 double cruiseCurrentDT = elapsedTime - accelDT;
-                instantTargetPosition=profileStartPos + accelDistance + currentMaxVelocity * cruiseCurrentDT;
+                instantTargetPosition = profileStartPos + accelDistance + currentMaxVelocity * cruiseCurrentDT;
             }
 
             else if (elapsedTime < accelDT+cruiseDT+decelDT){
                 double decelCurrentDT = elapsedTime - accelDT - cruiseDT;
-                instantTargetPosition = profileStartPos + accelDistance + cruiseDistance + currentMaxVelocity * decelCurrentDT + 0.5 * currentMaxDeceleration * Math.pow(decelCurrentDT, 2);
+                instantTargetPosition = profileStartPos + accelDistance + cruiseDistance + currentMaxVelocity * decelCurrentDT + 0.5 * currentMaxDeceleration * decelCurrentDT*decelCurrentDT;
+            }
+            else if (elapsedTime >= accelDT+decelDT+cruiseDT){
+                instantTargetPosition=target;
             }
             double error=instantTargetPosition-getCurrentPosition();
             double kpPower = kP*error;

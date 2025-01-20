@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.LOOP_TIMER;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.drive;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
 
 import androidx.annotation.NonNull;
 
