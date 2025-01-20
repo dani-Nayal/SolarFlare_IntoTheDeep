@@ -604,7 +604,13 @@ public abstract class TeleOpActions{
                 traj = trajBuilder.build();
             }
             isRRActive=true;
-            return traj.run(packet);
+            if (traj.run(packet)) {
+                return true;
+            }
+            else{
+                isRRActive=false;
+                return false;
+            }
         }
         public TeleOpTrajectoryAction strafeToLinearHeading(Vector2d vector, double heading){
             StrafeToLinearHeading func = trajBuilder::strafeToLinearHeading;
