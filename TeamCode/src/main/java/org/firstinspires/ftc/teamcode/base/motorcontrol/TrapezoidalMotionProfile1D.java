@@ -5,7 +5,6 @@ import static java.lang.Math.signum;
 import static java.lang.Math.round;
 
 import java.util.Locale;
-import java.util.function.Function;
 
 import androidx.annotation.NonNull;
 
@@ -25,61 +24,61 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
      */
     Telemetry telemetryDash;
     /**
-     * Max Acceleration
+     * Distance to travel
      */
-    double    Amax;
-    /**
-     * Max Deceleration
-     */
-    double    Dmax;
-    /**
-     * Max Velocity
-     */
-    double    Vmax;
-    /**
-     * Initial Velocity
-     */
-    double    Vi;
+    double    dist;
     /**
      * Initial Position
      */
     double    Pi;
     /**
-     * Cruise Speed
+     * Initial Velocity
      */
-    double    Vc;
+    double    Vi;
     /**
-     * Distance to travel
+     * Maximum Velocity
      */
-    double    dist;
+    double    Vmax;
+    /**
+     * Maximum Acceleration
+     */
+    double    Amax;
     /**
      * Acceleration Time
      */
     double    Ta;
     /**
-     * Deceleration Time
+     * Span (distaance) while accelerating
      */
-    double    Td;
+    double    Sa;
+    /**
+     * Cruise Velocity
+     */
+    double    Vc;
     /**
      * Cruise Time
      */
     double    Tc;
     /**
-     * Total Time
-     */
-    double    Tt;
-    /**
-     * Span (distaance) while accelerating
-     */
-    double    Sa;
-    /**
      * Span (distance) cruising
      */
     double    Sc;
     /**
+     * Max Deceleration
+     */
+    double    Dmax;
+    /**
+     * Deceleration Time
+     */
+    double    Td;
+    /**
      * Span (distance) decelerating
      */
     double    Sd;
+    /**
+     * Total Time
+     */
+    double    Tt;
 
     Telemetry getTelemetryDash() {
         if(telemetryDash == null)
@@ -98,12 +97,13 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
      * @param dist_in  Distance to travel
      * @param Pi_in Initial Position
      */
-    public void resetProfile(double Amax_in,
-                             double Dmax_in,
-                             double Vmax_in,
+    public void resetProfile(double dist_in,
+                             double Pi_in,
                              double Vi_in,
-                             double dist_in,
-                             int    Pi_in) {
+                             double Vmax_in,
+                             double Amax_in,
+                             double Dmax_in)
+    {
         dist                    = dist_in;
         Pi                      = Pi_in;
         Vi                      = Vi_in;
@@ -166,6 +166,23 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
         }
     }
 
+    public boolean approxEqual(TrapezoidalMotionProfile1D other) {
+        return approxEquals( dist, other.dist) &&
+                approxEquals(Pi,   other.Pi)   &&
+                approxEquals(Vi,   other.Vi)   &&
+                approxEquals(Vmax, other.Vmax) &&
+                approxEquals(Amax, other.Amax) &&
+                approxEquals(Ta,   other.Ta)   &&
+                approxEquals(Sa,   other.Sa)   &&
+                approxEquals(Vc,   other.Vc)   &&
+                approxEquals(Tc,   other.Tc)   &&
+                approxEquals(Sc,   other.Sc)   &&
+                approxEquals(Dmax, other.Dmax) &&
+                approxEquals(Td,   other.Td)   &&
+                approxEquals(Sd,   other.Sd)   &&
+                approxEquals(Tt,   other.Tt);
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -173,10 +190,10 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
                 "    dist = %1$20.5f%n"  +
                 "    Pi   = %2$20.5f%n"  +
                 "    Vi   = %3$20.5f%n"  +
-                "    Amax = %4$20.5f%n"  +
-                "    Ta   = %5$20.5f%n"  +
-                "    Sa   = %6$20.5f%n"  +
-                "    Vmax = %7$20.5f%n"  +
+                "    Vmax = %4$20.5f%n"  +
+                "    Amax = %5$20.5f%n"  +
+                "    Ta   = %6$20.5f%n"  +
+                "    Sa   = %7$20.5f%n"  +
                 "    Tc   = %8$20.5f%n"  +
                 "    Vc   = %9$20.5f%n"  +
                 "    Sc   = %10$20.5f%n" +
@@ -186,7 +203,7 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
                 "    Tt   = %14$20.5f%n";
 
         return String.format(Locale.US, formatString,
-                dist,Pi,Vi,Amax,Ta,Sa,Vmax,Tc,Vc,Sc,Dmax,Td,Sd,Tt);
+                dist,Pi,Vi,Vmax,Amax,Ta,Sa,Tc,Vc,Sc,Dmax,Td,Sd,Tt);
     }
 
     /**
@@ -195,39 +212,40 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
      */
     public static void main(String[] args) {
         TrapezoidalMotionProfile1D profile = new TrapezoidalMotionProfile1D();
+        TrapezoidalMotionProfile1D test    = new TrapezoidalMotionProfile1D();
 
         //
         // Profile variables, initialized to
-        // profile 1 - Trinagular Profile - No cruising
-        int    Pi   =  0;    // m
-        double Vi   =  0.0;  // m/s
-        double Amax =  2.0;  // m/s^2
-        double Ta   =  3.0;  // a
-        double Sa   =  9.0;  // m (0.5*Amax*Ta*Ta)
-        double Vmax =  6.0;  // m/s
-        double Vc   =  6.0;  // m/s
-        double Sc   =  0.0;  // m
-        double Dmax = -1.0;  // m/s^2
-        double Td   =  6.0;  // s (Vc/Td)
-        double Sd   =  18.0; // -0.5*Dmax*Td*Td
-        double dist =  27.0; // m
-        double Tt   =  9.0;  // s
+        // profile 1 - Positive Distance - Trinagular Profile - No Cruise
+        test.Pi          =  0;    // m
+        test.Vi          =  0.0;  // m/s
+        test.Amax        =  2.0;  // m/s^2
+        test.Ta          =  3.0;  // a
+        test.Sa          =  9.0;  // m (0.5*Amax*Ta*Ta)
+        test.Vmax        =  6.0;  // m/s
+        test.Vc          =  6.0;  // m/s
+        test.Sc          =  0.0;  // m
+        test.Dmax        = -1.0;  // m/s^2
+        test.Td          =  6.0;  // s (Vc/Td)
+        test.Sd          =  18.0; // -0.5*Dmax*Td*Td
+        test.dist        =  27.0; // m
+        test.Tt          =  9.0;  // s
 
-        Function<TrapezoidalMotionProfile1D, Boolean> test = (TrapezoidalMotionProfile1D p) ->
-        {
-            return approxEquals( Ta,   p.Ta)   &&
-                    approxEquals(Sa,   p.Sa)   &&
-                    approxEquals(Vc,   p.Vc)   &&
-                    approxEquals(Sc,   p.Sc)   &&
-                    approxEquals(Dmax, p.Dmax) &&
-                    approxEquals(Td,   p.Td)   &&
-                    approxEquals(Sd,   p.Sd)   &&
-                    approxEquals(Tt,   p.Tt);
-        };
+        profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
+        System.out.println("Profile 1 matched: " + profile.approxEqual(test));
+        System.out.println(profile + "\n");
 
-        profile.resetProfile(Amax, Dmax, Vmax, Vi, dist, Pi);
-        System.out.println("Profile 1 matched: " + test.apply(profile));
+        // profile 2 - Negative Distance + Triangular Profile - No Cruise
+        test.dist        = -27.0; // m
+        test.Vmax        = -6.0;  // m/s
+        test.Amax        = -2.0;  // m/s^2
+        test.Sa          = -9.0;  // m (0.5*Amax*Ta*Ta)
+        test.Vc          = -6.0;  // m/s
+        test.Dmax        =  1.0;  // m/s^2
+        test.Sd          = -18.0; // -0.5*Dmax*Td*Td
 
-        System.out.println(profile);
+        profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
+        System.out.println("Profile 2 matched: " + profile.approxEqual(test));
+        System.out.println(profile + "\n");
     }
 }
