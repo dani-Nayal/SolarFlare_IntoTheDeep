@@ -53,13 +53,13 @@ public abstract class TeleOpActions{
             boolean diffAction = false;
             for (Condition condition : actions.keySet()){
                 if (condition.call()){
-                    if (currentAction != null && actions.get(condition)!=currentAction){
-                        currentAction.stop();
-                    }
                     if (actions.get(condition)!=currentAction){
+                        if (currentAction != null){
+                            currentAction.stop();
+                        }
                         diffAction=true;
+                        currentAction=actions.get(condition);
                     }
-                    currentAction=actions.get(condition);
                     break;
                 }
             }

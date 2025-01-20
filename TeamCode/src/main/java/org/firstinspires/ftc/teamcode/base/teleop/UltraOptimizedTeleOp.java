@@ -110,7 +110,6 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 });
         TeleOpActions.runLoop(
                 this::opModeIsActive,
-                this::isStopRequested,
                 clawFingers.triggeredToggleAction(()->(gamepad1.right_trigger>0),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
                 clawWrist.triggeredDynamicAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),1),
                 clawPitch.triggeredFSMAction(()->(gamepad1.dpad_left),()->(gamepad1.dpad_right),clawPitch.getPos("transferPosition"),clawPitch.getPos("hoverPosition"),clawPitch.getPos("pickUpPosition")),
