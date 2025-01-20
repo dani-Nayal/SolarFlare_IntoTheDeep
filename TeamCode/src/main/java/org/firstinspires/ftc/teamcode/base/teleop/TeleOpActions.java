@@ -684,7 +684,6 @@ public abstract class TeleOpActions{
                 TeleOpComponents.servos.get(i).setPosition(TeleOpComponents.servos.get(i).getPosition());
             }
             */
-            if (isStopRequested.call()) return;
         }
     }
 }
