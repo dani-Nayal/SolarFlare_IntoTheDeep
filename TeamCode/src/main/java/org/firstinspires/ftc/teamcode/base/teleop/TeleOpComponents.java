@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -759,10 +760,10 @@ public abstract class  TeleOpComponents {
         }
 
     }
-    public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry){
+    public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry, Pose2d initialDrivePose){
         TeleOpComponents.hardwareMap=hardwareMap;
         TeleOpComponents.telemetry=telemetry;
-        //TeleOpComponents.drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,Math.toRadians(90)));
+        TeleOpComponents.drive = new PinpointDrive(hardwareMap,initialDrivePose);
         //initialize mechanism variables here
         extendo = new BotMotor(
                 hardwareMap.get(DcMotorEx.class, "extendo").getDeviceName(),

@@ -14,6 +14,7 @@ import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.leftFr
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.rightBack;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.rightFront;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -31,7 +32,7 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 public class UltraOptimizedTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        TeleOpComponents.initializeMechanisms(hardwareMap,telemetry);
+        TeleOpComponents.initializeMechanisms(hardwareMap,telemetry,new Pose2d(0,0,Math.toRadians(90)));
         waitForStart();
         clawFingers.setPosition(clawFingers.getPos("openPosition"));
         clawWrist.setPosition(clawWrist.getPos("normalPosition"));
