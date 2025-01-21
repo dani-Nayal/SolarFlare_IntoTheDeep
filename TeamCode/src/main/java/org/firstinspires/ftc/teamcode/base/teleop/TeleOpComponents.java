@@ -57,7 +57,6 @@ public abstract class  TeleOpComponents {
     public static CRBotServo hangRight;
 
     public static class BotMotor extends DcMotorImplEx {
-        double previousPower = 0;
         boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
         double maxVelocityParam;
         double maxAccelerationParam;
