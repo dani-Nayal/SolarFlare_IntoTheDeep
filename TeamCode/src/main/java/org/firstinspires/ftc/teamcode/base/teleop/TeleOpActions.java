@@ -368,8 +368,8 @@ public abstract class TeleOpActions{
         private final DoubleFunction rxFun;
         private final Condition slowDownFun;
         private final BotMotor[] motors;
-        private final IMU[] imu;
-        public FieldCentricMecanumAction(BotMotor[] motors, IMU[] imu, DoubleFunction xFun, DoubleFunction yFun, DoubleFunction rxFun, Condition slowDownFun){
+        private final IMU imu;
+        public FieldCentricMecanumAction(BotMotor[] motors, IMU imu, DoubleFunction xFun, DoubleFunction yFun, DoubleFunction rxFun, Condition slowDownFun){
             this.xFun = xFun;
             this.yFun = yFun;
             this.rxFun = rxFun;
@@ -377,7 +377,7 @@ public abstract class TeleOpActions{
             this.motors=motors;
             this.imu=imu;
         }
-        public FieldCentricMecanumAction(BotMotor[] motors, IMU[] imu, DoubleFunction xFun, DoubleFunction yFun, DoubleFunction rxFun){
+        public FieldCentricMecanumAction(BotMotor[] motors, IMU imu, DoubleFunction xFun, DoubleFunction yFun, DoubleFunction rxFun){
             this(motors,imu,xFun,yFun,rxFun,null);
         }
         @Override
@@ -393,7 +393,7 @@ public abstract class TeleOpActions{
             double x = xFun.call();
             double rx = rxFun.call();
 
-            double botHeading = imu[0].getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
