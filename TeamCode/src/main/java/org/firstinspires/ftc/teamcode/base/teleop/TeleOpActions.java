@@ -1,18 +1,9 @@
 package org.firstinspires.ftc.teamcode.base.teleop;
 
 
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.CRBotServos;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.CRServos;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.LOOP_TIMER;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucketSlides;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitch;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.innerClawPitch;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPitchRight;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucket;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawWrist;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawFingers;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.drive;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendoPitch;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.motionProfileMotors;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.motors;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.servos;
@@ -707,15 +698,6 @@ public abstract class TeleOpActions{
         motors.clear();
         motionProfileMotors.clear();
         servos.clear();
-        CRBotServos.clear();
-        extendo=null;
-        extendoPitch=null;
-        bucketSlides=null;
-        clawPitch=null;
-        clawPitchRight=null;
-        bucket=null;
-        clawWrist=null;
-        clawFingers=null;
-        innerClawPitch=null;
+        CRServos.clear();
     }
 }

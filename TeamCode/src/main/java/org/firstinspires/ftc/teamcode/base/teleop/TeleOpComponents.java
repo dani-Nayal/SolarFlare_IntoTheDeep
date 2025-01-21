@@ -39,7 +39,7 @@ public abstract class  TeleOpComponents {
     public static ArrayList<BotMotor> motors = new ArrayList<>();
     public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
-    public static ArrayList<CRBotServo> CRBotServos = new ArrayList<>();
+    public static ArrayList<CRBotServo> CRServos = new ArrayList<>();
 
     //create mechanism variables here
     public static BotServo clawFingers;
@@ -706,7 +706,7 @@ public abstract class  TeleOpComponents {
             this.SERVO_SPEED = servoSpeed;
             setDirection(direction);
             //hardwareMap.put(deviceName,this);
-            CRBotServos.add(this);
+            CRServos.add(this);
         }
         @Override
         public void setPower(double power){
