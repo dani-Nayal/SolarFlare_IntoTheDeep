@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.PressTrigger;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.ConditionalAction;
-import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.UninterruptibleConditionalAction;
+import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.SemiUninterruptibleConditionalAction;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 import java.util.ArrayList;
@@ -305,7 +305,7 @@ public abstract class  TeleOpComponents {
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{
-                    new UninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+                    new SemiUninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
                             new SetTargetAction(target2,maxAcceleration,maxVelocity),
                             new SetTargetAction(target1,maxAcceleration,maxVelocity)
                     })
@@ -315,14 +315,26 @@ public abstract class  TeleOpComponents {
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
             return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
         }
-        public UninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
-            return new UninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
+            return new SemiUninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
                     new SetTargetAction(target2,maxAcceleration,maxVelocity),
                     new SetTargetAction(target1,maxAcceleration,maxVelocity)
             });
         }
-        public UninterruptibleConditionalAction toggleAction(double target1, double target2){
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2){
             return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
+        }
+        public UpwardFSMAction upwardFSMAction(double maxAcceleration, double maxVelocity,double...positions){
+            return new UpwardFSMAction(maxAcceleration, maxVelocity,positions);
+        }
+        public DownwardFSMAction downwardFSMAction(double maxAcceleration, double maxVelocity,double...positions){
+            return new DownwardFSMAction(maxAcceleration, maxVelocity,positions);
+        }
+        public UpwardFSMAction upwardFSMAction(double...positions){
+            return new UpwardFSMAction(positions);
+        }
+        public DownwardFSMAction downwardFSMAction(double...positions){
+            return new DownwardFSMAction(positions);
         }
         public BotMotor(String deviceName,
                         DcMotorController controller,
@@ -679,18 +691,24 @@ public abstract class  TeleOpComponents {
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{
-                    new UninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
+                    new SemiUninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
                             new SetPositionAction(target2),
                             new SetPositionAction(target1)
                     })
 
             });
         }
-        public UninterruptibleConditionalAction toggleAction(double target1, double target2){
-            return new UninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2){
+            return new SemiUninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
                     new SetPositionAction(target2),
                     new SetPositionAction(target1)
             });
+        }
+        public UpwardFSMAction upwardFSMAction(double...positions){
+            return new UpwardFSMAction(positions);
+        }
+        public DownwardFSMAction downwardFSMAction(double...positions){
+            return new DownwardFSMAction(positions);
         }
     }
     public static class CRBotServo extends CRServoImpl {

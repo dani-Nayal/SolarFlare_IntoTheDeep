@@ -181,6 +181,86 @@ public abstract class TeleOpActions{
             }
         }
     }
+    public static class SemiUninterruptibleConditionalAction implements TeleOpAction{
+        LinkedHashMap<Condition,TeleOpAction> actions = new LinkedHashMap<>();
+        TeleOpAction currentAction = null;
+        public SemiUninterruptibleConditionalAction(Condition[] conditions, TeleOpAction[] actions){
+            for (int i=0;i<conditions.length;i++){
+                this.actions.put(conditions[i],actions[i]);
+            }
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            boolean newAction=false;
+            if (currentAction == null) {
+                for (Condition condition : actions.keySet()) {
+                    if (condition.call()) {
+                        currentAction = actions.get(condition);
+                        newAction=true;
+                        break;
+                    }
+                }
+            }
+            if (currentAction != null) {
+                if (newAction){
+                    if (!currentAction.repeatFromStart(packet)) {
+                        currentAction = null;
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                else {
+                    if (!currentAction.run(packet)) {
+                        currentAction = null;
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        @Override
+        public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
+            boolean reset = false;
+            for (Condition condition : actions.keySet()){
+                if (condition.call()){
+                    if (currentAction != null && actions.get(condition)!=currentAction){
+                        currentAction.stop();
+                    }
+                    currentAction=actions.get(condition);
+                    reset=true;
+                    break;
+                }
+            }
+            if (currentAction != null) {
+                if (reset) {
+                    if (!currentAction.repeatFromStart(packet)) {
+                        currentAction = null;
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                else{
+                    if (!currentAction.run(packet)) {
+                        currentAction = null;
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        @Override
+        public void stop() {
+            if (currentAction != null){
+                currentAction.stop();
+            }
+        }
+    }
 
     public static class SleepWhileTrue implements TeleOpAction{
         public Condition condition;
