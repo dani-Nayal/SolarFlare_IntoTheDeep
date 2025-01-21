@@ -57,6 +57,7 @@ public abstract class  TeleOpComponents {
     public static CRBotServo hangRight;
 
     public static class BotMotor extends DcMotorImplEx {
+        double previousPower = 0;
         boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
         double maxVelocityParam;
         double maxAccelerationParam;
@@ -356,7 +357,7 @@ public abstract class  TeleOpComponents {
                 MOVEMENT_TIMER = new ElapsedTime();
             }
 
-            //hardwareMap.put(deviceName,this);
+            hardwareMap.put(deviceName,this);
             motors.add(this);
             if (Objects.equals(movementMode, "MOTION_PROFILE")) {
                 motionProfileMotors.add(this);
@@ -425,7 +426,8 @@ public abstract class  TeleOpComponents {
             integralSum += LOOP_TIMER.time()*error;
             double kiPower = kI*integralSum;
             double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
-            setPower(Math.min(1,Math.max(-1,kpPower+kiPower+kdPower)));
+            double outPower = Math.min(1,Math.max(-1,kpPower+kiPower+kdPower));
+                setPower(outPower);
             previousError=error;
         }
         public double getPos(String key){
@@ -509,7 +511,7 @@ public abstract class  TeleOpComponents {
 
             setDirection(direction);
 
-            //hardwareMap.put(deviceName,this);
+            hardwareMap.put(deviceName,this);
             servos.add(this);
         }
         public void setPositionWithDelay(double position){
@@ -766,8 +768,8 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
                 0.005,0,0.0,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{0,-991,-960,-620},
-                0,-991,
+                new double[]{0,-960,-960,0},
+                0,-960,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
@@ -780,8 +782,8 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
                 0.015,0,0.0,
-                new String[]{"depositPosition","transferPosition"},new double[]{1030,0},
-                1030,0,
+                new String[]{"depositPosition","transferPosition"},new double[]{1060,0},
+                1060,0,
                 200000,3000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
@@ -873,7 +875,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchLeft").getController(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{22,73,115,77.4,151.011,127.008},
+                new double[]{13,68,105,72.4,151.011,13},
                 270,
                 0,
                 270,
@@ -885,7 +887,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchRight").getController(),
                 hardwareMap.get(Servo.class, "clawPitchRight").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{22,73,115,77.4,151.011,127.008},
+                new double[]{13,68,105,72.4,151.011,13},
                 270,
                 0,
                 270,
@@ -897,7 +899,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "innerClawPitch").getController(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{62,0,186,170.5,73,179},
+                new double[]{82,20,200,160.5,73,82},
                 270,
                 0,
                 270,
