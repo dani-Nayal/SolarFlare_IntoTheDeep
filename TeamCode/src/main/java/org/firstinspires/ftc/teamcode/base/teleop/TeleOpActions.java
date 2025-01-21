@@ -391,7 +391,7 @@ public abstract class TeleOpActions{
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             double y = -yFun.call();
             double x = xFun.call();
-            double rx = rxFun.call();
+            double rx = -rxFun.call();
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
@@ -447,7 +447,7 @@ public abstract class TeleOpActions{
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             double y = -yFun.call();
             double x = xFun.call();
-            double rx = rxFun.call();
+            double rx = -rxFun.call();
 
             //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
