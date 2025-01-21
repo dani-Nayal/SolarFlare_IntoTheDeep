@@ -102,14 +102,20 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 new TeleOpAction[]{
                         new TeleOpSequentialAction(
                             clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
-                            extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenGrabPosition")+50),
-                            new TeleOpParallelAction(
-                                    extendo.moveToPositionAction(extendo.MIN_POSITION),
-                                    clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                    innerClawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition"))
-                            ),
+                            innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
                             extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenDepositPosition")),
-                            extendo.moveToPositionAction(extendo.MAX_POSITION)
+                            new TeleOpParallelAction(
+                                clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
+                                innerClawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
+                                extendo.moveToPositionAction(extendo.MAX_POSITION)
+                            )
+                        )
+                });
+        UninterruptiblePressTrigger specimenDepositSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad2.b)},
+                new TeleOpAction[]{
+                        new TeleOpSequentialAction(
+                                extendo.moveToPositionAction(500),
+                                clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                         )
                 });
         TeleOpActions.runLoop(
@@ -126,6 +132,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 transferSequence,
                 specimenGrabSequence,
                 setUpSpecimenDepositSequence,
+                specimenDepositSequence,
                 new ConditionalAction(new Condition[]{()->(!isRRActive)}, new TeleOpAction[]{
                         new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_trigger>0.2))
                 }),
