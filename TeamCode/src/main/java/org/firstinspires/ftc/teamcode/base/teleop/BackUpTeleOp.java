@@ -543,7 +543,7 @@ public class BackUpTeleOp extends LinearOpMode {
             if (gamepad2.y){
                 if (!isPressingY2){
                     isPressingY2=true;
-                    if (extendoTarget==793) {clawFingerPosition=0;} else {clawFingerPosition=793;}
+                    if (extendoTarget==793) {extendoTarget=0;} else {extendoTarget=793;}
                 }
             }
             else isPressingY2=false;
