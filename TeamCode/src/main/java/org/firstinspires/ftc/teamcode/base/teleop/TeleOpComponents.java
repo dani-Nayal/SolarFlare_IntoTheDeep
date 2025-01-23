@@ -437,7 +437,7 @@ public abstract class  TeleOpComponents {
             double kiPower = kI*integralSum;
             double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
             double outPower = Math.min(1,Math.max(-1,kpPower+kiPower+kdPower));
-                setPower(outPower);
+            setPower(outPower);
             previousError=error;
         }
         public double getPos(String key){
@@ -542,7 +542,8 @@ public abstract class  TeleOpComponents {
             time=Math.abs(getPosition()-startPos)/SERVO_SPEED+0.07;
             MOVEMENT_TIMER.reset();
         }
-        public void setPositionWithDelayAndOffset(double amount, double position){
+        public void changeOffset(double amount){
+            double position = getPosition();
             if (MOVEMENT_TIMER == null){
                 MOVEMENT_TIMER = new ElapsedTime();
                 startPos=0;
@@ -588,7 +589,7 @@ public abstract class  TeleOpComponents {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (isStart) {
                     isStart=false;
-                    setPositionWithDelayAndOffset(offset,getPosition());
+                    changeOffset(offset);
 
                 }
                 if (MOVEMENT_TIMER.time() < time){
