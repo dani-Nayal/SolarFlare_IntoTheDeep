@@ -569,12 +569,12 @@ public abstract class TeleOpActions{
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            TeleOpComponents.telemetry.addData("clawFingers pos",TeleOpComponents.clawFingers.getPosition());
-            TeleOpComponents.telemetry.addData("clawWrist pos",TeleOpComponents.clawWrist.getPosition());
-            TeleOpComponents.telemetry.addData("clawPitchLeft pos",TeleOpComponents.clawPitch.getPosition());
-            TeleOpComponents.telemetry.addData("clawPitchRight pos",TeleOpComponents.clawPitchRight.getPosition());
-            TeleOpComponents.telemetry.addData("innerClawPitch pos",TeleOpComponents.innerClawPitch.getPosition());
-            TeleOpComponents.telemetry.addData("bucket pos",TeleOpComponents.bucket.getPosition());
+            TeleOpComponents.telemetry.addData("clawFingers pos",TeleOpComponents.clawFingers.currPos);
+            TeleOpComponents.telemetry.addData("clawWrist pos",TeleOpComponents.clawWrist.currPos);
+            TeleOpComponents.telemetry.addData("clawPitchLeft pos",TeleOpComponents.clawPitch.currPos);
+            TeleOpComponents.telemetry.addData("clawPitchRight pos",TeleOpComponents.clawPitchRight.currPos);
+            TeleOpComponents.telemetry.addData("innerClawPitch pos",TeleOpComponents.innerClawPitch.currPos);
+            TeleOpComponents.telemetry.addData("bucket pos",TeleOpComponents.bucket.currPos);
             TeleOpComponents.telemetry.addData("extendo target",TeleOpComponents.extendo.target);
             TeleOpComponents.telemetry.addData("extendo pos",TeleOpComponents.extendo.getCurrentPosition());
             TeleOpComponents.telemetry.addData("extendo instant target",TeleOpComponents.extendo.instantTargetPosition);
