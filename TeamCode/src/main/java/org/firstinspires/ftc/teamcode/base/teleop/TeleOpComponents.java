@@ -500,6 +500,7 @@ public abstract class  TeleOpComponents {
         public double startPos = -1;
         public double time;
         public double currPos;
+        public double offset = 0;
         public BotServo(String deviceName,
                         ServoController controller,
                         int portNumber,
@@ -543,17 +544,38 @@ public abstract class  TeleOpComponents {
             time=Math.abs(getPosition()-startPos)/SERVO_SPEED+0.07;
             MOVEMENT_TIMER.reset();
         }
+        public void setPositionWithDelayAndOffset(double amount, double position){
+            if (MOVEMENT_TIMER == null){
+                MOVEMENT_TIMER = new ElapsedTime();
+                startPos=0;
+            }
+            else {
+                if (startPos == -1){
+                    startPos=getPosition();
+                }
+                else{
+                    startPos = Math.signum(getPosition() - startPos) * SERVO_SPEED * Math.min(time, MOVEMENT_TIMER.time()) + startPos;
+                }
+            }
+            offset+=amount;
+            for (BotServo servo : synchronizedServos){
+                servo.offset+=amount;
+            }
+            setPosition(position);
+            time=Math.abs(getPosition()-startPos)/SERVO_SPEED+0.07;
+            MOVEMENT_TIMER.reset();
+        }
         @Override
         public void setPosition(double position){
-            currPos=Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position));
-            super.setPosition(Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position)) / RANGE);
+            currPos=Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position+offset))-offset;
+            super.setPosition((currPos+offset)/RANGE);
             for (BotServo servo : synchronizedServos){
                 servo.setPosition(position);
             }
         }
         @Override
         public double getPosition(){
-            return currPos;
+            return currPos+offset;
         }
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
