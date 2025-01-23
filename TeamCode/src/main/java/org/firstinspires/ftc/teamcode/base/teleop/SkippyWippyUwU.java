@@ -18,12 +18,12 @@ public class SkippyWippyUwU extends LinearOpMode {
         innerClawPitch.setDirection(Servo.Direction.REVERSE);
         waitForStart();
         while (opModeIsActive()) {
-            clawWrist.setPosition(95);
-            clawFingers.setPosition(92);
-            clawPitchLeft.setPosition(68);
-            clawPitchRight.setPosition(68);
-            innerClawPitch.setPosition(20);
-            bucket.setPosition(158);
+            clawWrist.setPosition(95/270);
+            clawFingers.setPosition(92/180);
+            clawPitchLeft.setPosition(68/270);
+            clawPitchRight.setPosition(68/270);
+            innerClawPitch.setPosition(20/270);
+            bucket.setPosition(158/270);
         }
     }
 }
