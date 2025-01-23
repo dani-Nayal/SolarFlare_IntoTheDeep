@@ -43,6 +43,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
         UninterruptiblePressTrigger lowerIntakeSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad1.b)},
                 new TeleOpAction[]{
                         new TeleOpSequentialAction(
+                            bucketSlides.moveToPositionAction(bucketSlides.getPos("transferPosition")),
                             new TeleOpParallelAction(
                                     extendoPitch.moveToPositionAction(extendoPitch.getPos("pickUpPosition")),
                                     clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
