@@ -580,6 +580,37 @@ public abstract class  TeleOpComponents {
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
         }
+        public class ChangeOffsetAction implements TeleOpAction {
+            boolean isStart = true;
+            double amount;
+            public ChangeOffsetAction(double amount){
+                this.amount = amount;
+            }
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (isStart) {
+                    isStart=false;
+                    setPositionWithDelayAndOffset(offset,getPosition());
+
+                }
+                if (MOVEMENT_TIMER.time() < time){
+                    return true;
+                }
+                else{
+                    startPos=-1;
+                    return false;
+                }
+            }
+
+            @Override
+            public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
+                isStart=true;
+                return run(packet);
+            }
+
+            @Override
+            public void stop() {}
+        }
         public class SetPositionAction implements TeleOpAction {
             boolean isStart = true;
             DoubleFunction posFun;
