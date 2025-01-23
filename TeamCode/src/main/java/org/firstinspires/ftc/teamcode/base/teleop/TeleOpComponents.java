@@ -601,7 +601,6 @@ public abstract class  TeleOpComponents {
                     return false;
                 }
             }
-
             @Override
             public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
                 isStart=true;
@@ -610,6 +609,12 @@ public abstract class  TeleOpComponents {
 
             @Override
             public void stop() {}
+        }
+        public ChangeOffsetAction changeOffsetAction(double amount){
+            return new ChangeOffsetAction(amount);
+        }
+        public ConditionalAction triggeredChangeOffsetAction(Condition upCondition, Condition downCondition, double amount){
+            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new ChangeOffsetAction(amount),new ChangeOffsetAction(-amount)});
         }
         public class SetPositionAction implements TeleOpAction {
             boolean isStart = true;
