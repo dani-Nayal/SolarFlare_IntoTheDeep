@@ -107,7 +107,6 @@ public abstract class  TeleOpComponents {
             @Override
             public void stop() {
                 setMotorTarget(getCurrentPosition());
-                setPower(0);
             }
 
             @Override
@@ -155,7 +154,6 @@ public abstract class  TeleOpComponents {
             @Override
             public void stop() {
                 setMotorTarget(getCurrentPosition());
-                setPower(0);
             }
 
             @Override
