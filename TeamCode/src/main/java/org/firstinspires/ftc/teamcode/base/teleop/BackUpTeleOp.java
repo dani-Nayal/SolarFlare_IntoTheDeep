@@ -533,10 +533,10 @@ public class BackUpTeleOp extends LinearOpMode {
             }
             else isPressingA2=false;
 
-            if(gamepad2.left_bumper){
+            if(gamepad2.right_bumper){
                 clawFingerPosition=92;
             }
-            if(gamepad2.right_bumper){
+            if(gamepad2.left_bumper){
                 clawFingerPosition=20;
             }
 
