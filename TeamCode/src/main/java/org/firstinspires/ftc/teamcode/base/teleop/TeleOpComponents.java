@@ -412,7 +412,6 @@ public abstract class  TeleOpComponents {
                 cruiseDistance=0;
                 decelDistance=0;
             }
-            MOVEMENT_TIMER.reset();
         }
         public void runMotionProfileOnce(){
             double elapsedTime = MOVEMENT_TIMER.time();
@@ -454,6 +453,7 @@ public abstract class  TeleOpComponents {
                 for (BotMotor motor : synchronizedMotors){
                     motor.setMotorTarget(target,maxVelocity,maxAcceleration);
                 }
+                MOVEMENT_TIMER.reset();
             }
         }
         public void createPendingMotionProfiles(){
