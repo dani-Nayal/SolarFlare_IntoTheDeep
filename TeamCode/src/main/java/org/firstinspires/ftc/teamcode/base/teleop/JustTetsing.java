@@ -23,26 +23,26 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 public class JustTetsing extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        TeleOpComponents.initializeMechanisms(hardwareMap,telemetry,new Pose2d(0,0,Math.toRadians(90)));
         UninterruptiblePressTrigger sequence = new UninterruptiblePressTrigger(
                 new Condition[]{()->(gamepad1.y)},
                 new TeleOpAction[]{
                         new TeleOpSequentialAction(
-                            new TeleOpParallelAction(
-                                clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
-                                new TeleOpSequentialAction(
-                                        new TeleOpSleepAction(0.1),
-                                        clawPitch.setPositionAction(clawPitch.getPos("pickUpPosition"))
-                                )
-                            ),
-                            clawFingers.setPositionAction(92)
+                                new TeleOpParallelAction(
+                                        clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
+                                        new TeleOpSequentialAction(
+                                                new TeleOpSleepAction(0.1),
+                                                clawPitch.setPositionAction(clawPitch.getPos("pickUpPosition"))
+                                        )
+                                ),
+                                clawFingers.setPositionAction(0)
                         )
                 }
         );
-        TeleOpComponents.initializeMechanisms(hardwareMap,telemetry,new Pose2d(0,0,Math.toRadians(90)));
+        waitForStart();
         clawFingers.setPosition(clawFingers.getPos("openPosition"));
         clawPitch.setPosition(clawPitch.getPos("pickUpPosition"));
         innerClawPitch.setPosition(innerClawPitch.getPos("pickUpPosition"));
-        waitForStart();
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 sequence,
