@@ -34,6 +34,7 @@ public class TristanBackupAuto extends LinearOpMode {
     DcMotor bucketSlides;
     Servo clawPitchLeft;
     Servo clawPitchRight;
+    Servo innerClawPitch;
     Servo clawFingers;
     Servo clawWrist;
     Servo bucket;
@@ -157,6 +158,7 @@ public class TristanBackupAuto extends LinearOpMode {
 
             clawPitchLeft.setPosition(clawPitchPosition/270);
             clawPitchRight.setPosition(clawPitchPosition/270);
+            innerClawPitch.setPosition(innerClawPitchPosition/270);
             clawFingers.setPosition(clawFingerPosition/180);
             clawWrist.setPosition(clawWristPosition/270);
             bucket.setPosition(bucketPosition/270);
@@ -363,16 +365,16 @@ public class TristanBackupAuto extends LinearOpMode {
 
                 .build();
 
-        DcMotor extendo = hardwareMap.dcMotor.get("extendo");
-        DcMotor extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
-        DcMotor bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
-        Servo clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
-        Servo clawPitchRight = hardwareMap.servo.get("clawPitchRight");
-        Servo innerClawPitch = hardwareMap.servo.get("innerClawPitch");
+        extendo = hardwareMap.dcMotor.get("extendo");
+        extendoPitch = hardwareMap.dcMotor.get("extendoPitch");
+        bucketSlides = hardwareMap.dcMotor.get("bucketSlides");
+        clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
+        clawPitchRight = hardwareMap.servo.get("clawPitchRight");
+        innerClawPitch = hardwareMap.servo.get("innerClawPitch");
 
-        Servo clawFingers = hardwareMap.servo.get("clawFingers");
-        Servo clawWrist = hardwareMap.servo.get("clawWrist");
-        Servo bucket = hardwareMap.servo.get("bucket");
+        clawFingers = hardwareMap.servo.get("clawFingers");
+        clawWrist = hardwareMap.servo.get("clawWrist");
+        bucket = hardwareMap.servo.get("bucket");
 
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

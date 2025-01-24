@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.PressTrigger;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.ConditionalAction;
-import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.UninterruptibleConditionalAction;
+import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.SemiUninterruptibleConditionalAction;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 import java.util.ArrayList;
@@ -35,10 +36,11 @@ public abstract class  TeleOpComponents {
     public static HardwareMap hardwareMap;
     public static Telemetry telemetry;
     public static PinpointDrive drive;
+    public static ElapsedTime LOOP_TIMER = null;
     public static ArrayList<BotMotor> motors = new ArrayList<>();
     public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
-    public static ArrayList<CRBotServo> CRBotServos = new ArrayList<>();
+    public static ArrayList<CRBotServo> CRServos = new ArrayList<>();
 
     //create mechanism variables here
     public static BotServo clawFingers;
@@ -74,7 +76,7 @@ public abstract class  TeleOpComponents {
         public double accelDistance = 0; public double decelDistance = 0; public double cruiseDistance = 0;
         public double profileStartPos = 0;
         public double startVelocity = 0;
-        public ElapsedTime MOVEMENT_TIMER = null; public ElapsedTime LOOP_TIMER = null;
+        public ElapsedTime MOVEMENT_TIMER = null;
         double integralSum = 0;
         double previousError = 0;
         double previousVoltage = 0;
@@ -105,7 +107,6 @@ public abstract class  TeleOpComponents {
             @Override
             public void stop() {
                 setMotorTarget(getCurrentPosition());
-                setPower(0);
             }
 
             @Override
@@ -153,7 +154,6 @@ public abstract class  TeleOpComponents {
             @Override
             public void stop() {
                 setMotorTarget(getCurrentPosition());
-                setPower(0);
             }
 
             @Override
@@ -303,7 +303,7 @@ public abstract class  TeleOpComponents {
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{
-                    new UninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+                    new SemiUninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
                             new SetTargetAction(target2,maxAcceleration,maxVelocity),
                             new SetTargetAction(target1,maxAcceleration,maxVelocity)
                     })
@@ -313,14 +313,26 @@ public abstract class  TeleOpComponents {
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
             return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
         }
-        public UninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
-            return new UninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
+            return new SemiUninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
                     new SetTargetAction(target2,maxAcceleration,maxVelocity),
                     new SetTargetAction(target1,maxAcceleration,maxVelocity)
             });
         }
-        public UninterruptibleConditionalAction toggleAction(double target1, double target2){
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2){
             return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
+        }
+        public UpwardFSMAction upwardFSMAction(double maxAcceleration, double maxVelocity,double...positions){
+            return new UpwardFSMAction(maxAcceleration, maxVelocity,positions);
+        }
+        public DownwardFSMAction downwardFSMAction(double maxAcceleration, double maxVelocity,double...positions){
+            return new DownwardFSMAction(maxAcceleration, maxVelocity,positions);
+        }
+        public UpwardFSMAction upwardFSMAction(double...positions){
+            return new UpwardFSMAction(positions);
+        }
+        public DownwardFSMAction downwardFSMAction(double...positions){
+            return new DownwardFSMAction(positions);
         }
         public BotMotor(String deviceName,
                         DcMotorController controller,
@@ -353,7 +365,6 @@ public abstract class  TeleOpComponents {
             setZeroPowerBehavior(zeroPowerBehaviour);
             if (Objects.equals(movementMode, "MOTION_PROFILE")){
                 MOVEMENT_TIMER = new ElapsedTime();
-                LOOP_TIMER = new ElapsedTime();
             }
 
             hardwareMap.put(deviceName,this);
@@ -373,21 +384,21 @@ public abstract class  TeleOpComponents {
 
                 accelDT = (currentMaxVelocity - startVelocity) / currentMaxAcceleration;
                 decelDT = (0 - currentMaxVelocity) / currentMaxDeceleration;
-                accelDistance = startVelocity * accelDT + 0.5 * currentMaxAcceleration * Math.pow(accelDT, 2);
-                decelDistance = currentMaxVelocity * decelDT + 0.5 * currentMaxDeceleration * Math.pow(decelDT, 2);
+                accelDistance = startVelocity * accelDT + 0.5 * currentMaxAcceleration * accelDT*accelDT;
+                decelDistance = currentMaxVelocity * decelDT + 0.5 * currentMaxDeceleration * decelDT*decelDT;
 
                 if (Math.abs(accelDistance + decelDistance) > Math.abs(distance)) {
                     double halfExceededDistance = (distance - accelDistance - decelDistance) / 2;
                     accelDistance = accelDistance + halfExceededDistance;
                     accelDT = Math.max(
-                            (-startVelocity + Math.sqrt(Math.abs(Math.pow(startVelocity, 2) + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration),
-                            (-startVelocity - Math.sqrt(Math.abs(Math.pow(startVelocity, 2) + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration)
+                            (-startVelocity + Math.sqrt(Math.abs(startVelocity*startVelocity + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration),
+                            (-startVelocity - Math.sqrt(Math.abs(startVelocity*startVelocity + 2 * currentMaxAcceleration * accelDistance))) / (currentMaxAcceleration)
                     );
                     currentMaxVelocity = currentMaxAcceleration * accelDT + startVelocity;
                     decelDistance = decelDistance + halfExceededDistance;
                     decelDT = Math.max(
-                            (-currentMaxVelocity + Math.sqrt(Math.abs(Math.pow(currentMaxVelocity, 2) + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration),
-                            (-currentMaxVelocity - Math.sqrt(Math.abs(Math.pow(currentMaxVelocity, 2) + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration)
+                            (-currentMaxVelocity + Math.sqrt(Math.abs(currentMaxVelocity*currentMaxVelocity + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration),
+                            (-currentMaxVelocity - Math.sqrt(Math.abs(currentMaxVelocity*currentMaxVelocity + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration)
                     );
                 }
                 cruiseDistance = distance - accelDistance - decelDistance;
@@ -401,34 +412,32 @@ public abstract class  TeleOpComponents {
                 cruiseDistance=0;
                 decelDistance=0;
             }
-            MOVEMENT_TIMER.reset();
         }
         public void runMotionProfileOnce(){
             double elapsedTime = MOVEMENT_TIMER.time();
-            if (elapsedTime > accelDT+decelDT+cruiseDT){
-                instantTargetPosition=target;
-            }
-
-            else if (elapsedTime < accelDT){
-                instantTargetPosition=profileStartPos + startVelocity * elapsedTime + 0.5 * currentMaxAcceleration * Math.pow(elapsedTime, 2);
+            if (elapsedTime < accelDT){
+                instantTargetPosition=profileStartPos + startVelocity * elapsedTime + 0.5 * currentMaxAcceleration * elapsedTime*elapsedTime;
             }
             else if (elapsedTime < accelDT+cruiseDT){
                 double cruiseCurrentDT = elapsedTime - accelDT;
-                instantTargetPosition=profileStartPos + accelDistance + currentMaxVelocity * cruiseCurrentDT;
+                instantTargetPosition = profileStartPos + accelDistance + currentMaxVelocity * cruiseCurrentDT;
             }
 
             else if (elapsedTime < accelDT+cruiseDT+decelDT){
                 double decelCurrentDT = elapsedTime - accelDT - cruiseDT;
-                instantTargetPosition = profileStartPos + accelDistance + cruiseDistance + currentMaxVelocity * decelCurrentDT + 0.5 * currentMaxDeceleration * Math.pow(decelCurrentDT, 2);
+                instantTargetPosition = profileStartPos + accelDistance + cruiseDistance + currentMaxVelocity * decelCurrentDT + 0.5 * currentMaxDeceleration * decelCurrentDT*decelCurrentDT;
+            }
+            else if (elapsedTime >= accelDT+decelDT+cruiseDT){
+                instantTargetPosition=target;
             }
             double error=instantTargetPosition-getCurrentPosition();
             double kpPower = kP*error;
             integralSum += LOOP_TIMER.time()*error;
             double kiPower = kI*integralSum;
             double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
-            setPower(Math.min(1,Math.max(-1,kpPower+kiPower+kdPower)));
+            double outPower = Math.min(1,Math.max(-1,kpPower+kiPower+kdPower));
+            setPower(outPower);
             previousError=error;
-            LOOP_TIMER.reset();
         }
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
@@ -444,7 +453,7 @@ public abstract class  TeleOpComponents {
                 for (BotMotor motor : synchronizedMotors){
                     motor.setMotorTarget(target,maxVelocity,maxAcceleration);
                 }
-                LOOP_TIMER.reset();
+                MOVEMENT_TIMER.reset();
             }
         }
         public void createPendingMotionProfiles(){
@@ -489,6 +498,7 @@ public abstract class  TeleOpComponents {
         public double startPos = -1;
         public double time;
         public double currPos;
+        public double offset = 0;
         public BotServo(String deviceName,
                         ServoController controller,
                         int portNumber,
@@ -512,7 +522,7 @@ public abstract class  TeleOpComponents {
 
             setDirection(direction);
 
-            //hardwareMap.put(deviceName,this);
+            hardwareMap.put(deviceName,this);
             servos.add(this);
         }
         public void setPositionWithDelay(double position){
@@ -532,20 +542,78 @@ public abstract class  TeleOpComponents {
             time=Math.abs(getPosition()-startPos)/SERVO_SPEED+0.07;
             MOVEMENT_TIMER.reset();
         }
+        public void changeOffset(double amount){
+            double position = getPosition();
+            if (MOVEMENT_TIMER == null){
+                MOVEMENT_TIMER = new ElapsedTime();
+                startPos=0;
+            }
+            else {
+                if (startPos == -1){
+                    startPos=getPosition();
+                }
+                else{
+                    startPos = Math.signum(getPosition() - startPos) * SERVO_SPEED * Math.min(time, MOVEMENT_TIMER.time()) + startPos;
+                }
+            }
+            offset+=amount;
+            for (BotServo servo : synchronizedServos){
+                servo.offset+=amount;
+            }
+            setPosition(position);
+            time=Math.abs(getPosition()-startPos)/SERVO_SPEED+0.07;
+            MOVEMENT_TIMER.reset();
+        }
         @Override
         public void setPosition(double position){
-            currPos=Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position));
-            super.setPosition(Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position)) / RANGE);
+            currPos=Math.max(MINIMUM_POSITION,Math.min(MAXIMUM_POSITION,position+offset))-offset;
+            super.setPosition((currPos+offset)/RANGE);
             for (BotServo servo : synchronizedServos){
                 servo.setPosition(position);
             }
         }
         @Override
         public double getPosition(){
-            return currPos;
+            return currPos+offset;
         }
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
+        }
+        public class ChangeOffsetAction implements TeleOpAction {
+            boolean isStart = true;
+            double amount;
+            public ChangeOffsetAction(double amount){
+                this.amount = amount;
+            }
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (isStart) {
+                    isStart=false;
+                    changeOffset(offset);
+
+                }
+                if (MOVEMENT_TIMER.time() < time){
+                    return true;
+                }
+                else{
+                    startPos=-1;
+                    return false;
+                }
+            }
+            @Override
+            public boolean repeatFromStart(@NonNull TelemetryPacket packet) {
+                isStart=true;
+                return run(packet);
+            }
+
+            @Override
+            public void stop() {}
+        }
+        public ChangeOffsetAction changeOffsetAction(double amount){
+            return new ChangeOffsetAction(amount);
+        }
+        public ConditionalAction triggeredChangeOffsetAction(Condition upCondition, Condition downCondition, double amount){
+            return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new ChangeOffsetAction(amount),new ChangeOffsetAction(-amount)});
         }
         public class SetPositionAction implements TeleOpAction {
             boolean isStart = true;
@@ -680,18 +748,24 @@ public abstract class  TeleOpComponents {
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{
-                    new UninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
+                    new SemiUninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
                             new SetPositionAction(target2),
                             new SetPositionAction(target1)
                     })
 
             });
         }
-        public UninterruptibleConditionalAction toggleAction(double target1, double target2){
-            return new UninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2){
+            return new SemiUninterruptibleConditionalAction(new Condition[]{()->(getPosition()==target1),()->(getPosition()==target2)},new TeleOpAction[]{
                     new SetPositionAction(target2),
                     new SetPositionAction(target1)
             });
+        }
+        public UpwardFSMAction upwardFSMAction(double...positions){
+            return new UpwardFSMAction(positions);
+        }
+        public DownwardFSMAction downwardFSMAction(double...positions){
+            return new DownwardFSMAction(positions);
         }
     }
     public static class CRBotServo extends CRServoImpl {
@@ -707,7 +781,7 @@ public abstract class  TeleOpComponents {
             this.SERVO_SPEED = servoSpeed;
             setDirection(direction);
             //hardwareMap.put(deviceName,this);
-            CRBotServos.add(this);
+            CRServos.add(this);
         }
         @Override
         public void setPower(double power){
@@ -743,10 +817,10 @@ public abstract class  TeleOpComponents {
         }
 
     }
-    public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry){
+    public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry, Pose2d initialDrivePose){
         TeleOpComponents.hardwareMap=hardwareMap;
         TeleOpComponents.telemetry=telemetry;
-        //TeleOpComponents.drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,Math.toRadians(90)));
+        TeleOpComponents.drive = new PinpointDrive(hardwareMap,initialDrivePose);
         //initialize mechanism variables here
         extendo = new BotMotor(
                 hardwareMap.get(DcMotorEx.class, "extendo").getDeviceName(),
@@ -756,7 +830,7 @@ public abstract class  TeleOpComponents {
                 0.015,0,0.0,
                 new String[]{},new double[]{},
                 793,0,
-                200000,3000,
+                250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -769,9 +843,9 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
                 0.005,0,0.0,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{0,-991,-960,-620},
-                0,-991,
-                200000,3000,
+                new double[]{0,-960,-960,0},
+                0,-960,
+                250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -783,9 +857,9 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
                 0.015,0,0.0,
-                new String[]{"depositPosition","transferPosition"},new double[]{1030,0},
-                1030,0,
-                200000,3000,
+                new String[]{"depositPosition","transferPosition"},new double[]{1060,0},
+                1060,0,
+                250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -876,7 +950,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchLeft").getController(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{22,73,115,77.4,151.011,127.008},
+                new double[]{13,68,100,72.4,151.011,13},
                 270,
                 0,
                 270,
@@ -888,7 +962,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchRight").getController(),
                 hardwareMap.get(Servo.class, "clawPitchRight").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{22,73,115,77.4,151.011,127.008},
+                new double[]{13,68,100,72.4,151.011,13},
                 270,
                 0,
                 270,
@@ -900,7 +974,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "innerClawPitch").getController(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{62,0,186,170.5,73,179},
+                new double[]{82,20,200,160.5,73,82},
                 270,
                 0,
                 270,
