@@ -38,12 +38,15 @@ public class PinpointDrive extends MecanumDrive {
         X (forward) odometry pod is. Left of the center is a positive number,
         right of the center is a negative number. The Y pod offset refers to how far forwards from
         the tracking point the Y (strafe) odometry pod is: forward of the center is a positive number,
-        backwards is a negative number.
+        backwards is a negative numbere
          */
         //These are tuned for 3110-0002-0001 Product Insight #1
         // RR localizer note: These units are inches, presets are converted from mm (which is why they are inexact)
-        public double xOffset = -3.3071;
-        public double yOffset = -6.6142;
+        //center: (6 9/32, 7 9/16)
+        // X offset= 6 9/32 - 9 3/8
+        // Y offset= 7 9/16 - 10 3/8
+        public double xOffset = 3.09375;
+        public double yOffset = -2.8125;
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -104,8 +107,8 @@ public class PinpointDrive extends MecanumDrive {
         This is recommended before you run your autonomous, as a bad initial calibration can cause
         an incorrect starting value for x, y, and heading.
          */
-        //pinpoint.recalibrateIMU();
         pinpoint.resetPosAndIMU();
+
         // wait for pinpoint to finish calibrating
         try {
             Thread.sleep(300);

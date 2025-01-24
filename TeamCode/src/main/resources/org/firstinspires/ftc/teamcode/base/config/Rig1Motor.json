@@ -1,0 +1,39 @@
+{
+  "robotName": "Rig1Motor",
+  "robotDimensions": {
+    "length": 1.0,
+    "width": 1.0
+  },
+  "Motors": {
+    "TESTING_MOTOR": {
+      "deviceName": "motor-1",
+      "kP": 0.001,
+      "kI": 0.0,
+      "kD": 0.0,
+      "runMode": "RUN_WITHOUT_ENCODER",
+      "direction": "FORWARD",
+      "zeroPowerBehavior": "BRAKE",
+      "maxPower": 1.0,
+      "minTarget": 0,
+      "maxTarget": 10000,
+      "maxAcceleration": 3000,
+      "maxVelocity": 1500
+    }
+  },
+  "Servos": {
+  },
+  "Poses": {
+    "Pose1": {
+    }
+  },
+  "Pinpoint": {
+  },
+  "Limelight": {
+  },
+  "IMU": {
+    "deviceName": "imu",
+    "LogoFacingDirection": "FORWARD",
+    "UsbFacingDirection": "UP",
+    "testVariable": 1.0
+  }
+}
