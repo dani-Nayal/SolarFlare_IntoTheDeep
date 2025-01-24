@@ -19,7 +19,7 @@ public class BackUpTeleOp extends LinearOpMode {
     double bucketSlidesTarget = 0;
     double clawWristPosition = 95;
     double clawFingerPosition = 92;
-    double clawPitchPosition = 110;
+    double clawPitchPosition = 100;
     double innerClawPitchPosition = 200;
     double bucketPosition = 46;
     public class MotionProfile{
@@ -123,9 +123,10 @@ public class BackUpTeleOp extends LinearOpMode {
     }
     @Override
     public void runOpMode() throws InterruptedException {
+        ElapsedTime timer = new ElapsedTime();
 
         //double hangTarget = 0;
-        double maxExtendoPosition = 800;
+        double maxExtendoPosition = 793;
 
         boolean isXSequenceActive = false;
         boolean isASequenceActive = false;
@@ -250,7 +251,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 clawWristPosition = 95;
                 clawFingerPosition = 92;
                 clawPitchPosition = 68;
-                innerClawPitchPosition = 0;
+                innerClawPitchPosition = 20;
                 bucketSlidesTarget=0;
                 if (Btimer.seconds() > 0.6) {
                     extendoTarget = maxExtendoPosition;
@@ -261,13 +262,14 @@ public class BackUpTeleOp extends LinearOpMode {
             // Transfer sample
             if (gamepad1.a){
                 isASequenceActive=true;
+                isX2SequenceActive=false;
                 Atimer.reset();
 
             }
             if (isASequenceActive) {
 
                 clawWristPosition = 95;
-                clawPitchPosition = 105;
+                clawPitchPosition = 100;
                 innerClawPitchPosition = 200;
                 bucketPosition=46;
 
@@ -275,17 +277,15 @@ public class BackUpTeleOp extends LinearOpMode {
                     extendoTarget=0;
                 }
 
-                if (Atimer.seconds() > 0.8) {
-                    if (!(extendo.getCurrentPosition()>150)) {
-                        extendoPitchTarget = 0;
-                    }
+                if (extendo.getCurrentPosition() < 100) {
+                    extendoPitchTarget=0;
                 }
 
-                if (Atimer.seconds() > 1.3) {
+                if (Atimer.seconds() > 1.1) {
                     clawFingerPosition = 92;
                 }
 
-                if (Atimer.seconds() > 1.55) {
+                if (Atimer.seconds() > 1.3) {
                     clawPitchPosition = 72.4;
                     innerClawPitchPosition = 160;
 
@@ -319,7 +319,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 if (X2timer.seconds() > 1) {
                     //clawWristPosition = 95;
                     clawPitchPosition = 68;
-                    innerClawPitchPosition = 5;
+                    innerClawPitchPosition = 20;
                     bucketPosition=46;
                     isX2SequenceActive=false;
                 }
@@ -333,7 +333,7 @@ public class BackUpTeleOp extends LinearOpMode {
             }
             if (isDownSequenceActive){
                 clawWristPosition = 95;
-                clawPitchPosition = 105;
+                clawPitchPosition = 100;
                 innerClawPitchPosition = 200;
                 bucketPosition=46;
                 if (downTimer.seconds()>0.4){
@@ -345,7 +345,7 @@ public class BackUpTeleOp extends LinearOpMode {
             if(gamepad2.dpad_up){
                 extendoTarget=maxExtendoPosition;
                 clawPitchPosition = 68;
-                innerClawPitchPosition = 5;
+                innerClawPitchPosition = 20;
                 bucketPosition=46;
 
             }
@@ -357,17 +357,18 @@ public class BackUpTeleOp extends LinearOpMode {
             }
             if (isB2SequenceActive) {
                 clawFingerPosition = 0;
-                innerClawPitchPosition = 93;
+                innerClawPitchPosition = 180;
 
                 if (B2timer.seconds()>0.3){
                     bucketPosition=158;
                     extendoTarget=0;
+                    bucketSlidesTarget=200;
                 }
 
                 if (B2timer.seconds() > 0.6) {
-                    clawPitchPosition = 127;
-                    innerClawPitchPosition = 179;
-                    extendoPitchTarget = -600;
+                    clawPitchPosition = 13;
+                    innerClawPitchPosition = 82;
+                    extendoPitchTarget=0;
                 }
                 if (B2timer.seconds() > 1) {
                     extendoTarget=793;
@@ -516,9 +517,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 clawWristPosition += 5;
             }
 
-            if (gamepad1.left_trigger>0) {
-                innerClawPitchPosition -= 1;
-            }
+
             else if (gamepad1.right_trigger>0) {
                 innerClawPitchPosition += 1;
             }
@@ -532,10 +531,18 @@ public class BackUpTeleOp extends LinearOpMode {
                 }
             }
             else isPressingA2=false;
+
+            if(gamepad2.right_bumper){
+                clawFingerPosition=92;
+            }
+            if(gamepad2.left_bumper){
+                clawFingerPosition=20;
+            }
+
             if (gamepad2.y){
                 if (!isPressingY2){
                     isPressingY2=true;
-                    if (clawFingerPosition==92) {clawFingerPosition=0;} else {clawFingerPosition=92;}
+                    if (extendoTarget==793) {extendoTarget=0;} else {extendoTarget=793;}
                 }
             }
             else isPressingY2=false;
@@ -616,8 +623,10 @@ public class BackUpTeleOp extends LinearOpMode {
             telemetry.addData("Control hub IMU heading", imu.getRobotYawPitchRollAngles().getYaw());
             telemetry.addData("pinpoint x",pinpoint.getPosX());
             telemetry.addData("pinpoint y", pinpoint.getPosY());
+            telemetry.addData("looptime", timer.time());
 
             telemetry.update();
+            timer.reset();
         }
     }
 }
