@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.base.config;
 import androidx.annotation.NonNull;
 
 public class RobotDimensions {
-    public double length = 0.0;
-    public double width  = 0.0;
+    public double length = 15.364;
+    public double width  = 14.375;
 
     public RobotDimensions() {
         this.length = 15.364;

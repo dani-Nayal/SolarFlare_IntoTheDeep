@@ -8,12 +8,32 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
+import org.firstinspires.ftc.teamcode.base.config.RobotState;
+
 @Autonomous
 public class FourSampleAuto extends LinearOpMode {
+    RobotConfig robotConfig;
+    HardwareConfig hw;
+    RobotState state;
     CustomActions actions;
     @Override
     public void runOpMode(){
+
+        robotConfig = RobotConfig.createInstance("IntoTheDeepV2");
+
+        try {
+            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+        state = RobotState.getInstance();
+
         actions = new CustomActions(telemetry);
+        actions.setInitialDrivePosition("sample", "sample");
 
         waitForStart();
 

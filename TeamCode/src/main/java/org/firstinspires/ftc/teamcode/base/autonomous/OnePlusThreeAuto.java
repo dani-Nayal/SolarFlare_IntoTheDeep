@@ -7,12 +7,32 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
+import org.firstinspires.ftc.teamcode.base.config.RobotState;
+
 @Autonomous
 public class OnePlusThreeAuto extends LinearOpMode {
+    RobotConfig robotConfig;
+    HardwareConfig hw;
+    RobotState state;
     CustomActions actions;
     @Override
     public void runOpMode(){
+        robotConfig = RobotConfig.createInstance("IntoTheDeep-V2");
+
+        try {
+            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+        state = RobotState.getInstance();
+
         actions = new CustomActions(telemetry);
+        actions.setInitialDrivePosition("specimen", "sample");
 
         waitForStart();
 
@@ -20,13 +40,13 @@ public class OnePlusThreeAuto extends LinearOpMode {
                 new ParallelAction(
                         actions.globalMechanismControl(),
                         new SequentialAction(
-                                actions.moveToHighChamberAndScoreSpecimen(
+                                actions.moveToChambersAndScoreHighChamber(
                                         actions.getInitialDrivePosition("specimen", "sample"),
                                         new Vector2d(-9,-58),
                                         Math.toRadians(90)
                                 ),
                                 actions.grabGroundSample(
-                                        new Pose2d(-9, -58, Math.toRadians(90)),
+                                        new Pose2d(-9, -58 + 9, Math.toRadians(90)),
                                         new Vector2d(-48,-53),
                                         Math.toRadians(90),
                                         500
