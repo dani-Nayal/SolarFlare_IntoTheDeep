@@ -1,3 +1,32 @@
+/*
+ * Copyright (c) 2025 Murad Nayal
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * (subject to the limitations in the disclaimer below) provided that the following conditions are
+ * met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list of conditions
+ * and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ * and the following disclaimer in the documentation and/or other materials provided with the
+ * distribution.
+ *
+ * Neither the name Murad Nayal nor the names of contributors to this material may be used to
+ * endorse or promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS LICENSE. THIS
+ * SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+ * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
 import static java.lang.Math.abs;
@@ -14,6 +43,7 @@ import static org.firstinspires.ftc.teamcode.base.calibration.Math.solveQuadrati
 import static org.firstinspires.ftc.teamcode.base.calibration.Math.approxEquals;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.teamcode.base.calibration.CalculationException;
 import org.firstinspires.ftc.teamcode.base.calibration.ComplexNumberPair;
 
@@ -51,6 +81,10 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
      * Span (distaance) while accelerating
      */
     double    Sa;
+    /**
+     * Top Velocity for the triangular case
+     */
+    double    Vt;
     /**
      * Cruise Velocity
      */
@@ -117,22 +151,22 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
 
         // Vc is a solution to the following quadratic equation aX^2 + bX + c = 0
         double            a     = Dmax - Amax;
-        double            b     = Dmax*Vi;
-        double            c     = -2*Dmax*(Vi*Vi + dist*Amax);
+        double            b     = 0;
+        double            c     = -Dmax*(Vi*Vi + 2*dist*Amax);
         ComplexNumberPair roots = solveQuadraticEquation(a, b, c);
         if(roots.n1.isComplex() || roots.n2.isComplex()) {
             throw new CalculationException("Could not solve for cruise velocity");
         } else if(signum(roots.n1.a) != signum(roots.n2.a)) {
-            Vc                  = signum(roots.n1.a) == signum(dist) ? roots.n1.a : roots.n2.a;
+            Vt                  = signum(roots.n1.a) == signum(dist) ? roots.n1.a : roots.n2.a;
         } else if(roots.n1.compareTo(roots.n2) >= 0) {
-            Vc                  = roots.n1.a;
+            Vt                  = roots.n1.a;
         } else {
-            Vc                  = roots.n2.a;
+            Vt                  = roots.n2.a;
         }
 
         System.out.println("roots: " + roots);
 
-        Vc                      = abs(Vc)<abs(Vmax) ? Vc : Vmax;
+        Vc                      = abs(Vt)<abs(Vmax) ? Vt : Vmax;
 
         Ta                      = abs((Vc-Vi) / Amax);
         Td                      = abs(Vc/Dmax);
@@ -172,43 +206,79 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
     }
 
     public boolean approxEqual(TrapezoidalMotionProfile1D other) {
-        return approxEquals( dist, other.dist) &&
-                approxEquals(Pi,   other.Pi)   &&
-                approxEquals(Vi,   other.Vi)   &&
-                approxEquals(Vmax, other.Vmax) &&
-                approxEquals(Amax, other.Amax) &&
-                approxEquals(Ta,   other.Ta)   &&
-                approxEquals(Sa,   other.Sa)   &&
-                approxEquals(Vc,   other.Vc)   &&
-                approxEquals(Tc,   other.Tc)   &&
-                approxEquals(Sc,   other.Sc)   &&
-                approxEquals(Dmax, other.Dmax) &&
-                approxEquals(Td,   other.Td)   &&
-                approxEquals(Sd,   other.Sd)   &&
-                approxEquals(Tt,   other.Tt);
+        boolean distTest = approxEquals(dist, other.dist);
+        boolean PiTest   = approxEquals(Pi,   other.Pi);
+        boolean ViTest   = approxEquals(Vi,   other.Vi);
+        boolean VmaxTest = approxEquals(Vmax, other.Vmax);
+        boolean AmaxTest = approxEquals(Amax, other.Amax);
+        boolean TaTest   = approxEquals(Ta,   other.Ta);
+        boolean SaTest   = approxEquals(Sa,   other.Sa);
+        boolean VtTest   = approxEquals(Vt,   other.Vt);
+        boolean VcTest   = approxEquals(Vc,   other.Vc);
+        boolean TcTest   = approxEquals(Tc,   other.Tc);
+        boolean ScTest   = approxEquals(Sc,   other.Sc);
+        boolean DmaxTest = approxEquals(Dmax, other.Dmax);
+        boolean TdTest   = approxEquals(Td,   other.Td);
+        boolean SdTest   = approxEquals(Sd,   other.Sd);
+        boolean TtTest   = approxEquals(Tt,   other.Tt);
+
+        if(!distTest)
+            System.out.println("Failed distTest");
+        if(!PiTest)
+            System.out.println("Failed PiTest");
+        if(!ViTest)
+            System.out.println("Failed ViTest");
+        if(!VmaxTest)
+            System.out.println("Failed VmaxTest");
+        if(!AmaxTest)
+            System.out.println("Failed AmaxTest");
+        if(!TaTest)
+            System.out.println("Failed TaTest");
+        if(!SaTest)
+            System.out.println("Failed SaTest");
+        if(!VtTest)
+            System.out.println("Failed VtTest");
+        if(!VcTest)
+            System.out.println("Failed VcTest");
+        if(!TcTest)
+            System.out.println("Failed TcTest");
+        if(!ScTest)
+            System.out.println("Failed ScTest");
+        if(!DmaxTest)
+            System.out.println("Failed DmaxTest");
+        if(!TdTest)
+            System.out.println("Failed TdTest");
+        if(!SdTest)
+            System.out.println("Failed SdTest");
+        if(!TtTest)
+            System.out.println("Failed TtTest");
+
+        return  distTest && PiTest && ViTest && VmaxTest && AmaxTest && TaTest && SaTest &&
+                VtTest   && VcTest && TcTest && ScTest   && DmaxTest && TdTest && SdTest && TtTest;
     }
 
     @NonNull
     @Override
     public String toString() {
         String formatString = "TrapezoidalMotionProfile1D%n" +
-                "    dist = %1$20.5f%n"  +
-                "    Pi   = %2$20.5f%n"  +
-                "    Vi   = %3$20.5f%n"  +
-                "    Vmax = %4$20.5f%n"  +
-                "    Amax = %5$20.5f%n"  +
-                "    Ta   = %6$20.5f%n"  +
-                "    Sa   = %7$20.5f%n"  +
-                "    Tc   = %8$20.5f%n"  +
-                "    Vc   = %9$20.5f%n"  +
-                "    Sc   = %10$20.5f%n" +
-                "    Dmax = %11$20.5f%n" +
-                "    Td   = %12$20.5f%n" +
-                "    Sd   = %13$20.5f%n" +
-                "    Tt   = %14$20.5f%n";
+                "    dist = %1$.5f%n"  +
+                "    Pi   = %2$.5f%n"  +
+                "    Vi   = %3$.5f%n"  +
+                "    Vmax = %4$.5f%n"  +
+                "    Amax = %5$.5f%n"  +
+                "    Ta   = %6$.5f%n"  +
+                "    Sa   = %7$.5f%n"  +
+                "    Vt   = %8$.5f%n"  +
+                "    Tc   = %9$.5f%n"  +
+                "    Vc   = %10$.5f%n"  +
+                "    Sc   = %11$.5f%n" +
+                "    Dmax = %12$.5f%n" +
+                "    Td   = %13$.5f%n" +
+                "    Sd   = %14$.5f%n" +
+                "    Tt   = %15$.5f%n";
 
         return String.format(Locale.US, formatString,
-                dist,Pi,Vi,Vmax,Amax,Ta,Sa,Tc,Vc,Sc,Dmax,Td,Sd,Tt);
+                dist,Pi,Vi,Vmax,Amax,Ta,Sa,Vt,Tc,Vc,Sc,Dmax,Td,Sd,Tt);
     }
 
     /**
@@ -219,96 +289,133 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
         TrapezoidalMotionProfile1D profile = new TrapezoidalMotionProfile1D();
         TrapezoidalMotionProfile1D test    = new TrapezoidalMotionProfile1D();
 
+        String testDesc  = "";
         //
         // Profile variables, initialized to
-        // profile 1 - Positive Distance - Trinagular Profile - No Cruise
+        testDesc         = "Profile 1 - Positive Distance - Trinagular Profile - No Cruise";
+        test.dist        =  27.0; // m
         test.Pi          =   0;    // m
         test.Vi          =   0.0;  // m/s
+        test.Vmax        =   6.0;  // m/s
         test.Amax        =   2.0;  // m/s^2
         test.Ta          =   3.0;  // a
         test.Sa          =   9.0;  // m (0.5*Amax*Ta*Ta)
-        test.Vmax        =   6.0;  // m/s
+        test.Vt          =   6.0;  // m/s
+        test.Tc          =   0.0;  // s
         test.Vc          =   6.0;  // m/s
         test.Sc          =   0.0;  // m
         test.Dmax        =  -1.0;  // m/s^2
         test.Td          =   6.0;  // s (Vc/Td)
         test.Sd          =  18.0; // -0.5*Dmax*Td*Td
-        test.dist        =  27.0; // m
         test.Tt          =   9.0;  // s
 
         profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
-        System.out.println("Profile 1 matched: " + profile.approxEqual(test));
+        System.out.println(testDesc + " - Passed: " + profile.approxEqual(test));
         // System.out.println(profile + "\n");
 
-        // profile 2 - Negative Distance + Triangular Profile - No Cruise
+        testDesc         = "Pofile 2 - Negative Distance + Triangular Profile - No Cruise";
         test.dist        = -27.0; // m
+        test.Pi          =   0;    // m
+        test.Vi          =   0.0;  // m/s
         test.Vmax        =  -6.0;  // m/s
         test.Amax        =  -2.0;  // m/s^2
+        test.Ta          =   3.0;  // a
         test.Sa          =  -9.0;  // m (0.5*Amax*Ta*Ta)
+        test.Vt          =  -6.0;  // m/s
+        test.Tc          =   0.0;  // s
         test.Vc          =  -6.0;  // m/s
+        test.Sc          =   0.0;  // m
         test.Dmax        =   1.0;  // m/s^2
+        test.Td          =   6.0;  // s (Vc/Td)
         test.Sd          = -18.0; // -0.5*Dmax*Td*Td
+        test.Tt          =   9.0;  // s
 
         profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
-        System.out.println("Profile 2 matched: " + profile.approxEqual(test));
+        System.out.println(testDesc + " - Passed: " + profile.approxEqual(test));
         // System.out.println(profile + "\n");
 
-        // profile 3 - Negative Distance + Cruise
-        test.dist        = -39.0; // m
-        test.Vmax        =  -6.0;  // m/s
-        test.Amax        =  -2.0;  // m/s^2
-        test.Ta          =   3.0;  // s
-        test.Sa          =  -9.0;  // m (0.5*Amax*Ta*Ta)
-        test.Vc          =  -6.0;  // m/s
+        testDesc         = "Profile 3 - Negative Distance + Cruise";
+        test.dist        = -39.0;     // m
+        test.Pi          =   0;       // m
+        test.Vi          =   0.0;     // m/s
+        test.Vmax        =  -6.0;     // m/s
+        test.Amax        =  -2.0;     // m/s^2
+        test.Ta          =   3.0;     // a
+        test.Sa          =  -9.0;     // m (0.5*Amax*Ta*Ta)
+        test.Vt          =  -7.21110; // m/s
         test.Tc          =   2.0;  // s
-        test.Sc          = -12.0; // m
+        test.Vc          =  -6.0;  // m/s
+        test.Sc          = -12.0;  // m
         test.Dmax        =   1.0;  // m/s^2
-        test.Td          =   6.0;  // s
-        test.Sd          =  -18.0; // -0.5*Dmax*Td*Td
-        test.Tt          =   11.0; // s
+        test.Td          =   6.0;  // s (Vc/Td)
+        test.Sd          = -18.0; // -0.5*Dmax*Td*Td
+        test.Tt          =  11.0;  // s
 
         profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
-        System.out.println("Profile 3 matched: " + profile.approxEqual(test));
+        System.out.println(testDesc + " - Passed: " + profile.approxEqual(test));
         // System.out.println(profile + "\n");
 
-        // profile 4 - Vc < Vmax
-        test.dist        =   7.0; // m
+        testDesc         = "Profile 4 - Vc < Vmax";
+        test.dist        =   7.0;  // m
         test.Pi          =   0.0;  // m
         test.Vi          =   2.0;  // m/s
         test.Vmax        =   6.0;  // m/s
         test.Amax        =   2.0;  // m/s^2
         test.Ta          =   1.0;  // s
-        test.Sa          =   3.0; // m (0.5*Amax*Ta*Ta)
-        test.Vc          =   4.0;  // m/s
+        test.Sa          =   3.0;  // m (0.5*Amax*Ta*Ta)
+        test.Vt          =   4.0;  // m/s
         test.Tc          =   0.0;  // s
+        test.Vc          =   4.0;  // m/s
         test.Sc          =   0.0;  // m
-        test.Dmax        =   2.0;  // m/s^2
+        test.Dmax        =  -2.0;  // m/s^2
         test.Td          =   2.0;  // s
         test.Sd          =   4.0;  // -0.5*Dmax*Td*Td
         test.Tt          =   3.0;  // s
 
         profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
-        System.out.println("Profile 4 matched: " + profile.approxEqual(test));
-        System.out.println(profile + "\n");
+        System.out.println(testDesc + " - Passed: " + profile.approxEqual(test));
+        // System.out.println(profile + "\n");
 
-        // profile 5 - No Acceleration
-        test.dist        =  16.0; // m
+        testDesc         = "Profile 5 - No Acceleration";
+        test.dist        =   4.0;  // m
         test.Pi          =   0.0;  // m
         test.Vi          =   4.0;  // m/s
         test.Vmax        =   5.0;  // m/s
         test.Amax        =   2.0;  // m/s^2
         test.Ta          =   0.0;  // s
         test.Sa          =   0.0;  // m (0.5*Amax*Ta*Ta)
-        test.Vc          =   2.0;  // m/s
+        test.Vt          =   4.0;  // m/s
         test.Tc          =   0.0;  // s
+        test.Vc          =   4.0;  // m/s
         test.Sc          =   0.0;  // m
-        test.Dmax        =   1.0;  // m/s^2
-        test.Td          =   4.0;  // s
-        test.Sd          =   8.0;  // -0.5*Dmax*Td*Td
-        test.Tt          =   4.0;  // s
+        test.Dmax        =  -2.0;  // m/s^2
+        test.Td          =   2.0;  // s
+        test.Sd          =   4.0;  // -0.5*Dmax*Td*Td
+        test.Tt          =   2.0;  // s
 
         profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
-        System.out.println("Profile 5 matched: " + profile.approxEqual(test));
-        System.out.println(profile + "\n");
+        System.out.println(testDesc + " - Passed: " + profile.approxEqual(test));
+        // System.out.println(profile + "\n");
+
+        testDesc         = "Profile 6 - Vi = Vmax - No acceleration";
+        test.dist        =  24.0;     // m
+        test.Pi          =   0.0;     // m
+        test.Vi          =   4.0;     // m/s
+        test.Vmax        =   4.0;     // m/s
+        test.Amax        =   2.0;     // m/s^2
+        test.Ta          =   0.0;     // s
+        test.Sa          =   0.0;     // m (0.5*Amax*Ta*Ta)
+        test.Vt          =   6.11010; // m/s
+        test.Tc          =   4.0;     // s
+        test.Vc          =   4.0;     // m/s
+        test.Sc          =  16.0;     // m
+        test.Dmax        =  -1.0;     // m/s^2
+        test.Td          =   4.0;     // s
+        test.Sd          =   8.0;     // -0.5*Dmax*Td*Td
+        test.Tt          =   8.0;     // s
+
+        profile.resetProfile(test.dist, test.Pi, test.Vi, test.Vmax, test.Amax, test.Dmax);
+        System.out.println(testDesc + " - Passed: " + profile.approxEqual(test));
+        // System.out.println(profile + "\n");
     }
 }
