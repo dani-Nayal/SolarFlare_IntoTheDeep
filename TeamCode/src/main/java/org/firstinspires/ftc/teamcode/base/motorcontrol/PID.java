@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.base.motorcontrol;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
-import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 
@@ -21,31 +20,39 @@ public class PID {
     double lastReference = 0;
     double integralSum = 0;
     ElapsedTime timer = new ElapsedTime();
+    boolean isFirstIteration = true;
     public PID(){
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
     }
     public double getPIDOutput(MotorEnum motorEnum, double reference) {
-        MotorConfig motorConfig = hw.getMotorConfig(motorEnum);
-        encoderPosition = motorConfig.motor.getCurrentPosition();
+        if (isFirstIteration){
+            timer.reset();
+            isFirstIteration = false;
+        }
 
-        error = reference - encoderPosition;
+        encoderPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
 
-        derivative = motorConfig.motor.getVelocity();
+        error = state.getMotorTarget(motorEnum) - encoderPosition;
+
+        derivative = (error - lastError) / timer.seconds();
 
         integralSum = integralSum + (error * timer.seconds());
 
         if (reference != lastReference){
             integralSum = 0;
         }
-        
-        proportionalPower = error * motorConfig.kP;
-        integralPower = integralSum * motorConfig.kI;
-        derivativePower = derivative * motorConfig.kD;
-        outPower = Math.max(-1, Math.min(1, proportionalPower + integralPower + derivativePower));
 
-        lastError = error;
+        proportionalPower = error * 0.015;
+
+        integralPower = integralSum * hw.getMotorConfig(motorEnum).kI;
+
+        derivativePower = derivative * 0.0002;
+
+        outPower = proportionalPower + integralPower + derivativePower;
+
         lastReference = reference;
+        lastError = error;
         timer.reset();
 
         return outPower;
