@@ -780,7 +780,7 @@ public abstract class  TeleOpComponents {
             super(controller, portNumber);
             this.SERVO_SPEED = servoSpeed;
             setDirection(direction);
-            //hardwareMap.put(deviceName,this);
+            hardwareMap.put(deviceName,this);
             CRServos.add(this);
         }
         @Override
