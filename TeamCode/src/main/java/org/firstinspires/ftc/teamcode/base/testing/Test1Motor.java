@@ -24,6 +24,7 @@ public class Test1Motor extends LinearOpMode {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
         motorControl = new MotorControl(MotorEnum.TESTING_MOTOR);
@@ -31,23 +32,29 @@ public class Test1Motor extends LinearOpMode {
 
         hw.getMotorConfig(MotorEnum.TESTING_MOTOR).motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hw.getMotorConfig(MotorEnum.TESTING_MOTOR).motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         waitForStart();
 
         while (opModeIsActive()){
             if (gamepad1.a){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 2500);
             }
             else if (gamepad1.b){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 800);
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 5000);
             }
             else if (gamepad1.y){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1321);
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 7500);
             }
             else if (gamepad1.x){
-                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 1819);
+                state.setMotorTarget(MotorEnum.TESTING_MOTOR, 10000);
             }
 
-            motorControl.runTrapezoidalMotionProfile(telemetry);
+            motorControl.runPIDMotorControl(telemetry);
+
+            telemetry.addData("kp", hw.getMotorConfig(MotorEnum.TESTING_MOTOR).kP);
+            telemetry.addData("ki", hw.getMotorConfig(MotorEnum.TESTING_MOTOR).kI);
+            telemetry.addData("kd", hw.getMotorConfig(MotorEnum.TESTING_MOTOR).kD);
+            telemetry.update();
         }
     }
 }
