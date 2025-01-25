@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.CRServos;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.LOOP_TIMER;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucketSlides;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.drive;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.motionProfileMotors;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.motors;
@@ -758,6 +759,7 @@ public abstract class TeleOpActions{
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
             }
+            /*
             for (int i=0;i<TeleOpComponents.motionProfileMotors.size();i++){
                 BotMotor motor = TeleOpComponents.motionProfileMotors.get(i);
                 if (!motor.isStallResetting){
@@ -765,6 +767,9 @@ public abstract class TeleOpActions{
                     motor.runMotionProfileOnce();
                 }
             }
+            */
+            bucketSlides.createPendingMotionProfiles();
+            bucketSlides.runMotionProfileOnce();
             LOOP_TIMER.reset();
         }
         for (int i=0;i<TeleOpComponents.motors.size();i++){

@@ -29,8 +29,8 @@ public class JustTetsing extends LinearOpMode {
         waitForStart();
         TeleOpActions.runLoop(
                 this::opModeIsActive,
-                extendo.triggeredDynamicAction(()->(gamepad1.left_bumper),()->(gamepad1.right_bumper),15),
-                bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1060),
+                bucketSlides.triggeredDynamicAction(()->(gamepad1.left_bumper),()->(gamepad1.right_bumper),15),
+                bucketSlides.triggeredFSMAction(()->(gamepad1.a),()->(gamepad1.b),0,1060),
                 new UpdateTelemetryAction()
         );
     }
