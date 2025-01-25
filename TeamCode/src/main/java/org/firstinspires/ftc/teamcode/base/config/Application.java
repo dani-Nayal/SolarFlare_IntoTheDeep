@@ -43,6 +43,8 @@ public class Application {
 
     public static InputStream getResourceAsStream(String resourceName) throws IOException {
         InputStream input = Application.class.getResourceAsStream(resourceName);
+        if(input == null)
+            input = Application.class.getResourceAsStream(getApplicationResourcesPath(resourceName));
         return input;
     }
 
@@ -58,9 +60,14 @@ public class Application {
         return relativeDirUp + "/" + relativeDirDown;
     }
 
+    public static String getApplicationResourcesPath(String fileName) {
+        return getApplicationResourcesPath() + fileName;
+    }
+
     public static void main(String[] args) {
         String packageName = Objects.requireNonNull(Application.class.getPackage()).getName();
         System.out.println("Package is: " + packageName);
         System.out.println("Resources Path: " + getApplicationResourcesPath());
+        System.out.println("Resource Path for file " + getApplicationResourcesPath("file"));
     }
 }
