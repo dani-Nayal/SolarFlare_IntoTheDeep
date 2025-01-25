@@ -29,6 +29,7 @@
  */
 package org.firstinspires.ftc.teamcode.base.config;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -41,23 +42,29 @@ public class Application {
     // public static String metricsDirName = "/storage/emulated/0/Android/data/com.qualcomm.ftcrobotcontroller/files/";
     public static String      metricsDirName = "C:/Temp";
 
-    public static InputStream getResourceAsStream(String resourceName) throws IOException {
-        InputStream input = Application.class.getResourceAsStream(resourceName);
-        if(input == null)
-            input = Application.class.getResourceAsStream(getApplicationResourcesPath(resourceName));
-        return input;
+    public static InputStream getResourceAsStream(String resourceName) {
+        InputStream resource = Application.class.getResourceAsStream(resourceName);
+        if(resource == null) {
+            String resourcePath = getApplicationResourcesPath(resourceName);
+            try {
+                resource        = new FileInputStream(resourcePath);
+            } catch(IOException e) {
+                return null;
+            }
+        }
+        return resource;
     }
 
     public static String getApplicationResourcesPath() {
-        String   packageName          = Objects.requireNonNull(Application.class.getPackage()).getName();
-        String[] packageDirs          = packageName.split("\\.");
-        StringBuilder relativeDirUp   = new StringBuilder();
-        StringBuilder relativeDirDown = new StringBuilder();
+        String        packageName  = Objects.requireNonNull(Application.class.getPackage()).getName();
+        String[]      packageDirs  = packageName.split("\\.");
+        StringBuilder resourcesDir = new StringBuilder();
+        resourcesDir.append(System.getProperty("user.dir"));
+        resourcesDir.append("/TeamCode/src/main/resources/");
         for(String packageDir: packageDirs) {
-            relativeDirUp.append("../");
-            relativeDirDown.append(packageDir).append("/");
+            resourcesDir.append(packageDir).append("/");
         }
-        return relativeDirUp + "/" + relativeDirDown;
+        return resourcesDir.toString();
     }
 
     public static String getApplicationResourcesPath(String fileName) {
@@ -65,9 +72,16 @@ public class Application {
     }
 
     public static void main(String[] args) {
-        String packageName = Objects.requireNonNull(Application.class.getPackage()).getName();
-        System.out.println("Package is: " + packageName);
-        System.out.println("Resources Path: " + getApplicationResourcesPath());
-        System.out.println("Resource Path for file " + getApplicationResourcesPath("file"));
+        String   packageName = Objects.requireNonNull(Application.class.getPackage()).getName();
+        String[] robotNames  = new String[] {"IntoTheDeep-V2", "Rig1Motor"};
+        System.out.println("Package is:            " + packageName);
+        System.out.println("Resources Path:        " + getApplicationResourcesPath());
+        System.out.println("user.dir:              " + System.getProperty("user.dir"));
+        System.out.println("Checking RobotConfig files");
+        for(String robotName: robotNames) {
+            String      robotConfigFileName = robotName + ".json";
+            InputStream robotConfigFile     = getResourceAsStream(robotConfigFileName);
+            System.out.println("Obtained RobotConfigFile: " + robotConfigFile + " from " + robotConfigFileName);
+        }
     }
 }
