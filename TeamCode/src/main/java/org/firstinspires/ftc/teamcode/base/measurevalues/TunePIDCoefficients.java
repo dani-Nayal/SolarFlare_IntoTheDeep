@@ -78,7 +78,7 @@ public class TunePIDCoefficients extends LinearOpMode {
             double error = state.getMotorTarget(testingMotor) - encoderPosition;
 
             double derivative = (error - lastError) / timer.seconds();
- r``````````````````````````````````````````````
+
             integralSum = integralSum + (error * timer.seconds());
 
             if (reference != lastReference){
