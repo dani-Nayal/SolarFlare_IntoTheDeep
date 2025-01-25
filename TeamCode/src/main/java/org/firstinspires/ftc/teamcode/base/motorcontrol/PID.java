@@ -43,11 +43,11 @@ public class PID {
             integralSum = 0;
         }
 
-        proportionalPower = error * hw.getMotorConfig(motorEnum).kP;
+        proportionalPower = error * 0.015;
 
         integralPower = integralSum * hw.getMotorConfig(motorEnum).kI;
 
-        derivativePower = derivative * hw.getMotorConfig(motorEnum).kD;
+        derivativePower = derivative * 0.0002;
 
         outPower = proportionalPower + integralPower + derivativePower;
 

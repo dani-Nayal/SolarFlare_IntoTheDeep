@@ -50,11 +50,6 @@ public class Test1Motor extends LinearOpMode {
             }
 
             motorControl.runPIDMotorControl(telemetry);
-
-            telemetry.addData("kp", hw.getMotorConfig(MotorEnum.TESTING_MOTOR).kP);
-            telemetry.addData("ki", hw.getMotorConfig(MotorEnum.TESTING_MOTOR).kI);
-            telemetry.addData("kd", hw.getMotorConfig(MotorEnum.TESTING_MOTOR).kD);
-            telemetry.update();
         }
     }
 }
