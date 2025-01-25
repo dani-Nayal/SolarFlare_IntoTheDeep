@@ -402,6 +402,14 @@ public abstract class  TeleOpComponents {
                 }
                 cruiseDistance = distance - accelDistance - decelDistance;
                 cruiseDT = cruiseDistance / currentMaxVelocity;
+                if (Double.isNaN(accelDT) || Double.isNaN(accelDistance) || Double.isNaN(decelDT) || Double.isNaN(decelDistance) || Double.isNaN(cruiseDT) || Double.isNaN(cruiseDistance) || accelDT<0 || decelDT < 0 || cruiseDT<0){
+                    accelDT=0;
+                    cruiseDT=0;
+                    decelDT=0;
+                    accelDistance=0;
+                    cruiseDistance=0;
+                    decelDistance=0;
+                }
             }
             else{
                 accelDT=0;
