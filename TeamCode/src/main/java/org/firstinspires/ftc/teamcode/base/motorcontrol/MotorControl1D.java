@@ -165,6 +165,7 @@ public class MotorControl1D {
         lastVmax                     = Vmax;
         lastAmax                     = Amax;
 
+        /*
         telemetry.addData("iteration",           iter++);
         telemetry.addData("now",                 now);
         telemetry.addData("distance",            profile.dist );
@@ -180,6 +181,7 @@ public class MotorControl1D {
         telemetry.addData("max accel",           profile.Amax);
         telemetry.addData("max decl",            profile.Dmax);
         telemetry.addData("max velocity",        profile.Vmax);
+        */
 
         /*
         telemetry.addData("motor.getDirection()", motor.getDirection());
