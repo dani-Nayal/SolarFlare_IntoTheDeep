@@ -53,7 +53,8 @@ String jsonString = gson.toJson(object);
 public class JSONUtils {
     public static <T> T parseJSON(Reader input, Class<T> contentsClass) {
         Gson gson = new GsonBuilder().create();
-        return gson.fromJson(input, contentsClass);
+        T contents = gson.fromJson(input, contentsClass);
+        return contents;
     }
 
     public static class JsonTest {
