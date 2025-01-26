@@ -7,7 +7,7 @@
   "Motors": {
     "TESTING_MOTOR": {
       "deviceName": "motor-1",
-      "kP": 0.001,
+      "kP": 0.015,
       "kI": 0.0,
       "kD": 0.0002,
       "runMode": "RUN_WITHOUT_ENCODER",
