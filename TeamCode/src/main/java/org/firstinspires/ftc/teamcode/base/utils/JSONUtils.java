@@ -37,45 +37,69 @@ import java.io.Reader;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.firstinspires.ftc.teamcode.base.config.Application;
 
+/*
+Code snippets for gson
+
+- Serializing an object into JSON
+Gson gson = new GsonBuilder().setPrettyPrinting().create();
+String jsonString = gson.toJson(object);
+
+ */
+
 public class JSONUtils {
     public static <T> T parseJSON(Reader input, Class<T> contentsClass) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().create();
         return gson.fromJson(input, contentsClass);
     }
 
     public static class JsonTest {
+        public enum MotorEnumTest {M1, M2}
+        public enum ServoEnumTest {S1, S2}
         public static class MotorTest {
-            public String k1;
-            public int    k2;
+            public int           id = 1;
+            public Object        objId;
+            public MotorEnumTest motorEnum;
+            public String        k1;
+            public int           k2;
             @NonNull
             public String toString() {
                 var sb = new StringBuilder();
                 sb.append("MotorTest\n");
-                sb.append("  k1=").append(k1).append("\n");
-                sb.append("  k2=").append(k2).append("\n");
+                sb.append("  id=       ").append(id).append("\n");
+                sb.append("  objId=    ").append(objId).append("\n");
+                sb.append("  motorEnum=").append(motorEnum).append("\n");
+                sb.append("  k1=       ").append(k1).append("\n");
+                sb.append("  k2=       ").append(k2).append("\n");
                 return sb.toString();
             }
         }
         public static class ServoTest {
-            public String k1;
-            public int    k2;
+            public int           id = 10;
+            public Object        objId;
+            public ServoEnumTest servoEnum;
+            public String        k1;
+            public int           k2;
             @NonNull
             public String toString() {
                 var sb = new StringBuilder();
                 sb.append("ServoTest\n");
-                sb.append("  k1=").append(k1).append("\n");
-                sb.append("  k2=").append(k2).append("\n");
+                sb.append("  id=       ").append(id).append("\n");
+                sb.append("  objId=    ").append(objId).append("\n");
+                sb.append("  servoEnum=").append(servoEnum).append("\n");
+                sb.append("  k1=       ").append(k1).append("\n");
+                sb.append("  k2=       ").append(k2).append("\n");
                 return sb.toString();
             }
         }
 
-        public String                 title;
-        public int                    version;
-        public Map<String, MotorTest> motors;
-        public Map<String, ServoTest> servos;
+        public String                        title;
+        public int                           version;
+        public Map<MotorEnumTest, MotorTest> motors;
+        public Map<ServoEnumTest, ServoTest> servos;
 
         @NonNull
         public String toString() {
@@ -93,7 +117,7 @@ public class JSONUtils {
     }
 
     public static void main(String[] args) {
-        InputStream input    = Application.getResourceAsStream("Test1.json");
+        InputStream input    = Application.getResourceAsStream("JSONTest.json");
         Reader      reader   = new InputStreamReader(input);
         JsonTest    contents = parseJSON(reader, JsonTest.class);
         System.out.println(contents.toString());
