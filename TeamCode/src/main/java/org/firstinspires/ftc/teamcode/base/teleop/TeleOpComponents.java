@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
@@ -56,9 +57,10 @@ public abstract class  TeleOpComponents {
 
     public static CRBotServo hang;
     public static CRBotServo hangRight;
+    public static BotMotor ryanNemesis;
 
     public static class BotMotor extends DcMotorImplEx {
-        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
+        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 7;
         double maxVelocityParam;
         double maxAccelerationParam;
         double instantTargetPosition = 0;
@@ -409,6 +411,8 @@ public abstract class  TeleOpComponents {
                     accelDistance=0;
                     cruiseDistance=0;
                     decelDistance=0;
+                    telemetry.addData("e","e");
+                    telemetry.update();
                 }
             }
             else{
@@ -453,6 +457,7 @@ public abstract class  TeleOpComponents {
         public void setMotorTarget(double target, double maxVelocity, double maxAcceleration){
             target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
+                MOVEMENT_TIMER.reset();
                 this.target = target;
                 integralSum = 0;
                 previousError = 0;
@@ -460,7 +465,6 @@ public abstract class  TeleOpComponents {
                 for (BotMotor motor : synchronizedMotors){
                     motor.setMotorTarget(target,maxVelocity,maxAcceleration);
                 }
-                MOVEMENT_TIMER.reset();
             }
         }
         public void createPendingMotionProfiles(){
@@ -825,6 +829,21 @@ public abstract class  TeleOpComponents {
     public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry, Pose2d initialDrivePose){
         TeleOpComponents.hardwareMap=hardwareMap;
         TeleOpComponents.telemetry=telemetry;
+        /*
+        ryanNemesis = new BotMotor(
+                hardwareMap.get(DcMotorEx.class, "motor-1").getController(),
+                hardwareMap.get(DcMotorEx.class, "motor-1").getPortNumber(),
+                hardwareMap.get(DcMotorEx.class, "motor-1").getMotorType(),
+                0.015,0,0.00002,
+                new String[]{},new double[]{},
+                Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY,
+                250000,3500,
+                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
+                DcMotorEx.Direction.FORWARD,
+                DcMotorEx.ZeroPowerBehavior.BRAKE,
+                "MOTION_PROFILE"
+        );
+        */
         TeleOpComponents.drive = new PinpointDrive(hardwareMap,initialDrivePose);
         //initialize mechanism variables here
         extendo = new BotMotor(
@@ -986,8 +1005,8 @@ public abstract class  TeleOpComponents {
                 Servo.Direction.FORWARD
         );
         synchronizeServos(clawPitch,clawPitchRight);
-    }
 
+    }
     public static void synchronizeServos(BotServo servo1, BotServo servo2){
         servo1.synchronizedServos.add(servo2);
     }

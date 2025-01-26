@@ -56,7 +56,7 @@ public class MotorConfig{
             throws JSONException {
         this.motorEnum         = motorEnum;
         this.deviceName        = robotConfig.getMotorString(motorEnum, "deviceName");
-        this.motor             = (DcMotorEx) hardwareMap.get(DcMotorEx.class, deviceName);
+        this.motor             = hardwareMap.get(DcMotorEx.class, deviceName);
         this.kP                = robotConfig.getMotorDouble(motorEnum, "kP");
         this.kI                = robotConfig.getMotorDouble(motorEnum, "kI");
         this.kD                = robotConfig.getMotorDouble(motorEnum, "kD");
