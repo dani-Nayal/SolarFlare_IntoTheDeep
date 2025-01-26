@@ -29,23 +29,37 @@
  */
 package org.firstinspires.ftc.teamcode.base.config;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.json.JSONException;
+import java.util.logging.Logger;
 
 public class LimelightConfig {
     public Limelight3A limelight;
     public String      deviceName;
     public int         pollingRate;
 
-    public LimelightConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
-            throws JSONException {
-        deviceName      = robotConfig.getLimelightString("deviceName");
-        if(deviceName != null) {
-            limelight   = hardwareMap.get(Limelight3A.class, this.deviceName);
-            pollingRate = robotConfig.getLimelightInt("pollingRate");
+    public void initialize(HardwareMap hardwareMap) {
+        try {
+            limelight = hardwareMap.get(Limelight3A.class, this.deviceName);
             limelight.setPollRateHz(pollingRate);
+        } catch (Exception e) {
+            Logger logger = RobotLogger.getInstance().getConfigLogger();
+            logger.throwing("MotorConfig", "Initialize", e);
         }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+
+        sb.append("LimelightConfig\n");
+        sb.append("  deviceName=").append(deviceName).append("\n");
+        sb.append("  pollingRate=").append(pollingRate).append("\n");
+
+        return sb.toString();
     }
 }
