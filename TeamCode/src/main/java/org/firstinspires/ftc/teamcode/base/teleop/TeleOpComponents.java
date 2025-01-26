@@ -387,8 +387,8 @@ public abstract class  TeleOpComponents {
                 decelDT = (0 - currentMaxVelocity) / currentMaxDeceleration;
                 accelDistance = startVelocity * accelDT + 0.5 * currentMaxAcceleration * accelDT*accelDT;
                 decelDistance = currentMaxVelocity * decelDT + 0.5 * currentMaxDeceleration * decelDT*decelDT;
-
-                if (Math.abs(accelDistance + decelDistance) > Math.abs(distance)) {
+                cruiseDistance = Math.abs(distance - accelDistance - decelDistance)*Math.signum(currentMaxVelocity);
+                if (Math.abs(accelDistance + cruiseDistance+ decelDistance) > Math.abs(distance)) {
                     double halfExceededDistance = (distance - accelDistance - decelDistance) / 2;
                     accelDistance = accelDistance + halfExceededDistance;
                     accelDT = Math.max(
@@ -402,7 +402,7 @@ public abstract class  TeleOpComponents {
                             (-currentMaxVelocity - Math.sqrt(Math.abs(currentMaxVelocity*currentMaxVelocity + 2 * currentMaxDeceleration * decelDistance))) / (currentMaxDeceleration)
                     );
                 }
-                cruiseDistance = distance - accelDistance - decelDistance;
+                cruiseDistance = Math.abs(distance - accelDistance - decelDistance)*Math.signum(currentMaxVelocity);
                 cruiseDT = cruiseDistance / currentMaxVelocity;
                 if (Double.isNaN(accelDT) || Double.isNaN(accelDistance) || Double.isNaN(decelDT) || Double.isNaN(decelDistance) || Double.isNaN(cruiseDT) || Double.isNaN(cruiseDistance) || accelDT<0 || decelDT < 0 || cruiseDT<0){
                     accelDT=0;
