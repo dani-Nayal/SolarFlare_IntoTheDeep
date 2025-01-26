@@ -16,9 +16,10 @@ public class PID {
     public double integralPower;
     public double derivativePower;
     public double outPower;
-    double lastError = 0;
-    double lastReference = 0;
-    double integralSum = 0;
+    public double lastError = 0;
+    public double lastReference = 0;
+    public double integralSum = 0;
+    public double loopTime;
     ElapsedTime timer = new ElapsedTime();
     boolean isFirstIteration = true;
     public PID(){
@@ -53,8 +54,8 @@ public class PID {
 
         lastReference = reference;
         lastError = error;
+        loopTime = timer.seconds();
         timer.reset();
-
         return outPower;
     }
 }

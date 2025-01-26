@@ -4,8 +4,9 @@
     "length": 1.0,
     "width": 1.0
   },
-  "Motors": {
+  "motors": {
     "TESTING_MOTOR": {
+      "motorEnum": "TESTING_MOTOR",
       "deviceName": "motor-1",
       "kP": 0.015,
       "kI": 0.0,
@@ -20,20 +21,15 @@
       "maxVelocity": 1500
     }
   },
-  "Servos": {
+  "servos": {
   },
-  "Poses": {
-    "Pose1": {
-    }
+  "pinpoint": {
   },
-  "Pinpoint": {
+  "limelight": {
   },
-  "Limelight": {
-  },
-  "IMU": {
+  "imu": {
     "deviceName": "imu",
-    "LogoFacingDirection": "FORWARD",
-    "UsbFacingDirection": "UP",
-    "testVariable": 1.0
+    "logoFacingDirection": "FORWARD",
+    "usbFacingDirection": "UP"
   }
 }

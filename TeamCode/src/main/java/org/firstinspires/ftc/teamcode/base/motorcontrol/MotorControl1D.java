@@ -73,11 +73,11 @@ public class MotorControl1D {
      */
     double                     Vmax;
 
-    int                        previousLoopTarget       = 0;
-    double                     lastAmax                 = 0;
-    double                     lastVmax                 = 0;
-    boolean                    isMaxVelocityChanged     = false;
-    boolean                    isMaxAccelerationChanged = false;
+    int                        previousLoopTarget   = 0;
+    double                     lastAmax             = 0;
+    double                     lastVmax             = 0;
+    boolean                    isVmaxChanged        = false;
+    boolean                    isAmaxChanged        = false;
     /**
      * Initial Velocity, when setting the profile up
      */
@@ -112,17 +112,15 @@ public class MotorControl1D {
         int targetPosition = state.getMotorTarget(motorEnum);
 
         // If the target, maxVelocity, or maxAcceleration changes
-        if (targetPosition != previousLoopTarget ||
-                isMaxVelocityChanged            ||
-                isMaxAccelerationChanged ) {
-            Pi                       = motor.getCurrentPosition();
-            Vi                       = motor.getVelocity();
-            distance                 = targetPosition - Pi;
+        if (targetPosition != previousLoopTarget || isVmaxChanged || isAmaxChanged ) {
+            Pi            = motor.getCurrentPosition();
+            Vi            = motor.getVelocity();
+            distance      = targetPosition - Pi;
 
             profile.resetProfile(distance, Pi, Vi, Vmax, Amax, Amax);
 
-            isMaxVelocityChanged     = false;
-            isMaxAccelerationChanged = false;
+            isVmaxChanged = false;
+            isAmaxChanged = false;
 
             timer.reset();
         }
@@ -153,6 +151,7 @@ public class MotorControl1D {
         telemetryDash.addData("motorVelocity",       motorVelocity);
         telemetryDash.update();
 
+        /*
         metricsFile.addData(
                 iter,
                 targetMotorPosition,
@@ -160,6 +159,7 @@ public class MotorControl1D {
                 targetMotorPower,
                 motorPower,
                 motorVelocity);
+         */
 
         previousLoopTarget           = targetPosition;
         lastVmax                     = Vmax;
@@ -212,5 +212,14 @@ public class MotorControl1D {
     public void runPIDMotorControl() {
         targetMotorPower = pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum));
         motor.setPower(targetMotorPower);
+    }
+
+    public void setMaxAcceleration(double Amax_in){
+        Amax     = Amax_in;
+        isAmaxChanged = true;
+    }
+    public void setMaxVelocity(double Vmax_in){
+        Vmax          = Vmax_in;
+        isVmaxChanged = true;
     }
 }

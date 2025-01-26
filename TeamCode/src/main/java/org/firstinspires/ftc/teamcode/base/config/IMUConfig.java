@@ -29,6 +29,8 @@
  */
 package org.firstinspires.ftc.teamcode.base.config;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection;
@@ -36,24 +38,60 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
-import org.json.JSONException;
+import java.util.logging.Logger;
 
-public class IMUConfig{
+public class IMUConfig {
     public String              deviceName;
     public IMU                 imu;
     public IMU.Parameters      parameters;
-    public LogoFacingDirection logoDirection;
-    public UsbFacingDirection  usbDirection;
 
-    public IMUConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
-            throws JSONException {
-        this.deviceName    = robotConfig.getIMUString("deviceName");
-        this.imu           = hardwareMap.get(IMU.class, this.deviceName);
-        this.logoDirection = robotConfig.getIMULogoFacingDirection();
-        this.usbDirection  = robotConfig.getIMULUSBFacingDirection();
-        this.parameters    = new IMU.Parameters(new RevHubOrientationOnRobot(
-                this.logoDirection,
-                this.usbDirection));
-        imu.initialize(this.parameters);
+    /**
+     * Directions the logo of the ControlHub faces
+     * Possible directions
+     *  - UP
+     *  - DOWN
+     *  - FORWARD
+     *  - BACKWARD
+     *  - LEFT
+     *  - RIGHT
+     */
+    public LogoFacingDirection logoFacingDirection;
+
+    /**
+     * Directions the USB port of the ControlHub faces
+     * Possible directions
+     *  - UP
+     *  - DOWN
+     *  - FORWARD
+     *  - BACKWARD
+     *  - LEFT
+     *  - RIGHT
+     */
+    public UsbFacingDirection  usbFacingDirection;
+
+    public void initialize(HardwareMap hardwareMap) {
+        try {
+            imu = hardwareMap.get(IMU.class, deviceName);
+            parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                    logoFacingDirection,
+                    usbFacingDirection));
+            imu.initialize(parameters);
+        } catch (Exception e) {
+            Logger logger = RobotLogger.getInstance().getConfigLogger();
+            logger.throwing("MotorConfig", "Initialize", e);
+        }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+
+        sb.append("IMUConfig\n");
+        sb.append("  deviceName=").append(deviceName).append("\n");
+        sb.append("  logoFacingDirection=").append(logoFacingDirection).append("\n");
+        sb.append("  usbFacingDirection=").append(usbFacingDirection).append("\n");
+
+        return sb.toString();
     }
 }

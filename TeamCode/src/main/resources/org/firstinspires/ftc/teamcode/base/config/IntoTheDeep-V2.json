@@ -4,11 +4,9 @@
     "length": 15.0625,
     "width": 12.4375
   },
-  "Calibration": {
-    "motorProfileResolution": 100
-  },
-  "Motors": {
+  "motors": {
     "LEFT_BACK": {
+      "motorEnum": "LEFT_BACK",
       "deviceName": "leftBack",
       "kP": 0.0,
       "kI": 0.0,
@@ -18,11 +16,12 @@
       "zeroPowerBehavior": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
-      "maxTarget": 10000000000000000,
+      "maxTarget": 1000000,
       "maxAcceleration": 0,
       "maxVelocity": 0
     },
     "RIGHT_BACK": {
+      "motorEnum": "RIGHT_BACK",
       "deviceName": "rightBack",
       "kP": 0.0,
       "kI": 0.0,
@@ -32,11 +31,12 @@
       "zeroPowerBehavior": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
-      "maxTarget": 100000000000000000,
+      "maxTarget": 1000000,
       "maxAcceleration": 0,
       "maxVelocity": 0
     },
     "LEFT_FRONT": {
+      "motorEnum": "LEFT_FRONT",
       "deviceName": "leftFront",
       "kP": 0.0,
       "kI": 0.0,
@@ -46,11 +46,12 @@
       "zeroPowerBehavior": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
-      "maxTarget": 1000000000000000000,
+      "maxTarget": 1000000,
       "maxAcceleration": 0,
       "maxVelocity": 0
     },
     "RIGHT_FRONT": {
+      "motorEnum": "RIGHT_FRONT",
       "deviceName": "rightFront",
       "kP": 0.0,
       "kI": 0.0,
@@ -60,11 +61,12 @@
       "zeroPowerBehavior": "BRAKE",
       "maxPower": 1.0,
       "minTarget": 0,
-      "maxTarget": 1000000000000000000,
+      "maxTarget": 1000000,
       "maxAcceleration": 0,
       "maxVelocity": 0
     },
     "EXTENDO": {
+      "motorEnum": "EXTENDO",
       "deviceName": "extendo",
       "kP": 0.0,
       "kI": 0.0,
@@ -79,6 +81,7 @@
       "maxVelocity": 3000
     },
     "EXTENDO_PITCH": {
+      "motorEnum": "EXTENDO_PITCH",
       "deviceName": "extendoPitch",
       "kP": 0.0,
       "kI": 0.0,
@@ -93,6 +96,7 @@
       "maxVelocity": 3000
     },
     "BUCKET_SLIDES": {
+      "motorEnum": "BUCKET_SLIDES",
       "deviceName": "bucketSlides",
       "kP": 0.0,
       "kI": 0.0,
@@ -107,8 +111,9 @@
       "maxVelocity": 3000
     }
   },
-  "Servos": {
+  "servos": {
     "CLAW_PITCH_LEFT": {
+      "servoEnum": "CLAW_PITCH_LEFT",
       "deviceName": "clawPitchLeft",
       "direction": "FORWARD",
       "minServoPosition": 0.0,
@@ -116,6 +121,7 @@
       "degreesPerSecond": 0.0
     },
     "CLAW_PITCH_RIGHT": {
+      "servoEnum": "CLAW_PITCH_RIGHT",
       "deviceName": "clawPitchRight",
       "direction": "REVERSE",
       "minServoPosition": 0.0,
@@ -123,13 +129,15 @@
       "degreesPerSecond": 0.0
     },
     "INNER_CLAW_PITCH": {
+      "servoEnum": "INNER_CLAW_PITCH",
       "deviceName": "innerClawPitch",
       "direction": "REVERSE",
       "minServoPosition": 0.0,
       "maxServoPosition": 270.0,
-      "degreesPerSecond": 0.0
+      "degreesPerzecond": 0.0
     },
     "BUCKET": {
+      "servoEnum": "BUCKET",
       "deviceName": "bucket",
       "direction": "FORWARD",
       "minServoPosition": 0.0,
@@ -137,6 +145,7 @@
       "degreesPerSecond": 0.0
     },
     "CLAW_FINGERS": {
+      "servoEnum": "CLAW_FINGERS",
       "deviceName": "clawFingers",
       "direction": "FORWARD",
       "minServoPosition": 0.0,
@@ -144,6 +153,7 @@
       "degreesPerSecond": 0.0
     },
     "CLAW_WRIST": {
+      "servoEnum": "CLAW_WRIST",
       "deviceName": "clawWrist",
       "direction": "FORWARD",
       "minServoPosition": 0.0,
@@ -151,37 +161,33 @@
       "degreesPerSecond": 0.0
     },
     "HANG_LEFT": {
+      "servoEnum": "HANG_LEFT",
       "deviceName": "hangLeft",
       "direction": "FORWARD",
-      "minServoPosition": -100000000,
-      "maxServoPosition": 1000000000,
+      "minServoPosition": -1000000,
+      "maxServoPosition": 1000000,
       "degreesPerSecond": 522
     },
     "HANG_RIGHT": {
+      "servoEnum": "HANG_RIGHT",
       "deviceName": "hangRight",
       "direction": "REVERSE",
-      "minServoPosition": -100000000,
-      "maxServoPosition": 1000000000,
+      "minServoPosition": -1000000,
+      "maxServoPosition": 1000000,
       "degreesPerSecond": 522
     }
   },
-  "Poses": {
-    "Pose1": {
-    }
+  "pinpoint": {
+    "deviceName": "pinpoint"
   },
-  "Pinpoint": {
-    "deviceName": "pinpoint",
-    "testVariable": 1.0
-  },
-  "Limelight": {
+  "limelight": {
     "deviceName": "limelight",
-    "pollingRate": 11,
-    "testVariable": 1
+    "pollingRate": 11
   },
-  "IMU": {
+  "imu": {
     "deviceName": "imu",
-    "LogoFacingDirection": "FORWARD",
-    "UsbFacingDirection": "UP",
+    "logoFacingDirection": "FORWARD",
+    "usbFacingDirection": "UP",
     "testVariable": 1.0
   }
 }

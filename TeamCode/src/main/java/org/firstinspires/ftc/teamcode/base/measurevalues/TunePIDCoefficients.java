@@ -12,8 +12,6 @@ import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
-import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
-import org.json.JSONException;
 
 @Config
 @TeleOp
@@ -28,12 +26,8 @@ public class TunePIDCoefficients extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        try {
-            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
-            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
+        hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
         state = RobotState.getInstance();
 
         hw.getMotorConfig(MotorEnum.TESTING_MOTOR).motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -41,7 +35,7 @@ public class TunePIDCoefficients extends LinearOpMode {
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
-        Telemetry telemetry = dashboard.getTelemetry();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
         ElapsedTime timer = new ElapsedTime();
 
@@ -98,17 +92,20 @@ public class TunePIDCoefficients extends LinearOpMode {
             lastReference = reference;
             lastError = error;
 
-            timer.reset();
+            dashboardTelemetry.addData("motor target state", state.getMotorTarget(testingMotor));
+            dashboardTelemetry.addData("motor position", hw.getMotorConfig(testingMotor).motor.getCurrentPosition());
+            dashboardTelemetry.addData("error", error);
+            dashboardTelemetry.addData("proportional power", proportionalPower);
+            dashboardTelemetry.addData("integral power", integralPower);
+            dashboardTelemetry.addData("derivative power", derivativePower);
+            dashboardTelemetry.addData("motor power", outPower);
+            dashboardTelemetry.addData("derivative", derivative);
+            dashboardTelemetry.update();
 
-            telemetry.addData("motor target state", state.getMotorTarget(testingMotor));
-            telemetry.addData("motor position", hw.getMotorConfig(testingMotor).motor.getCurrentPosition());
-            telemetry.addData("error", error);
-            telemetry.addData("proportional power", proportionalPower);
-            telemetry.addData("integral power", integralPower);
-            telemetry.addData("derivative power", derivativePower);
-            telemetry.addData("motor power", outPower);
-            telemetry.addData("derivative", derivative);
+            telemetry.addData("loop time", timer.seconds());
             telemetry.update();
+
+            timer.reset();
         }
     }
 }
