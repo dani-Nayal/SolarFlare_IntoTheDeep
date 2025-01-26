@@ -62,6 +62,8 @@ public class JSONUtils {
         public enum MotorEnumTest {M1, M2}
         public enum ServoEnumTest {S1, S2}
         public static class MotorTest {
+            public int           id = 1;
+            public Object        objId;
             public MotorEnumTest motorEnum;
             public String        k1;
             public int           k2;
@@ -69,6 +71,8 @@ public class JSONUtils {
             public String toString() {
                 var sb = new StringBuilder();
                 sb.append("MotorTest\n");
+                sb.append("  id=       ").append(id).append("\n");
+                sb.append("  objId=    ").append(objId).append("\n");
                 sb.append("  motorEnum=").append(motorEnum).append("\n");
                 sb.append("  k1=       ").append(k1).append("\n");
                 sb.append("  k2=       ").append(k2).append("\n");
@@ -76,6 +80,8 @@ public class JSONUtils {
             }
         }
         public static class ServoTest {
+            public int           id = 10;
+            public Object        objId;
             public ServoEnumTest servoEnum;
             public String        k1;
             public int           k2;
@@ -83,6 +89,8 @@ public class JSONUtils {
             public String toString() {
                 var sb = new StringBuilder();
                 sb.append("ServoTest\n");
+                sb.append("  id=       ").append(id).append("\n");
+                sb.append("  objId=    ").append(objId).append("\n");
                 sb.append("  servoEnum=").append(servoEnum).append("\n");
                 sb.append("  k1=       ").append(k1).append("\n");
                 sb.append("  k2=       ").append(k2).append("\n");
