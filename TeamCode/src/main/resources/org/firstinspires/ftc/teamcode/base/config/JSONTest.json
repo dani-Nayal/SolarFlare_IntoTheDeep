@@ -2,21 +2,25 @@
   "title": "This is I",
   "version": 50,
   "motors": {
-    "m1": {
+    "M1": {
+      "motorEnum": "M1",
       "k1": "name1",
       "k2": 2
     },
-    "m2": {
+    "M2": {
+      "motorEnum": "M2",
       "k1": "name2",
       "k2": 20
     }
   },
   "servos": {
-    "s1" : {
+    "S1" : {
+      "servoEnum": "S1",
       "k1": "lame1",
       "k2": 100
     },
-    "s2": {
+    "S2": {
+      "servoEnum": "S2",
       "k1": "lame2",
       "k2": 200
     }
