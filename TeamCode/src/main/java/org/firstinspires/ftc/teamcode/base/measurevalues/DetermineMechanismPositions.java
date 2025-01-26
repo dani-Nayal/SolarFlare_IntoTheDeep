@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.config.ServoEnum;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
-import org.json.JSONException;
 
 public class DetermineMechanismPositions extends LinearOpMode {
     HardwareConfig hw;
@@ -20,12 +19,8 @@ public class DetermineMechanismPositions extends LinearOpMode {
     double position = 0;
     @Override
     public void runOpMode(){
-        try {
-            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
-            hw    = HardwareConfig.createInstance(hardwareMap, robotConfig);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
+        hw    = HardwareConfig.createInstance(hardwareMap, robotConfig);
 
         state = RobotState.getInstance();
 
