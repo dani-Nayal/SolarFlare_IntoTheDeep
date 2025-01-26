@@ -34,13 +34,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class Application {
     /**
+     * Returns Metrics directory name. Select based on context
      * This is the directory on the Robot Controller where metrics files are going to be saved
      * This should switch to a testing directory in a robot-less development environment
+     * Output directory from persistentDataPath on Android
+     * Application.persistentDataPath points to /storage/emulated/<userid>/Android/data/<packagename>/files
+     * @return Metrics directory name.
      */
-    // public static String metricsDirName = "/storage/emulated/0/Android/data/com.qualcomm.ftcrobotcontroller/files/";
-    public static String      metricsDirName = "C:/Temp";
+    public static String      getMetricsDirName() {
+        // String metricsDirName = "/storage/emulated/0/Android/data/com.qualcomm.ftcrobotcontroller/files/";
+        String metricsDirName   = "C:/Temp";
+        return metricsDirName;
+    }
 
     public static InputStream getResourceAsStream(String resourceName) {
         InputStream resource = Application.class.getResourceAsStream(resourceName);
