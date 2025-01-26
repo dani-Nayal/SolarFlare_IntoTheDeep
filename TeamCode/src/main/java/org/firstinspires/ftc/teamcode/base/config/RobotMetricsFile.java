@@ -35,10 +35,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RobotMetricsFile {
-    @SuppressWarnings("SpellCheckingInspection")
-    // Output directory from persistentDataPath on Android
-    // Application.persistentDataPath points to /storage/emulated/<userid>/Android/data/<packagename>/files
-    private static final String    dirName = "/storage/emulated/0/Android/data/com.qualcomm.ftcrobotcontroller/files/";
     private        final String    tableName;
     private              Formatter formatter;
     private        final String[]  fieldNames;
@@ -55,7 +51,7 @@ public class RobotMetricsFile {
         if(isActive())
             close();
 
-        String fullFileName = dirName + "/" + tableName + ".csv";
+        String fullFileName = Application.getMetricsDirName() + "/" + tableName + ".csv";
 
         try {
             formatter = new Formatter(fullFileName);
