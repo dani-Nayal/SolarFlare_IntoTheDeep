@@ -60,7 +60,7 @@ public abstract class  TeleOpComponents {
     public static BotMotor ryanNemesis;
 
     public static class BotMotor extends DcMotorImplEx {
-        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 5;
+        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 7;
         double maxVelocityParam;
         double maxAccelerationParam;
         double instantTargetPosition = 0;
@@ -457,6 +457,7 @@ public abstract class  TeleOpComponents {
         public void setMotorTarget(double target, double maxVelocity, double maxAcceleration){
             target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
+                MOVEMENT_TIMER.reset();
                 this.target = target;
                 integralSum = 0;
                 previousError = 0;
@@ -464,7 +465,6 @@ public abstract class  TeleOpComponents {
                 for (BotMotor motor : synchronizedMotors){
                     motor.setMotorTarget(target,maxVelocity,maxAcceleration);
                 }
-                MOVEMENT_TIMER.reset();
             }
         }
         public void createPendingMotionProfiles(){
