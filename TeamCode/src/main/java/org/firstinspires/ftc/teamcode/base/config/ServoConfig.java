@@ -29,10 +29,12 @@
  */
 package org.firstinspires.ftc.teamcode.base.config;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.json.JSONException;
+import java.util.logging.Logger;
 
 public class ServoConfig{
     public ServoEnum       servoEnum;
@@ -43,17 +45,30 @@ public class ServoConfig{
     public double          maxServoPosition;
     public double          degreesPerSecond;
 
-    public ServoConfig(ServoEnum servoEnum, HardwareMap hardwareMap, RobotConfig robotConfig)
-            throws JSONException {
-        this.servoEnum        = servoEnum;
-        this.deviceName       = robotConfig.getServoString(servoEnum,"deviceName");
-        this.servo            = hardwareMap.servo.get(deviceName);
-        this.direction        = robotConfig.getServoDirection(servoEnum);
+    public void initialize(HardwareMap hardwareMap) {
+        try {
+            servo = hardwareMap.servo.get(deviceName);
+            servo.setDirection(direction);
+        } catch (Exception e) {
+            Logger logger = RobotLogger.getInstance().getConfigLogger();
+            logger.throwing("MotorConfig", "Initialize", e);
+        }
+    }
 
-        this.minServoPosition = robotConfig.getServoDouble(servoEnum,"minServoPosition");
-        this.maxServoPosition = robotConfig.getServoDouble(servoEnum,"maxServoPosition");
-        this.degreesPerSecond = robotConfig.getServoDouble(servoEnum,"degreesPerSecond");
+    @NonNull
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
 
-        servo.setDirection(this.direction);
+        sb.append("ServoConfig\n");
+        sb.append("  servoEnum=").append(servoEnum.name()).append("\n");
+        sb.append("  deviceName=").append(deviceName);
+        sb.append("  servo=").append(servo).append("\n");
+        sb.append("  direction=").append(direction).append("\n");
+        sb.append("  minServoPosition=").append(minServoPosition).append("\n");
+        sb.append("  maxServoPosition=").append(maxServoPosition).append("\n");
+        sb.append("  degreesPerSecond=").append(degreesPerSecond).append("\n");
+
+        return sb.toString();
     }
 }

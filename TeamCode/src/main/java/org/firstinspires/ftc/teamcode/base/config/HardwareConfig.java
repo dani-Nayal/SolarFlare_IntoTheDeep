@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.base.config;
 
-import static java.util.logging.Level.INFO;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class HardwareConfig {
@@ -12,52 +10,35 @@ public class HardwareConfig {
 
     private final  Logger                         logger;
     public  final  RobotDimensions                robotDimensions;
-    private final  EnumMap<MotorEnum,MotorConfig> motorConfigs;
-    private final  EnumMap<ServoEnum,ServoConfig> servoConfigs;
+    private final  HashMap<MotorEnum,MotorConfig> motorConfigs;
+    private final  HashMap<ServoEnum,ServoConfig> servoConfigs;
     public  final  IMUConfig                      imuConfig;
     public  final  PinpointConfig                 pinpointConfig;
     public  final  LimelightConfig                limelightConfig;
 
-    private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
-            throws JSONException {
+    private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig) {
         logger            = RobotLogger.getInstance().getConfigLogger();
-        robotDimensions   = robotConfig.getRobotDimensions();
-        motorConfigs      = new EnumMap<>(MotorEnum.class);
-        servoConfigs      = new EnumMap<>(ServoEnum.class);
-        for(MotorEnum motorEnum: robotConfig.getMotorEnums()) {
-            logger.logp(INFO,
-                    "HardwareConfig",
-                    "MotorConfig",
-                    "Initializing MotorConfig: " + motorEnum);
-            motorConfigs.put(motorEnum, new MotorConfig(motorEnum, hardwareMap, robotConfig));
-        }
-        for(ServoEnum servoEnum: robotConfig.getServoEnums()) {
-            logger.logp(INFO,
-                    "HardwareConfig",
-                    "MotorConfig",
-                    "Initializing ServoConfig: " + servoEnum);
-            servoConfigs.put(servoEnum, new ServoConfig(servoEnum, hardwareMap, robotConfig));
-        }
+        robotDimensions   = robotConfig.robotDimensions;
+        motorConfigs      = robotConfig.motors;
+        servoConfigs      = robotConfig.servos;
+        imuConfig         = robotConfig.imu;
+        pinpointConfig    = robotConfig.pinpoint;
+        limelightConfig   = robotConfig.limelight;
 
-        logger.logp(INFO,
-                "HardwareConfig",
-                "MotorConfig",
-                "Initializing IMUConfig");
-        imuConfig         = new IMUConfig(hardwareMap,       robotConfig);
-        logger.logp(INFO,
-                "HardwareConfig",
-                "MotorConfig",
-                "Initializing IMUConfig");
-        pinpointConfig    = new PinpointConfig(hardwareMap,  robotConfig);
-        logger.logp(INFO,
-                "HardwareConfig",
-                "MotorConfig",
-                "Initializing LimelightConfig");
-        limelightConfig   = new LimelightConfig(hardwareMap, robotConfig);
+        initialize(hardwareMap);
     }
 
-    public static HardwareConfig createInstance(HardwareMap hardwareMap, RobotConfig robotConfig)
-            throws JSONException {
+    public void initialize(HardwareMap hardwareMap) {
+        for(var motorConfig: motorConfigs.values())
+            motorConfig.initialize(hardwareMap);
+        for(var servoConfig: servoConfigs.values())
+            servoConfig.initialize(hardwareMap);
+        imuConfig.initialize(hardwareMap);
+        pinpointConfig.initialize(hardwareMap);
+        limelightConfig.initialize(hardwareMap);
+    }
+
+    public static HardwareConfig createInstance(HardwareMap hardwareMap, RobotConfig robotConfig) {
         hardwareConfig = new HardwareConfig(hardwareMap, robotConfig);
         return hardwareConfig;
     }

@@ -29,20 +29,33 @@
  */
 package org.firstinspires.ftc.teamcode.base.config;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.json.JSONException;
+import java.util.logging.Logger;
 
 public class PinpointConfig{
     public GoBildaPinpointDriverRR pinpoint;
     public String                  deviceName;
 
-    public PinpointConfig(HardwareMap hardwareMap, RobotConfig robotConfig)
-            throws JSONException {
-        deviceName = robotConfig.getPinpointString("deviceName");
-        if (deviceName != null) {
+    public void initialize(HardwareMap hardwareMap) {
+        try {
             pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class, deviceName);
+        } catch (Exception e) {
+            Logger logger = RobotLogger.getInstance().getConfigLogger();
+            logger.throwing("MotorConfig", "Initialize", e);
         }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        sb.append("Pinpointconfig\n");
+        sb.append("  deviceName=").append(deviceName).append("\n");
+
+        return sb.toString();
     }
 }

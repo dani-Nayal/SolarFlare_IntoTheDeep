@@ -29,12 +29,15 @@
  */
 package org.firstinspires.ftc.teamcode.base.config;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.json.JSONException;
+import java.util.logging.Logger;
+
 
 public class MotorConfig{
     public MotorEnum                 motorEnum;
@@ -52,26 +55,42 @@ public class MotorConfig{
     public int                       maxTarget;
     public double                    maxAcceleration;
     public double                    maxVelocity;
-    public MotorConfig(MotorEnum motorEnum, HardwareMap hardwareMap, RobotConfig robotConfig)
-            throws JSONException {
-        this.motorEnum         = motorEnum;
-        this.deviceName        = robotConfig.getMotorString(motorEnum, "deviceName");
-        this.motor             = hardwareMap.get(DcMotorEx.class, deviceName);
-        this.kP                = robotConfig.getMotorDouble(motorEnum, "kP");
-        this.kI                = robotConfig.getMotorDouble(motorEnum, "kI");
-        this.kD                = robotConfig.getMotorDouble(motorEnum, "kD");
-        this.runMode           = robotConfig.getMotorRunMode(motorEnum);
-        this.direction         = robotConfig.getMotorDirection(motorEnum);
-        this.zeroPowerBehavior = robotConfig.getMotorZeroPowerBehavior(motorEnum);
-        this.maxPower          = robotConfig.getMotorInt(motorEnum, "maxPower");
-        this.minTarget         = robotConfig.getMotorInt(motorEnum, "minTarget");
-        this.maxTarget         = robotConfig.getMotorInt(motorEnum, "maxTarget");
-        this.maxAcceleration   = robotConfig.getMotorInt(motorEnum, "maxAcceleration");
-        this.maxVelocity       = robotConfig.getMotorInt(motorEnum, "maxVelocity");
 
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(this.runMode);
-        motor.setDirection(this.direction);
-        motor.setZeroPowerBehavior(this.zeroPowerBehavior);
+    public void initialize(HardwareMap hardwareMap) {
+        try {
+            motor = hardwareMap.get(DcMotorEx.class, deviceName);
+
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(this.runMode);
+            motor.setDirection(this.direction);
+            motor.setZeroPowerBehavior(this.zeroPowerBehavior);
+        } catch (Exception e) {
+            Logger logger = RobotLogger.getInstance().getConfigLogger();
+            logger.throwing("MotorConfig", "Initialize", e);
+        }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+
+        sb.append("  motorEnum=").append(motorEnum).append("\n");
+        sb.append("  deviceName=").append(deviceName).append("\n");
+        sb.append("  motor=").append(motor).append("\n");
+        sb.append("  kP=").append(kP).append("\n");
+        sb.append("  kI=").append(kI).append("\n");
+        sb.append("  kD=").append(kD).append("\n");
+        sb.append("  runMode=").append(runMode).append("\n");
+        sb.append("  direction=").append(direction).append("\n");
+        sb.append("  zeroPowerBehavior=").append(zeroPowerBehavior).append("\n");
+        sb.append("  motorProfileResolution=").append(motorProfileResolution).append("\n");
+        sb.append("  maxPower=").append(maxPower).append("\n");
+        sb.append("  minTarget=").append(minTarget).append("\n");
+        sb.append("  maxTarget=").append(maxTarget).append("\n");
+        sb.append("  maxAcceleration=").append(maxAcceleration).append("\n");
+        sb.append("  maxVelocity=").append(maxVelocity).append("\n");
+
+        return sb.toString();
     }
 }

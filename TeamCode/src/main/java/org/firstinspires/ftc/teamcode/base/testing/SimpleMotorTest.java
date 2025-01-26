@@ -8,19 +8,14 @@ import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
-import org.json.JSONException;
 
 @TeleOp
 public class SimpleMotorTest extends LinearOpMode {
     public void runOpMode() {
         RobotConfig robotConfig = null;
         HardwareConfig hw = null;
-        try {
-            robotConfig = RobotConfig.createInstance("Rig1Motor");
-            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        robotConfig = RobotConfig.createInstance("Rig1Motor");
+        hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
         MotorConfig motorConfig = hw.getMotorConfig(MotorEnum.TESTING_MOTOR);
         DcMotorEx      motor    = motorConfig.motor;
         DcMotorEx motor_direct  = hardwareMap.get(DcMotorEx.class, "motor-1");
