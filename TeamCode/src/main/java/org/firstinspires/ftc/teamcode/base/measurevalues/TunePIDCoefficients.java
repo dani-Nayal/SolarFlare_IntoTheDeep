@@ -41,7 +41,7 @@ public class TunePIDCoefficients extends LinearOpMode {
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
-        Telemetry telemetry = dashboard.getTelemetry();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
         ElapsedTime timer = new ElapsedTime();
 
@@ -98,17 +98,20 @@ public class TunePIDCoefficients extends LinearOpMode {
             lastReference = reference;
             lastError = error;
 
-            timer.reset();
+            dashboardTelemetry.addData("motor target state", state.getMotorTarget(testingMotor));
+            dashboardTelemetry.addData("motor position", hw.getMotorConfig(testingMotor).motor.getCurrentPosition());
+            dashboardTelemetry.addData("error", error);
+            dashboardTelemetry.addData("proportional power", proportionalPower);
+            dashboardTelemetry.addData("integral power", integralPower);
+            dashboardTelemetry.addData("derivative power", derivativePower);
+            dashboardTelemetry.addData("motor power", outPower);
+            dashboardTelemetry.addData("derivative", derivative);
+            dashboardTelemetry.update();
 
-            telemetry.addData("motor target state", state.getMotorTarget(testingMotor));
-            telemetry.addData("motor position", hw.getMotorConfig(testingMotor).motor.getCurrentPosition());
-            telemetry.addData("error", error);
-            telemetry.addData("proportional power", proportionalPower);
-            telemetry.addData("integral power", integralPower);
-            telemetry.addData("derivative power", derivativePower);
-            telemetry.addData("motor power", outPower);
-            telemetry.addData("derivative", derivative);
+            telemetry.addData("loop time", timer.seconds());
             telemetry.update();
+
+            timer.reset();
         }
     }
 }

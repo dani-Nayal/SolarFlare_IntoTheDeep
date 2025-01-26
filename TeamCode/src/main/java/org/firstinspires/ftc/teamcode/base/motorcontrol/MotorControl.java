@@ -26,7 +26,7 @@ public class MotorControl {
     boolean isMaxVelocityChanged = false;
     boolean isMaxAccelerationChanged = false;
     double initialVelocity;
-    double distance;
+    int distance;
     MotorEnum motorEnum;
     Telemetry dashBoardTelemetry = FtcDashboard.getInstance().getTelemetry();
     public MotorControl(MotorEnum motorEnum){
@@ -123,6 +123,7 @@ public class MotorControl {
         telemetry.addData("derivative power", pid.derivativePower);
         telemetry.addData("derivative", pid.derivativePower);
         telemetry.addData("out power", pid.outPower);
+        telemetry.addData("loop time", pid.loopTime);
         telemetry.update();
     }
 }
