@@ -5,26 +5,26 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class TrapezoidalMotionProfile {
-    double accelerationDistance;
-    double accelerationTime;
-    double cruiseDistance;
-    double cruiseTime;
-    double decelerationDistance;
-    double decelerationTime;
-    double totalTime;
-    double maxAcceleration;
-    double maxDeceleration;
-    double maxVelocity;
-    double initialVelocity;
-    double distance;
+    public double accelerationDistance;
+    public double accelerationTime;
+    public double cruiseDistance;
+    public double cruiseTime;
+    public double decelerationDistance;
+    public double decelerationTime;
+    public double totalTime;
+    public double maxAcceleration;
+    public double maxDeceleration;
+    public double maxVelocity;
+    public double initialVelocity;
+    public int distance;
     int initialPosition;
-    public void resetProfile(double maxAcceleration, double maxVelocity, double initialVelocity, double distance, int initialPosition){
+    public void resetProfile(double maxAcceleration, double maxVelocity, double initialVelocity, int distance, int initialPosition){
         this.maxVelocity = maxVelocity * Math.signum(distance);
         this.initialVelocity = initialVelocity;
         this.distance = distance;
         this.initialPosition = initialPosition;
         this.maxAcceleration = maxAcceleration * Math.signum(maxVelocity - initialVelocity);
-        this.maxDeceleration = maxAcceleration * -1;
+        this.maxDeceleration = Math.signum(distance) * -maxAcceleration;
 
 
         accelerationTime = (this.maxVelocity - this.initialVelocity) / this.maxAcceleration;
