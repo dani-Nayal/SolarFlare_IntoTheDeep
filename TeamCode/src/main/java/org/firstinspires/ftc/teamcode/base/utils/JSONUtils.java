@@ -40,8 +40,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.firstinspires.ftc.teamcode.base.config.Application;
-import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.config.ServoEnum;
 
 /*
 Code snippets for gson
