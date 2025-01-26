@@ -100,29 +100,7 @@ public class MotorControl {
         dashBoardTelemetry.update();
         telemetry.update();
     }
-    public void runOldTrapezoidalMotionProfile(){
-        int currentTarget = state.getMotorTarget(motorEnum);
 
-        int currentPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
-
-        double distance = currentTarget - currentPosition;
-
-        if (previousLoopTarget != currentTarget){
-            timer.reset();
-        }
-
-        double instantTargetPosition = badProfile.runTrapezoidalMotionProfile(
-                hw.getMotorConfig(motorEnum).maxVelocity,
-                hw.getMotorConfig(motorEnum).maxAcceleration,
-                distance,
-                timer.seconds()
-        );
-
-        double motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
-
-        hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
-        previousLoopTarget = currentTarget;
-    }
     public void setMaxAcceleration(double maxAcceleration){
         this.maxAcceleration = maxAcceleration;
         isMaxAccelerationChanged = true;

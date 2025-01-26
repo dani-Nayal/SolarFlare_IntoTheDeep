@@ -21,9 +21,10 @@ public class TunePIDCoefficients extends LinearOpMode {
     HardwareConfig hw;
     RobotState state;
     static MotorEnum testingMotor = MotorEnum.TESTING_MOTOR;
-    public static double kP = 0.001;
+    boolean isFirstIteration = true;
+    public static double kP = 0.015;
     public static double kI;
-    public static double kD;
+    public static double kD = 0.0002;
 
     @Override
     public void runOpMode(){
@@ -53,6 +54,10 @@ public class TunePIDCoefficients extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
+            if (isFirstIteration){
+                timer.reset();
+                isFirstIteration = false;
+            }
             if (gamepad1.a){
                 state.setMotorTarget(testingMotor, (int) (hw.getMotorConfig(testingMotor).maxTarget * 0.25));
             }
@@ -72,7 +77,7 @@ public class TunePIDCoefficients extends LinearOpMode {
 
             double error = state.getMotorTarget(testingMotor) - encoderPosition;
 
-            double derivative = (error - lastError)/ timer.seconds();
+            double derivative = (error - lastError) / timer.seconds();
 
             integralSum = integralSum + (error * timer.seconds());
 
