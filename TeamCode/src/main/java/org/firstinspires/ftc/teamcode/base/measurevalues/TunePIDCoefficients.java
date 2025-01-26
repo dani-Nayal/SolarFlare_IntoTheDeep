@@ -12,8 +12,6 @@ import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
-import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
-import org.json.JSONException;
 
 @Config
 @TeleOp
@@ -28,12 +26,8 @@ public class TunePIDCoefficients extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        try {
-            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
-            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
+        hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
         state = RobotState.getInstance();
 
         hw.getMotorConfig(MotorEnum.TESTING_MOTOR).motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

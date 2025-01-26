@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.PID;
-import org.json.JSONException;
 
 import java.util.Objects;
 
@@ -34,12 +33,8 @@ public class MeasureMotorAcceleration extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     @Override
     public void runOpMode(){
-        try {
-            RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
-            hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        RobotConfig robotConfig = RobotConfig.createInstance("Rig1Motor");
+        hw = HardwareConfig.createInstance(hardwareMap, robotConfig);
         state = RobotState.getInstance();
         pid = new PID();
 
