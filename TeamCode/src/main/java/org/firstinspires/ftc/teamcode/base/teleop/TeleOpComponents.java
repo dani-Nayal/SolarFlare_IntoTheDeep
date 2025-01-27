@@ -59,7 +59,7 @@ public abstract class  TeleOpComponents {
     public static BotMotor ryanNemesis;
 
     public static class BotMotor extends DcMotorImplEx {
-        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 7;
+        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 10;
         double maxVelocityParam;
         double maxAccelerationParam;
         double instantTargetPosition = 0;
