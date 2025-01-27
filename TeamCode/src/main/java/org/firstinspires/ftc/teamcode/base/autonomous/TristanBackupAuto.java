@@ -410,7 +410,7 @@ public class TristanBackupAuto extends LinearOpMode {
                                 ),
                                 // Move bucketSlides up to scoring position
 
-                                new SleepAction(0.6),
+                                new SleepAction(0.8),
                                 // Rotate bucket to score
                                 setBucketPosition(158),
                                 new SleepAction(0.7),
@@ -478,7 +478,7 @@ public class TristanBackupAuto extends LinearOpMode {
                                 new SleepAction(0.4),
                                 // Move bucketSlides up to scoring position
                                 setBucketSlidesTarget(1070),
-                                new SleepAction(0.6),
+                                new SleepAction(0.8),
                                 // Rotate bucket to score
                                 setBucketPosition(158),
                                 new SleepAction(0.4),
@@ -545,7 +545,7 @@ public class TristanBackupAuto extends LinearOpMode {
                                 new SleepAction(0.4),
                                 // Move bucketSlides up to scoring position
                                 setBucketSlidesTarget(1070),
-                                new SleepAction(0.6),
+                                new SleepAction(0.8),
                                 // Rotate bucket to score
                                 setBucketPosition(158),
                                 new SleepAction(0.4),
@@ -611,7 +611,7 @@ public class TristanBackupAuto extends LinearOpMode {
                                 new SleepAction(0.4),
                                 // Move bucketSlides up to scoring position
                                 setBucketSlidesTarget(1070),
-                                new SleepAction(0.6),
+                                new SleepAction(0.8),
                                 // Rotate bucket to score
                                 setBucketPosition(158),
                                 new SleepAction(0.4),
