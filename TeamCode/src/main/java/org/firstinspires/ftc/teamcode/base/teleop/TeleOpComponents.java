@@ -1007,14 +1007,14 @@ public abstract class  TeleOpComponents {
         synchronizeServos(clawPitch,clawPitchRight);
 
     }
-    public static void synchronizeServos(BotServo servo1, BotServo servo2){
-        servo1.synchronizedServos.add(servo2);
+    public static void synchronizeServos(BotServo...servos){
+        servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
     }
-    public static void synchronizeServos(CRBotServo servo1, CRBotServo servo2){
-        servo1.synchronizedServos.add(servo2);
+    public static void synchronizeServos(CRBotServo...servos){
+        servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
     }
-    public static void synchronizeMotors(BotMotor motor1, BotMotor motor2){
-        motor1.synchronizedMotors.add(motor2);
+    public static void synchronizeMotors(BotMotor...motors){
+        motors[0].synchronizedMotors.addAll(Arrays.asList(motors).subList(1, motors.length));
     }
 }
 
