@@ -336,29 +336,29 @@ public class TristanBackupAuto extends LinearOpMode {
                 .build();
         Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-60,-48, Math.toRadians(45)))
                 // Go to sample zone 1
-                .strafeToLinearHeading(new Vector2d(-52.5,-53), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-50.5,-54), Math.toRadians(90))
                 .build();
-        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-52.5,-53, Math.toRadians(90)))
+        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-50.5,-54, Math.toRadians(90)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-60,-48), Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-65,-51), Math.toRadians(45))
                 .build();
-        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-60,-48, Math.toRadians(45)))
+        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-65,-51, Math.toRadians(45)))
                 // Sample zone 2
-                .strafeToLinearHeading(new Vector2d(-61,-53), Math.toRadians(93))
+                .strafeToLinearHeading(new Vector2d(-59,-54), Math.toRadians(93))
                 .build();
-        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-61,-53, Math.toRadians(93)))
+        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-59,-54, Math.toRadians(93)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-60,-48), Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-65,-51), Math.toRadians(45))
                 .build();
-        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-60,-48, Math.toRadians(45)))
+        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-65,-51, Math.toRadians(45)))
                 // sample zone 3
                 .strafeToLinearHeading(new Vector2d(-65,-53), Math.toRadians(108))
                 .build();
         Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-65,-53, Math.toRadians(108)))
                 // turn and score bucket
-                .strafeToLinearHeading(new Vector2d(-60,-48), Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-65,-51), Math.toRadians(45))
                 .build();
-        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54.5,-53.5, Math.toRadians(45)))
+        Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-65,-51, Math.toRadians(45)))
                 // park
                 .strafeToLinearHeading(new Vector2d(-44,-6), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-24.2,-6), Math.toRadians(180))
