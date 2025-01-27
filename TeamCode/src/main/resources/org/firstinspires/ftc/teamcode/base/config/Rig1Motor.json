@@ -7,6 +7,7 @@
   "motors": {
     "TESTING_MOTOR": {
       "motorEnum": "TESTING_MOTOR",
+      "partName": "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (19.2:1 Ratio, 312 RPM)",
       "deviceName": "motor-1",
       "kP": 0.015,
       "kI": 0.0,
@@ -18,7 +19,12 @@
       "minTarget": 0,
       "maxTarget": 10000,
       "maxAcceleration": 3000,
-      "maxVelocity": 1500
+      "maxVelocity": 1500,
+      "calibration": {
+        "minTimeInc": 10.0,
+        "timeResolution": 100,
+        "powerResolution": 100
+      }
     }
   },
   "servos": {
