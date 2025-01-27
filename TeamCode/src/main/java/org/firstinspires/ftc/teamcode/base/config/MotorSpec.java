@@ -29,6 +29,8 @@
  */
 package org.firstinspires.ftc.teamcode.base.config;
 
+import androidx.annotation.NonNull;
+
 import org.firstinspires.ftc.teamcode.base.calibration.Range;
 
 public class MotorSpec {
@@ -71,4 +73,31 @@ public class MotorSpec {
      * Encoder Resolution Formula
      */
     public String encoderResolutionFormula;
+
+    @NonNull
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        sb.append("MotorSpec\n");
+        sb.append("  nominalVoltage=")          .append(nominalVoltage)          .append("\n");
+        sb.append("  gearRatio=")               .append(gearRatio)               .append("\n");
+        sb.append("  gearRatioFormula=")        .append(gearRatioFormula)        .append("\n");
+        sb.append("  noLoadSpeed=")             .append(noLoadSpeed)             .append("\n");
+        sb.append("  noLoadCurrent=")           .append(noLoadCurrent)           .append("\n");
+        sb.append("  stallCurrent=")            .append(stallCurrent)            .append("\n");
+        sb.append("  stallTorque=")             .append(stallTorque)             .append("\n");
+        sb.append("  encoderType=")             .append(encoderType)             .append("\n");
+        sb.append("  encoderSensorType=")       .append(encoderSensorType)       .append("\n");
+        sb.append("  encoderVoltageRange=")     .append(encoderVoltageRange)     .append("\n");
+        sb.append("  encoderResolution=")       .append(encoderResolution)       .append("\n");
+        sb.append("  encoderResolutionFormula=").append(encoderResolutionFormula).append("\n");
+
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        var motorSpec = new MotorSpec();
+        System.out.println("motorSpec\n");
+        System.out.println(motorSpec);
+    }
 }
