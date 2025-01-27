@@ -996,7 +996,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "bucket").getController(),
                 hardwareMap.get(Servo.class, "bucket").getPortNumber(),
                 new String[]{"transferPosition","depositPosition"},
-                new double[]{46,158},
+                new double[]{36,158},
                 270,
                 0,
                 270,
