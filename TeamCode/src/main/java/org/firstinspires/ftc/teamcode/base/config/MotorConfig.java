@@ -39,8 +39,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.logging.Logger;
 
 
-public class MotorConfig{
+public class MotorConfig {
     public MotorEnum                 motorEnum;
+    public String                    partName;
     public String                    deviceName;
     public DcMotorEx                 motor;
     public double                    kP;
@@ -49,12 +50,14 @@ public class MotorConfig{
     public DcMotor.RunMode           runMode;
     public DcMotorSimple.Direction   direction;
     public DcMotor.ZeroPowerBehavior zeroPowerBehavior;
+    public double                    encoderResolution;
     public int                       motorProfileResolution;
     public double                    maxPower;
     public int                       minTarget;
     public int                       maxTarget;
     public double                    maxAcceleration;
     public double                    maxVelocity;
+    public MotorCalibConfig          motorCalibConfig;
 
     public void initialize(HardwareMap hardwareMap) {
         try {
@@ -75,21 +78,24 @@ public class MotorConfig{
     public String toString() {
         var sb = new StringBuilder();
 
-        sb.append("  motorEnum=").append(motorEnum).append("\n");
-        sb.append("  deviceName=").append(deviceName).append("\n");
-        sb.append("  motor=").append(motor).append("\n");
-        sb.append("  kP=").append(kP).append("\n");
-        sb.append("  kI=").append(kI).append("\n");
-        sb.append("  kD=").append(kD).append("\n");
-        sb.append("  runMode=").append(runMode).append("\n");
-        sb.append("  direction=").append(direction).append("\n");
-        sb.append("  zeroPowerBehavior=").append(zeroPowerBehavior).append("\n");
+        sb.append("  motorEnum=")             .append(motorEnum)             .append("\n");
+        sb.append("  partName=")              .append(partName)              .append("\n");
+        sb.append("  deviceName=")            .append(deviceName)            .append("\n");
+        sb.append("  motor=")                 .append(motor)                 .append("\n");
+        sb.append("  kP=")                    .append(kP)                    .append("\n");
+        sb.append("  kI=")                    .append(kI)                    .append("\n");
+        sb.append("  kD=")                    .append(kD)                    .append("\n");
+        sb.append("  runMode=")               .append(runMode)               .append("\n");
+        sb.append("  direction=")             .append(direction)             .append("\n");
+        sb.append("  zeroPowerBehavior=")     .append(zeroPowerBehavior)     .append("\n");
+        sb.append("  encoderResolution=")     .append(encoderResolution)     .append("\n");
         sb.append("  motorProfileResolution=").append(motorProfileResolution).append("\n");
-        sb.append("  maxPower=").append(maxPower).append("\n");
-        sb.append("  minTarget=").append(minTarget).append("\n");
-        sb.append("  maxTarget=").append(maxTarget).append("\n");
-        sb.append("  maxAcceleration=").append(maxAcceleration).append("\n");
-        sb.append("  maxVelocity=").append(maxVelocity).append("\n");
+        sb.append("  maxPower=")              .append(maxPower)              .append("\n");
+        sb.append("  minTarget=")             .append(minTarget)             .append("\n");
+        sb.append("  maxTarget=")             .append(maxTarget)             .append("\n");
+        sb.append("  maxAcceleration=")       .append(maxAcceleration)       .append("\n");
+        sb.append("  maxVelocity=")           .append(maxVelocity)           .append("\n");
+        sb.append("  motorCalibConfig=\n")    .append(motorCalibConfig)      .append("\n");
 
         return sb.toString();
     }

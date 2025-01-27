@@ -1,0 +1,89 @@
+{
+  "motors": {
+    "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 435 RPM)": {
+      "nominalVoltage": 12,
+      "gearRatio": "13.7:1",
+      "gearRatioFormula": "(((1+(46/17))) * (1+(46/17)))",
+      "noLoadSpeed": 435,
+      "noLoadCurrent": 0.25,
+      "stallCurrent": 9.2,
+      "stallTorque": 18.7,
+      "encoderType": "Relative, Quadrature",
+      "encoderSensorType": "Magnetic (Hall Effect)",
+      "encoderVoltageRange": {
+        "min": 3.3,
+        "max": 5
+      },
+      "encoderResolution": 384.5,
+      "encoderResolutionFormula": "((((1+(46/17))) * (1+(46/17))) * 28)"
+    },
+    "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (5.2:1 Ratio, 1150 RPM)": {
+      "nominalVoltage": 12,
+      "gearRatio": "5.2:1",
+      "gearRatioFormula": "(1+(46/11))",
+      "noLoadSpeed": 1150,
+      "noLoadCurrent": 0.25,
+      "stallCurrent": 9.2,
+      "stallTorque": 7.9,
+      "encoderType": "Relative, Quadrature",
+      "encoderSensorType": "Magnetic (Hall Effect)",
+      "encoderVoltageRange": {
+        "min": 3.3,
+        "max": 5
+      },
+      "encoderResolution": 145.1,
+      "encoderResolutionFormula": "((1+(46/11)) * 28)"
+},
+    "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (50.9:1 Ratio, 117 RPM)": {
+      "nominalVoltage": 12,
+      "gearRatio": "50.9:1",
+      "gearRatioFormula": "(((1+(46/17))) * (1+(46/17))) * (1+(46/17))",
+      "noLoadSpeed": 117,
+      "noLoadCurrent": 0.25,
+      "stallCurrent": 9.2,
+      "stallTorque": 68.4,
+      "encoderType": "Relative, Quadrature",
+      "encoderSensorType": "Magnetic (Hall Effect)",
+      "encoderVoltageRange": {
+        "min": 3.3,
+        "max": 5
+      },
+      "encoderResolution": 1425.1,
+      "encoderResolutionFormula": "((((1+(46/17))) * (1+(46/17))) * (1+(46/17)) * 28)"
+    },
+    "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (99.5:1 Ratio, 60 RPM)": {
+      "nominalVoltage": 12,
+      "gearRatio": "99.5:1",
+      "gearRatioFormula": "(((1+(46/17))) * (1+(46/11))) * (1+(46/11))",
+      "noLoadSpeed": 60,
+      "noLoadCurrent": 0.25,
+      "stallCurrent": 9.2,
+      "stallTorque": 133.2,
+      "encoderType": "Relative, Quadrature",
+      "encoderSensorType": "Magnetic (Hall Effect)",
+      "encoderVoltageRange": {
+        "min": 3.3,
+        "max": 5
+      },
+      "encoderResolution": 2786.2,
+      "encoderResolutionFormula": "((((1+(46/17))) * (1+(46/11))) * (1+(46/11)) * 28)"
+    },
+    "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (19.2:1 Ratio, 312 RPM)": {
+      "nominalVoltage": 12,
+      "gearRatio": "19.2:1",
+      "gearRatioFormula": "(((1+(46/17))) * (1+(46/11)))",
+      "noLoadSpeed": 312,
+      "noLoadCurrent": 0.25,
+      "stallCurrent": 9.2,
+      "stallTorque": 24.3,
+      "encoderType": "Relative, Quadrature",
+      "encoderSensorType": "Magnetic (Hall Effect)",
+      "encoderVoltageRange": {
+        "min": 3.3,
+        "max": 5
+      },
+      "encoderResolution": 537.7,
+      "encoderResolutionFormula": "((((1+(46/17))) * (1+(46/11))) * 28)"
+    }
+  }
+}

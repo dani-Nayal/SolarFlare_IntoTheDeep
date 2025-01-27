@@ -7,6 +7,7 @@
   "motors": {
     "LEFT_BACK": {
       "motorEnum": "LEFT_BACK",
+      "partName": "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 435 RPM)",
       "deviceName": "leftBack",
       "kP": 0.0,
       "kI": 0.0,
@@ -18,10 +19,16 @@
       "minTarget": 0,
       "maxTarget": 1000000,
       "maxAcceleration": 0,
-      "maxVelocity": 0
+      "maxVelocity": 0,
+      "calibration": {
+        "minTimeInc": 10.0,
+        "timeResolution": 100,
+        "powerResolution": 100
+      }
     },
     "RIGHT_BACK": {
       "motorEnum": "RIGHT_BACK",
+      "partName": "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 435 RPM)",
       "deviceName": "rightBack",
       "kP": 0.0,
       "kI": 0.0,
@@ -33,10 +40,16 @@
       "minTarget": 0,
       "maxTarget": 1000000,
       "maxAcceleration": 0,
-      "maxVelocity": 0
+      "maxVelocity": 0,
+      "calibration": {
+        "minTimeInc": 10.0,
+        "timeResolution": 100,
+        "powerResolution": 100
+      }
     },
     "LEFT_FRONT": {
       "motorEnum": "LEFT_FRONT",
+      "partName": "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 435 RPM)",
       "deviceName": "leftFront",
       "kP": 0.0,
       "kI": 0.0,
@@ -48,10 +61,16 @@
       "minTarget": 0,
       "maxTarget": 1000000,
       "maxAcceleration": 0,
-      "maxVelocity": 0
+      "maxVelocity": 0,
+      "calibration": {
+        "minTimeInc": 10.0,
+        "timeResolution": 100,
+        "powerResolution": 100
+      }
     },
     "RIGHT_FRONT": {
       "motorEnum": "RIGHT_FRONT",
+      "partName": "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (13.7:1 Ratio, 435 RPM)",
       "deviceName": "rightFront",
       "kP": 0.0,
       "kI": 0.0,
@@ -63,10 +82,16 @@
       "minTarget": 0,
       "maxTarget": 1000000,
       "maxAcceleration": 0,
-      "maxVelocity": 0
+      "maxVelocity": 0,
+      "calibration": {
+        "minTimeInc": 10.0,
+        "timeResolution": 100,
+        "powerResolution": 100
+      }
     },
     "EXTENDO": {
       "motorEnum": "EXTENDO",
+      "partName": "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (99.5:1 Ratio, 60 RPM)",
       "deviceName": "extendo",
       "kP": 0.0,
       "kI": 0.0,
@@ -78,10 +103,16 @@
       "minTarget": 0,
       "maxTarget": 793,
       "maxAcceleration": 20000,
-      "maxVelocity": 3000
+      "maxVelocity": 3000,
+      "calibration": {
+        "minTimeInc": 10.0,
+        "timeResolution": 100,
+        "powerResolution": 100
+      }
     },
     "EXTENDO_PITCH": {
       "motorEnum": "EXTENDO_PITCH",
+      "partName": "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (50.9:1 Ratio, 117 RPM)",
       "deviceName": "extendoPitch",
       "kP": 0.0,
       "kI": 0.0,
@@ -93,10 +124,16 @@
       "minTarget": -991,
       "maxTarget": 0,
       "maxAcceleration": 20000,
-      "maxVelocity": 3000
+      "maxVelocity": 3000,
+      "calibration": {
+        "minTimeInc": 10.0,
+        "timeResolution": 100,
+        "powerResolution": 100
+      }
     },
     "BUCKET_SLIDES": {
       "motorEnum": "BUCKET_SLIDES",
+      "partName": "Gobilda - 5203 Yellow Jacket Planetary Gear Motor (5.2:1 Ratio, 1150 RPM)",
       "deviceName": "bucketSlides",
       "kP": 0.0,
       "kI": 0.0,
@@ -108,7 +145,12 @@
       "minTarget": 0,
       "maxTarget": 1030,
       "maxAcceleration": 20000,
-      "maxVelocity": 3000
+      "maxVelocity": 3000,
+      "calibration": {
+        "minTimeInc": 10.0,
+        "timeResolution": 100,
+        "powerResolution": 100
+      }
     }
   },
   "servos": {
