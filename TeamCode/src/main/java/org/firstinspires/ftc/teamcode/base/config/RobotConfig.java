@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 
 public class RobotConfig {
     private static RobotConfig                     instance = null;
+    public         PartsSpecs                      partsSpecs = null;
     public         String                          robotName;
     public         RobotDimensions                 robotDimensions;
     public         HashMap<MotorEnum, MotorConfig> motors;
@@ -50,12 +51,27 @@ public class RobotConfig {
 
     public static RobotConfig createInstance(String robotName) {
         try(InputStream input = Application.getResourceAsStream(robotName + ".json")) {
-            instance      = parseJSON(new InputStreamReader(input), RobotConfig.class);
+            instance        = parseJSON(new InputStreamReader(input), RobotConfig.class);
         } catch(Exception e) {
-            Logger logger = RobotLogger.getInstance().getConfigLogger();
+            Logger logger   = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("RobotConfig", "createInstance", e);
         }
+
+        instance.assignSpecs();
+
         return instance;
+    }
+
+    protected void assignSpecs() {
+        PartsSpecs partsSpecs = PartsSpecs.getInstance();
+        for(var motorConfig: motors.values()) {
+            String    partName  = motorConfig.partName;
+            MotorSpec motorSpec = partsSpecs.motors.get(partName);
+            if(motorSpec == null)
+                throw new MissingDataException("No motor spec for: " + partName);
+
+            motorConfig.encoderResolution = motorSpec.encoderResolution;
+        }
     }
 
     @NonNull
@@ -64,8 +80,8 @@ public class RobotConfig {
         var sb = new StringBuilder();
 
         sb.append("RobotConfig\n");
-        sb.append("robotName=")      .append(robotName)      .append("\n");
-        sb.append("robotDimensions=").append(robotDimensions).append("\n");
+        sb.append("robotName=")      .append(robotName)           .append("\n");
+        sb.append("robotDimensions=").append(robotDimensions)     .append("\n");
         sb.append("motors\n");
         for(var entry: motors.entrySet())
             sb.append(entry.getKey().name())
@@ -78,13 +94,17 @@ public class RobotConfig {
                     .append("=\n")
                     .append(entry.getValue().toString())
                     .append("\n");
-        sb.append("imu\n")     .append(imu.toString())       .append("\n");
-        sb.append("pinpoint\n").append(pinpoint.toString())  .append("\n");
-        sb.append("limelight\n").append(limelight.toString()).append("\n");
+        sb.append("imu\n")           .append(imu.toString())      .append("\n");
+        sb.append("pinpoint\n")      .append(pinpoint.toString()) .append("\n");
+        sb.append("limelight\n")     .append(limelight.toString()).append("\n");
 
         return sb.toString();
     }
 
+    /**
+     * RobotConfig instance is build around a particular robot, as specified by a robotName
+     * @return RobotConfig instance
+     */
     public static RobotConfig getInstance() {
         if(instance == null)
             throw new IllegalStateException("Config object not initialized");
