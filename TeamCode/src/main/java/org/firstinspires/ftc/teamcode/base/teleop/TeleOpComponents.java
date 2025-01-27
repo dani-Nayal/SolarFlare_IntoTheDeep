@@ -876,7 +876,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getController(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
-                0.015,0,0.0,
+                0.015,0,0.0005,
                 new String[]{"depositPosition","transferPosition"},new double[]{1060,0},
                 1060,0,
                 250000,3500,
