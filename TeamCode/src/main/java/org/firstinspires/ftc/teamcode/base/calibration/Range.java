@@ -29,7 +29,27 @@
  */
 package org.firstinspires.ftc.teamcode.base.calibration;
 
+import androidx.annotation.NonNull;
+
+import java.util.Locale;
+
 public class Range {
     public double min;
     public double max;
+
+    public Range(double min, double max) {
+        this.min = min;
+        this.max = max;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "Range(min=%1$.5f, max=%2$.5f)", min, max);
+    }
+
+    public static void main(String[] args) {
+        Range range = new Range(10,20);
+        System.out.println(range);
+    }
 }
