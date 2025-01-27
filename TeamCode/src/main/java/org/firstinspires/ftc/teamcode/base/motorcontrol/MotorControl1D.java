@@ -117,7 +117,7 @@ public class MotorControl1D {
             Vi            = motor.getVelocity();
             distance      = targetPosition - Pi;
 
-            profile.resetProfile(distance, Pi, Vi, Vmax, Amax, Amax);
+            profile.calcProfile(distance, Pi, Vi, Vmax, Amax, Amax);
 
             isVmaxChanged = false;
             isAmaxChanged = false;
