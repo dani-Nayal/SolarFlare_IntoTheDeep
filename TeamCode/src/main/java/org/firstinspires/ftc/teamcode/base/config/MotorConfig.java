@@ -39,8 +39,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.logging.Logger;
 
 
-public class MotorConfig{
+public class MotorConfig {
     public MotorEnum                 motorEnum;
+    public String                    partName;
     public String                    deviceName;
     public DcMotorEx                 motor;
     public double                    kP;
@@ -55,6 +56,7 @@ public class MotorConfig{
     public int                       maxTarget;
     public double                    maxAcceleration;
     public double                    maxVelocity;
+    public MotorCalibConfig          motorCalibConfig;
 
     public void initialize(HardwareMap hardwareMap) {
         try {
@@ -76,6 +78,7 @@ public class MotorConfig{
         var sb = new StringBuilder();
 
         sb.append("  motorEnum=").append(motorEnum).append("\n");
+        sb.append("  partName=").append(partName).append("\n");
         sb.append("  deviceName=").append(deviceName).append("\n");
         sb.append("  motor=").append(motor).append("\n");
         sb.append("  kP=").append(kP).append("\n");
@@ -90,6 +93,7 @@ public class MotorConfig{
         sb.append("  maxTarget=").append(maxTarget).append("\n");
         sb.append("  maxAcceleration=").append(maxAcceleration).append("\n");
         sb.append("  maxVelocity=").append(maxVelocity).append("\n");
+        sb.append("  motorCalibConfig=\n").append(motorCalibConfig);
 
         return sb.toString();
     }
