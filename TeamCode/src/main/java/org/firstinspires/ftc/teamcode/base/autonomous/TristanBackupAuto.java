@@ -46,7 +46,7 @@ public class TristanBackupAuto extends LinearOpMode {
     public double clawFingerPosition = 92;
     public double clawWristPosition = 95;
     public double bucketSlidesTarget = 0;
-    public double bucketPosition = 46;
+    public double bucketPosition = 36;
     public double hangTarget = 0;
     public class MotionProfile{
         public double kP; public double kI; public double kD;
@@ -330,33 +330,33 @@ public class TristanBackupAuto extends LinearOpMode {
         Pose2d initialPose = new Pose2d(-42, -62.5, Math.toRadians(90));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
-        Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-42,-62.5, Math.toRadians(90)))
+        Action onePlusThreeBucket1 = drive.actionBuilder(new Pose2d(-39,-62.5, Math.toRadians(90)))
                 // Score preload bucket
-                .strafeToLinearHeading(new Vector2d(-55.5,-53), Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-60,-48), Math.toRadians(45))
                 .build();
-        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-55.5,-53, Math.toRadians(45)))
+        Action onePlusThreeBucket2 = drive.actionBuilder(new Pose2d(-60,-48, Math.toRadians(45)))
                 // Go to sample zone 1
-                .strafeToLinearHeading(new Vector2d(-54.5,-48.8), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-52.5,-53), Math.toRadians(90))
                 .build();
-        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-54.5,-48.8, Math.toRadians(90)))
+        Action onePlusThreeBucket3 = drive.actionBuilder(new Pose2d(-52.5,-53, Math.toRadians(90)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-56,-53.2), Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-60,-48), Math.toRadians(45))
                 .build();
-        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-56,-53.2, Math.toRadians(45)))
+        Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-60,-48, Math.toRadians(45)))
                 // Sample zone 2
-                .strafeToLinearHeading(new Vector2d(-63,-49.8), Math.toRadians(93))
+                .strafeToLinearHeading(new Vector2d(-61,-53), Math.toRadians(93))
                 .build();
-        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-63,-49.8, Math.toRadians(93)))
+        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-61,-53, Math.toRadians(93)))
                 // Score bucket
-                .strafeToLinearHeading(new Vector2d(-54.5,-54), Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-60,-48), Math.toRadians(45))
                 .build();
-        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-54.5,-54, Math.toRadians(45)))
+        Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-60,-48, Math.toRadians(45)))
                 // sample zone 3
-                .strafeToLinearHeading(new Vector2d(-67,-49.3), Math.toRadians(105))
+                .strafeToLinearHeading(new Vector2d(-65,-53), Math.toRadians(108))
                 .build();
-        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-67,-49.3, Math.toRadians(105)))
+        Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-65,-53, Math.toRadians(108)))
                 // turn and score bucket
-                .strafeToLinearHeading(new Vector2d(-54.5,-53.5), Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-60,-48), Math.toRadians(45))
                 .build();
         Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-54.5,-53.5, Math.toRadians(45)))
                 // park
@@ -402,7 +402,11 @@ public class TristanBackupAuto extends LinearOpMode {
                                         // score preload bucket
                                         onePlusThreeBucket1,
                                         //close claw
-                                        setBucketSlidesTarget(1050)
+                                        new SequentialAction(
+                                                new SleepAction(0.5),
+                                                setBucketSlidesTarget(1070)
+                                        )
+
                                 ),
                                 // Move bucketSlides up to scoring position
 
@@ -411,7 +415,7 @@ public class TristanBackupAuto extends LinearOpMode {
                                 setBucketPosition(158),
                                 new SleepAction(0.7),
                                 // Move bucket back to default position
-                                setBucketPosition(46),
+                                setBucketPosition(36),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
 
@@ -473,13 +477,13 @@ public class TristanBackupAuto extends LinearOpMode {
                                 // Wait for sample to settle in bucket
                                 new SleepAction(0.4),
                                 // Move bucketSlides up to scoring position
-                                setBucketSlidesTarget(1050),
+                                setBucketSlidesTarget(1070),
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
                                 setBucketPosition(158),
                                 new SleepAction(0.4),
                                 // Move bucket back to default position
-                                setBucketPosition(46),
+                                setBucketPosition(36),
                                 // Avoid level 4 hang
 
 
@@ -540,13 +544,13 @@ public class TristanBackupAuto extends LinearOpMode {
                                 // Wait for sample to settle in bucket
                                 new SleepAction(0.4),
                                 // Move bucketSlides up to scoring position
-                                setBucketSlidesTarget(1050),
+                                setBucketSlidesTarget(1070),
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
                                 setBucketPosition(158),
                                 new SleepAction(0.4),
                                 // Move bucket back to default position
-                                setBucketPosition(46),
+                                setBucketPosition(36),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
                                 new ParallelAction(
@@ -606,13 +610,13 @@ public class TristanBackupAuto extends LinearOpMode {
                                 // Wait for sample to settle in bucket
                                 new SleepAction(0.4),
                                 // Move bucketSlides up to scoring position
-                                setBucketSlidesTarget(1050),
+                                setBucketSlidesTarget(1070),
                                 new SleepAction(0.6),
                                 // Rotate bucket to score
                                 setBucketPosition(158),
                                 new SleepAction(0.4),
                                 // Move bucket back to default position
-                                setBucketPosition(46),
+                                setBucketPosition(36),
                                 // Avoid level 4 hang
                                 new SleepAction(0.4),
                                 // Move bucketSlides back to hang position
