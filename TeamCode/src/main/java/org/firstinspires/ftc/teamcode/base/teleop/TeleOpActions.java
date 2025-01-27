@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.base.teleop;
 
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.CRServos;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.LOOP_TIMER;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucketSlides;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.drive;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.motionProfileMotors;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.motors;
