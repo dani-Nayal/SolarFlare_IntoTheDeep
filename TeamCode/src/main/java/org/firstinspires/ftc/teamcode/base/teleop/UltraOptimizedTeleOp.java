@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.UpdateTelemetryAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpSequentialAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpParallelAction;
-import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.UninterruptiblePressTrigger;
+import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.PressTrigger;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.ConditionalAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.RobotCentricMecanumAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpAction;
@@ -141,7 +141,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                         )
                 });
         */
-        UninterruptiblePressTrigger sequences = new UninterruptiblePressTrigger(new Condition[]{
+        PressTrigger sequences = new PressTrigger(new Condition[]{
                 () -> (gamepad1.b),
                 () -> (gamepad2.x),
                 () -> (gamepad1.a),
