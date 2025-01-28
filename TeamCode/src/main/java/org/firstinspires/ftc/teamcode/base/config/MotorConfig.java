@@ -36,10 +36,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-public class MotorConfig {
+public class MotorConfig implements Validatable {
     public MotorEnum                 motorEnum;
     public MotorSpec                 motorSpec;
     public String                    partName;
@@ -59,7 +61,7 @@ public class MotorConfig {
     public int                       maxTarget;
     public double                    maxAcceleration;
     public double                    maxVelocity;
-    public MotorCalibConfig          motorCalibConfig;
+    public MotorCalibConfig          calibParams;
 
     public void initialize(HardwareMap hardwareMap) {
         try {
@@ -78,7 +80,19 @@ public class MotorConfig {
         } catch (Exception e) {
             Logger logger = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("MotorConfig", "Initialize", e);
+            logger.logp(Level.SEVERE, "MotorConfig", "initialize", toString());
         }
+    }
+
+    public void setMotorSpec(MotorSpec motorSpec) {
+        Logger logger  = RobotLogger.getInstance().getConfigLogger();
+        logger.logp(Level.SEVERE, "MotorConfig", "setMotorSpec",
+                "setting motor spec for " + motorEnum.name());
+        this.motorSpec = motorSpec;
+    }
+
+    public boolean isValid() {
+        return true;
     }
 
     @NonNull
@@ -88,6 +102,7 @@ public class MotorConfig {
 
         sb.append("  motorEnum=")             .append(motorEnum)             .append("\n");
         sb.append("  partName=")              .append(partName)              .append("\n");
+        sb.append("  motorSpec=\n")           .append(motorSpec)             .append("\n");
         sb.append("  deviceName=")            .append(deviceName)            .append("\n");
         sb.append("  motor=")                 .append(motor)                 .append("\n");
         sb.append("  kP=")                    .append(kP)                    .append("\n");
@@ -104,7 +119,7 @@ public class MotorConfig {
         sb.append("  maxTarget=")             .append(maxTarget)             .append("\n");
         sb.append("  maxAcceleration=")       .append(maxAcceleration)       .append("\n");
         sb.append("  maxVelocity=")           .append(maxVelocity)           .append("\n");
-        sb.append("  motorCalibConfig=\n")    .append(motorCalibConfig)      .append("\n");
+        sb.append("  calibParams=\n")         .append(calibParams)           .append("\n");
 
         return sb.toString();
     }
