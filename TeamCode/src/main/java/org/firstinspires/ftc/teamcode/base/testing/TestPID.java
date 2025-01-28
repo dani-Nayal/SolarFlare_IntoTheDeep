@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.base.testing;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +11,7 @@ import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl;
 
 @TeleOp
-public class Test1Motor extends LinearOpMode {
+public class TestPID extends LinearOpMode {
     HardwareConfig hw;
     RobotState state;
     MotorControl motorControl;
@@ -45,7 +44,7 @@ public class Test1Motor extends LinearOpMode {
                 state.setMotorTarget(MotorEnum.TESTING_MOTOR, 10000);
             }
 
-            motorControl.runTrapezoidalMotionProfile(telemetry, FtcDashboard.getInstance().getTelemetry());
+            motorControl.runPIDMotorControl(telemetry);
         }
     }
 }

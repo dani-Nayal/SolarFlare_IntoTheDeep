@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -12,8 +11,6 @@ public class MotorControl {
     HardwareConfig hw;
     RobotState state;
     PID pid;
-    MotionProfiles badProfile;
-    OldTrapezoidalMotionProfile oldProfile;
     TrapezoidalMotionProfile profile;
     public ElapsedTime timer;
     int currentPosition;
@@ -28,21 +25,24 @@ public class MotorControl {
     double initialVelocity;
     int distance;
     MotorEnum motorEnum;
-    Telemetry dashBoardTelemetry = FtcDashboard.getInstance().getTelemetry();
+    public double kP;
+    public double kI;
+    public double kD;
     public MotorControl(MotorEnum motorEnum){
         this.motorEnum = motorEnum;
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
         pid = new PID();
-        oldProfile = new OldTrapezoidalMotionProfile();
-        badProfile = new MotionProfiles();
         profile = new TrapezoidalMotionProfile();
         timer = new ElapsedTime();
         maxAcceleration = hw.getMotorConfig(motorEnum).maxAcceleration;
         maxVelocity = hw.getMotorConfig(motorEnum).maxVelocity;
+        kP = hw.getMotorConfig(motorEnum).kP;
+        kI = hw.getMotorConfig(motorEnum).kI;
+        kD = hw.getMotorConfig(motorEnum).kD;
     }
     // Run this method in a loop
-    public void runTrapezoidalMotionProfile(Telemetry telemetry){
+    public void runTrapezoidalMotionProfile(Telemetry telemetry, Telemetry dashBoardTelemetry){
 
         int currentTarget = state.getMotorTarget(motorEnum);
 
@@ -68,13 +68,16 @@ public class MotorControl {
 
         double instantTargetPosition = profile.runProfile(timer.seconds());
 
-        motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition);
+        motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition, kP, kI, kD);
 
         hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
 
         previousLoopTarget = currentTarget;
         lastMaxVelocity = maxVelocity;
         lastMaxAcceleration = maxAcceleration;
+
+        telemetry.addData("current phase", profile.currentPhase);
+        telemetry.addData("current time", timer.seconds());
         telemetry.addData("motor power", motorPower);
         telemetry.addData("state target position", state.getMotorTarget(motorEnum));
         telemetry.addData("current position", hw.getMotorConfig(motorEnum).motor.getCurrentPosition());
@@ -112,7 +115,8 @@ public class MotorControl {
 
     // Run this method in a loop
     public void runPIDMotorControl(Telemetry telemetry){
-        motorPower = pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum));
+
+        motorPower = pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum), kP, kI, kD);
         hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
 
         telemetry.addData("current position", pid.encoderPosition);

@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
@@ -37,7 +36,6 @@ public abstract class  TeleOpComponents {
     public static HardwareMap hardwareMap;
     public static Telemetry telemetry;
     public static PinpointDrive drive;
-    public static ElapsedTime LOOP_TIMER = null;
     public static ArrayList<BotMotor> motors = new ArrayList<>();
     public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
@@ -60,7 +58,7 @@ public abstract class  TeleOpComponents {
     public static BotMotor ryanNemesis;
 
     public static class BotMotor extends DcMotorImplEx {
-        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 7;
+        boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 10;
         double maxVelocityParam;
         double maxAccelerationParam;
         double instantTargetPosition = 0;
@@ -78,7 +76,7 @@ public abstract class  TeleOpComponents {
         public double accelDistance = 0; public double decelDistance = 0; public double cruiseDistance = 0;
         public double profileStartPos = 0;
         public double startVelocity = 0;
-        public ElapsedTime MOVEMENT_TIMER = null;
+        public ElapsedTime MOVEMENT_TIMER = null; public ElapsedTime LOOP_TIMER = null;
         double integralSum = 0;
         double previousError = 0;
         double previousVoltage = 0;
@@ -108,7 +106,7 @@ public abstract class  TeleOpComponents {
 
             @Override
             public void stop() {
-                setMotorTarget(getCurrentPosition());
+                setTarget(getCurrentPosition());
             }
 
             @Override
@@ -121,7 +119,7 @@ public abstract class  TeleOpComponents {
                             break;
                         }
                     }
-                    setMotorTarget(pos,maxAcceleration,maxVelocity);
+                    setTarget(pos,maxAcceleration,maxVelocity);
                     isStart=false;
                 }
                 return Math.abs(target-getCurrentPosition())>15;
@@ -155,7 +153,7 @@ public abstract class  TeleOpComponents {
 
             @Override
             public void stop() {
-                setMotorTarget(getCurrentPosition());
+                setTarget(getCurrentPosition());
             }
 
             @Override
@@ -168,7 +166,7 @@ public abstract class  TeleOpComponents {
                             break;
                         }
                     }
-                    setMotorTarget(pos,maxAcceleration,maxVelocity);
+                    setTarget(pos,maxAcceleration,maxVelocity);
                     isStart=false;
                 }
                 return Math.abs(target-getCurrentPosition())>15;
@@ -235,7 +233,7 @@ public abstract class  TeleOpComponents {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (isStart) {
-                    setMotorTarget(targetFun.call(),maxAcceleration,maxVelocity);
+                    setTarget(targetFun.call(),maxAcceleration,maxVelocity);
                     isStart=false;
                 }
                 return Math.abs(target-getCurrentPosition())>15;
@@ -249,20 +247,20 @@ public abstract class  TeleOpComponents {
 
             @Override
             public void stop() {
-                setMotorTarget(getCurrentPosition());
+                setTarget(getCurrentPosition());
             }
 
         }
-        public SetTargetAction moveToPositionAction(double target, double maxAcceleration, double maxVelocity){
+        public SetTargetAction setTargetAction(double target, double maxAcceleration, double maxVelocity){
             return new SetTargetAction(target,maxAcceleration,maxVelocity);
         }
-        public SetTargetAction moveToPositionAction(DoubleFunction targetFun, double maxAcceleration, double maxVelocity){
+        public SetTargetAction setTargetAction(DoubleFunction targetFun, double maxAcceleration, double maxVelocity){
             return new SetTargetAction(targetFun,maxAcceleration,maxVelocity);
         }
-        public SetTargetAction moveToPositionAction(double target){
+        public SetTargetAction setTargetAction(double target){
             return new SetTargetAction(target,MAX_ACCELERATION,MAX_VELOCITY);
         }
-        public SetTargetAction moveToPositionAction(DoubleFunction targetFun){
+        public SetTargetAction setTargetAction(DoubleFunction targetFun){
             return new SetTargetAction(targetFun,MAX_ACCELERATION,MAX_VELOCITY);
         }
         public class StallResetAction implements TeleOpAction{
@@ -297,10 +295,10 @@ public abstract class  TeleOpComponents {
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change){
             return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change)),new SetTargetAction(()->(target-change))});
         }
-        public PressTrigger triggeredMoveToTargetAction(Condition condition, double target, double maxAcceleration, double maxVelocity){
+        public PressTrigger triggeredSetTargetAction(Condition condition, double target, double maxAcceleration, double maxVelocity){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetTargetAction(target,maxAcceleration,maxVelocity)});
         }
-        public PressTrigger triggeredMoveToTargetAction(Condition condition, double target){
+        public PressTrigger triggeredSetTargetAction(Condition condition, double target){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetTargetAction(target)});
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
@@ -366,6 +364,7 @@ public abstract class  TeleOpComponents {
             setZeroPowerBehavior(zeroPowerBehaviour);
             if (Objects.equals(movementMode, "MOTION_PROFILE")){
                 MOVEMENT_TIMER = new ElapsedTime();
+                LOOP_TIMER = new ElapsedTime();
             }
 
             hardwareMap.put(getDeviceName(),this);
@@ -448,13 +447,14 @@ public abstract class  TeleOpComponents {
             double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
             double outPower = Math.min(1,Math.max(-1,kpPower+kiPower+kdPower));
             setPower(outPower);
+            LOOP_TIMER.reset();
             previousError=error;
         }
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
         }
 
-        public void setMotorTarget(double target, double maxVelocity, double maxAcceleration){
+        public void setTarget(double target, double maxVelocity, double maxAcceleration){
             target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
                 MOVEMENT_TIMER.reset();
@@ -463,7 +463,7 @@ public abstract class  TeleOpComponents {
                 previousError = 0;
                 isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
                 for (BotMotor motor : synchronizedMotors){
-                    motor.setMotorTarget(target,maxVelocity,maxAcceleration);
+                    motor.setTarget(target,maxVelocity,maxAcceleration);
                 }
             }
         }
@@ -477,8 +477,8 @@ public abstract class  TeleOpComponents {
             }
             else profileDelayCounter=1;
         }
-        public void setMotorTarget(double target){
-            this.setMotorTarget(target, MAX_VELOCITY, MAX_ACCELERATION);
+        public void setTarget(double target){
+            this.setTarget(target, MAX_VELOCITY, MAX_ACCELERATION);
         }
         public void initiateStallReset(){
             isStallResetting=true;
@@ -850,7 +850,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendo").getController(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "extendo").getMotorType(),
-                0.015,0,0.0,
+                0.015,0,0.00015,
                 new String[]{},new double[]{},
                 793,0,
                 250000,3500,
@@ -865,7 +865,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
                 0.005,0,0.0,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{0,-960,-960,0},
+                new double[]{0,-960,-960,-320},
                 0,-960,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
@@ -877,9 +877,9 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getController(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
                 hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
-                0.015,0,0.0,
-                new String[]{"depositPosition","transferPosition"},new double[]{1060,0},
-                1060,0,
+                0.03,0.0,0.001,
+                new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
+                1070,0,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
@@ -964,7 +964,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchLeft").getController(),
                 hardwareMap.get(Servo.class, "clawPitchLeft").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,100,72.4,151.011,13},
+                new double[]{13,68,100,72.4,75,40.5},
                 270,
                 0,
                 270,
@@ -975,7 +975,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "clawPitchRight").getController(),
                 hardwareMap.get(Servo.class, "clawPitchRight").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,100,72.4,151.011,13},
+                new double[]{13,68,100,72.4,75,40.5},
                 270,
                 0,
                 270,
@@ -986,7 +986,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "innerClawPitch").getController(),
                 hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{82,20,200,160.5,73,82},
+                new double[]{82,20,200,100,73,82},
                 270,
                 0,
                 270,
@@ -997,7 +997,7 @@ public abstract class  TeleOpComponents {
                 hardwareMap.get(Servo.class, "bucket").getController(),
                 hardwareMap.get(Servo.class, "bucket").getPortNumber(),
                 new String[]{"transferPosition","depositPosition"},
-                new double[]{46,158},
+                new double[]{36,158},
                 270,
                 0,
                 270,
@@ -1007,14 +1007,14 @@ public abstract class  TeleOpComponents {
         synchronizeServos(clawPitch,clawPitchRight);
 
     }
-    public static void synchronizeServos(BotServo servo1, BotServo servo2){
-        servo1.synchronizedServos.add(servo2);
+    public static void synchronizeServos(BotServo...servos){
+        servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
     }
-    public static void synchronizeServos(CRBotServo servo1, CRBotServo servo2){
-        servo1.synchronizedServos.add(servo2);
+    public static void synchronizeServos(CRBotServo...servos){
+        servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
     }
-    public static void synchronizeMotors(BotMotor motor1, BotMotor motor2){
-        motor1.synchronizedMotors.add(motor2);
+    public static void synchronizeMotors(BotMotor...motors){
+        motors[0].synchronizedMotors.addAll(Arrays.asList(motors).subList(1, motors.length));
     }
 }
 
