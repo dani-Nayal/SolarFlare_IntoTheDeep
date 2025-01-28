@@ -65,7 +65,7 @@ public class RobotMetricsFile {
             return;
         }
 
-        formatter.format("%1$s", robotMetricsSpec.getHeader() + "%n");
+        formatter.format("%1$s", robotMetricsSpec.getHeader() + "\n");
     }
 
     public void addData(Object... data) {
