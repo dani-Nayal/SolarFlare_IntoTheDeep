@@ -74,6 +74,10 @@ public class MotorSpec {
      */
     public String encoderResolutionFormula;
 
+    public double getNoLoadSpeedPPS() {
+        return encoderResolution * noLoadSpeed;
+    }
+
     @NonNull
     @Override
     public String toString() {
