@@ -3,13 +3,14 @@ package org.firstinspires.ftc.teamcode.base.testing;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.base.motorcontrol.TrapezoidalMotionProfile;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.TrapezoidalMotionProfile1D;
 
 public class TestProfileOutputs {
     public static void main(String[] args){
 
         ElapsedTime timer = new ElapsedTime();
-        TrapezoidalMotionProfile1D profile = new TrapezoidalMotionProfile1D();
+        TrapezoidalMotionProfile profile = new TrapezoidalMotionProfile();
         double maxAccel = 2000;
         double maxDecel = 2000;
         double maxVelocity = 1000;
@@ -18,7 +19,7 @@ public class TestProfileOutputs {
         int initialPosition = 0;
         double lastInstantTargetPosition = 0;
 
-        profile.resetProfile(distance, initialPosition, initialVelocity, maxVelocity, maxAccel, maxDecel);
+        profile.resetProfile(maxAccel, maxVelocity, initialVelocity, distance, initialPosition);
 
         timer.reset();
 
