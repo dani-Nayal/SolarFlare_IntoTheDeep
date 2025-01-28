@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.base.calibration.MotorProfileConstP;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.config.RobotLogger;
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
 
 
 import java.util.logging.Logger;
@@ -82,6 +82,7 @@ public class Rig1MotorCalib extends LinearOpMode {
         double power = 0.5;
         motorProfile.calcProfile(power, Pi, Pf);
         motorProfile.writeJSON();
+        motorProfile.writeMetrics();
 
         waitForStart();
 
