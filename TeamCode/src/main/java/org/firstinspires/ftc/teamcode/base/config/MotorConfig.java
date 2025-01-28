@@ -41,6 +41,7 @@ import java.util.logging.Logger;
 
 public class MotorConfig {
     public MotorEnum                 motorEnum;
+    public MotorSpec                 motorSpec;
     public String                    partName;
     public String                    deviceName;
     public DcMotorEx                 motor;
@@ -51,6 +52,7 @@ public class MotorConfig {
     public DcMotorSimple.Direction   direction;
     public DcMotor.ZeroPowerBehavior zeroPowerBehavior;
     public double                    encoderResolution;
+    public double                    noLoadSpeedPPS;
     public int                       motorProfileResolution;
     public double                    maxPower;
     public int                       minTarget;
@@ -61,7 +63,13 @@ public class MotorConfig {
 
     public void initialize(HardwareMap hardwareMap) {
         try {
-            motor = hardwareMap.get(DcMotorEx.class, deviceName);
+            if(motorSpec == null)
+                throw new MissingDataException("No motorSpec for motor:" + motorEnum);
+
+            encoderResolution = motorSpec.encoderResolution;
+            noLoadSpeedPPS    = motorSpec.getNoLoadSpeedPPS();
+
+            motor             = hardwareMap.get(DcMotorEx.class, deviceName);
 
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(this.runMode);
@@ -89,6 +97,7 @@ public class MotorConfig {
         sb.append("  direction=")             .append(direction)             .append("\n");
         sb.append("  zeroPowerBehavior=")     .append(zeroPowerBehavior)     .append("\n");
         sb.append("  encoderResolution=")     .append(encoderResolution)     .append("\n");
+        sb.append("  noLoadSpeedPPS=")        .append(noLoadSpeedPPS)        .append("\n");
         sb.append("  motorProfileResolution=").append(motorProfileResolution).append("\n");
         sb.append("  maxPower=")              .append(maxPower)              .append("\n");
         sb.append("  minTarget=")             .append(minTarget)             .append("\n");
