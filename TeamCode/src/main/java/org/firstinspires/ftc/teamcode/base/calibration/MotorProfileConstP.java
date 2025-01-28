@@ -41,20 +41,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.base.config.JSONWritable;
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.logging.MetricsWritable;
+import org.firstinspires.ftc.teamcode.base.logging.RobotMetrics;
+import org.firstinspires.ftc.teamcode.base.logging.RobotMetricsFile;
 import org.firstinspires.ftc.teamcode.base.utils.JSONUtils;
 
 import java.util.Arrays;
 import java.util.Locale;
 
-public class MotorProfileConstP implements JSONWritable {
-    private final MotorEnum   motorEnum;
-    private final DcMotorEx   motor;
-    private final double      minTimeInc;
+public class MotorProfileConstP implements JSONWritable, MetricsWritable {
+    private       MotorEnum   motorEnum;
+    private       MotorConfig motorConfig;
+    private       DcMotorEx   motor;
+    private       double      minTimeInc;
     /**
      * Encoder resolution of the motor itself at the shaft output (PPR)
      */
-    private final double      encoderResolution;
-    private final int         timeResolution;
+    private       double      encoderResolution;
+    private       int         timeResolution;
     private       double      power;
     private       int         Pi;
     private       int         Pf;
@@ -62,37 +66,38 @@ public class MotorProfileConstP implements JSONWritable {
      * Index where data stops. i.e. if we reach the Pf before we fill out
      * the entire array (before timeResolution)
      */
-    private       int         tIdxLast;
+    private       int         tIdxMax;
     /**
      * Time coordinate
      */
-    private final double[]    t;
+    private       double[]    t;
     /**
      * Velocity coordinate
      */
-    private final double[]    V;
+    private       double[]    V;
     /**
      * Position coordinate
      */
-    private final double[]    P;
+    private       double[]    P;
     /**
      * Acceleration coordinate
      */
-    private final double[]    A;
+    private       double[]    A;
     /**
      *
      */
-    private final double[]    C;
+    private       double[]    C;
     /**
      * Constructor requires information about the motor
-     * @param motorConfig: The configuration of the motor being calibrated
+     * @param motorConfig_in: The configuration of the motor being calibrated
      */
-    public MotorProfileConstP(MotorConfig motorConfig) {
+    public MotorProfileConstP(MotorConfig motorConfig_in) {
+        motorConfig       = motorConfig_in;
         motor             = motorConfig.motor;
         motorEnum         = motorConfig.motorEnum;
-        minTimeInc        = motorConfig.motorCalibConfig.minTimeInc;
+        minTimeInc        = motorConfig.calibParams.minTimeInc;
         encoderResolution = motorConfig.encoderResolution;
-        timeResolution    = motorConfig.motorCalibConfig.timeResolution;
+        timeResolution    = motorConfig.calibParams.timeResolution;
         t                 = new double[timeResolution];
         V                 = new double[timeResolution];
         P                 = new double[timeResolution];
@@ -105,13 +110,14 @@ public class MotorProfileConstP implements JSONWritable {
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setTargetPosition(Pi);
         motor.setPower(1.0);
+
         while(motor.isBusy())
             continue;
         motor.setMode(runMode);
     }
 
     private void calcAcceleration() {
-        for(int tIdx=1; tIdx<=tIdxLast; tIdx++) {
+        for(int tIdx=1; tIdx<=tIdxMax; tIdx++) {
             A[tIdx]       = (V[tIdx]-V[tIdx-1])/(t[tIdx]-t[tIdx-1]);
         }
     }
@@ -151,15 +157,53 @@ public class MotorProfileConstP implements JSONWritable {
         }
         motor.setPower(0);
         motor.setMode(runMode);
-        tIdxLast          = tIdx;
+        tIdxMax           = tIdx;
     }
 
     public String getJSONFileId() {
         return String.format(Locale.US, "%1$s-%2$.4f", motorEnum, power);
     }
 
+    public MotorProfileConstP copyContents() {
+        MotorProfileConstP profile = new MotorProfileConstP(motorConfig);
+        profile.motorEnum          = this.motorEnum;
+        profile.motorConfig        = null;
+        profile.motor              = null;
+        profile.minTimeInc         = this.minTimeInc;
+        profile.encoderResolution  = this.encoderResolution;
+        profile.timeResolution     = this.timeResolution;
+        profile.power              = this.power;
+        profile.Pi                 = this.Pi;
+        profile.Pf                 = this.Pf;
+        profile.tIdxMax            = this.tIdxMax;
+        profile.t                  = this.t;
+        profile.V                  = this.V;
+        profile.P                  = this.V;
+        profile.A                  = this.A;
+        profile.C                  = this.C;
+
+        return profile;
+    }
+
     public void writeJSON() {
-        JSONUtils.writeJSON(this);
+        MotorProfileConstP trimmedThis = copyContents();
+        JSONUtils.writeJSON(trimmedThis);
+    }
+
+    public String getMetricsFileId() {
+        return String.format(Locale.US, "%1$s-%2$.4f", motorEnum, power);
+    }
+
+    public String getMetricsTableType() {
+        return "MotorProfileConstP";
+    }
+
+    public void writeMetrics() {
+        RobotMetricsFile metricsFile = RobotMetrics.getInstance().getMetricsFile(this);
+        for(int tIdx=0; tIdx<tIdxMax; tIdx++) {
+            metricsFile.addData(t[tIdx],P[tIdx],V[tIdx],A[tIdx],C[tIdx]);
+        }
+        metricsFile.close();
     }
 
     @NonNull
@@ -175,7 +219,7 @@ public class MotorProfileConstP implements JSONWritable {
         sb.append("  power=")            .append(power)             .append("\n");
         sb.append("  Pi=")               .append(Pi)                .append("\n");
         sb.append("  Pf=")               .append(Pf)                .append("\n");
-        sb.append("  tIdxLast=")         .append(tIdxLast)          .append("\n");
+        sb.append("  tIdxMax=")          .append(tIdxMax)           .append("\n");
         sb.append("  t=\n")              .append(Arrays.toString(t)).append("\n");
         sb.append("  V=\n")              .append(Arrays.toString(V)).append("\n");
         sb.append("  P=\n")              .append(Arrays.toString(P)).append("\n");
