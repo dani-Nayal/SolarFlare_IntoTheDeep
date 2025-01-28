@@ -30,22 +30,22 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.config.RobotLogger;
-import org.firstinspires.ftc.teamcode.base.config.RobotMetricsFile;
+import org.firstinspires.ftc.teamcode.base.logging.MetricsWritable;
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+import org.firstinspires.ftc.teamcode.base.logging.RobotMetrics;
+import org.firstinspires.ftc.teamcode.base.logging.RobotMetricsFile;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 
 import java.util.logging.Logger;
 
-public class MotorControl1D {
+public class MotorControl1D implements MetricsWritable {
     Telemetry                  telemetryDash = FtcDashboard.getInstance().getTelemetry();
     Logger                     logger;
     RobotMetricsFile           metricsFile;
@@ -90,7 +90,7 @@ public class MotorControl1D {
     public MotorControl1D(MotorEnum motorEnum_in) {
         hw                = HardwareConfig.getInstance();
         logger            = RobotLogger.getInstance().getConfigLogger();
-        metricsFile       = RobotLogger.getInstance().getMetricsFile("motion_profile");
+        metricsFile       = RobotMetrics.getInstance().getMetricsFile(this);
         motorEnum         = motorEnum_in;
         motorConfig       = hw.getMotorConfig(motorEnum);
         motor             = motorConfig.motor;
@@ -103,6 +103,14 @@ public class MotorControl1D {
         Amax              = motorConfig.maxAcceleration;
         Dmax              = motorConfig.maxAcceleration;
         Vmax              = motorConfig.maxVelocity;
+    }
+
+    public String getMetricsFileId() {
+        return motorEnum.name();
+    }
+
+    public String getMetricsTableType() {
+        return "MotorControl";
     }
 
     /**
