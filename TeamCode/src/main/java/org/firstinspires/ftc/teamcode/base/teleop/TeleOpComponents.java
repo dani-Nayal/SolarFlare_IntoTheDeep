@@ -106,7 +106,7 @@ public abstract class  TeleOpComponents {
 
             @Override
             public void stop() {
-                setMotorTarget(getCurrentPosition());
+                setTarget(getCurrentPosition());
             }
 
             @Override
@@ -119,7 +119,7 @@ public abstract class  TeleOpComponents {
                             break;
                         }
                     }
-                    setMotorTarget(pos,maxAcceleration,maxVelocity);
+                    setTarget(pos,maxAcceleration,maxVelocity);
                     isStart=false;
                 }
                 return Math.abs(target-getCurrentPosition())>15;
@@ -153,7 +153,7 @@ public abstract class  TeleOpComponents {
 
             @Override
             public void stop() {
-                setMotorTarget(getCurrentPosition());
+                setTarget(getCurrentPosition());
             }
 
             @Override
@@ -166,7 +166,7 @@ public abstract class  TeleOpComponents {
                             break;
                         }
                     }
-                    setMotorTarget(pos,maxAcceleration,maxVelocity);
+                    setTarget(pos,maxAcceleration,maxVelocity);
                     isStart=false;
                 }
                 return Math.abs(target-getCurrentPosition())>15;
@@ -233,7 +233,7 @@ public abstract class  TeleOpComponents {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (isStart) {
-                    setMotorTarget(targetFun.call(),maxAcceleration,maxVelocity);
+                    setTarget(targetFun.call(),maxAcceleration,maxVelocity);
                     isStart=false;
                 }
                 return Math.abs(target-getCurrentPosition())>15;
@@ -247,20 +247,20 @@ public abstract class  TeleOpComponents {
 
             @Override
             public void stop() {
-                setMotorTarget(getCurrentPosition());
+                setTarget(getCurrentPosition());
             }
 
         }
-        public SetTargetAction moveToPositionAction(double target, double maxAcceleration, double maxVelocity){
+        public SetTargetAction setTargetAction(double target, double maxAcceleration, double maxVelocity){
             return new SetTargetAction(target,maxAcceleration,maxVelocity);
         }
-        public SetTargetAction moveToPositionAction(DoubleFunction targetFun, double maxAcceleration, double maxVelocity){
+        public SetTargetAction setTargetAction(DoubleFunction targetFun, double maxAcceleration, double maxVelocity){
             return new SetTargetAction(targetFun,maxAcceleration,maxVelocity);
         }
-        public SetTargetAction moveToPositionAction(double target){
+        public SetTargetAction setTargetAction(double target){
             return new SetTargetAction(target,MAX_ACCELERATION,MAX_VELOCITY);
         }
-        public SetTargetAction moveToPositionAction(DoubleFunction targetFun){
+        public SetTargetAction setTargetAction(DoubleFunction targetFun){
             return new SetTargetAction(targetFun,MAX_ACCELERATION,MAX_VELOCITY);
         }
         public class StallResetAction implements TeleOpAction{
@@ -295,10 +295,10 @@ public abstract class  TeleOpComponents {
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change){
             return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change)),new SetTargetAction(()->(target-change))});
         }
-        public PressTrigger triggeredMoveToTargetAction(Condition condition, double target, double maxAcceleration, double maxVelocity){
+        public PressTrigger triggeredSetTargetAction(Condition condition, double target, double maxAcceleration, double maxVelocity){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetTargetAction(target,maxAcceleration,maxVelocity)});
         }
-        public PressTrigger triggeredMoveToTargetAction(Condition condition, double target){
+        public PressTrigger triggeredSetTargetAction(Condition condition, double target){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetTargetAction(target)});
         }
         public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
@@ -454,7 +454,7 @@ public abstract class  TeleOpComponents {
             return KEY_POSITIONS.get(key);
         }
 
-        public void setMotorTarget(double target, double maxVelocity, double maxAcceleration){
+        public void setTarget(double target, double maxVelocity, double maxAcceleration){
             target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
                 MOVEMENT_TIMER.reset();
@@ -463,7 +463,7 @@ public abstract class  TeleOpComponents {
                 previousError = 0;
                 isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
                 for (BotMotor motor : synchronizedMotors){
-                    motor.setMotorTarget(target,maxVelocity,maxAcceleration);
+                    motor.setTarget(target,maxVelocity,maxAcceleration);
                 }
             }
         }
@@ -477,8 +477,8 @@ public abstract class  TeleOpComponents {
             }
             else profileDelayCounter=1;
         }
-        public void setMotorTarget(double target){
-            this.setMotorTarget(target, MAX_VELOCITY, MAX_ACCELERATION);
+        public void setTarget(double target){
+            this.setTarget(target, MAX_VELOCITY, MAX_ACCELERATION);
         }
         public void initiateStallReset(){
             isStallResetting=true;

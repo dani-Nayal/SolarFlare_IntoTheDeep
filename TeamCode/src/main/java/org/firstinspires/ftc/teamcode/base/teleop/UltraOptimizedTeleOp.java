@@ -151,15 +151,15 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 ()->(gamepad2.dpad_up||gamepad2.dpad_down)
         }, new TeleOpAction[]{
                 new TeleOpSequentialAction(
-                        bucketSlides.moveToPositionAction(bucketSlides.getPos("transferPosition")),
+                        bucketSlides.setTargetAction(bucketSlides.getPos("transferPosition")),
                         new TeleOpParallelAction(
-                                extendoPitch.moveToPositionAction(extendoPitch.getPos("pickUpPosition")),
+                                extendoPitch.setTargetAction(extendoPitch.getPos("pickUpPosition")),
                                 clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
                                 clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition"))
                         ),
                         new TeleOpParallelAction(
-                                extendo.moveToPositionAction(extendo.MAX_POSITION),
+                                extendo.setTargetAction(extendo.MAX_POSITION),
                                 clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                         )
                 ),
@@ -178,50 +178,50 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 new TeleOpSequentialAction(
                         new TeleOpParallelAction(
                                 clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
-                                extendo.moveToPositionAction(extendo.MIN_POSITION),
+                                extendo.setTargetAction(extendo.MIN_POSITION),
                                 clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition"))
                         ),
                         new TeleOpParallelAction(
-                                extendoPitch.moveToPositionAction(extendoPitch.getPos("transferPosition"))
+                                extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
                         ),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
                         new TeleOpParallelAction(
                                 clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("backOffPosition"))
                         ),
-                        bucketSlides.moveToPositionAction(bucketSlides.getPos("depositPosition"))
+                        bucketSlides.setTargetAction(bucketSlides.getPos("depositPosition"))
                 ),
                 new TeleOpParallelAction(
-                        extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenGrabPosition")),
+                        extendoPitch.setTargetAction(extendoPitch.getPos("specimenGrabPosition")),
                         clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
-                        extendo.moveToPositionAction(extendo.MIN_POSITION),
+                        extendo.setTargetAction(extendo.MIN_POSITION),
                         clawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition")),
                         innerClawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition"))
                 ),
                 new TeleOpSequentialAction(
                         clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
                         innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
-                        extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenDepositPosition")),
+                        extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                         new TeleOpParallelAction(
                                 clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
                                 innerClawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                extendo.moveToPositionAction(extendo.MAX_POSITION)
+                                extendo.setTargetAction(extendo.MAX_POSITION)
                         )
                 ),
                 new TeleOpSequentialAction(
-                        extendoPitch.moveToPositionAction(-500),
+                        extendoPitch.setTargetAction(-500),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                 ),
                 new TeleOpSequentialAction(
                         new TeleOpParallelAction(
                                 clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
-                                extendo.moveToPositionAction(extendo.MIN_POSITION),
+                                extendo.setTargetAction(extendo.MIN_POSITION),
                                 clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition"))
                         ),
                         new TeleOpParallelAction(
-                                extendoPitch.moveToPositionAction(extendoPitch.getPos("transferPosition"))
+                                extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
                         ),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
                         new TeleOpParallelAction(
