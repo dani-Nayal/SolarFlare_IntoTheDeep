@@ -124,7 +124,5 @@ public class MechanismDiagnosis extends LinearOpMode {
             telemetry.addLine("All systems are functional");
             telemetry.update();
         }
-
-
     }
 }
