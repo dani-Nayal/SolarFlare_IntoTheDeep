@@ -31,15 +31,19 @@ package org.firstinspires.ftc.teamcode.base.utils;
 
 import androidx.annotation.NonNull;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.firstinspires.ftc.teamcode.base.config.Application;
+import org.firstinspires.ftc.teamcode.base.config.JSONWritable;
 
 /*
 Code snippets for gson
@@ -53,10 +57,23 @@ String jsonString = gson.toJson(object);
 public class JSONUtils {
     public static <T> T parseJSON(Reader input, Class<T> contentsClass) {
         Gson gson = new GsonBuilder().create();
-        T contents = gson.fromJson(input, contentsClass);
-        return contents;
+        return gson.fromJson(input, contentsClass);
     }
 
+    public static <T extends JSONWritable> void writeJSON(T obj) {
+        String fileName     = obj.getClass().getName() + "-" + obj.getJSONFileId() + ".json";
+        String fullFileName = Application.getMetricsDirName() + "/" + fileName;
+        try (Writer writer  = new FileWriter(fullFileName)) {
+            Gson gson       = new GsonBuilder().create();
+            gson.toJson(obj, writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /***
+     * Selected testing cases
+     */
     public static class JsonTest {
         public enum MotorEnumTest {M1, M2}
         public enum ServoEnumTest {S1, S2}
