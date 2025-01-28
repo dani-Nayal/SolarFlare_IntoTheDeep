@@ -38,7 +38,7 @@ import static java.util.logging.Level.INFO;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
-import org.firstinspires.ftc.teamcode.base.config.RobotLogger;
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl1D;
 
