@@ -64,7 +64,7 @@ public class JSONUtils {
         String fileName     = obj.getClass().getName() + "-" + obj.getJSONFileId() + ".json";
         String fullFileName = Application.getMetricsDirName() + "/" + fileName;
         try (Writer writer  = new FileWriter(fullFileName)) {
-            Gson gson       = new GsonBuilder().create();
+            Gson gson       = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(obj, writer);
         } catch (IOException e) {
             throw new RuntimeException(e);
