@@ -31,10 +31,14 @@ package org.firstinspires.ftc.teamcode.base.config;
 
 import androidx.annotation.NonNull;
 
-public class MotorCalibConfig {
+public class MotorCalibConfig implements Validatable {
     public double minTimeInc;
     public int    timeResolution;
     public int    powerResolution;
+
+    public boolean isValid() {
+        return true;
+    }
 
     @NonNull
     @Override
