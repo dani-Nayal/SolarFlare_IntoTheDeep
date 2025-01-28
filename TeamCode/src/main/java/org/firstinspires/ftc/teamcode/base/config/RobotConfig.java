@@ -33,12 +33,14 @@ import static org.firstinspires.ftc.teamcode.base.utils.JSONUtils.parseJSON;
 
 import androidx.annotation.NonNull;
 
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-public class RobotConfig {
+public class RobotConfig implements Validatable {
     private static RobotConfig                     instance = null;
     public         PartsSpecs                      partsSpecs = null;
     public         String                          robotName;
@@ -51,25 +53,39 @@ public class RobotConfig {
 
     public static RobotConfig createInstance(String robotName) {
         try(InputStream input = Application.getResourceAsStream(robotName + ".json")) {
-            instance        = parseJSON(new InputStreamReader(input), RobotConfig.class);
+            instance            = parseJSON(new InputStreamReader(input), RobotConfig.class);
+            instance.partsSpecs = PartsSpecs.getInstance();
+            for(var motorConfig: instance.motors.values())
+                motorConfig.setMotorSpec(instance.partsSpecs.getMotorSpec(motorConfig.partName));
         } catch(Exception e) {
             Logger logger   = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("RobotConfig", "createInstance", e);
         }
-
-        instance.assignSpecs();
-
         return instance;
     }
 
-    protected void assignSpecs() {
-        PartsSpecs partsSpecs = PartsSpecs.getInstance();
-        for(var motorConfig: motors.values()) {
-            MotorSpec motorSpec = partsSpecs.motors.get(motorConfig.partName);
-            if(motorSpec == null)
-                throw new MissingDataException("No motor spec for: " + motorConfig.partName);
-            motorConfig.motorSpec = motorSpec;
-        }
+    public boolean isValid() {
+        boolean partsSpecValid       = partsSpecs.isValid();
+        boolean robotNameValid       = !robotName.isEmpty();
+        boolean robotDimensionsValid = robotDimensions.isValid();
+        boolean motorConfigsValid    = true;
+        for(var motorConfig: motors.values())
+            if(!motorConfig.isValid()) {
+                motorConfigsValid    = false;
+                break;
+            }
+        boolean servoConfigsValid    = true;
+        for(var servoConfig: servos.values())
+            if(!servoConfig.isValid()) {
+                servoConfigsValid    = false;
+                break;
+            }
+        boolean imuValid             = imu.isValid();
+        boolean pinpointValid        = pinpoint.isValid();
+        boolean limelightValid       = limelight.isValid();
+
+        return partsSpecValid     && robotNameValid && robotDimensionsValid && motorConfigsValid &&
+                servoConfigsValid && imuValid       && pinpointValid        && limelightValid;
     }
 
     @NonNull
@@ -110,16 +126,16 @@ public class RobotConfig {
     }
 
     public static void main(String[] args) {
-        Logger   logger     = RobotLogger.getInstance().getConfigLogger();
+
         String[] robotNames = new String[] {"IntoTheDeep-V2", "Rig1Motor"};
         try {
             for(String robotName: robotNames) {
                 RobotConfig config = RobotConfig.createInstance(robotName);
+                System.out.println("RobotConfig: " + robotName + " isValid: " + config.isValid());
                 System.out.println(config.toString());
             }
         } catch (Exception e) {
             System.out.println("RobotConfig.main throwing: " + e);
-            logger.throwing("RobotConfig", "main", e);
         }
     }
 }
