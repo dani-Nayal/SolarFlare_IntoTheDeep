@@ -210,7 +210,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                         )
                 ),
                 new TeleOpSequentialAction(
-                        extendo.moveToPositionAction(500),
+                        extendoPitch.moveToPositionAction(-500),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                 ),
                 new TeleOpSequentialAction(
