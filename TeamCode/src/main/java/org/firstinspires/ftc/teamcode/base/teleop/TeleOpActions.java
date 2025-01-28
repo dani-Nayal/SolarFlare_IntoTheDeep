@@ -767,9 +767,6 @@ public abstract class TeleOpActions{
                 }
             }
         }
-        for (int i=0;i<TeleOpComponents.motors.size();i++){
-            TeleOpComponents.motors.get(i).setPower(0);
-        }
         motors.clear();
         motionProfileMotors.clear();
         servos.clear();
