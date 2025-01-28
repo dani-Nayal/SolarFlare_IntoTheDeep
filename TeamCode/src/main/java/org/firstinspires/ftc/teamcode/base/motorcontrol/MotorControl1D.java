@@ -128,7 +128,7 @@ public class MotorControl1D {
         Double now                   = timer.seconds();
         Integer targetMotorPosition  = profile.runProfile(now);
 
-        targetMotorPower             = pid.getPIDOutput(motorEnum, targetMotorPosition);
+        targetMotorPower             = pid.getPIDOutput(motorEnum, targetMotorPosition, hw.getMotorConfig(motorEnum).kP,hw.getMotorConfig(motorEnum).kI,hw.getMotorConfig(motorEnum).kD);
         motor.setPower(targetMotorPower);
         /*
         try {
@@ -210,7 +210,7 @@ public class MotorControl1D {
 
     // Run this method in a loop
     public void runPIDMotorControl() {
-        targetMotorPower = pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum));
+        targetMotorPower = pid.getPIDOutput(motorEnum, state.getMotorTarget(motorEnum), hw.getMotorConfig(motorEnum).kP,hw.getMotorConfig(motorEnum).kI,hw.getMotorConfig(motorEnum).kD);
         motor.setPower(targetMotorPower);
     }
 

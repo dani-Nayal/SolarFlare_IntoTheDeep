@@ -45,6 +45,7 @@ public class TestProfileOutputs {
 
             lastInstantTargetPosition = instantTargetPosition;
         }
+        System.out.println(profile.toString());
 
     }
 }

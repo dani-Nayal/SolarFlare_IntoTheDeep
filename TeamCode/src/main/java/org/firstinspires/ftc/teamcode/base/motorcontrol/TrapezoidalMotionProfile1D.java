@@ -101,7 +101,7 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
      */
     private double    Ta;
     /**
-     * Span (distaance) while accelerating
+     * Span (distance) while accelerating
      */
     private double    Sa;
     /**
