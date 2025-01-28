@@ -65,12 +65,10 @@ public class RobotConfig {
     protected void assignSpecs() {
         PartsSpecs partsSpecs = PartsSpecs.getInstance();
         for(var motorConfig: motors.values()) {
-            String    partName  = motorConfig.partName;
-            MotorSpec motorSpec = partsSpecs.motors.get(partName);
+            MotorSpec motorSpec = partsSpecs.motors.get(motorConfig.partName);
             if(motorSpec == null)
-                throw new MissingDataException("No motor spec for: " + partName);
-
-            motorConfig.encoderResolution = motorSpec.encoderResolution;
+                throw new MissingDataException("No motor spec for: " + motorConfig.partName);
+            motorConfig.motorSpec = motorSpec;
         }
     }
 
