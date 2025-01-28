@@ -43,6 +43,10 @@ public class HardwareConfig {
         return hardwareConfig;
     }
 
+    public static HardwareConfig createInstance(HardwareMap hardwareMap, String robotName) {
+        return createInstance(hardwareMap, RobotConfig.createInstance(robotName));
+    }
+
     public static HardwareConfig getInstance() {
         if(hardwareConfig == null)
             throw new IllegalStateException("HardwareConfig has not been initialized");
