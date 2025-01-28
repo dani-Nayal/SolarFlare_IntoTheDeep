@@ -5,10 +5,13 @@ import java.util.logging.Logger;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class HardwareConfig {
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+
+public class HardwareConfig implements Validatable {
     private static HardwareConfig                 hardwareConfig;
 
     private final  Logger                         logger;
+    private final  RobotConfig                    robotConfig;
     public  final  RobotDimensions                robotDimensions;
     private final  HashMap<MotorEnum,MotorConfig> motorConfigs;
     private final  HashMap<ServoEnum,ServoConfig> servoConfigs;
@@ -16,8 +19,9 @@ public class HardwareConfig {
     public  final  PinpointConfig                 pinpointConfig;
     public  final  LimelightConfig                limelightConfig;
 
-    private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig) {
+    private HardwareConfig(HardwareMap hardwareMap, RobotConfig robotConfig_in) {
         logger            = RobotLogger.getInstance().getConfigLogger();
+        robotConfig       = robotConfig_in;
         robotDimensions   = robotConfig.robotDimensions;
         motorConfigs      = robotConfig.motors;
         servoConfigs      = robotConfig.servos;
@@ -51,6 +55,10 @@ public class HardwareConfig {
         if(hardwareConfig == null)
             throw new IllegalStateException("HardwareConfig has not been initialized");
         return hardwareConfig;
+    }
+
+    public boolean isValid() {
+        return robotConfig.isValid();
     }
 
     public MotorConfig getMotorConfig(MotorEnum motorEnum) throws IllegalArgumentException {
