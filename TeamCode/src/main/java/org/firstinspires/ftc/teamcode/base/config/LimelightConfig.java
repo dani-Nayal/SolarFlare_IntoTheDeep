@@ -34,9 +34,11 @@ import androidx.annotation.NonNull;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+
 import java.util.logging.Logger;
 
-public class LimelightConfig {
+public class LimelightConfig implements Validatable {
     public Limelight3A limelight;
     public String      deviceName;
     public int         pollingRate;
@@ -49,6 +51,10 @@ public class LimelightConfig {
             Logger logger = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("MotorConfig", "Initialize", e);
         }
+    }
+
+    public boolean isValid() {
+        return true;
     }
 
     @NonNull
