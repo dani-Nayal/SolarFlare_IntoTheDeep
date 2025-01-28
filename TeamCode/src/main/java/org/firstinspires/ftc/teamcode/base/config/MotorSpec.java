@@ -33,7 +33,7 @@ import androidx.annotation.NonNull;
 
 import org.firstinspires.ftc.teamcode.base.calibration.Range;
 
-public class MotorSpec {
+public class MotorSpec implements Validatable {
     public double nominalVoltage;
     public String gearRatio;
     public String gearRatioFormula;
@@ -76,6 +76,10 @@ public class MotorSpec {
 
     public double getNoLoadSpeedPPS() {
         return encoderResolution * noLoadSpeed;
+    }
+
+    public boolean isValid() {
+        return true;
     }
 
     @NonNull

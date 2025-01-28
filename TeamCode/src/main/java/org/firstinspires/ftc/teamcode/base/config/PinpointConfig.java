@@ -34,9 +34,11 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+
 import java.util.logging.Logger;
 
-public class PinpointConfig{
+public class PinpointConfig implements Validatable{
     public GoBildaPinpointDriverRR pinpoint;
     public String                  deviceName;
 
@@ -47,6 +49,10 @@ public class PinpointConfig{
             Logger logger = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("MotorConfig", "Initialize", e);
         }
+    }
+
+    public boolean isValid() {
+        return true;
     }
 
     @NonNull
