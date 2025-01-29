@@ -34,7 +34,6 @@ public abstract class  TeleOpComponents {
     public static Telemetry telemetry;
     public static PinpointDrive drive;
     public static ArrayList<BotMotor> motors = new ArrayList<>();
-    public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
     public static ArrayList<CRBotServo> CRServos = new ArrayList<>();
 
@@ -79,7 +78,7 @@ public abstract class  TeleOpComponents {
         double previousError = 0;
         double previousVoltage = 0;
         boolean isStallResetting = false;
-        String MOVEMENT_MODE;
+        public String MOVEMENT_MODE;
 
         public class UpwardFSMAction implements TeleOpAction{
             private final double maxAcceleration;
@@ -366,9 +365,6 @@ public abstract class  TeleOpComponents {
 
             hardwareMap.put(getDeviceName(),this);
             motors.add(this);
-            if (Objects.equals(movementMode, "MOTION_PROFILE")) {
-                motionProfileMotors.add(this);
-            }
         }
         public void createMotionProfile(double max_velocity, double max_acceleration) {
             profileStartPos=getCurrentPosition();
@@ -447,6 +443,17 @@ public abstract class  TeleOpComponents {
             LOOP_TIMER.reset();
             previousError=error;
         }
+        public void runPIDOnce(){
+            double error=target-getCurrentPosition();
+            double kpPower = kP*error;
+            integralSum += LOOP_TIMER.time()*error;
+            double kiPower = kI*integralSum;
+            double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
+            double outPower = Math.min(1,Math.max(-1,kpPower+kiPower+kdPower));
+            setPower(outPower);
+            LOOP_TIMER.reset();
+            previousError=error;
+        }
         public double getPos(String key){
             return KEY_POSITIONS.get(key);
         }
@@ -479,12 +486,12 @@ public abstract class  TeleOpComponents {
         }
         public void initiateStallReset(){
             isStallResetting=true;
-            setPower(-1);
+            setPower(-0.2);
             previousVoltage = getCurrent(CurrentUnit.AMPS);
         }
         public void checkStallResetOnce(){
             double voltage = getCurrent(CurrentUnit.AMPS);
-            if (voltage-previousVoltage>2){
+            if (voltage-previousVoltage>1.2){
                 setPower(0);
                 setMode(RunMode.STOP_AND_RESET_ENCODER);
                 setMode(RUN_MODE);
@@ -828,7 +835,7 @@ public abstract class  TeleOpComponents {
         //initialize mechanism variables here
         extendo = new BotMotor(
                 "extendo",
-                0.015,0,0.00015, 15,
+                0.015,0,0, 15,
                 new String[]{},new double[]{},
                 793,0,
                 250000,3500,
@@ -839,9 +846,9 @@ public abstract class  TeleOpComponents {
         );
         extendoPitch = new BotMotor(
                 "extendoPitch",
-                0.005,0,0.0, 15,
+                0.005,0,0, 15,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{0,-960,-960,-320},
+                new double[]{0,-960,-960,0},
                 0,-960,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
@@ -851,7 +858,7 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.03,0.0,0.001, 15,
+                0.015,0,0, 15,
                 new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
                 1070,0,
                 250000,3500,
@@ -927,7 +934,7 @@ public abstract class  TeleOpComponents {
         clawPitch = new BotServo(
                 "clawPitch",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,100,72.4,75,40.5},
+                new double[]{13,68,100,72.4,145,13},
                 270,
                 0,
                 270,
@@ -937,7 +944,7 @@ public abstract class  TeleOpComponents {
         clawPitchRight = new BotServo(
                 "clawPitchRight",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,100,72.4,75,40.5},
+                new double[]{13,68,100,72.4,145,13},
                 270,
                 0,
                 270,
@@ -947,7 +954,7 @@ public abstract class  TeleOpComponents {
         innerClawPitch = new BotServo(
                 "innerClawPitch",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{82,20,200,100,73,82},
+                new double[]{82,20,200,100,78,82},
                 270,
                 0,
                 270,
@@ -964,16 +971,16 @@ public abstract class  TeleOpComponents {
                 422,
                 Servo.Direction.FORWARD
         );
-        synchronizeServos(clawPitch,clawPitchRight);
+        synchronize(clawPitch,clawPitchRight);
 
     }
-    public static void synchronizeServos(BotServo...servos){
+    public static void synchronize(BotServo...servos){
         servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
     }
-    public static void synchronizeServos(CRBotServo...servos){
+    public static void synchronize(CRBotServo...servos){
         servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
     }
-    public static void synchronizeMotors(BotMotor...motors){
+    public static void synchronize(BotMotor...motors){
         motors[0].synchronizedMotors.addAll(Arrays.asList(motors).subList(1, motors.length));
     }
 }
