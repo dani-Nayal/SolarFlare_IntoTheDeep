@@ -486,12 +486,12 @@ public abstract class  TeleOpComponents {
         }
         public void initiateStallReset(){
             isStallResetting=true;
-            setPower(-1);
+            setPower(-0.2);
             previousVoltage = getCurrent(CurrentUnit.AMPS);
         }
         public void checkStallResetOnce(){
             double voltage = getCurrent(CurrentUnit.AMPS);
-            if (voltage-previousVoltage>2){
+            if (voltage-previousVoltage>1.2){
                 setPower(0);
                 setMode(RunMode.STOP_AND_RESET_ENCODER);
                 setMode(RUN_MODE);
@@ -848,7 +848,7 @@ public abstract class  TeleOpComponents {
                 "extendoPitch",
                 0.005,0,0, 15,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{0,-960,-960,-320},
+                new double[]{0,-960,-960,0},
                 0,-960,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
@@ -934,7 +934,7 @@ public abstract class  TeleOpComponents {
         clawPitch = new BotServo(
                 "clawPitch",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,100,72.4,75,40.5},
+                new double[]{13,68,100,72.4,145,13},
                 270,
                 0,
                 270,
@@ -944,7 +944,7 @@ public abstract class  TeleOpComponents {
         clawPitchRight = new BotServo(
                 "clawPitchRight",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,100,72.4,75,40.5},
+                new double[]{13,68,100,72.4,145,13},
                 270,
                 0,
                 270,
@@ -954,7 +954,7 @@ public abstract class  TeleOpComponents {
         innerClawPitch = new BotServo(
                 "innerClawPitch",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{82,20,200,100,73,82},
+                new double[]{82,20,200,100,78,82},
                 270,
                 0,
                 270,
