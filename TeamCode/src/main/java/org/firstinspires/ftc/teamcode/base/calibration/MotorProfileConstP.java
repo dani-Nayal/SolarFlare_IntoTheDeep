@@ -31,6 +31,12 @@ package org.firstinspires.ftc.teamcode.base.calibration;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -46,27 +52,24 @@ import org.firstinspires.ftc.teamcode.base.logging.RobotMetrics;
 import org.firstinspires.ftc.teamcode.base.logging.RobotMetricsFile;
 import org.firstinspires.ftc.teamcode.base.utils.JSONUtils;
 
-import java.util.Arrays;
-import java.util.Locale;
-
 public class MotorProfileConstP implements JSONWritable, MetricsWritable {
     private       MotorEnum   motorEnum;
     private       MotorConfig motorConfig;
     private       DcMotorEx   motor;
-    private       double      minTimeInc;
+    public        double      minTimeInc;
     /**
      * Encoder resolution of the motor itself at the shaft output (PPR)
      */
-    private       double      encoderResolution;
-    private       int         timeResolution;
-    private       double      power;
-    private       int         Pi;
-    private       int         Pf;
+    public        double      encoderResolution;
+    public        int         timeResolution;
+    public        double      power;
+    public        int         Pi;
+    public        int         Pf;
     /**
      * Index where data stops. i.e. if we reach the Pf before we fill out
      * the entire array (before timeResolution)
      */
-    private       int         tIdxMax;
+    public       int         tIdxMax;
     /**
      * Time coordinate
      */
@@ -88,6 +91,23 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
      */
     private       double[]    C;
     /**
+     * Equilibrium speed
+     */
+    public        double      Veq;
+    /**
+     * Maximum Acceleration
+     */
+    public        double      Amax;
+    /**
+     * Maximum Deceleration
+     */
+    public        double      Dmax;
+    /**
+     * Has the profile reached the target position Pf
+     */
+    public        boolean     isTargetReached;
+
+    /**
      * Constructor requires information about the motor
      * @param motorConfig_in: The configuration of the motor being calibrated
      */
@@ -95,8 +115,8 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         motorConfig       = motorConfig_in;
         motor             = motorConfig.motor;
         motorEnum         = motorConfig.motorEnum;
+        encoderResolution = motorConfig.getEncoderResolution();
         minTimeInc        = motorConfig.calibParams.minTimeInc;
-        encoderResolution = motorConfig.encoderResolution;
         timeResolution    = motorConfig.calibParams.timeResolution;
         t                 = new double[timeResolution];
         V                 = new double[timeResolution];
@@ -116,10 +136,34 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         motor.setMode(runMode);
     }
 
+    public double getPLast() {
+        return P[tIdxMax];
+    }
+
     private void calcAcceleration() {
+        Amax              = Double.NEGATIVE_INFINITY;
+        Dmax              = Double.POSITIVE_INFINITY;
         for(int tIdx=1; tIdx<=tIdxMax; tIdx++) {
-            A[tIdx]       = (V[tIdx]-V[tIdx-1])/(t[tIdx]-t[tIdx-1]);
+            double At     = 1000 * (V[tIdx]-V[tIdx-1])/(t[tIdx]-t[tIdx-1]);
+            A[tIdx]       = At;
+            if(At > Amax)
+                Amax      = At;
+            if(At < Dmax)
+                Dmax      = At;
         }
+    }
+
+    private void calcVeq() {
+        int speedWindowSize = motorConfig.calibParams.speedWindowSize;
+        var Vavg            = new ArrayList<Double>();
+        /// tIdx references the original arrays
+        for(int tIdx=speedWindowSize-1; tIdx<V.length; tIdx++) {
+            double Vsum     = 0;
+            for(int pIdx=0; pIdx<speedWindowSize; pIdx++)
+                Vsum       += V[tIdx-pIdx];
+            Vavg.add(Vsum/speedWindowSize);
+        }
+        Veq                 = Collections.max(Vavg);
     }
 
     public void calcProfile(double power_in, int Pi_in, int Pf_in) {
@@ -139,7 +183,7 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
 
         timer.reset();
         motor.setPower(power);
-        while(tIdx<timeResolution && motor.getCurrentPosition()<Pf) {
+        do {
             double tNow   = timer.milliseconds();
             double PNow   = motor.getCurrentPosition();
             double CNow   = motor.getCurrent(CurrentUnit.AMPS);
@@ -153,11 +197,17 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
                 C[tIdx++] = CNow;
                 tPrev     = tNow;
             }
-            calcAcceleration();
-        }
+        } while(tIdx<timeResolution && motor.getCurrentPosition()<Pf);
+
         motor.setPower(0);
         motor.setMode(runMode);
-        tIdxMax           = tIdx;
+        /// tIdx is one position ahead of the last valid slot in the data arrays
+        tIdxMax           = tIdx - 1;
+
+        calcAcceleration();
+        calcVeq();
+
+        isTargetReached   = Math.approxEquals(P[tIdxMax],Pf,5.0/Pf);
     }
 
     public String getJSONFileId() {
@@ -175,6 +225,9 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         profile.power              = this.power;
         profile.Pi                 = this.Pi;
         profile.Pf                 = this.Pf;
+        /***
+         * This is the last -valid- index into the data arrays
+         */
         profile.tIdxMax            = this.tIdxMax;
         profile.t                  = this.t;
         profile.V                  = this.V;
@@ -200,7 +253,7 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
 
     public void writeMetrics() {
         RobotMetricsFile metricsFile = RobotMetrics.getInstance().getMetricsFile(this);
-        for(int tIdx=0; tIdx<tIdxMax; tIdx++) {
+        for(int tIdx=0; tIdx<=tIdxMax; tIdx++) {
             metricsFile.addData(t[tIdx],P[tIdx],V[tIdx],A[tIdx],C[tIdx]);
         }
         metricsFile.close();
