@@ -63,29 +63,63 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
     public        double      encoderResolution;
     public        int         timeResolution;
     public        double      power;
+    /**
+     * Starting Position
+     */
     public        int         Pi;
+    /**
+     * Final Position
+     */
     public        int         Pf;
     /**
      * Index where data stops. i.e. if we reach the Pf before we fill out
      * the entire array (before timeResolution)
      */
-    public       int         tIdxMax;
+    public        int         tIdxMax;
+    /**
+     * The number of periods used to compute Aavg and Vavg
+     */
+    public        int         averagingPeriods;
     /**
      * Time coordinate
      */
     private       double[]    t;
     /**
-     * Velocity coordinate
+     * Time to extract position
      */
-    private       double[]    V;
+    private       double[]    tPextract;
+    /**
+     * Time to extract velocity
+     */
+    private       double[]    tVextract;
+    /**
+     * Time to extract current
+     */
+    private       double[]    tCextract;
+    /**
+     * Cycle time
+     */
+    private       double[]    tCycle;
     /**
      * Position coordinate
      */
     private       double[]    P;
     /**
+     * Velocity coordinate
+     */
+    private       double[]    V;
+    /**
+     * Moving Average Velocity
+     */
+    private       double[]    Vavg;
+    /**
      * Acceleration coordinate
      */
     private       double[]    A;
+    /**
+     * Moving Average Acceleration
+     */
+    private       double[]    Aavg;
     /**
      *
      */
@@ -119,10 +153,17 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         minTimeInc        = motorConfig.calibParams.minTimeInc;
         timeResolution    = motorConfig.calibParams.timeResolution;
         t                 = new double[timeResolution];
+        tPextract         = new double[timeResolution];
+        tVextract         = new double[timeResolution];
+        tCextract         = new double[timeResolution];
+        tCycle            = new double[timeResolution];
         V                 = new double[timeResolution];
+        Vavg              = new double[timeResolution];
         P                 = new double[timeResolution];
         A                 = new double[timeResolution];
+        Aavg              = new double[timeResolution];
         C                 = new double[timeResolution];
+
     }
 
     protected void gotoPi() {
@@ -153,8 +194,13 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         }
     }
 
+    private void calcAveragingPeriods() {
+        double tPeriod   = (t[tIdxMax] - t[0])/ (tIdxMax + 1.0);
+        averagingPeriods = (int) (motorConfig.calibParams.averagingTime / tPeriod);
+    }
+
     private void calcVeq() {
-        int speedWindowSize = motorConfig.calibParams.speedWindowSize;
+        int speedWindowSize = motorConfig.calibParams.averagingTime;
         var Vavg            = new ArrayList<Double>();
         /// tIdx references the original arrays
         for(int tIdx=speedWindowSize-1; tIdx<V.length; tIdx++) {
@@ -171,7 +217,9 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         Pi                = Pi_in;
         Pf                = Pf_in;
 
-        ElapsedTime timer = new ElapsedTime();
+        ElapsedTime timer   = new ElapsedTime();
+        ElapsedTime eTimer  = new ElapsedTime();
+        ElapsedTime eTimer2 = new ElapsedTime();
         double  dt;
         double  tPrev     = 0;
         int     tIdx      = 0;
@@ -181,21 +229,41 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        double tNow;
+        double PNow;
+        double VNow;
+        double CNow;
         timer.reset();
+        eTimer2.reset();
         motor.setPower(power);
         do {
-            double tNow   = timer.milliseconds();
-            double PNow   = motor.getCurrentPosition();
-            double CNow   = motor.getCurrent(CurrentUnit.AMPS);
+            tCycle[tIdx]    = eTimer2.milliseconds();
+            eTimer2.reset();
+            tNow            = timer.milliseconds();
+
+            /// Pull current position info
+            eTimer.reset();
+            PNow            = motor.getCurrentPosition();
+            tPextract[tIdx] = eTimer.milliseconds();
+
+            /// Pull velocity info
             /// With no arguments getVelocity() returns Ticks Per Second
-            double VNow   = motor.getVelocity();
-            dt            = tNow - tPrev;
+            eTimer.reset();
+            VNow            = motor.getVelocity();
+            tVextract[tIdx] = eTimer.milliseconds();
+
+            /// Pull current info
+            eTimer.reset();
+            CNow            = motor.getCurrent(CurrentUnit.AMPS);
+            tCextract[tIdx] = eTimer.milliseconds();
+
+            dt              = tNow - tPrev;
             if(dt >= minTimeInc) {
-                t[tIdx]   = tNow;
-                P[tIdx]   = PNow;
-                V[tIdx]   = VNow;
-                C[tIdx++] = CNow;
-                tPrev     = tNow;
+                t[tIdx]     = tNow;
+                P[tIdx]     = PNow;
+                V[tIdx]     = VNow;
+                C[tIdx++]   = CNow;
+                tPrev       = tNow;
             }
         } while(tIdx<timeResolution && motor.getCurrentPosition()<Pf);
 
@@ -230,9 +298,15 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
          */
         profile.tIdxMax            = this.tIdxMax;
         profile.t                  = this.t;
+        profile.tPextract          = this.tPextract;
+        profile.tVextract          = this.tVextract;
+        profile.tCextract          = this.tVextract;
+        profile.tCycle             = this.tCycle;
         profile.V                  = this.V;
+        profile.Vavg               = this.Vavg;
         profile.P                  = this.V;
         profile.A                  = this.A;
+        profile.Aavg               = this.Aavg;
         profile.C                  = this.C;
 
         return profile;
@@ -254,8 +328,13 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
     public void writeMetrics() {
         RobotMetricsFile metricsFile = RobotMetrics.getInstance().getMetricsFile(this);
         for(int tIdx=0; tIdx<=tIdxMax; tIdx++) {
-            metricsFile.addData(t[tIdx],P[tIdx],V[tIdx],A[tIdx],C[tIdx]);
+            metricsFile.addData(
+                    t[tIdx], tPextract[tIdx], tVextract[tIdx], tCextract[tIdx], tCycle[tIdx],
+                    P[tIdx], V[tIdx],         Vavg[tIdx],      A[tIdx],         Aavg[tIdx],
+                    C[tIdx]
+            );
         }
+
         metricsFile.close();
     }
 
@@ -264,20 +343,26 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
     public String toString() {
         var sb = new StringBuilder();
         sb.append("MotorProfileConstP\n");
-        sb.append("  JSONFileId=")       .append(getJSONFileId())   .append("\n");
-        sb.append("  motorEnum=")        .append(motorEnum)         .append("\n");
-        sb.append("  minTimeInc=")       .append(minTimeInc)        .append("\n");
-        sb.append("  encoderResolution=").append(encoderResolution) .append("\n");
-        sb.append("  timeResolution=")   .append(timeResolution)    .append("\n");
-        sb.append("  power=")            .append(power)             .append("\n");
-        sb.append("  Pi=")               .append(Pi)                .append("\n");
-        sb.append("  Pf=")               .append(Pf)                .append("\n");
-        sb.append("  tIdxMax=")          .append(tIdxMax)           .append("\n");
-        sb.append("  t=\n")              .append(Arrays.toString(t)).append("\n");
-        sb.append("  V=\n")              .append(Arrays.toString(V)).append("\n");
-        sb.append("  P=\n")              .append(Arrays.toString(P)).append("\n");
-        sb.append("  A=\n")              .append(Arrays.toString(A)).append("\n");
-        sb.append("  C=\n")              .append(Arrays.toString(C)).append("\n");
+        sb.append("  JSONFileId=")       .append(getJSONFileId())           .append("\n");
+        sb.append("  motorEnum=")        .append(motorEnum)                 .append("\n");
+        sb.append("  minTimeInc=")       .append(minTimeInc)                .append("\n");
+        sb.append("  encoderResolution=").append(encoderResolution)         .append("\n");
+        sb.append("  timeResolution=")   .append(timeResolution)            .append("\n");
+        sb.append("  power=")            .append(power)                     .append("\n");
+        sb.append("  Pi=")               .append(Pi)                        .append("\n");
+        sb.append("  Pf=")               .append(Pf)                        .append("\n");
+        sb.append("  tIdxMax=")          .append(tIdxMax)                   .append("\n");
+        sb.append("  t=\n")              .append(Arrays.toString(t))        .append("\n");
+        sb.append("  tPextract=\n")      .append(Arrays.toString(tPextract)).append("\n");
+        sb.append("  tVextract=\n")      .append(Arrays.toString(tVextract)).append("\n");
+        sb.append("  tCextract=\n")      .append(Arrays.toString(tCextract)).append("\n");
+        sb.append("  tCycle=\n")         .append(Arrays.toString(tCycle))   .append("\n");
+        sb.append("  V=\n")              .append(Arrays.toString(V))        .append("\n");
+        sb.append("  Vavg=\n")           .append(Arrays.toString(Vavg))     .append("\n");
+        sb.append("  P=\n")              .append(Arrays.toString(P))        .append("\n");
+        sb.append("  A=\n")              .append(Arrays.toString(A))        .append("\n");
+        sb.append("  Aavg=\n")           .append(Arrays.toString(Aavg))     .append("\n");
+        sb.append("  C=\n")              .append(Arrays.toString(C))        .append("\n");
 
         return sb.toString();
     }
