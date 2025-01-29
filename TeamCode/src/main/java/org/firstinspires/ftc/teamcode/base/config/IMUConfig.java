@@ -38,9 +38,11 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+
 import java.util.logging.Logger;
 
-public class IMUConfig {
+public class IMUConfig implements Validatable {
     public String              deviceName;
     public IMU                 imu;
     public IMU.Parameters      parameters;
@@ -80,6 +82,10 @@ public class IMUConfig {
             Logger logger = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("MotorConfig", "Initialize", e);
         }
+    }
+
+    public boolean isValid() {
+        return true;
     }
 
     @NonNull

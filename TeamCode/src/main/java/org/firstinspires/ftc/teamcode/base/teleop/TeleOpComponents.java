@@ -3,15 +3,12 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -58,6 +55,7 @@ public abstract class  TeleOpComponents {
     public static BotMotor ryanNemesis;
 
     public static class BotMotor extends DcMotorImplEx {
+        double errorTol;
         boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 10;
         double maxVelocityParam;
         double maxAccelerationParam;
@@ -122,7 +120,7 @@ public abstract class  TeleOpComponents {
                     setTarget(pos,maxAcceleration,maxVelocity);
                     isStart=false;
                 }
-                return Math.abs(target-getCurrentPosition())>15;
+                return Math.abs(target-getCurrentPosition())>errorTol;
             }
         }
         public class DownwardFSMAction implements TeleOpAction{
@@ -169,7 +167,7 @@ public abstract class  TeleOpComponents {
                     setTarget(pos,maxAcceleration,maxVelocity);
                     isStart=false;
                 }
-                return Math.abs(target-getCurrentPosition())>15;
+                return Math.abs(target-getCurrentPosition())>errorTol;
             }
         }
 
@@ -236,7 +234,7 @@ public abstract class  TeleOpComponents {
                     setTarget(targetFun.call(),maxAcceleration,maxVelocity);
                     isStart=false;
                 }
-                return Math.abs(target-getCurrentPosition())>15;
+                return Math.abs(target-getCurrentPosition())>errorTol;
             }
 
             @Override
@@ -334,11 +332,9 @@ public abstract class  TeleOpComponents {
         public DownwardFSMAction downwardFSMAction(double...positions){
             return new DownwardFSMAction(positions);
         }
-        public BotMotor(DcMotorController controller,
-                        int portNumber,
-                        @NonNull MotorConfigurationType motorType,
-
+        public BotMotor(String deviceName,
                         double kP,double kI,double kD,
+                        double errorTol,
                         String[] keyPositionKeys,
                         double[] keyPositionValues,
                         double maxPosition, double minPosition,
@@ -346,9 +342,10 @@ public abstract class  TeleOpComponents {
                         RunMode runMode, Direction direction, ZeroPowerBehavior zeroPowerBehaviour,
                         String movementMode)
         {
-            super(controller, portNumber, Direction.FORWARD,motorType);
+            super(hardwareMap.get(DcMotorEx.class, deviceName).getController(), hardwareMap.get(DcMotorEx.class, deviceName).getPortNumber(), Direction.FORWARD, hardwareMap.get(DcMotorEx.class, deviceName).getMotorType());
 
             this.kP=kP; this.kI=kI; this.kD=kD;
+            this.errorTol=errorTol;
             this.KEY_POSITIONS = new HashMap<>();
             for (int i=0;i<keyPositionKeys.length;i++){
                 this.KEY_POSITIONS.put(keyPositionKeys[i],keyPositionValues[i]);
@@ -510,8 +507,7 @@ public abstract class  TeleOpComponents {
         public double time;
         public double currPos;
         public double offset = 0;
-        public BotServo(ServoController controller,
-                        int portNumber,
+        public BotServo(String deviceName,
                         String[] keyPositionKeys,
                         double[] keyPositionValues,
                         double maxPosition,
@@ -520,7 +516,7 @@ public abstract class  TeleOpComponents {
                         double servoSpeed,
                         Direction direction)
         {
-            super(controller, portNumber);
+            super(hardwareMap.get(Servo.class, deviceName).getController(), hardwareMap.get(Servo.class, deviceName).getPortNumber());
 
             this.KEY_POSITIONS = new HashMap<>();
             for (int i=0;i<keyPositionKeys.length;i++){
@@ -781,12 +777,11 @@ public abstract class  TeleOpComponents {
     public static class CRBotServo extends CRServoImpl {
         public ArrayList<CRBotServo> synchronizedServos = new ArrayList<>();
         public double SERVO_SPEED;
-        public CRBotServo(ServoController controller,
-                        int portNumber,
+        public CRBotServo(String deviceName,
                         double servoSpeed,
                         Direction direction)
         {
-            super(controller, portNumber);
+            super(hardwareMap.get(Servo.class, deviceName).getController(), hardwareMap.get(Servo.class, deviceName).getPortNumber());
             this.SERVO_SPEED = servoSpeed;
             setDirection(direction);
             hardwareMap.put(getDeviceName(),this);
@@ -829,28 +824,11 @@ public abstract class  TeleOpComponents {
     public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry, Pose2d initialDrivePose){
         TeleOpComponents.hardwareMap=hardwareMap;
         TeleOpComponents.telemetry=telemetry;
-        /*
-        ryanNemesis = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "motor-1").getController(),
-                hardwareMap.get(DcMotorEx.class, "motor-1").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "motor-1").getMotorType(),
-                0.015,0,0.00002,
-                new String[]{},new double[]{},
-                Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY,
-                250000,3500,
-                DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
-                DcMotorEx.Direction.FORWARD,
-                DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "MOTION_PROFILE"
-        );
-        */
         TeleOpComponents.drive = new PinpointDrive(hardwareMap,initialDrivePose);
         //initialize mechanism variables here
         extendo = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "extendo").getController(),
-                hardwareMap.get(DcMotorEx.class, "extendo").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "extendo").getMotorType(),
-                0.015,0,0.00015,
+                "extendo",
+                0.015,0,0.00015, 15,
                 new String[]{},new double[]{},
                 793,0,
                 250000,3500,
@@ -860,10 +838,8 @@ public abstract class  TeleOpComponents {
                 "MOTION_PROFILE"
         );
         extendoPitch = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "extendoPitch").getController(),
-                hardwareMap.get(DcMotorEx.class, "extendoPitch").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "extendoPitch").getMotorType(),
-                0.005,0,0.0,
+                "extendoPitch",
+                0.005,0,0.0, 15,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{0,-960,-960,-320},
                 0,-960,
@@ -874,10 +850,8 @@ public abstract class  TeleOpComponents {
                 "MOTION_PROFILE"
         );
         bucketSlides = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "bucketSlides").getController(),
-                hardwareMap.get(DcMotorEx.class, "bucketSlides").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "bucketSlides").getMotorType(),
-                0.03,0.0,0.001,
+                "bucketSlides",
+                0.03,0.0,0.001, 15,
                 new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
                 1070,0,
                 250000,3500,
@@ -887,10 +861,8 @@ public abstract class  TeleOpComponents {
                 "MOTION_PROFILE"
         );
         rightFront = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "rightFront").getController(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "rightFront").getMotorType(),
-                0.015,0,0,
+                "rightFront",
+                0.015,0,0, 0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
                 200000,3000,
@@ -900,10 +872,8 @@ public abstract class  TeleOpComponents {
                 "soogma"
         );
         rightBack = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "rightBack").getController(),
-                hardwareMap.get(DcMotorEx.class, "rightBack").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "rightBack").getMotorType(),
-                0.015,0,0,
+                "rightBack",
+                0.015,0,0, 0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
                 200000,3000,
@@ -913,10 +883,8 @@ public abstract class  TeleOpComponents {
                 "soogma"
         );
         leftFront = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "leftFront").getController(),
-                hardwareMap.get(DcMotorEx.class, "leftFront").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "leftFront").getMotorType(),
-                0.015,0,0,
+                "leftFront",
+                0.015,0,0, 0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
                 200000,3000,
@@ -926,10 +894,8 @@ public abstract class  TeleOpComponents {
                 "soogma"
         );
         leftBack = new BotMotor(
-                hardwareMap.get(DcMotorEx.class, "leftBack").getController(),
-                hardwareMap.get(DcMotorEx.class, "leftBack").getPortNumber(),
-                hardwareMap.get(DcMotorEx.class, "leftBack").getMotorType(),
-                0.015,0,0,
+                "leftBack",
+                0.015,0,0, 0,
                 new String[]{},new double[]{},
                 Double.POSITIVE_INFINITY,0,
                 200000,3000,
@@ -939,8 +905,7 @@ public abstract class  TeleOpComponents {
                 "soogma"
         );
         clawFingers = new BotServo(
-                hardwareMap.get(Servo.class, "clawFingers").getController(),
-                hardwareMap.get(Servo.class, "clawFingers").getPortNumber(),
+                "clawFingers",
                 new String[]{"closedPosition","openPosition"},
                 new double[]{20,92},
                 92,
@@ -950,8 +915,7 @@ public abstract class  TeleOpComponents {
                 Servo.Direction.FORWARD
         );
         clawWrist = new BotServo(
-                hardwareMap.get(Servo.class, "clawWrist").getController(),
-                hardwareMap.get(Servo.class, "clawWrist").getPortNumber(),
+                "clawWrist",
                 new String[]{"normalPosition"},
                 new double[]{95},
                 185,
@@ -961,8 +925,7 @@ public abstract class  TeleOpComponents {
                 Servo.Direction.FORWARD
         );
         clawPitch = new BotServo(
-                hardwareMap.get(Servo.class, "clawPitchLeft").getController(),
-                hardwareMap.get(Servo.class, "clawPitchLeft").getPortNumber(),
+                "clawPitch",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{13,68,100,72.4,75,40.5},
                 270,
@@ -972,8 +935,7 @@ public abstract class  TeleOpComponents {
                 Servo.Direction.FORWARD
         );
         clawPitchRight = new BotServo(
-                hardwareMap.get(Servo.class, "clawPitchRight").getController(),
-                hardwareMap.get(Servo.class, "clawPitchRight").getPortNumber(),
+                "clawPitchRight",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{13,68,100,72.4,75,40.5},
                 270,
@@ -983,8 +945,7 @@ public abstract class  TeleOpComponents {
                 Servo.Direction.REVERSE
         );
         innerClawPitch = new BotServo(
-                hardwareMap.get(Servo.class, "innerClawPitch").getController(),
-                hardwareMap.get(Servo.class, "innerClawPitch").getPortNumber(),
+                "innerClawPitch",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{82,20,200,100,73,82},
                 270,
@@ -994,8 +955,7 @@ public abstract class  TeleOpComponents {
                 Servo.Direction.REVERSE
         );
         bucket = new BotServo(
-                hardwareMap.get(Servo.class, "bucket").getController(),
-                hardwareMap.get(Servo.class, "bucket").getPortNumber(),
+                "bucket",
                 new String[]{"transferPosition","depositPosition"},
                 new double[]{36,158},
                 270,

@@ -45,10 +45,11 @@ import static org.firstinspires.ftc.teamcode.base.calibration.Math.approxEquals;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.calibration.CalculationException;
 import org.firstinspires.ftc.teamcode.base.calibration.ComplexNumberPair;
+import org.firstinspires.ftc.teamcode.base.logging.MetricsWritable;
 import org.firstinspires.ftc.teamcode.base.regtest.RegTest;
 
 @SuppressWarnings({"SpellCheckingInspection"})
-public class TrapezoidalMotionProfile1D implements MotionProfile {
+public class TrapezoidalMotionProfile1D implements MotionProfile, MetricsWritable {
     /**
      * initialized: Has this profile been initialized?
      */
@@ -314,6 +315,14 @@ public class TrapezoidalMotionProfile1D implements MotionProfile {
         }  else {
             return (int) round(Pi + dist);
         }
+    }
+
+    public String getMetricsFileId() {
+        return String.format(Locale.US,"%1$.2f-%2$.2f-%3$.2f-%4$.2f-%5$.2f-",Pi,Vi,Vmax,Amax,Dmax);
+    }
+
+    public String getMetricsTableType() {
+        return "TrapezoidalMotionProfile1D";
     }
 
     public boolean approxEqual(TrapezoidalMotionProfile1D other) {
