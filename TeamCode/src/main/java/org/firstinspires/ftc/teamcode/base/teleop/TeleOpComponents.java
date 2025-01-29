@@ -34,7 +34,6 @@ public abstract class  TeleOpComponents {
     public static Telemetry telemetry;
     public static PinpointDrive drive;
     public static ArrayList<BotMotor> motors = new ArrayList<>();
-    public static ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
     public static ArrayList<BotServo> servos = new ArrayList<>();
     public static ArrayList<CRBotServo> CRServos = new ArrayList<>();
 
@@ -366,9 +365,6 @@ public abstract class  TeleOpComponents {
 
             hardwareMap.put(getDeviceName(),this);
             motors.add(this);
-            if (Objects.equals(movementMode, "MOTION_PROFILE")) {
-                motionProfileMotors.add(this);
-            }
         }
         public void createMotionProfile(double max_velocity, double max_acceleration) {
             profileStartPos=getCurrentPosition();
@@ -438,6 +434,17 @@ public abstract class  TeleOpComponents {
                 instantTargetPosition=target;
             }
             double error=instantTargetPosition-getCurrentPosition();
+            double kpPower = kP*error;
+            integralSum += LOOP_TIMER.time()*error;
+            double kiPower = kI*integralSum;
+            double kdPower = kD*(error-previousError)/LOOP_TIMER.time();
+            double outPower = Math.min(1,Math.max(-1,kpPower+kiPower+kdPower));
+            setPower(outPower);
+            LOOP_TIMER.reset();
+            previousError=error;
+        }
+        public void runPIDOnce(){
+            double error=target-getCurrentPosition();
             double kpPower = kP*error;
             integralSum += LOOP_TIMER.time()*error;
             double kiPower = kI*integralSum;
