@@ -27,13 +27,16 @@ public class CustomActions {
     MotorControl extendoControl;
     MotorControl extendoPitchControl;
     MotorControl bucketSlidesControl;
-    MotorControl hangControl;
     Telemetry telemetry;
 
     public CustomActions(Telemetry telemetry) {
         this.telemetry = telemetry;
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
+
+        extendoControl = new MotorControl(MotorEnum.EXTENDO);
+        extendoPitchControl = new MotorControl(MotorEnum.EXTENDO_PITCH);
+        bucketSlidesControl = new MotorControl(MotorEnum.BUCKET_SLIDES);
     }
 
     public class SetMotorTargetAction implements Action {
@@ -175,18 +178,15 @@ public class CustomActions {
         throw new NullPointerException("drive variable is null");
     }
 
-    // TODO: Create custom actions
     public class GlobalMechanismControl implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             extendoControl.runPIDMotorControl(telemetry);
             extendoPitchControl.runPIDMotorControl(telemetry);
             bucketSlidesControl.runPIDMotorControl(telemetry);
-            hangControl.runPIDMotorControl(telemetry);
             return true;
         }
     }
-
     public Action globalMechanismControl() {
         return new GlobalMechanismControl();
     }
@@ -195,6 +195,7 @@ public class CustomActions {
         return new SequentialAction(
                 new ParallelAction(
                         setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_CLOSED),
+                        setServoPositionAction(ServoEnum.CLAW_WRIST, state.CLAW_WRIST_DEFAULT),
                         setServoPositionAction(ServoEnum.BUCKET, state.BUCKET_DEPOSIT),
                         setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_SCORE_SPECIMEN),
                         setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_SCORE_SPECIMEN),
@@ -204,6 +205,37 @@ public class CustomActions {
                         drive.actionBuilder(initialDrivePose).strafeToLinearHeading(scoringPose, heading).build()
                 ),
                 drive.actionBuilder(new Pose2d(scoringPose.x, scoringPose.y, heading)).strafeToLinearHeading(new Vector2d(scoringPose.x, scoringPose.y + 9), heading).build(),
+                setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_OPEN),
+
+                new ParallelAction(
+                        setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_TRANSFER),
+                        setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_TRANSFER),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, state.CLAW_PITCH_TRANSFER),
+                        setServoPositionAction(ServoEnum.INNER_CLAW_PITCH, state.INNER_CLAW_PITCH_TRANSFER)
+                )
+        );
+    }
+
+    public Action moveToChambers(Pose2d initialDrivePose, Vector2d scoringPose, double heading) {
+        return new SequentialAction(
+                drive.actionBuilder(initialDrivePose).strafeToLinearHeading(scoringPose, heading).build()
+        );
+    }
+
+    public Action scoreHighChamber(){
+        return new SequentialAction(
+                new ParallelAction(
+                        setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_CLOSED),
+                        setServoPositionAction(ServoEnum.CLAW_WRIST, state.CLAW_WRIST_DEFAULT),
+                        setServoPositionAction(ServoEnum.BUCKET, state.BUCKET_DEPOSIT),
+                        setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_SCORE_SPECIMEN),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_SCORE_SPECIMEN),
+                        setServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, state.CLAW_PITCH_SCORE_SPECIMEN),
+                        setServoPositionAction(ServoEnum.INNER_CLAW_PITCH, state.INNER_CLAW_PITCH_SCORE_SPECIMEN)
+                ),
+                setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_SCORE_SPECIMEN),
+                drive.actionBuilder(drive.pose).strafeToLinearHeading(new Vector2d(drive.pose.position.x, drive.pose.position.y + 9), drive.pose.heading).build(),
                 setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_OPEN),
 
                 new ParallelAction(
@@ -237,6 +269,7 @@ public class CustomActions {
         return new SequentialAction(
                 new ParallelAction(
                         setServoPositionAction(ServoEnum.CLAW_FINGERS, state.CLAW_FINGERS_CLOSED),
+                        setServoPositionAction(ServoEnum.CLAW_WRIST, state.CLAW_WRIST_DEFAULT),
                         setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
                         setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_TRANSFER),
                         setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_TRANSFER),
@@ -252,6 +285,7 @@ public class CustomActions {
         return new SequentialAction(
                 new ParallelAction(
                         setMotorTargetAction(MotorEnum.BUCKET_SLIDES, state.BUCKET_SLIDES_TRANSFER),
+                        setServoPositionAction(ServoEnum.CLAW_WRIST, state.CLAW_WRIST_DEFAULT),
                         setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
                         setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_PICK_UP),
                         setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_PICK_UP),
@@ -268,6 +302,7 @@ public class CustomActions {
         return new SequentialAction(
                 new ParallelAction(
                         setMotorTargetAction(MotorEnum.EXTENDO, state.EXTENDO_RETRACTED),
+                        setServoPositionAction(ServoEnum.CLAW_WRIST, state.CLAW_WRIST_DEFAULT),
                         setMotorTargetAction(MotorEnum.EXTENDO_PITCH, state.EXTENDO_PITCH_GRAB_SPECIMEN),
                         setServoPositionAction(ServoEnum.CLAW_PITCH_LEFT, state.CLAW_PITCH_GRAB_SPECIMEN),
                         setServoPositionAction(ServoEnum.CLAW_PITCH_RIGHT, state.CLAW_PITCH_GRAB_SPECIMEN),
