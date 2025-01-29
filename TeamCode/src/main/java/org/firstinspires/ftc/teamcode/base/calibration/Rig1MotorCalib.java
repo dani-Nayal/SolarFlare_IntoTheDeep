@@ -83,6 +83,17 @@ public class Rig1MotorCalib extends LinearOpMode {
         motorProfile.writeJSON();
         motorProfile.writeMetrics();
 
+        telemetry.addData("Profile calculated", "");
+        telemetry.addData("Power",              power);
+        telemetry.addData("Pi",                 Pi);
+        telemetry.addData("Pf",                 Pf);
+        telemetry.addData("Plast",              motorProfile.getPLast());
+        telemetry.addData("isTargetReached",    motorProfile.isTargetReached);
+        telemetry.addData("Veq",                motorProfile.Veq);
+        telemetry.addData("Amax",               motorProfile.Amax);
+        telemetry.addData("Dmax",               motorProfile.Dmax);
+        telemetry.update();
+
         waitForStart();
 
         while (opModeIsActive()) {
