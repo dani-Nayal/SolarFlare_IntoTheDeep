@@ -14,7 +14,8 @@ public class TrapezoidalMotionProfile {
     public double initialVelocity;
     public int distance;
     public String currentPhase;
-    int initialPosition;
+    public int initialPosition;
+    public double currentVelocity;
     public void resetProfile(double maxAcceleration, double maxVelocity, double initialVelocity, int distance, int initialPosition){
         this.maxVelocity = maxVelocity * Math.signum(distance);
         this.initialVelocity = initialVelocity;
@@ -24,10 +25,10 @@ public class TrapezoidalMotionProfile {
         this.maxDeceleration = Math.signum(distance) * -maxAcceleration;
 
 
-        accelerationTime = (this.maxVelocity - this.initialVelocity) / this.maxAcceleration;
+        accelerationTime = Math.abs((this.maxVelocity - this.initialVelocity) / this.maxAcceleration);
         accelerationDistance = this.initialVelocity * accelerationTime + 0.5 * this.maxAcceleration * Math.pow(accelerationTime, 2);
 
-        decelerationTime = (0- this.maxVelocity) / maxDeceleration;
+        decelerationTime = Math.abs((0- this.maxVelocity) / maxDeceleration);
         decelerationDistance = this.maxVelocity * decelerationTime + 0.5 * maxDeceleration * Math.pow(decelerationTime, 2);
 
         cruiseDistance = Math.abs(distance - accelerationDistance - decelerationDistance) * Math.signum(maxVelocity);
@@ -49,26 +50,30 @@ public class TrapezoidalMotionProfile {
             cruiseTime = Math.abs(cruiseDistance / this.maxVelocity);
         }
 
-        totalTime = Math.max(0, accelerationTime) + Math.max(0, cruiseTime) + Math.max(0, decelerationTime);
+        totalTime = Math.abs(Math.max(0, accelerationTime) + Math.max(0, cruiseTime) + Math.max(0, decelerationTime));
     }
     // Run this method in a loop
     public double runProfile(double elapsedTime){
         if (elapsedTime < accelerationTime) {
             currentPhase = "accelerating";
+            currentVelocity = initialVelocity + maxAcceleration * elapsedTime;
             return initialPosition + initialVelocity * elapsedTime + 0.5 * maxAcceleration * Math.pow(elapsedTime, 2);
         }
         else if (elapsedTime < (accelerationTime + cruiseTime)){
             double cruiseElapsedTime = elapsedTime - accelerationTime;
             currentPhase = "cruising";
+            currentVelocity = maxVelocity;
             return initialPosition + accelerationDistance + maxVelocity * cruiseElapsedTime;
         }
         else if (elapsedTime < totalTime){
             double decelerateElapsedTime = elapsedTime - accelerationTime - cruiseTime;
             currentPhase = "decelerating";
+            currentVelocity = maxVelocity + maxDeceleration * decelerateElapsedTime;
             return initialPosition + accelerationDistance + cruiseDistance + maxVelocity * decelerateElapsedTime + 0.5 * maxDeceleration * Math.pow(decelerateElapsedTime, 2);
         }
         else {
             currentPhase = "profile finished";
+            currentVelocity = 0;
             return initialPosition + distance;
         }
     }

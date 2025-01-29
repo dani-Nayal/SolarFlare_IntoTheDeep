@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.RobotState;
 
@@ -14,20 +15,25 @@ public class MotorControl {
     TrapezoidalMotionProfile profile;
     public ElapsedTime timer;
     int currentPosition;
+    int currentTarget;
     double motorPower;
     double maxAcceleration;
     double maxVelocity;
     int previousLoopTarget = 0;
     double lastMaxAcceleration = 0;
     double lastMaxVelocity = 0;
+    double instantTargetPosition;
     boolean isMaxVelocityChanged = false;
     boolean isMaxAccelerationChanged = false;
     double initialVelocity;
     int distance;
     MotorEnum motorEnum;
+
     public double kP;
     public double kI;
     public double kD;
+
+    MotorConfig motorConfig;
     public MotorControl(MotorEnum motorEnum){
         this.motorEnum = motorEnum;
         hw = HardwareConfig.getInstance();
@@ -37,9 +43,11 @@ public class MotorControl {
         timer = new ElapsedTime();
         maxAcceleration = hw.getMotorConfig(motorEnum).maxAcceleration;
         maxVelocity = hw.getMotorConfig(motorEnum).maxVelocity;
-        kP = hw.getMotorConfig(motorEnum).kP;
-        kI = hw.getMotorConfig(motorEnum).kI;
-        kD = hw.getMotorConfig(motorEnum).kD;
+        motorConfig = hw.getMotorConfig(motorEnum);
+
+        kP = motorConfig.kP;
+        kI = motorConfig.kI;
+        kD = motorConfig.kD;
     }
     // Run this method in a loop
     public void runTrapezoidalMotionProfile(Telemetry telemetry, Telemetry dashBoardTelemetry){
@@ -49,9 +57,9 @@ public class MotorControl {
         // If the target, maxVelocity, or maxAcceleration changes
         if (currentTarget != previousLoopTarget || isMaxVelocityChanged || isMaxAccelerationChanged){
 
-            currentPosition = hw.getMotorConfig(motorEnum).motor.getCurrentPosition();
+            currentPosition = motorConfig.motor.getCurrentPosition();
             distance = currentTarget - currentPosition;
-            initialVelocity = hw.getMotorConfig(motorEnum).motor.getVelocity();
+            initialVelocity = motorConfig.motor.getVelocity();
 
             timer.reset();
 
@@ -70,7 +78,7 @@ public class MotorControl {
 
         motorPower = pid.getPIDOutput(motorEnum, instantTargetPosition, kP, kI, kD);
 
-        hw.getMotorConfig(motorEnum).motor.setPower(motorPower);
+        motorConfig.motor.setPower(motorPower);
 
         previousLoopTarget = currentTarget;
         lastMaxVelocity = maxVelocity;
