@@ -24,7 +24,7 @@
         "minTimeInc": 10.0,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 40.0
       }
     },
     "RIGHT_BACK": {
@@ -46,7 +46,7 @@
         "minTimeInc": 10.0,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 40.0
       }
     },
     "LEFT_FRONT": {
@@ -68,7 +68,7 @@
         "minTimeInc": 10.0,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 40.0
       }
     },
     "RIGHT_FRONT": {
@@ -90,7 +90,7 @@
         "minTimeInc": 10.0,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 40.0
       }
     },
     "EXTENDO": {
@@ -112,7 +112,7 @@
         "minTimeInc": 10.0,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 40.0
       }
     },
     "EXTENDO_PITCH": {
@@ -134,7 +134,7 @@
         "minTimeInc": 10.0,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 40.0
       }
     },
     "BUCKET_SLIDES": {
@@ -156,7 +156,7 @@
         "minTimeInc": 10.0,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 40.0
       }
     }
   },
