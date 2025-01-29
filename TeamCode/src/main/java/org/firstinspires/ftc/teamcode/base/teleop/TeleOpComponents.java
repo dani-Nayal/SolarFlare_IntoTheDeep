@@ -971,16 +971,16 @@ public abstract class  TeleOpComponents {
                 422,
                 Servo.Direction.FORWARD
         );
-        synchronizeServos(clawPitch,clawPitchRight);
+        synchronize(clawPitch,clawPitchRight);
 
     }
-    public static void synchronizeServos(BotServo...servos){
+    public static void synchronize(BotServo...servos){
         servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
     }
-    public static void synchronizeServos(CRBotServo...servos){
+    public static void synchronize(CRBotServo...servos){
         servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
     }
-    public static void synchronizeMotors(BotMotor...motors){
+    public static void synchronize(BotMotor...motors){
         motors[0].synchronizedMotors.addAll(Arrays.asList(motors).subList(1, motors.length));
     }
 }
