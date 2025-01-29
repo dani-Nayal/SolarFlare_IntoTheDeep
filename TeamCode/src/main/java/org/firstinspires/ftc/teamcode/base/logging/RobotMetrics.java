@@ -69,8 +69,19 @@ public class RobotMetrics {
         tablesSpecs.put("MotorProfileConstP",
                 new RobotMetricsSpec(
                         "MotorProfileConstP",
-                        "%1$.5f,%2$.5f,%3$.5f,%4$.5f,%5$.5f%n",
-                        new String[] {"time","position","velocity","acceleration","current"}));
+                        "%1$.5f,%2$.5f,%3$.5f,%4$.5f,%5$.5f,%6$.5f,%7$.5f,%8$.5f,%9$.5f,%10$.5f,%11$.5f%n",
+                        new String[] {
+                                "Time",
+                                "tPextract",
+                                "tVextract",
+                                "tCextract",
+                                "tCycle",
+                                "Position",
+                                "Velocity",
+                                "Vavg",
+                                "Acceleration",
+                                "Aavg",
+                                "Current"}));
 
         tablesSpecs.put("MotionControl",
                 new RobotMetricsSpec(
