@@ -70,7 +70,7 @@ public class Math {
         }
     }
 
-    public static boolean approxEquals(double n1, double n2) {
+    public static boolean approxEquals(double n1, double n2, double tolerance) {
         if(n1 == 0.0 && n2 == 0.0)
             return true;
 
@@ -79,6 +79,10 @@ public class Math {
         double errorRatio = abs(n1-n2)/(abs(n1)+abs(n2));
         // System.out.println(String.format(Locale.US, "Error Ratio=%1$20.10f", errorRatio));
 
-        return errorRatio < NUMERICAL_TOLERANCE_RATIO;
+        return errorRatio < tolerance;
+    }
+
+    public static boolean approxEquals(double n1, double n2) {
+        return approxEquals(n1, n2, NUMERICAL_TOLERANCE_RATIO);
     }
 }

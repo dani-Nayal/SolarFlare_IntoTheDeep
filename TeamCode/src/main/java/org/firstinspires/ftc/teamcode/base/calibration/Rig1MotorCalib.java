@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.base.testing;
+package org.firstinspires.ftc.teamcode.base.calibration;
 
 import static java.util.logging.Level.INFO;
 
@@ -36,7 +36,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.base.calibration.MotorProfileConstP;
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
@@ -83,6 +82,17 @@ public class Rig1MotorCalib extends LinearOpMode {
         motorProfile.calcProfile(power, Pi, Pf);
         motorProfile.writeJSON();
         motorProfile.writeMetrics();
+
+        telemetry.addData("Profile calculated", "");
+        telemetry.addData("Power",              power);
+        telemetry.addData("Pi",                 Pi);
+        telemetry.addData("Pf",                 Pf);
+        telemetry.addData("Plast",              motorProfile.getPLast());
+        telemetry.addData("isTargetReached",    motorProfile.isTargetReached);
+        telemetry.addData("Veq",                motorProfile.Veq);
+        telemetry.addData("Amax",               motorProfile.Amax);
+        telemetry.addData("Dmax",               motorProfile.Dmax);
+        telemetry.update();
 
         waitForStart();
 

@@ -22,8 +22,9 @@
       "maxVelocity": 1500,
       "calibParams": {
         "minTimeInc": 10.0,
-        "timeResolution": 100,
-        "powerResolution": 100
+        "timeResolution": 500,
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     }
   },

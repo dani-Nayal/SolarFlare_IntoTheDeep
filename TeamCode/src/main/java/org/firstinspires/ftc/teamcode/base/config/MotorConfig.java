@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.base.calibration.MotorCalibConfig;
 import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
 
 import java.util.logging.Level;
@@ -44,6 +45,7 @@ import java.util.logging.Logger;
 public class MotorConfig implements Validatable {
     public MotorEnum                 motorEnum;
     public MotorSpec                 motorSpec;
+    public MotorCalibConfig calibParams;
     public String                    partName;
     public String                    deviceName;
     public DcMotorEx                 motor;
@@ -53,25 +55,18 @@ public class MotorConfig implements Validatable {
     public DcMotor.RunMode           runMode;
     public DcMotorSimple.Direction   direction;
     public DcMotor.ZeroPowerBehavior zeroPowerBehavior;
-    public double                    encoderResolution;
-    public double                    noLoadSpeedPPS;
-    public int                       motorProfileResolution;
     public double                    maxPower;
     public int                       minTarget;
     public int                       maxTarget;
     public double                    maxAcceleration;
     public double                    maxVelocity;
-    public MotorCalibConfig          calibParams;
 
     public void initialize(HardwareMap hardwareMap) {
         try {
             if(motorSpec == null)
                 throw new MissingDataException("No motorSpec for motor:" + motorEnum);
 
-            encoderResolution = motorSpec.encoderResolution;
-            noLoadSpeedPPS    = motorSpec.getNoLoadSpeedPPS();
-
-            motor             = hardwareMap.get(DcMotorEx.class, deviceName);
+            motor = hardwareMap.get(DcMotorEx.class, deviceName);
 
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(this.runMode);
@@ -84,10 +79,15 @@ public class MotorConfig implements Validatable {
         }
     }
 
+    public double getEncoderResolution() {
+        return motorSpec.encoderResolution;
+    }
+
+    public double getNoLoadVelocity() {
+        return motorSpec.getNoLoadSpeedPPS();
+    }
+
     public void setMotorSpec(MotorSpec motorSpec) {
-        Logger logger  = RobotLogger.getInstance().getConfigLogger();
-        logger.logp(Level.SEVERE, "MotorConfig", "setMotorSpec",
-                "setting motor spec for " + motorEnum.name());
         this.motorSpec = motorSpec;
     }
 
@@ -111,14 +111,13 @@ public class MotorConfig implements Validatable {
         sb.append("  runMode=")               .append(runMode)               .append("\n");
         sb.append("  direction=")             .append(direction)             .append("\n");
         sb.append("  zeroPowerBehavior=")     .append(zeroPowerBehavior)     .append("\n");
-        sb.append("  encoderResolution=")     .append(encoderResolution)     .append("\n");
-        sb.append("  noLoadSpeedPPS=")        .append(noLoadSpeedPPS)        .append("\n");
-        sb.append("  motorProfileResolution=").append(motorProfileResolution).append("\n");
+        sb.append("  encoderResolution=")     .append(getEncoderResolution()).append("\n");
         sb.append("  maxPower=")              .append(maxPower)              .append("\n");
         sb.append("  minTarget=")             .append(minTarget)             .append("\n");
         sb.append("  maxTarget=")             .append(maxTarget)             .append("\n");
         sb.append("  maxAcceleration=")       .append(maxAcceleration)       .append("\n");
         sb.append("  maxVelocity=")           .append(maxVelocity)           .append("\n");
+        sb.append("  noLoadVelocity=")        .append(getNoLoadVelocity())   .append("\n");
         sb.append("  calibParams=\n")         .append(calibParams)           .append("\n");
 
         return sb.toString();

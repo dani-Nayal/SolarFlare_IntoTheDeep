@@ -23,7 +23,8 @@
       "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "RIGHT_BACK": {
@@ -44,7 +45,8 @@
       "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "LEFT_FRONT": {
@@ -65,7 +67,8 @@
       "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "RIGHT_FRONT": {
@@ -86,7 +89,8 @@
       "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "EXTENDO": {
@@ -107,7 +111,8 @@
       "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "EXTENDO_PITCH": {
@@ -128,7 +133,8 @@
       "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "BUCKET_SLIDES": {
@@ -149,7 +155,8 @@
       "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     }
   },
