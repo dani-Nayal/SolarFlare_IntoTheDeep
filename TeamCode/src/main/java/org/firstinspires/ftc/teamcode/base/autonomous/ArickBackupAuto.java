@@ -10,7 +10,6 @@ import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.drive;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendoPitch;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.innerClawPitch;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.motionProfileMotors;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.motors;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.servos;
 
@@ -30,14 +29,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotMotor;
 
+import java.util.Objects;
+
 @Autonomous(name = "MotionProfileFourSample", group = "Autonomous")
 public class ArickBackupAuto extends LinearOpMode {
     public static class GlobalPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            for (BotMotor motor: TeleOpComponents.motionProfileMotors){
-                motor.createPendingMotionProfiles();
-                motor.runMotionProfileOnce();
+            for (BotMotor motor: TeleOpComponents.motors){
+                if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE")) {
+                    motor.createPendingMotionProfiles();
+                    motor.runMotionProfileOnce();
+                }
             }
             return true;
         }
@@ -87,8 +90,10 @@ public class ArickBackupAuto extends LinearOpMode {
 
                 .build();
 
-        for (int i=0;i<TeleOpComponents.motionProfileMotors.size();i++){
-            TeleOpComponents.motionProfileMotors.get(i).LOOP_TIMER.reset();
+        for (int i=0;i<TeleOpComponents.motors.size();i++){
+            if (Objects.equals(motors.get(i).MOVEMENT_MODE, "MOTION_PROFILE")) {
+                TeleOpComponents.motors.get(i).LOOP_TIMER.reset();
+            }
         }
         Actions.runBlocking(
             new ParallelAction(
@@ -327,7 +332,6 @@ public class ArickBackupAuto extends LinearOpMode {
             )
         );
         motors.clear();
-        motionProfileMotors.clear();
         servos.clear();
         CRServos.clear();
     }

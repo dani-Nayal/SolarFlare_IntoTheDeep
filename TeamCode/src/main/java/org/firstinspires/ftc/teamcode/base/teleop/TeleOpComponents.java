@@ -78,7 +78,7 @@ public abstract class  TeleOpComponents {
         double previousError = 0;
         double previousVoltage = 0;
         boolean isStallResetting = false;
-        String MOVEMENT_MODE;
+        public String MOVEMENT_MODE;
 
         public class UpwardFSMAction implements TeleOpAction{
             private final double maxAcceleration;
