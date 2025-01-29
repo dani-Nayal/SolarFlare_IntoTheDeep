@@ -835,7 +835,7 @@ public abstract class  TeleOpComponents {
         //initialize mechanism variables here
         extendo = new BotMotor(
                 "extendo",
-                0.015,0,0.00015, 15,
+                0.015,0,0, 15,
                 new String[]{},new double[]{},
                 793,0,
                 250000,3500,
@@ -846,7 +846,7 @@ public abstract class  TeleOpComponents {
         );
         extendoPitch = new BotMotor(
                 "extendoPitch",
-                0.005,0,0.0, 15,
+                0.005,0,0, 15,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{0,-960,-960,-320},
                 0,-960,
@@ -858,7 +858,7 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.03,0.0,0.001, 15,
+                0.015,0,0, 15,
                 new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
                 1070,0,
                 250000,3500,
