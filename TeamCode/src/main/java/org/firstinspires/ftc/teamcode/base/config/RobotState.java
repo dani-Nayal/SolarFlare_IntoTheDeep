@@ -7,9 +7,6 @@ public class RobotState {
     HardwareConfig hw;
     HashMap<MotorEnum, Integer> targets = new HashMap<>(10);
     HashMap<ServoEnum, Double> positions = new HashMap<>(10);
-
-    // TODO: Store preset mechanism position values here
-
     public int EXTENDO_PITCH_TRANSFER = 0;
     public int EXTENDO_PITCH_PICK_UP = -960;
     public int BUCKET_SLIDES_HIGH_BUCKET = 1030;
@@ -32,8 +29,8 @@ public class RobotState {
 
     public int EXTENDO_SCORE_SPECIMEN = 800;
     public int EXTENDO_PITCH_SCORE_SPECIMEN = -620;
-    public double CLAW_PITCH_SCORE_SPECIMEN = 127;
-    public double INNER_CLAW_PITCH_SCORE_SPECIMEN = 179;
+    public int CLAW_PITCH_SCORE_SPECIMEN = 127;
+    public int INNER_CLAW_PITCH_SCORE_SPECIMEN = 179;
 
     public int EXTENDO_RETRACTED = 0;
     public int EXTENDO_PITCH_GRAB_SPECIMEN = -960;
@@ -49,7 +46,19 @@ public class RobotState {
     private RobotState(){
         hw = HardwareConfig.getInstance();
         targets.put(MotorEnum.TESTING_MOTOR, 0);
-        // TODO: make sure to add default positions
+
+        /*
+        targets.put(MotorEnum.EXTENDO, 0);
+        targets.put(MotorEnum.EXTENDO_PITCH, 0);
+        targets.put(MotorEnum.BUCKET_SLIDES, 0);
+
+        positions.put(ServoEnum.CLAW_PITCH_LEFT, 115);
+        positions.put(ServoEnum.CLAW_PITCH_RIGHT, 115);
+        positions.put(ServoEnum.CLAW_WRIST, 95);
+        positions.put(ServoEnum.BUCKET, 46);
+        positions.put(ServoEnum.INNER_CLAW_PITCH, 186);
+        positions.put(ServoEnum.CLAW_FINGERS, 20);
+         */
     }
     public int getMotorTarget(MotorEnum motorEnum) throws IllegalArgumentException{
         Integer target = targets.get(motorEnum);

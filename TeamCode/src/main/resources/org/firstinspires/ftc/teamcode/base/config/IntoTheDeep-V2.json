@@ -176,7 +176,7 @@
       "direction": "REVERSE",
       "minServoPosition": 0.0,
       "maxServoPosition": 270.0,
-      "degreesPerzecond": 0.0
+      "degreesPerSecond": 0.0
     },
     "BUCKET": {
       "servoEnum": "BUCKET",
