@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.base.motorcontrol;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 public class TrapezoidalMotionProfile {
     public double accelerationDistance;
     public double accelerationTime;
@@ -17,6 +13,7 @@ public class TrapezoidalMotionProfile {
     public double maxVelocity;
     public double initialVelocity;
     public int distance;
+    public String currentPhase;
     int initialPosition;
     public void resetProfile(double maxAcceleration, double maxVelocity, double initialVelocity, int distance, int initialPosition){
         this.maxVelocity = maxVelocity * Math.signum(distance);
@@ -33,10 +30,10 @@ public class TrapezoidalMotionProfile {
         decelerationTime = (0- this.maxVelocity) / maxDeceleration;
         decelerationDistance = this.maxVelocity * decelerationTime + 0.5 * maxDeceleration * Math.pow(decelerationTime, 2);
 
-        cruiseDistance = this.distance - accelerationDistance - decelerationDistance;
+        cruiseDistance = Math.abs(distance - accelerationDistance - decelerationDistance) * Math.signum(maxVelocity);
         cruiseTime = Math.abs(cruiseDistance / this.maxVelocity);
 
-        if (Math.abs(accelerationDistance) + Math.abs(decelerationDistance) > Math.abs(this.distance)){
+        if (Math.abs(accelerationDistance + cruiseDistance + decelerationDistance) > Math.abs(this.distance)){
             double exceededDistance = (accelerationDistance + decelerationDistance) - this.distance;
 
             accelerationDistance -= exceededDistance / 2;
@@ -57,17 +54,21 @@ public class TrapezoidalMotionProfile {
     // Run this method in a loop
     public double runProfile(double elapsedTime){
         if (elapsedTime < accelerationTime) {
+            currentPhase = "accelerating";
             return initialPosition + initialVelocity * elapsedTime + 0.5 * maxAcceleration * Math.pow(elapsedTime, 2);
         }
         else if (elapsedTime < (accelerationTime + cruiseTime)){
             double cruiseElapsedTime = elapsedTime - accelerationTime;
+            currentPhase = "cruising";
             return initialPosition + accelerationDistance + maxVelocity * cruiseElapsedTime;
         }
         else if (elapsedTime < totalTime){
             double decelerateElapsedTime = elapsedTime - accelerationTime - cruiseTime;
+            currentPhase = "decelerating";
             return initialPosition + accelerationDistance + cruiseDistance + maxVelocity * decelerateElapsedTime + 0.5 * maxDeceleration * Math.pow(decelerateElapsedTime, 2);
         }
         else {
+            currentPhase = "profile finished";
             return initialPosition + distance;
         }
     }

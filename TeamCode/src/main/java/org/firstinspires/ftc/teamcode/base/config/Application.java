@@ -45,9 +45,10 @@ public class Application {
      * @return Metrics directory name.
      */
     public static String      getMetricsDirName() {
-        // String metricsDirName = "/storage/emulated/0/Android/data/com.qualcomm.ftcrobotcontroller/files/";
-        String metricsDirName   = "C:/Temp";
-        return metricsDirName;
+        if(Objects.requireNonNull(System.getProperty("os.name")).contains("Windows"))
+            return "C:/Temp";
+        else
+            return "/storage/emulated/0/Android/data/com.qualcomm.ftcrobotcontroller/files/";
     }
 
     public static InputStream getResourceAsStream(String resourceName) {
@@ -85,11 +86,17 @@ public class Application {
         System.out.println("Package is:            " + packageName);
         System.out.println("Resources Path:        " + getApplicationResourcesPath());
         System.out.println("user.dir:              " + System.getProperty("user.dir"));
+        System.out.println("os.name:               " + System.getProperty("os.name"));
+        System.out.println("metricsDirName:        " + getMetricsDirName());
         System.out.println("Checking RobotConfig files");
         for(String robotName: robotNames) {
             String      robotConfigFileName = robotName + ".json";
-            InputStream robotConfigFile     = getResourceAsStream(robotConfigFileName);
-            System.out.println("Obtained RobotConfigFile: " + robotConfigFile + " from " + robotConfigFileName);
+            try(InputStream robotConfigFile = getResourceAsStream(robotConfigFileName)) {
+                System.out.println("Obtained RobotConfigFile: " + robotConfigFile + " from " + robotConfigFileName);
+            } catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+
         }
     }
 }

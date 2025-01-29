@@ -27,23 +27,9 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.base.config;
+package org.firstinspires.ftc.teamcode.base.logging;
 
-import androidx.annotation.NonNull;
-
-public class MotorCalibConfig {
-    public double minTimeInc;
-    public int    timeResolution;
-    public int    powerResolution;
-
-    @NonNull
-    @Override
-    public String toString() {
-        var sb = new StringBuilder();
-        sb.append("MotorCalibConfig\n");
-        sb.append("  minTimeInc=").append(minTimeInc).append("\n");
-        sb.append("  timeResolution=").append(+timeResolution).append("\n");
-        sb.append("  powerResolution=").append(+powerResolution).append("\n");
-        return sb.toString();
-    }
+public interface MetricsWritable {
+    String getMetricsFileId();
+    String getMetricsTableType();
 }

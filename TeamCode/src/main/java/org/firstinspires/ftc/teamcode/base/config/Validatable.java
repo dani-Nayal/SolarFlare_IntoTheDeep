@@ -29,29 +29,7 @@
  */
 package org.firstinspires.ftc.teamcode.base.config;
 
-import androidx.annotation.NonNull;
-
-public class RobotDimensions implements Validatable {
-    public double length = 15.364;
-    public double width  = 14.375;
-
-    public RobotDimensions() {
-        this.length = 15.364;
-        this.width  = 14.375;
-    }
-    public RobotDimensions(double length, double width) {
-        this.length = length;
-        this.width  = width;
-    }
-
-    public boolean isValid() {
-        return true;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "RobotDimensions(length=" + length + ", width=" + width + ")";
-    }
+@SuppressWarnings("SpellCheckingInspection")
+public interface Validatable {
+    boolean isValid();
 }
-

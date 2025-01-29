@@ -27,42 +27,48 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.base.testing;
-
-import java.util.logging.Logger;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+package org.firstinspires.ftc.teamcode.base.calibration;
 
 import static java.util.logging.Level.INFO;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
 import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
+import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
-import org.firstinspires.ftc.teamcode.base.config.RobotState;
-import org.firstinspires.ftc.teamcode.base.motorcontrol.MotorControl1D;
+
+
+import java.util.logging.Logger;
 
 @Autonomous
-public class Rig1Motor extends LinearOpMode {
-    Logger         logger;
-    RobotConfig    robotConfig;
-    HardwareConfig hardwareConfig;
-    RobotState     robotState;
-    MotorControl1D motorControl;
+public class Rig1MotorCalib extends LinearOpMode {
+    String             className  = "Rig1MotorCalib";
+    String             methodName = "runOpMode";
+    String             robotName  = "Rig1Motor";
+    MotorEnum          motorEnum  = MotorEnum.TESTING_MOTOR;
+
+    Logger             logger;
+    HardwareConfig     hardwareConfig;
+    MotorConfig        motorConfig;
+    DcMotorEx          motor;
+    MotorProfileConstP motorProfile;
 
     public void runOpMode(){
         sleep(3000);
         try {
             logger         = RobotLogger.getInstance().getConfigLogger();
-            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created configLogger");
-            robotConfig    = RobotConfig.createInstance("Rig1Motor");
-            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created robotConfig");
-            hardwareConfig = HardwareConfig.createInstance(hardwareMap, robotConfig);
-            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created hardwareConfig");
-            motorControl   = new MotorControl1D(MotorEnum.TESTING_MOTOR);
-            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created motorControl");
-            robotState     = RobotState.getInstance();
-            logger.logp(INFO, "Rig1Motor", "runOpMode", "Created robotState");
+            logger.logp(INFO, className, methodName, "Created configLogger");
+            hardwareConfig = HardwareConfig.createInstance(hardwareMap, robotName);
+            logger.logp(INFO, className, methodName, "Created hardwareConfig");
+            motorConfig    = hardwareConfig.getMotorConfig(motorEnum);
+            logger.logp(INFO, className, methodName, "got motorConfig: " + motorEnum);
+            motor          = motorConfig.motor;
+            motorProfile   = new MotorProfileConstP(motorConfig);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -70,23 +76,28 @@ public class Rig1Motor extends LinearOpMode {
         telemetry.addData("Done with initialization", "");
         telemetry.update();
 
+        int    Pi    = 0;
+        int    Pf    = 10 * (int) motorConfig.motorSpec.encoderResolution;
+        double power = 0.5;
+        motorProfile.calcProfile(power, Pi, Pf);
+        motorProfile.writeJSON();
+        motorProfile.writeMetrics();
+
+        telemetry.addData("Profile calculated", "");
+        telemetry.addData("Power",              power);
+        telemetry.addData("Pi",                 Pi);
+        telemetry.addData("Pf",                 Pf);
+        telemetry.addData("Plast",              motorProfile.getPLast());
+        telemetry.addData("isTargetReached",    motorProfile.isTargetReached);
+        telemetry.addData("Veq",                motorProfile.Veq);
+        telemetry.addData("Amax",               motorProfile.Amax);
+        telemetry.addData("Dmax",               motorProfile.Dmax);
+        telemetry.update();
+
         waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad1.a){
-                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 0);
-            }
-            else if (gamepad1.b){
-                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 500);
-            }
-            else if (gamepad1.y){
-                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 1500);
-            }
-            else if (gamepad1.x){
-                robotState.setMotorTarget(MotorEnum.TESTING_MOTOR, 2000);
-            }
-
-            motorControl.runTrapezoidalMotionProfile(telemetry);
+            sleep(500);
         }
     }
 }
