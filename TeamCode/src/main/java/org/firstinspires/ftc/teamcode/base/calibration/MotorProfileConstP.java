@@ -31,10 +31,10 @@ package org.firstinspires.ftc.teamcode.base.calibration;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -47,12 +47,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.base.config.JSONWritable;
 import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
+import org.firstinspires.ftc.teamcode.base.config.Validatable;
 import org.firstinspires.ftc.teamcode.base.logging.MetricsWritable;
 import org.firstinspires.ftc.teamcode.base.logging.RobotMetrics;
 import org.firstinspires.ftc.teamcode.base.logging.RobotMetricsFile;
 import org.firstinspires.ftc.teamcode.base.utils.JSONUtils;
+import org.firstinspires.ftc.teamcode.base.validate.Validation;
 
-public class MotorProfileConstP implements JSONWritable, MetricsWritable {
+public class MotorProfileConstP implements JSONWritable, MetricsWritable, Validatable {
     private       MotorEnum   motorEnum;
     private       MotorConfig motorConfig;
     private       DcMotorEx   motor;
@@ -129,6 +131,10 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
      */
     public        double      Veq;
     /**
+     * Maximum velocity. should be close the stread state velocity
+     */
+    public        double      Vmax;
+    /**
      * Maximum Acceleration
      */
     public        double      Amax;
@@ -140,7 +146,22 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
      * Has the profile reached the target position Pf
      */
     public        boolean     isTargetReached;
-
+    /**
+     * Index of steady state for Vavg
+     */
+    public        int         ssIdxVavg;
+    /**
+     * steady state Vavg. null if it does not obtain
+     */
+    public        Double      ssVavg;
+    /**
+     * Index of steady state of Aavg
+     */
+    public        int         ssIdxAavg;
+    /**
+     * Steady state Aavg. null if it does not obtain
+     */
+    public        Double      ssAavg;
     /**
      * Constructor requires information about the motor
      * @param motorConfig_in: The configuration of the motor being calibrated
@@ -163,7 +184,6 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         A                 = new double[timeResolution];
         Aavg              = new double[timeResolution];
         C                 = new double[timeResolution];
-
     }
 
     protected void gotoPi() {
@@ -181,51 +201,64 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         return P[tIdxMax];
     }
 
-    private void calcAcceleration() {
-        Amax              = Double.NEGATIVE_INFINITY;
-        Dmax              = Double.POSITIVE_INFINITY;
-        for(int tIdx=1; tIdx<=tIdxMax; tIdx++) {
-            double At     = 1000 * (V[tIdx]-V[tIdx-1])/(t[tIdx]-t[tIdx-1]);
-            A[tIdx]       = At;
-            if(At > Amax)
-                Amax      = At;
-            if(At < Dmax)
-                Dmax      = At;
-        }
-    }
-
     private void calcAveragingPeriods() {
         double tPeriod   = (t[tIdxMax] - t[0])/ (tIdxMax + 1.0);
         averagingPeriods = (int) (motorConfig.calibParams.averagingTime / tPeriod);
     }
 
-    private void calcVeq() {
-        int speedWindowSize = motorConfig.calibParams.averagingTime;
-        var Vavg            = new ArrayList<Double>();
+    private void calcDerivedData() {
+        calcAveragingPeriods();
+        Vmax                  = Double.NEGATIVE_INFINITY;
+        Amax                  = Double.NEGATIVE_INFINITY;
+        Dmax                  = Double.POSITIVE_INFINITY;
         /// tIdx references the original arrays
-        for(int tIdx=speedWindowSize-1; tIdx<V.length; tIdx++) {
-            double Vsum     = 0;
-            for(int pIdx=0; pIdx<speedWindowSize; pIdx++)
-                Vsum       += V[tIdx-pIdx];
-            Vavg.add(Vsum/speedWindowSize);
+        for(int tIdx=0; tIdx<=tIdxMax; tIdx++) {
+            int tIdx0         = max(tIdx-averagingPeriods, 0);
+            double tNow       = V[tIdx];
+            double VNow       = V[tIdx];
+            double ANow       = tIdx==0? 0 : 1000*(VNow-V[tIdx-1])/(tNow-t[tIdx-1]);
+            Vavg[tIdx]        = 1000*(P[tIdx]-P[tIdx0])/(tNow-t[tIdx0]);
+            Aavg[tIdx]        = 1000*(VNow-V[tIdx0])/(tNow-t[tIdx0]);
+            A[tIdx]           = ANow;
+
+            if(VNow > Vmax)
+                Vmax          = VNow;
+
+            if(ANow > Amax)
+                Amax          = ANow;
+            if(ANow < Dmax)
+                Dmax          = ANow;
         }
-        Veq                 = Collections.max(Vavg);
+
+        ssIdxVavg             = Math.getSteadyStateStartPredicate(
+                V,
+                averagingPeriods,
+                (Double v1, Double v2) -> abs(v1-v2) < abs(Vmax)/100.0);
+        ssVavg                = ssIdxVavg>0 ? Vavg[ssIdxVavg] : null;
+
+        ssIdxAavg             = Math.getSteadyStateStartPredicate(
+                A,
+                averagingPeriods,
+                (Double a1, Double a2) -> abs(a1-a2) < abs(Amax)/100.0);
+        ssAavg                = ssIdxAavg>0 ? Aavg[ssIdxAavg] : null;
+
+        isTargetReached       = Math.approxEquals(P[tIdxMax],Pf,5.0/Pf);
     }
 
     public void calcProfile(double power_in, int Pi_in, int Pf_in) {
-        power             = power_in;
-        Pi                = Pi_in;
-        Pf                = Pf_in;
+        power               = power_in;
+        Pi                  = Pi_in;
+        Pf                  = Pf_in;
 
         ElapsedTime timer   = new ElapsedTime();
         ElapsedTime eTimer  = new ElapsedTime();
         ElapsedTime eTimer2 = new ElapsedTime();
         double  dt;
-        double  tPrev     = 0;
-        int     tIdx      = 0;
+        double  tPrev       = 0;
+        int     tIdx        = 0;
 
         gotoPi();
-        RunMode runMode   = motor.getMode();
+        RunMode runMode     = motor.getMode();
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -270,12 +303,17 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         motor.setPower(0);
         motor.setMode(runMode);
         /// tIdx is one position ahead of the last valid slot in the data arrays
-        tIdxMax           = tIdx - 1;
+        tIdxMax             = tIdx - 1;
 
-        calcAcceleration();
-        calcVeq();
+        calcDerivedData();
+    }
 
-        isTargetReached   = Math.approxEquals(P[tIdxMax],Pf,5.0/Pf);
+    public boolean hasSteadyStateVavg() {
+        return ssVavg != null;
+    }
+
+    public boolean hasSteadyStateAavg() {
+        return ssAavg != null;
     }
 
     public String getJSONFileId() {
@@ -293,18 +331,16 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         profile.power              = this.power;
         profile.Pi                 = this.Pi;
         profile.Pf                 = this.Pf;
-        /***
-         * This is the last -valid- index into the data arrays
-         */
+        /// This is the last -valid- index into the data arrays
         profile.tIdxMax            = this.tIdxMax;
         profile.t                  = this.t;
         profile.tPextract          = this.tPextract;
         profile.tVextract          = this.tVextract;
-        profile.tCextract          = this.tVextract;
+        profile.tCextract          = this.tCextract;
         profile.tCycle             = this.tCycle;
         profile.V                  = this.V;
         profile.Vavg               = this.Vavg;
-        profile.P                  = this.V;
+        profile.P                  = this.P;
         profile.A                  = this.A;
         profile.Aavg               = this.Aavg;
         profile.C                  = this.C;
@@ -365,6 +401,37 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable {
         sb.append("  C=\n")              .append(Arrays.toString(C))        .append("\n");
 
         return sb.toString();
+    }
+
+    public boolean isValid() {
+        return Validation.validate("motorEnum", motorEnum)                                                        &&
+                Validation.validate("motorConfig", motorConfig)                                                   &&
+                Validation.validate("motor",motor)                                                                &&
+                Validation.validate("minTimeInc", minTimeInc, (Double x) -> x>0.0)                                &&
+                Validation.validate("encoderResolution", encoderResolution, (Double x) -> x>0)                    &&
+                Validation.validate("timeResolution",timeResolution,(Integer i) -> i>0)                           &&
+                Validation.validate("power", power, (Double x) -> x>=-1 && x<=1)                                  &&
+                Validation.validate("tIdxMax", tIdxMax, (Integer i) -> i>=0 && i<timeResolution)                  &&
+                Validation.validate("averagingPeriods", averagingPeriods, (Integer i) -> i>0 && i<timeResolution) &&
+                Validation.validate("t", t)                                                                       &&
+                Validation.validate("tPextract", tPextract)                                                       &&
+                Validation.validate("tVextract", tVextract)                                                       &&
+                Validation.validate("tCextract", tCextract)                                                       &&
+                Validation.validate("tCycle", tCycle)                                                             &&
+                Validation.validate("P", P)                                                                       &&
+                Validation.validate("V", V)                                                                       &&
+                Validation.validate("Vavg", Vavg)                                                                 &&
+                Validation.validate("A", A)                                                                       &&
+                Validation.validate("Aavg", Aavg)                                                                 &&
+                Validation.validate("C", C)                                                                       &&
+                Validation.validate("Veq", Veq)                                                                   &&
+                Validation.validate("Vmax", Vmax)                                                                 &&
+                Validation.validate("Amax", Amax)                                                                 &&
+                Validation.validate("Dmax", Dmax)                                                                 &&
+                Validation.validate("ssIdxVavg", ssIdxVavg, (Integer i) -> i>=0 && i<timeResolution)              &&
+                Validation.validate("ssVavg", ssVavg)                                                             &&
+                Validation.validate("ssIdxAavg", ssIdxAavg, (Integer i) -> i>=0 && i<timeResolution)              &&
+                Validation.validate("ssAavg", ssAavg);
     }
 
     public static void main(String[] args) {
