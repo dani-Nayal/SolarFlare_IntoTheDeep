@@ -84,6 +84,7 @@ public class Rig1MotorCalib extends LinearOpMode {
         motorProfile.writeMetrics();
 
         telemetry.addData("Profile calculated", "");
+        telemetry.addData("isValid",            motorProfile.isValid());
         telemetry.addData("Power",              power);
         telemetry.addData("Pi",                 Pi);
         telemetry.addData("Pf",                 Pf);
