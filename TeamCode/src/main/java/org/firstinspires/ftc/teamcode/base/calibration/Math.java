@@ -91,7 +91,11 @@ public class Math {
                                                  int      eIdx,
                                                  int      lookback,
                                                  BiPredicate<Double, Double> predicate) {
-        int    sIdx        = max(eIdx-lookback, 0);
+        int    sIdx        = eIdx-lookback;
+        /// need at least lookback data points to determine steady state
+        if(sIdx<0)
+            return false;
+
         double currentData = data[eIdx];
         for(int idx=sIdx; idx<=eIdx; idx++) {
             if(!predicate.test(currentData, data[idx]))
@@ -101,14 +105,13 @@ public class Math {
     }
 
     @SuppressWarnings("SpellCheckingInspection")
-    public static int getSteadyStateStartPredicate(double[] data,
+    public static Integer getSteadyStateStartPredicate(double[] data,
                                                    int      lookback,
                                                    BiPredicate<Double, Double> predicate) {
-        if(data.length <= lookback)
-            throw new CalculationException("No steady state on a " + data.length + "array with " + lookback + " lookback");
         for(int idx=lookback; idx<data.length; idx++)
             if(isSteadyStatePredicate(data, idx, lookback, predicate))
                 return idx;
-        return 0;
+
+        return null;
     }
 }
