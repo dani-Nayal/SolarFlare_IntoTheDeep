@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name = "OneBucketPlusThreeBucket", group = "Autonomous")
+@Autonomous(name = "TristanAuto", group = "Autonomous")
 public class TristanBackupAuto extends LinearOpMode {
     double kP = 0.015;
     DcMotor extendo;
