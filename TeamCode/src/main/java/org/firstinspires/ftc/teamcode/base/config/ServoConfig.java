@@ -34,9 +34,11 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+
 import java.util.logging.Logger;
 
-public class ServoConfig{
+public class ServoConfig implements Validatable {
     public ServoEnum       servoEnum;
     public String          deviceName;
     public Servo           servo;
@@ -53,6 +55,10 @@ public class ServoConfig{
             Logger logger = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("MotorConfig", "Initialize", e);
         }
+    }
+
+    public boolean isValid() {
+        return true;
     }
 
     @NonNull

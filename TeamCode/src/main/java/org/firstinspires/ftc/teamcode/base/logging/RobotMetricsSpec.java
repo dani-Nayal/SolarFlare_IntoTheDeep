@@ -27,31 +27,51 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.base.config;
+package org.firstinspires.ftc.teamcode.base.logging;
 
 import androidx.annotation.NonNull;
 
-public class RobotDimensions implements Validatable {
-    public double length = 15.364;
-    public double width  = 14.375;
+import org.firstinspires.ftc.teamcode.base.config.Application;
 
-    public RobotDimensions() {
-        this.length = 15.364;
-        this.width  = 14.375;
-    }
-    public RobotDimensions(double length, double width) {
-        this.length = length;
-        this.width  = width;
+import java.util.Arrays;
+import java.util.Locale;
+
+public class RobotMetricsSpec implements Comparable<RobotMetricsSpec> {
+    public String   tableType;
+    public String   format;
+    public String[] fields;
+
+    public RobotMetricsSpec(String tableType, String format, String[] fields) {
+        this.tableType = tableType;
+        this.format    = format;
+        this.fields    = fields.clone();
     }
 
-    public boolean isValid() {
-        return true;
+    public int compareTo(RobotMetricsSpec other) {
+        return tableType.compareTo(other.tableType);
+    }
+
+    public String getHeader() {
+        return String.join(",", fields);
+    }
+
+    public String getFileName(String id) {
+        return String.format(Locale.US, "%1$s-%2$s.csv", tableType, id);
+    }
+
+    public String getFullFileName(String id) {
+        return Application.getMetricsDirName() + "/" + getFileName(id);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "RobotDimensions(length=" + length + ", width=" + width + ")";
+        var sb = new StringBuilder();
+        sb.append("RobotMetricsSpec\n");
+        sb.append("  tableType=").append(tableType)              .append("\n");
+        sb.append("  format=")   .append(format)                 .append("\n");
+        sb.append("  fields")    .append(Arrays.toString(fields)).append("\n");
+
+        return sb.toString();
     }
 }
-

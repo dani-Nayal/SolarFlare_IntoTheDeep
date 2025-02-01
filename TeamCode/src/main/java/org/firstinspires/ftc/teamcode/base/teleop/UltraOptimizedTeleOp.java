@@ -39,108 +39,6 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
         clawPitch.setPosition(clawPitch.getPos("transferPosition"));
         innerClawPitch.setPosition(innerClawPitch.getPos("transferPosition"));
         bucket.setPosition(bucket.getPos("transferPosition"));
-        /*
-        UninterruptiblePressTrigger lowerIntakeSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad1.b)},
-                new TeleOpAction[]{
-                        new TeleOpSequentialAction(
-                                bucketSlides.moveToPositionAction(bucketSlides.getPos("transferPosition")),
-                                new TeleOpParallelAction(
-                                        extendoPitch.moveToPositionAction(extendoPitch.getPos("pickUpPosition")),
-                                        clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
-                                        clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition"))
-                                ),
-                                new TeleOpParallelAction(
-                                        extendo.moveToPositionAction(extendo.MAX_POSITION),
-                                        clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
-                                )
-                        )
-                });
-        UninterruptiblePressTrigger pickUpSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad2.x)},
-                new TeleOpAction[]{
-                        new TeleOpSequentialAction(
-                            clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
-                            new TeleOpParallelAction(
-                                    innerClawPitch.setPositionAction(innerClawPitch.getPos("pickUpPosition")),
-                                    clawPitch.setPositionAction(clawPitch.getPos("pickUpPosition"))
-                            ),
-                            clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
-                            new TeleOpParallelAction(
-                                    innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition")),
-                                    clawPitch.setPositionAction(clawPitch.getPos("hoverPosition"))
-                            )
-                        )
-                });
-        UninterruptiblePressTrigger transferSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad1.a)},
-                new TeleOpAction[]{
-                        new TeleOpSequentialAction(
-                                new TeleOpParallelAction(
-                                        clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
-                                        extendo.moveToPositionAction(extendo.MIN_POSITION),
-                                        clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition"))
-                                ),
-                                new TeleOpParallelAction(
-                                        extendoPitch.moveToPositionAction(extendoPitch.getPos("transferPosition"))
-                                ),
-                                clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
-                                new TeleOpParallelAction(
-                                        clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("backOffPosition"))
-                                ),
-                                bucketSlides.moveToPositionAction(bucketSlides.getPos("depositPosition"))
-                        )
-                });
-        UninterruptiblePressTrigger specimenGrabSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad2.options)},
-                new TeleOpAction[]{
-                            new TeleOpParallelAction(
-                                    extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenGrabPosition")),
-                                    clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
-                                    extendo.moveToPositionAction(extendo.MIN_POSITION),
-                                    clawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition")),
-                                    innerClawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition"))
-                            )
-                });
-        UninterruptiblePressTrigger setUpSpecimenDepositSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad2.b)},
-                new TeleOpAction[]{
-                        new TeleOpSequentialAction(
-                            clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
-                            innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
-                            extendoPitch.moveToPositionAction(extendoPitch.getPos("specimenDepositPosition")),
-                            new TeleOpParallelAction(
-                                clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                innerClawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                extendo.moveToPositionAction(extendo.MAX_POSITION)
-                            )
-                        )
-                });
-        UninterruptiblePressTrigger specimenDepositSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad2.y)},
-                new TeleOpAction[]{
-                        new TeleOpSequentialAction(
-                                extendo.moveToPositionAction(500),
-                                clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
-                        )
-                });
-        UninterruptiblePressTrigger specimenRetractionSequence = new UninterruptiblePressTrigger(new Condition[]{()->(gamepad2.dpad_up||gamepad2.dpad_down)},
-                new TeleOpAction[]{
-                        new TeleOpSequentialAction(
-                                new TeleOpParallelAction(
-                                        clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
-                                        extendo.moveToPositionAction(extendo.MIN_POSITION),
-                                        clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition"))
-                                ),
-                                new TeleOpParallelAction(
-                                        extendoPitch.moveToPositionAction(extendoPitch.getPos("transferPosition"))
-                                ),
-                                clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
-                                new TeleOpParallelAction(
-                                        clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("backOffPosition"))
-                                )
-                        )
-                });
-        */
         PressTrigger sequences = new PressTrigger(new Condition[]{
                 () -> (gamepad1.b),
                 () -> (gamepad2.x),
@@ -177,6 +75,8 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 ),
                 new TeleOpSequentialAction(
                         new TeleOpParallelAction(
+                                bucketSlides.setTargetAction(bucketSlides.getPos("transferPosition")),
+                                bucket.setPositionAction(bucketSlides.getPos("transferPosition")),
                                 clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
                                 extendo.setTargetAction(extendo.MIN_POSITION),
                                 clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
@@ -193,6 +93,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                         bucketSlides.setTargetAction(bucketSlides.getPos("depositPosition"))
                 ),
                 new TeleOpParallelAction(
+                        bucket.setPositionAction(bucket.getPos("depositPosition")),
                         extendoPitch.setTargetAction(extendoPitch.getPos("specimenGrabPosition")),
                         clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
                         extendo.setTargetAction(extendo.MIN_POSITION),
@@ -200,21 +101,27 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                         innerClawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition"))
                 ),
                 new TeleOpSequentialAction(
-                        clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
-                        innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
+                        new TeleOpParallelAction(
+                            clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
+                            innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
+                            bucket.setPositionAction(bucket.getPos("depositPosition")),
+                            bucketSlides.setTargetAction(200)
+                        ),
                         extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                         new TeleOpParallelAction(
                                 clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
                                 innerClawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                extendo.setTargetAction(extendo.MAX_POSITION)
+                                extendo.setTargetAction(550)
                         )
                 ),
                 new TeleOpSequentialAction(
-                        extendoPitch.setTargetAction(-500),
+                        extendo.setTargetAction(250),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                 ),
                 new TeleOpSequentialAction(
                         new TeleOpParallelAction(
+                                bucketSlides.setTargetAction(bucketSlides.getPos("transferPosition")),
+                                bucket.setPositionAction(bucketSlides.getPos("transferPosition")),
                                 clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
                                 extendo.setTargetAction(extendo.MIN_POSITION),
                                 clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
@@ -233,11 +140,9 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
         TeleOpActions.runLoop(
                 this::opModeIsActive,
                 clawFingers.triggeredToggleAction(()->(gamepad2.left_bumper||gamepad2.right_bumper),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
+                new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{bucketSlides.stallResetAction()}),
                 clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),2),
-                //clawPitch.triggeredFSMAction(()->(gamepad1.dpad_left),()->(gamepad1.dpad_right),clawPitch.getPos("transferPosition"),clawPitch.getPos("hoverPosition"),clawPitch.getPos("pickUpPosition")),
                 bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
-                //extendoPitch.triggeredFSMAction(()->(gamepad1.dpad_up),()->(gamepad1.dpad_down),extendoPitch.getPos("transferPosition"),extendoPitch.getPos("pickUpPosition")),
-                //extendoPitch.triggeredDynamicAction(()->(gamepad2.right_stick_y>0),()->(gamepad2.right_stick_y<0),15),
                 bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("depositPosition"),bucketSlides.getPos("transferPosition")),
                 sequences,
                 new ConditionalAction(new Condition[]{()->(!isRRActive)}, new TeleOpAction[]{

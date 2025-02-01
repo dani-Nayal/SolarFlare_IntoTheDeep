@@ -27,22 +27,17 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.base.config;
+package org.firstinspires.ftc.teamcode.base.calibration;
 
 import androidx.annotation.NonNull;
 
-public class RobotDimensions implements Validatable {
-    public double length = 15.364;
-    public double width  = 14.375;
+import org.firstinspires.ftc.teamcode.base.config.Validatable;
 
-    public RobotDimensions() {
-        this.length = 15.364;
-        this.width  = 14.375;
-    }
-    public RobotDimensions(double length, double width) {
-        this.length = length;
-        this.width  = width;
-    }
+public class MotorCalibConfig implements Validatable {
+    public double minTimeInc;
+    public int    timeResolution;
+    public int    powerResolution;
+    public int    speedWindowSize;
 
     public boolean isValid() {
         return true;
@@ -51,7 +46,13 @@ public class RobotDimensions implements Validatable {
     @NonNull
     @Override
     public String toString() {
-        return "RobotDimensions(length=" + length + ", width=" + width + ")";
+        var sb = new StringBuilder();
+        sb.append("MotorCalibConfig\n");
+        sb.append("  minTimeInc=")     .append(minTimeInc)     .append("\n");
+        sb.append("  timeResolution=") .append(timeResolution) .append("\n");
+        sb.append("  powerResolution=").append(powerResolution).append("\n");
+        sb.append("  speedWindowSize=").append(speedWindowSize).append("\n");
+
+        return sb.toString();
     }
 }
-

@@ -20,10 +20,11 @@
       "maxTarget": 1000000,
       "maxAcceleration": 0,
       "maxVelocity": 0,
-      "calibration": {
+      "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "RIGHT_BACK": {
@@ -41,10 +42,11 @@
       "maxTarget": 1000000,
       "maxAcceleration": 0,
       "maxVelocity": 0,
-      "calibration": {
+      "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "LEFT_FRONT": {
@@ -62,10 +64,11 @@
       "maxTarget": 1000000,
       "maxAcceleration": 0,
       "maxVelocity": 0,
-      "calibration": {
+      "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "RIGHT_FRONT": {
@@ -83,10 +86,11 @@
       "maxTarget": 1000000,
       "maxAcceleration": 0,
       "maxVelocity": 0,
-      "calibration": {
+      "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "EXTENDO": {
@@ -104,10 +108,11 @@
       "maxTarget": 793,
       "maxAcceleration": 20000,
       "maxVelocity": 3000,
-      "calibration": {
+      "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "EXTENDO_PITCH": {
@@ -125,10 +130,11 @@
       "maxTarget": 0,
       "maxAcceleration": 20000,
       "maxVelocity": 3000,
-      "calibration": {
+      "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     },
     "BUCKET_SLIDES": {
@@ -146,10 +152,11 @@
       "maxTarget": 1030,
       "maxAcceleration": 20000,
       "maxVelocity": 3000,
-      "calibration": {
+      "calibParams": {
         "minTimeInc": 10.0,
         "timeResolution": 100,
-        "powerResolution": 100
+        "powerResolution": 100,
+        "speedWindowSize": 10
       }
     }
   },
@@ -176,7 +183,7 @@
       "direction": "REVERSE",
       "minServoPosition": 0.0,
       "maxServoPosition": 270.0,
-      "degreesPerzecond": 0.0
+      "degreesPerSecond": 0.0
     },
     "BUCKET": {
       "servoEnum": "BUCKET",

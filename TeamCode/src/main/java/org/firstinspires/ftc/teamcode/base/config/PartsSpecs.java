@@ -33,12 +33,14 @@ import static org.firstinspires.ftc.teamcode.base.utils.JSONUtils.parseJSON;
 
 import androidx.annotation.NonNull;
 
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-public class PartsSpecs {
+public class PartsSpecs implements Validatable {
     private static PartsSpecs                 instance;
     public         HashMap<String, MotorSpec> motors;
 
@@ -50,6 +52,17 @@ public class PartsSpecs {
             logger.throwing("RobotConfig", "createInstance", e);
         }
         return instance;
+    }
+
+    public boolean isValid() {
+        return true;
+    }
+
+    public MotorSpec getMotorSpec(String partName) {
+        MotorSpec motorSpec = motors.get(partName);
+        if(motorSpec == null)
+            throw new MissingDataException("No motor spec for: " + partName);
+        return motorSpec;
     }
 
     @NonNull

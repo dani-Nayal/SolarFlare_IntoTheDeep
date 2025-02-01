@@ -27,7 +27,9 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.base.config;
+package org.firstinspires.ftc.teamcode.base.logging;
+
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.Formatter;
@@ -35,23 +37,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RobotMetricsFile {
-    private        final String    tableName;
-    private              Formatter formatter;
-    private        final String[]  fieldNames;
-    private        final String    formatString;
+    private final RobotMetricsSpec robotMetricsSpec;
+    private       Formatter        formatter;
+    private final String           fileId;
+    private final String           fullFileName;
 
-    public RobotMetricsFile(String fileRoot, String formatString, String... fieldNames) {
-        this.tableName    = fileRoot;
-        this.formatString = formatString;
-        this.fieldNames   = fieldNames;
+    public RobotMetricsFile(RobotMetricsSpec robotMetricsSpec_in, String fileId_in) {
+        robotMetricsSpec = robotMetricsSpec_in;
+        fileId           = fileId_in;
+        fullFileName     = robotMetricsSpec.getFullFileName(fileId);
         open();
     }
 
     public void open() {
         if(isActive())
             close();
-
-        String fullFileName = Application.getMetricsDirName() + "/" + tableName + ".csv";
 
         try {
             formatter = new Formatter(fullFileName);
@@ -64,15 +64,16 @@ public class RobotMetricsFile {
                     e);
             return;
         }
-        formatter.format("%1$s", String.join(",", fieldNames) + "%n");
+
+        formatter.format("%1$s", robotMetricsSpec.getHeader() + "\n");
     }
 
     public void addData(Object... data) {
         if(!isActive()) {
-            Logger.getGlobal().severe("RobotMetricsFile " + tableName + " not open. Skipping...");
+            Logger.getGlobal().severe("RobotMetricsFile " + robotMetricsSpec.tableType + " not open. Skipping...");
             return;
         }
-        formatter.format(formatString, data);
+        formatter.format(robotMetricsSpec.format, data);
     }
 
     public boolean isActive() {
@@ -83,6 +84,20 @@ public class RobotMetricsFile {
         if(isActive()) {
             formatter.flush();
             formatter.close();
+            formatter = null;
         }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        sb.append("RobotMetricsFile\n");
+        sb.append("  robotMetricsSpec=\n").append(robotMetricsSpec);
+        sb.append("  formatter=")         .append(formatter)   .append("\n");
+        sb.append("  fileId=")            .append(fileId)      .append("\n");
+        sb.append("  fullFileName=")      .append(fullFileName).append("\n");
+
+        return sb.toString();
     }
 }

@@ -26,7 +26,7 @@ public class PID {
         hw = HardwareConfig.getInstance();
         state = RobotState.getInstance();
     }
-    public double getPIDOutput(MotorEnum motorEnum, double reference) {
+    public double getPIDOutput(MotorEnum motorEnum, double reference, double kP, double kI, double kD) {
         if (isFirstIteration){
             timer.reset();
             isFirstIteration = false;
@@ -44,11 +44,11 @@ public class PID {
             integralSum = 0;
         }
 
-        proportionalPower = error * hw.getMotorConfig(motorEnum).kP;
+        proportionalPower = error * kP;
 
-        integralPower = integralSum * hw.getMotorConfig(motorEnum).kI;
+        integralPower = integralSum * kI;
 
-        derivativePower = derivative * hw.getMotorConfig(motorEnum).kD;
+        derivativePower = derivative * kD;
 
         outPower = proportionalPower + integralPower + derivativePower;
 
