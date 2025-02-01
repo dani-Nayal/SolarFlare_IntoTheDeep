@@ -45,8 +45,10 @@ public class LimelightConfig implements Validatable {
 
     public void initialize(HardwareMap hardwareMap) {
         try {
-            limelight = hardwareMap.get(Limelight3A.class, this.deviceName);
-            limelight.setPollRateHz(pollingRate);
+            if(deviceName!=null) {
+                limelight = hardwareMap.get(Limelight3A.class, deviceName);
+                limelight.setPollRateHz(pollingRate);
+            }
         } catch (Exception e) {
             Logger logger = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("MotorConfig", "Initialize", e);
