@@ -31,6 +31,8 @@ package org.firstinspires.ftc.teamcode.base.calibration;
 
 import static java.util.logging.Level.INFO;
 
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -55,7 +57,8 @@ public class Rig1MotorCalib extends LinearOpMode {
     HardwareConfig     hardwareConfig;
     MotorConfig        motorConfig;
     DcMotorEx          motor;
-    MotorProfileConstP motorProfile;
+    MotorProfileConstP motorProfileF;
+    MotorProfileConstP motorProfileR;
 
     public void runOpMode(){
         sleep(3000);
@@ -67,11 +70,14 @@ public class Rig1MotorCalib extends LinearOpMode {
             motorConfig    = hardwareConfig.getMotorConfig(motorEnum);
             logger.logp(INFO, className, methodName, "got motorConfig: " + motorEnum);
             motor          = motorConfig.motor;
-            motorProfile   = new MotorProfileConstP(motorConfig);
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            motorProfileF  = new MotorProfileConstP(motorConfig, Direction.FORWARD);
+            motorProfileR  = new MotorProfileConstP(motorConfig, Direction.REVERSE);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         telemetry.addData("Done with initialization", "");
         telemetry.update();
@@ -79,20 +85,48 @@ public class Rig1MotorCalib extends LinearOpMode {
         int    Pi    = 0;
         int    Pf    = 10 * (int) motorConfig.motorSpec.encoderResolution;
         double power = 0.5;
-        motorProfile.calcProfile(power, Pi, Pf);
-        motorProfile.writeJSON();
-        motorProfile.writeMetrics();
 
-        telemetry.addData("Profile calculated", "");
-        telemetry.addData("isValid",            motorProfile.isValid());
-        telemetry.addData("Power",              power);
-        telemetry.addData("Pi",                 Pi);
-        telemetry.addData("Pf",                 Pf);
-        telemetry.addData("Plast",              motorProfile.getPLast());
-        telemetry.addData("isTargetReached",    motorProfile.isTargetReached);
-        telemetry.addData("Veq",                motorProfile.Veq);
-        telemetry.addData("Amax",               motorProfile.Amax);
-        telemetry.addData("Dmax",               motorProfile.Dmax);
+        motorProfileF.calcProfile(power, Pi, Pf);
+        motorProfileF.writeJSON();
+        motorProfileF.writeMetrics();
+
+        /*
+        motorProfileR.calcProfile(power, Pi, Pf);
+        motorProfileR.writeJSON();
+        motorProfileR.writeMetrics();
+         */
+
+        telemetry.addData("Profile Calculations", "");
+
+        telemetry.addData("Power",               power);
+        telemetry.addData("Pi",                  Pi);
+        telemetry.addData("Pf",                  Pf);
+
+        telemetry.addData("F_isValid",           motorProfileF.isValid());
+        telemetry.addData("F_averagingPeriods",  motorProfileF.averagingPeriods);
+        telemetry.addData("F_tIdxMax",           motorProfileF.tIdxMax);
+        telemetry.addData("F_Plast",             motorProfileF.getPLast());
+        telemetry.addData("F_isTargetReached",   motorProfileF.hasReachedTarget());
+        telemetry.addData("F_timeToTarget",      motorProfileF.getTimeToTarget());
+        telemetry.addData("F_hasSteadyStateV",   motorProfileF.hasSteadyStateV());
+        telemetry.addData("F_timeToSteadyState", motorProfileF.getTimeToSteadyState());
+        telemetry.addData("F_Vss",               motorProfileF.getSteadyStateV());
+        telemetry.addData("F_Vmax",              motorProfileF.Vmax);
+        telemetry.addData("F_Amax",              motorProfileF.Amax);
+        telemetry.addData("F_Dmax",              motorProfileF.Dmax);
+
+        telemetry.addData("R_isValid",           motorProfileR.isValid());
+        telemetry.addData("R_averagingPeriods",  motorProfileR.averagingPeriods);
+        telemetry.addData("R_tIdxMax",           motorProfileR.tIdxMax);
+        telemetry.addData("R_Plast",             motorProfileR.getPLast());
+        telemetry.addData("R_isTargetReached",   motorProfileR.hasReachedTarget());
+        telemetry.addData("R_timeToTarget",      motorProfileR.getTimeToTarget());
+        telemetry.addData("R_hasSteadyStateV",   motorProfileR.hasSteadyStateV());
+        telemetry.addData("R_timeToSteadyState", motorProfileR.getTimeToSteadyState());
+        telemetry.addData("R_Vss",               motorProfileR.getSteadyStateV());
+        telemetry.addData("R_Vmax",              motorProfileR.Vmax);
+        telemetry.addData("R_Amax",              motorProfileR.Amax);
+        telemetry.addData("R_Dmax",              motorProfileR.Dmax);
         telemetry.update();
 
         waitForStart();
