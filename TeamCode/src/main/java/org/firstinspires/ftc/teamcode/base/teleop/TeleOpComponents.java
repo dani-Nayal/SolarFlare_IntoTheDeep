@@ -842,7 +842,7 @@ public abstract class  TeleOpComponents {
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "MOTION_PROFILE"
+                "PID"
         );
         extendoPitch = new BotMotor(
                 "extendoPitch",
@@ -854,7 +854,7 @@ public abstract class  TeleOpComponents {
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "MOTION_PROFILE"
+                "PID"
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
@@ -865,7 +865,7 @@ public abstract class  TeleOpComponents {
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "MOTION_PROFILE"
+                "PID"
         );
         rightFront = new BotMotor(
                 "rightFront",
