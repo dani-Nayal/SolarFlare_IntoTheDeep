@@ -39,6 +39,8 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -58,6 +60,11 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
     private       MotorEnum   motorEnum;
     private       MotorConfig motorConfig;
     private       DcMotorEx   motor;
+    /**
+     * Calibration Direction: FORWARD, REVERSE
+     */
+    public        Direction   calibDirection;
+
     public        double      minTimeInc;
     /**
      * Encoder resolution of the motor itself at the shaft output (PPR)
@@ -127,10 +134,6 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
      */
     private       double[]    C;
     /**
-     * Equilibrium speed
-     */
-    public        double      Veq;
-    /**
      * Maximum velocity. should be close the stread state velocity
      */
     public        double      Vmax;
@@ -149,7 +152,7 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
     /**
      * Index of steady state for Vavg
      */
-    public        int         ssIdxVavg;
+    public        Integer     ssIdxVavg;
     /**
      * steady state Vavg. null if it does not obtain
      */
@@ -157,7 +160,7 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
     /**
      * Index of steady state of Aavg
      */
-    public        int         ssIdxAavg;
+    public        Integer     ssIdxAavg;
     /**
      * Steady state Aavg. null if it does not obtain
      */
@@ -166,8 +169,9 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
      * Constructor requires information about the motor
      * @param motorConfig_in: The configuration of the motor being calibrated
      */
-    public MotorProfileConstP(MotorConfig motorConfig_in) {
+    public MotorProfileConstP(MotorConfig motorConfig_in, Direction calibDirection_in) {
         motorConfig       = motorConfig_in;
+        calibDirection    = calibDirection_in;
         motor             = motorConfig.motor;
         motorEnum         = motorConfig.motorEnum;
         encoderResolution = motorConfig.getEncoderResolution();
@@ -186,8 +190,8 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
         C                 = new double[timeResolution];
     }
 
-    protected void gotoPi() {
-        RunMode runMode = motor.getMode();
+    protected void gotoStart() {
+        RunMode runMode   = motor.getMode();
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setTargetPosition(Pi);
         motor.setPower(1.0);
@@ -208,20 +212,20 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
 
     private void calcDerivedData() {
         calcAveragingPeriods();
-        Vmax                  = Double.NEGATIVE_INFINITY;
+        Vmax                  = 0.0;
         Amax                  = Double.NEGATIVE_INFINITY;
         Dmax                  = Double.POSITIVE_INFINITY;
         /// tIdx references the original arrays
-        for(int tIdx=0; tIdx<=tIdxMax; tIdx++) {
+        for(int tIdx=1; tIdx<=tIdxMax; tIdx++) {
             int tIdx0         = max(tIdx-averagingPeriods, 0);
-            double tNow       = V[tIdx];
+            double tNow       = t[tIdx];
             double VNow       = V[tIdx];
-            double ANow       = tIdx==0? 0 : 1000*(VNow-V[tIdx-1])/(tNow-t[tIdx-1]);
-            Vavg[tIdx]        = 1000*(P[tIdx]-P[tIdx0])/(tNow-t[tIdx0]);
-            Aavg[tIdx]        = 1000*(VNow-V[tIdx0])/(tNow-t[tIdx0]);
+            double ANow       = (VNow-V[tIdx-1])/(tNow-t[tIdx-1]);
+            Vavg[tIdx]        = (P[tIdx]-P[tIdx0])/(tNow-t[tIdx0]);
+            Aavg[tIdx]        = (VNow-V[tIdx0])/(tNow-t[tIdx0]);
             A[tIdx]           = ANow;
 
-            if(VNow > Vmax)
+            if(abs(VNow) > abs(Vmax))
                 Vmax          = VNow;
 
             if(ANow > Amax)
@@ -233,95 +237,157 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
         ssIdxVavg             = Math.getSteadyStateStartPredicate(
                 V,
                 averagingPeriods,
-                (Double v1, Double v2) -> abs(v1-v2) < abs(Vmax)/100.0);
-        ssVavg                = ssIdxVavg>0 ? Vavg[ssIdxVavg] : null;
+                (Double v1, Double v2) -> abs(v1-v2) < abs(Vmax)/250.0);
+        ssVavg                = ssIdxVavg!=null ? Vavg[ssIdxVavg] : null;
 
         ssIdxAavg             = Math.getSteadyStateStartPredicate(
                 A,
                 averagingPeriods,
-                (Double a1, Double a2) -> abs(a1-a2) < abs(Amax)/100.0);
-        ssAavg                = ssIdxAavg>0 ? Aavg[ssIdxAavg] : null;
+                (Double a1, Double a2) -> abs(a1-a2) < abs(Amax)/250.0);
+        ssAavg                = ssIdxAavg!=null ? Aavg[ssIdxAavg] : null;
 
         isTargetReached       = Math.approxEquals(P[tIdxMax],Pf,5.0/Pf);
     }
 
     public void calcProfile(double power_in, int Pi_in, int Pf_in) {
-        power               = power_in;
-        Pi                  = Pi_in;
-        Pf                  = Pf_in;
+        power                   = power_in;
+        Pi                      = calibDirection == Direction.FORWARD? Pi_in : Pf_in;
+        Pf                      = calibDirection == Direction.FORWARD? Pf_in : Pi_in;
 
-        ElapsedTime timer   = new ElapsedTime();
-        ElapsedTime eTimer  = new ElapsedTime();
-        ElapsedTime eTimer2 = new ElapsedTime();
+        ElapsedTime timer       = new ElapsedTime();
+        ElapsedTime eTimer      = new ElapsedTime();
+        ElapsedTime eTimer2     = new ElapsedTime();
         double  dt;
-        double  tPrev       = 0;
-        int     tIdx        = 0;
+        double  tPrev           = 0;
+        int     tIdx            = 0;
 
-        gotoPi();
-        RunMode runMode     = motor.getMode();
+        gotoStart();
+        RunMode runMode         = motor.getMode();
+        motor.setDirection(calibDirection);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double tNow;
-        double PNow;
-        double VNow;
-        double CNow;
+        double  tCycleNow       = 0;
+        double  tPextractNow    = 0;
+        double  tVextractNow    = 0;
+        double  tCextractNow    = 0;
+        double  tNow;
+        double  PNow;
+        double  VNow;
+        double  CNow;
+        boolean shortOfTarget;
         timer.reset();
         eTimer2.reset();
         motor.setPower(power);
         do {
-            tCycle[tIdx]    = eTimer2.milliseconds();
+            tCycleNow          += eTimer2.seconds();
             eTimer2.reset();
-            tNow            = timer.milliseconds();
+            tNow                = timer.seconds();
 
             /// Pull current position info
             eTimer.reset();
-            PNow            = motor.getCurrentPosition();
-            tPextract[tIdx] = eTimer.milliseconds();
+            PNow                = motor.getCurrentPosition();
+            tPextractNow       += eTimer.seconds();
 
             /// Pull velocity info
             /// With no arguments getVelocity() returns Ticks Per Second
             eTimer.reset();
-            VNow            = motor.getVelocity();
-            tVextract[tIdx] = eTimer.milliseconds();
+            VNow                = motor.getVelocity();
+            tVextractNow       += eTimer.seconds();
 
             /// Pull current info
             eTimer.reset();
-            CNow            = motor.getCurrent(CurrentUnit.AMPS);
-            tCextract[tIdx] = eTimer.milliseconds();
+            CNow                = motor.getCurrent(CurrentUnit.AMPS);
+            tCextractNow       += eTimer.seconds();
 
-            dt              = tNow - tPrev;
+            dt                  = tNow - tPrev;
             if(dt >= minTimeInc) {
-                t[tIdx]     = tNow;
-                P[tIdx]     = PNow;
-                V[tIdx]     = VNow;
-                C[tIdx++]   = CNow;
-                tPrev       = tNow;
+                t        [tIdx] = tNow;
+                P        [tIdx] = PNow;
+                V        [tIdx] = VNow;
+                C        [tIdx] = CNow;
+                tCycle   [tIdx] = tCycleNow;
+                tPextract[tIdx] = tPextractNow;
+                tVextract[tIdx] = tVextractNow;
+                tCextract[tIdx] = tCextractNow;
+                tPrev           = tNow;
+                tCycleNow       = 0;
+                tPextractNow    = 0;
+                tVextractNow    = 0;
+                tCextractNow    = 0;
+
+                tIdx++;
             }
-        } while(tIdx<timeResolution && motor.getCurrentPosition()<Pf);
+            shortOfTarget       = calibDirection == Direction.FORWARD? PNow<Pf : PNow>Pf;
+        } while(tIdx<timeResolution && shortOfTarget);
 
         motor.setPower(0);
         motor.setMode(runMode);
         /// tIdx is one position ahead of the last valid slot in the data arrays
-        tIdxMax             = tIdx - 1;
+        tIdxMax                 = tIdx - 1;
 
         calcDerivedData();
+        trimArrays();
     }
 
-    public boolean hasSteadyStateVavg() {
+    private double[] trimArray(double[] data) {
+        double[] trimmedArray = new double[tIdxMax+1];
+        System.arraycopy(data, 0, trimmedArray, 0, tIdxMax+1);
+        return trimmedArray;
+    }
+
+    private void trimArrays() {
+        t                 = trimArray(t);
+        tPextract         = trimArray(tPextract);
+        tVextract         = trimArray(tVextract);
+        tCextract         = trimArray(tCextract);
+        tCycle            = trimArray(tCycle);
+        V                 = trimArray(V);
+        Vavg              = trimArray(Vavg);
+        P                 = trimArray(P);
+        A                 = trimArray(A);
+        Aavg              = trimArray(Aavg);
+        C                 = trimArray(C);
+    }
+
+    public boolean hasSteadyStateV() {
         return ssVavg != null;
     }
 
-    public boolean hasSteadyStateAavg() {
+    public boolean hasSteadyStateA() {
         return ssAavg != null;
     }
 
-    public String getJSONFileId() {
-        return String.format(Locale.US, "%1$s-%2$.4f", motorEnum, power);
+    public boolean hasReachedTarget() {
+        return isTargetReached;
     }
 
-    public MotorProfileConstP copyContents() {
-        MotorProfileConstP profile = new MotorProfileConstP(motorConfig);
+    /**
+     * Returns time to reach steady state in seconds
+     * @return time to reach steady state
+     */
+    public Double getTimeToSteadyState() {
+        return hasSteadyStateV() ? t[ssIdxVavg] : null;
+    }
+
+    /**
+     * Returns time to reach target
+     * @return time to reach target
+     */
+    public Double getTimeToTarget() {
+        return hasReachedTarget()? t[tIdxMax] : null;
+    }
+
+    public Double getSteadyStateV() {
+        return ssVavg;
+    }
+
+    public Double getSteadyStateA() {
+        return ssAavg;
+    }
+
+    public MotorProfileConstP getCopyForJSON() {
+        MotorProfileConstP profile = new MotorProfileConstP(motorConfig, calibDirection);
         profile.motorEnum          = this.motorEnum;
         profile.motorConfig        = null;
         profile.motor              = null;
@@ -348,13 +414,17 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
         return profile;
     }
 
+    public String getJSONFileId() {
+        return String.format(Locale.US, "%1$s-%2$s-%3$.2f", motorEnum, calibDirection.name(), power);
+    }
+
     public void writeJSON() {
-        MotorProfileConstP trimmedThis = copyContents();
+        MotorProfileConstP trimmedThis = getCopyForJSON();
         JSONUtils.writeJSON(trimmedThis);
     }
 
     public String getMetricsFileId() {
-        return String.format(Locale.US, "%1$s-%2$.4f", motorEnum, power);
+        return String.format(Locale.US, "%1$s-%2$s-%3$.4f", motorEnum, calibDirection.name(), power);
     }
 
     public String getMetricsTableType() {
@@ -424,7 +494,6 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
                 Validation.validate("A", A)                                                                       &&
                 Validation.validate("Aavg", Aavg)                                                                 &&
                 Validation.validate("C", C)                                                                       &&
-                Validation.validate("Veq", Veq)                                                                   &&
                 Validation.validate("Vmax", Vmax)                                                                 &&
                 Validation.validate("Amax", Amax)                                                                 &&
                 Validation.validate("Dmax", Dmax)                                                                 &&
