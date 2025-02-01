@@ -22,6 +22,8 @@ public class BackUpTeleOp extends LinearOpMode {
     double clawPitchPosition = 100;
     double innerClawPitchPosition = 200;
     double bucketPosition = 36;
+
+    double bucketSlidesMax = 1070;
     public class MotionProfile{
         public double kP; public double kI; public double kD;
         public double MAX_ACCELERATION; public double MAX_VELOCITY;
@@ -135,6 +137,8 @@ public class BackUpTeleOp extends LinearOpMode {
         boolean isOp2SequenceActive = false;
         boolean isPressingY = false;
         boolean isPressingY2 = false;
+        boolean isBucketMaxSet = false;
+
         boolean isPressingA2 = false;
         boolean isX2SequenceActive = false;
         boolean isPressingBumper2 = false;
@@ -220,7 +224,7 @@ public class BackUpTeleOp extends LinearOpMode {
             else if (gamepad1.back && bucketSlidesTarget<15){
                 bucketSlidesTarget=0;
             }
-            if (gamepad2.back){
+            if ((gamepad2.back) && !(gamepad2.a)){
                 bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
@@ -282,17 +286,17 @@ public class BackUpTeleOp extends LinearOpMode {
                     extendoPitchTarget=0;
                 }
 
-                if (Atimer.seconds() > 1.1) {
+                if (Atimer.seconds() > 1.4) {
                     clawFingerPosition = 86;
                 }
 
-                if (Atimer.seconds() > 1.3) {
+                if (Atimer.seconds() > 1.7) {
                     clawPitchPosition = 72.4;
                     innerClawPitchPosition = 160;
 
                 }
-                if (Atimer.seconds() > 1.75) {
-                    bucketSlidesTarget=1060;
+                if (Atimer.seconds() > 2) {
+                    bucketSlidesTarget=bucketSlidesMax;
                     isASequenceActive=false;
 
                 }
@@ -489,7 +493,7 @@ public class BackUpTeleOp extends LinearOpMode {
             if (gamepad1.y){
                 if (!isPressingY) {
                     if (bucketSlidesTarget == 0) {
-                        bucketSlidesTarget = 1070;}
+                        bucketSlidesTarget = bucketSlidesMax;}
                     else {
                         bucketSlidesTarget = 0;
                     }
@@ -512,10 +516,10 @@ public class BackUpTeleOp extends LinearOpMode {
 
             // Default perpendicular claw pos 79.5 degrees
             if (gamepad2.left_trigger>0 && clawWristPosition >= 15) {
-                clawFingerPosition -= 1;
+                clawWristPosition -= 6;
             }
             else if (gamepad2.right_trigger>0 && clawWristPosition <= 175) {
-                clawFingerPosition += 1;
+                clawWristPosition += 6;
             }
 
 
@@ -525,13 +529,21 @@ public class BackUpTeleOp extends LinearOpMode {
 
             // BucketTransfer / default pos 85 degrees
             // Bucket Deposit pos 205 degrees
-            if (gamepad2.a){
+            if ((gamepad2.a)){
                 if (!isPressingA2){
                     isPressingA2=true;
                     if (bucketPosition==36) {bucketPosition=158;} else {bucketPosition=36;}
                 }
             }
             else isPressingA2=false;
+
+            if ((gamepad2.left_stick_x<0.2) && (gamepad2.right_stick_x>0.2)){
+                if (!isBucketMaxSet){
+                    isBucketMaxSet=true;
+                    if (bucketSlidesMax==570) {bucketSlidesMax=1070;} else {bucketSlidesMax=570;}
+                }
+            }
+            else isBucketMaxSet=false;
 
             if(gamepad2.right_bumper){
                 clawFingerPosition=86;
