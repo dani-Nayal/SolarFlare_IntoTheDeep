@@ -51,7 +51,7 @@ public class MotorCalibConfig implements Validatable {
         sb.append("  minTimeInc=")     .append(minTimeInc)     .append("\n");
         sb.append("  timeResolution=") .append(timeResolution) .append("\n");
         sb.append("  powerResolution=").append(powerResolution).append("\n");
-        sb.append("  averagingTime=").append(averagingTime).append("\n");
+        sb.append("  averagingTime=")  .append(averagingTime).append("\n");
 
         return sb.toString();
     }
