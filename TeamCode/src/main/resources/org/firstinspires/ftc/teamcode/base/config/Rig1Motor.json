@@ -21,10 +21,10 @@
       "maxAcceleration": 3000,
       "maxVelocity": 1500,
       "calibParams": {
-        "minTimeInc": 2.0,
+        "minTimeInc": 0.002,
         "timeResolution": 3000,
         "powerResolution": 100,
-        "averagingTime": 40.0
+        "averagingTime": 0.040
       }
     }
   },
