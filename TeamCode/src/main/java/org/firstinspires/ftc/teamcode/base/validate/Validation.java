@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.base.validate;
 
 import static java.lang.Double.isNaN;
+import static java.lang.Double.NEGATIVE_INFINITY;
+import static java.lang.Double.POSITIVE_INFINITY;
 
 import org.firstinspires.ftc.teamcode.base.config.Validatable;
 import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
@@ -41,8 +43,8 @@ public class Validation {
     }
 
     public static boolean validate(String fieldName, Double field) {
-        if(isNaN(field) || field==Double.NEGATIVE_INFINITY || field==Double.POSITIVE_INFINITY) {
-            logSevere(fieldName, "is NaN or an infinity");
+        if(field==null || isNaN(field) || field==NEGATIVE_INFINITY || field==POSITIVE_INFINITY) {
+            logSevere(fieldName, "is null, NaN or an infinity");
             return false;
         } else {
             return true;
