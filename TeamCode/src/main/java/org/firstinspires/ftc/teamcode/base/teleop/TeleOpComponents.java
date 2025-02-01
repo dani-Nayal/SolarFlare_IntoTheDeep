@@ -362,6 +362,9 @@ public abstract class  TeleOpComponents {
                 MOVEMENT_TIMER = new ElapsedTime();
                 LOOP_TIMER = new ElapsedTime();
             }
+            else if (Objects.equals(movementMode, "PID")){
+                MOVEMENT_TIMER = new ElapsedTime();
+            }
 
             hardwareMap.put(getDeviceName(),this);
             motors.add(this);
@@ -461,7 +464,9 @@ public abstract class  TeleOpComponents {
         public void setTarget(double target, double maxVelocity, double maxAcceleration){
             target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
-                MOVEMENT_TIMER.reset();
+                if (Objects.nonNull(MOVEMENT_TIMER)) {
+                    MOVEMENT_TIMER.reset();
+                }
                 this.target = target;
                 integralSum = 0;
                 previousError = 0;
