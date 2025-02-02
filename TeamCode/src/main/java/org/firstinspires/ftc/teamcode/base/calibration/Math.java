@@ -30,9 +30,10 @@
 package org.firstinspires.ftc.teamcode.base.calibration;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.max;
 import static java.lang.Math.sqrt;
 
-import java.util.Locale;
+import java.util.function.BiPredicate;
 
 public class Math {
     public static double NUMERICAL_TOLERANCE_RATIO = 1E-3;
@@ -42,27 +43,22 @@ public class Math {
         if (discriminant > 0) {
             double root1 = (-b + sqrt(discriminant)) / (2 * a);
             double root2 = (-b - sqrt(discriminant)) / (2 * a);
-            // System.out.println("Roots are real and different:");
-            // System.out.println("Root 1: " + root1);
-            // System.out.println("Root 2: " + root2);
+            /// Roots are real and different
             return new ComplexNumberPair(
                     new ComplexNumber(root1, 0.0),
                     new ComplexNumber(root2, 0.0)
             );
         } else if (discriminant == 0) {
             double root = -b / (2 * a);
-            // System.out.println("Roots are real and equal:");
-            // System.out.println("Root: " + root);
+            /// Roots are real and equal
             return new ComplexNumberPair(
                     new ComplexNumber(root, 0.0),
                     new ComplexNumber(root, 0.0)
             );
         } else {
-            // System.out.println("Roots are complex and different:");
+            /// Roots are complex and different
             double realPart = -b / (2 * a);
             double imaginaryPart = sqrt(-discriminant) / (2 * a);
-            // System.out.println("Root 1: " + realPart + " + " + imaginaryPart + "i");
-            // System.out.println("Root 2: " + realPart + " - " + imaginaryPart + "i");
             return new ComplexNumberPair(
                     new ComplexNumber(realPart,  imaginaryPart),
                     new ComplexNumber(realPart, -imaginaryPart)
@@ -73,16 +69,49 @@ public class Math {
     public static boolean approxEquals(double n1, double n2, double tolerance) {
         if(n1 == 0.0 && n2 == 0.0)
             return true;
-
-        // System.out.println(String.format(Locale.US, "n1=%1$20.5f n2=%2$20.5f", n1, n2));
-
         double errorRatio = abs(n1-n2)/(abs(n1)+abs(n2));
-        // System.out.println(String.format(Locale.US, "Error Ratio=%1$20.10f", errorRatio));
-
         return errorRatio < tolerance;
     }
 
     public static boolean approxEquals(double n1, double n2) {
         return approxEquals(n1, n2, NUMERICAL_TOLERANCE_RATIO);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    public static boolean isSteadyState(double[] data, int eIdx, int lookback, double tolerance) {
+        return isSteadyStatePredicate(
+                data,
+                eIdx,
+                lookback,
+                (Double n1, Double n2) -> approxEquals(n1, n2, tolerance));
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    public static boolean isSteadyStatePredicate(double[] data,
+                                                 int      eIdx,
+                                                 int      lookback,
+                                                 BiPredicate<Double, Double> predicate) {
+        int    sIdx        = eIdx-lookback;
+        /// need at least lookback data points to determine steady state
+        if(sIdx<0)
+            return false;
+
+        double currentData = data[eIdx];
+        for(int idx=sIdx; idx<=eIdx; idx++) {
+            if(!predicate.test(currentData, data[idx]))
+                return false;
+        }
+        return true;
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    public static Integer getSteadyStateStartPredicate(double[] data,
+                                                   int      lookback,
+                                                   BiPredicate<Double, Double> predicate) {
+        for(int idx=lookback; idx<data.length; idx++)
+            if(isSteadyStatePredicate(data, idx, lookback, predicate))
+                return idx;
+
+        return null;
     }
 }

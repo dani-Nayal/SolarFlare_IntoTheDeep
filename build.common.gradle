@@ -106,9 +106,6 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    packagingOptions {
-        pickFirst '**/*.so'
-    }
 
     sourceSets.main {
         jni.srcDirs = []

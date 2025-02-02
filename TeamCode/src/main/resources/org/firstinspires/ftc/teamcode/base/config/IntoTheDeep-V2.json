@@ -21,10 +21,10 @@
       "maxAcceleration": 0,
       "maxVelocity": 0,
       "calibParams": {
-        "minTimeInc": 10.0,
+        "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 0.040
       }
     },
     "RIGHT_BACK": {
@@ -43,10 +43,10 @@
       "maxAcceleration": 0,
       "maxVelocity": 0,
       "calibParams": {
-        "minTimeInc": 10.0,
+        "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 0.040
       }
     },
     "LEFT_FRONT": {
@@ -65,10 +65,10 @@
       "maxAcceleration": 0,
       "maxVelocity": 0,
       "calibParams": {
-        "minTimeInc": 10.0,
+        "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 0.040
       }
     },
     "RIGHT_FRONT": {
@@ -87,10 +87,10 @@
       "maxAcceleration": 0,
       "maxVelocity": 0,
       "calibParams": {
-        "minTimeInc": 10.0,
+        "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 0.040
       }
     },
     "EXTENDO": {
@@ -109,10 +109,10 @@
       "maxAcceleration": 20000,
       "maxVelocity": 3000,
       "calibParams": {
-        "minTimeInc": 10.0,
+        "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 0.040
       }
     },
     "EXTENDO_PITCH": {
@@ -131,10 +131,10 @@
       "maxAcceleration": 20000,
       "maxVelocity": 3000,
       "calibParams": {
-        "minTimeInc": 10.0,
+        "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 0.040
       }
     },
     "BUCKET_SLIDES": {
@@ -153,10 +153,10 @@
       "maxAcceleration": 20000,
       "maxVelocity": 3000,
       "calibParams": {
-        "minTimeInc": 10.0,
+        "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "speedWindowSize": 10
+        "averagingTime": 0.040
       }
     }
   },
