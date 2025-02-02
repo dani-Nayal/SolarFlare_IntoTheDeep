@@ -36,6 +36,8 @@ import static java.lang.Math.max;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import androidx.annotation.NonNull;
 
@@ -51,27 +53,30 @@ import org.firstinspires.ftc.teamcode.base.config.MotorConfig;
 import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.config.Validatable;
 import org.firstinspires.ftc.teamcode.base.logging.MetricsWritable;
+import org.firstinspires.ftc.teamcode.base.logging.RobotLogger;
 import org.firstinspires.ftc.teamcode.base.logging.RobotMetrics;
 import org.firstinspires.ftc.teamcode.base.logging.RobotMetricsFile;
 import org.firstinspires.ftc.teamcode.base.utils.JSONUtils;
 import org.firstinspires.ftc.teamcode.base.validate.Validation;
 
 public class MotorProfileConstP implements JSONWritable, MetricsWritable, Validatable {
-    private       MotorEnum   motorEnum;
-    private       MotorConfig motorConfig;
-    private       DcMotorEx   motor;
+    private transient final Logger      logger;
+    private           final MotorEnum   motorEnum;
+    private transient final MotorConfig motorConfig;
+    private transient final DcMotorEx   motor;
     /**
      * Calibration Direction: FORWARD, REVERSE
      */
-    public        Direction   calibDirection;
+    public  transient Direction   calibDirection;
 
-    public        double      minTimeInc;
+    public        double          minTimeInc;
     /**
      * Encoder resolution of the motor itself at the shaft output (PPR)
      */
-    public        double      encoderResolution;
-    public        int         timeResolution;
-    public        double      power;
+    public        double        encoderResolution;
+    public        int           timeResolution;
+    public        double        power;
+    public        double        signedPower;
     /**
      * Starting Position
      */
@@ -112,7 +117,7 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
     /**
      * Position coordinate
      */
-    private       double[]    P;
+    private       int[]       P;
     /**
      * Velocity coordinate
      */
@@ -169,9 +174,9 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
      * Constructor requires information about the motor
      * @param motorConfig_in: The configuration of the motor being calibrated
      */
-    public MotorProfileConstP(MotorConfig motorConfig_in, Direction calibDirection_in) {
+    public MotorProfileConstP(MotorConfig motorConfig_in) {
         motorConfig       = motorConfig_in;
-        calibDirection    = calibDirection_in;
+        logger            = RobotLogger.getInstance().getConfigLogger();
         motor             = motorConfig.motor;
         motorEnum         = motorConfig.motorEnum;
         encoderResolution = motorConfig.getEncoderResolution();
@@ -184,24 +189,41 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
         tCycle            = new double[timeResolution];
         V                 = new double[timeResolution];
         Vavg              = new double[timeResolution];
-        P                 = new double[timeResolution];
+        P                 = new int   [timeResolution];
         A                 = new double[timeResolution];
         Aavg              = new double[timeResolution];
         C                 = new double[timeResolution];
     }
 
     protected void gotoStart() {
-        RunMode runMode   = motor.getMode();
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setTargetPosition(Pi);
-        motor.setPower(1.0);
+        logger.logp(Level.INFO,
+                "MotorProfileConsP",
+                "gotoStart",
+                "Entering: Motor: " + motorEnum +  " " + calibDirection + " P=" + motor.getCurrentPosition() + " Pi=" + Pi);
 
-        while(motor.isBusy())
-            continue;
-        motor.setMode(runMode);
+        double toStartPower = motor.getCurrentPosition()<Pi?1.0:-1.0;
+
+        motor.setMode(RunMode.RUN_TO_POSITION);
+        motor.setTargetPosition(Pi);
+        motor.setPower(toStartPower);
+
+        boolean offTarget   = true;
+        while(motor.isBusy() || offTarget) {
+            offTarget = abs(Pi - motor.getCurrentPosition()) > 5;
+            logger.logp(Level.INFO,
+                    "MotorProfileConstP",
+                    "TheWhileLoop",
+                    calibDirection + " P=" + motor.getCurrentPosition() + " - still offTarget");
+        }
+
+        logger.logp(Level.INFO,
+                "MotorProfileConsP",
+                "gotoStart",
+                "Exiting: Motor: " + motorEnum + " " + calibDirection + " power=" +
+                        toStartPower + " offTarget=" + offTarget + " P=" + motor.getCurrentPosition());
     }
 
-    public double getPLast() {
+    public int getPLast() {
         return P[tIdxMax];
     }
 
@@ -250,9 +272,11 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
     }
 
     public void calcProfile(double power_in, int Pi_in, int Pf_in) {
-        power                   = power_in;
-        Pi                      = calibDirection == Direction.FORWARD? Pi_in : Pf_in;
-        Pf                      = calibDirection == Direction.FORWARD? Pf_in : Pi_in;
+        Pi                      = Pi_in;
+        Pf                      = Pf_in;
+        power                   = abs(power_in);
+        signedPower             = Pf > Pi? power : -power;
+        calibDirection          = Pf > Pi? Direction.FORWARD : Direction.REVERSE;
 
         ElapsedTime timer       = new ElapsedTime();
         ElapsedTime eTimer      = new ElapsedTime();
@@ -262,23 +286,22 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
         int     tIdx            = 0;
 
         gotoStart();
-        RunMode runMode         = motor.getMode();
-        motor.setDirection(calibDirection);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
 
         double  tCycleNow       = 0;
         double  tPextractNow    = 0;
         double  tVextractNow    = 0;
         double  tCextractNow    = 0;
         double  tNow;
-        double  PNow;
+        int     PNow;
         double  VNow;
         double  CNow;
         boolean shortOfTarget;
         timer.reset();
         eTimer2.reset();
-        motor.setPower(power);
+        motor.setPower(signedPower);
+        String format           = "tIdx=%1$d shortOfTarget=%2$b Pi=%3$d Pf=%4$d P=%5$d";
         do {
             tCycleNow          += eTimer2.seconds();
             eTimer2.reset();
@@ -319,10 +342,17 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
                 tIdx++;
             }
             shortOfTarget       = calibDirection == Direction.FORWARD? PNow<Pf : PNow>Pf;
+
+            /*
+            logger.logp(Level.SEVERE,
+                    "MotorProfileConstP",
+                    "calclProfile",
+                    String.format(Locale.US, format, tIdx, shortOfTarget, Pi, Pf, PNow));
+            */
+
         } while(tIdx<timeResolution && shortOfTarget);
 
         motor.setPower(0);
-        motor.setMode(runMode);
         /// tIdx is one position ahead of the last valid slot in the data arrays
         tIdxMax                 = tIdx - 1;
 
@@ -332,6 +362,12 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
 
     private double[] trimArray(double[] data) {
         double[] trimmedArray = new double[tIdxMax+1];
+        System.arraycopy(data, 0, trimmedArray, 0, tIdxMax+1);
+        return trimmedArray;
+    }
+
+    private int[] trimArray(int[] data) {
+        int[] trimmedArray = new int[tIdxMax+1];
         System.arraycopy(data, 0, trimmedArray, 0, tIdxMax+1);
         return trimmedArray;
     }
@@ -352,10 +388,6 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
 
     public boolean hasSteadyStateV() {
         return ssVavg != null;
-    }
-
-    public boolean hasSteadyStateA() {
-        return ssAavg != null;
     }
 
     public boolean hasReachedTarget() {
@@ -382,36 +414,20 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
         return ssVavg;
     }
 
-    public Double getSteadyStateA() {
-        return ssAavg;
+    public boolean hasSteadyStateA() {
+        return ssAavg != null;
     }
 
-    public MotorProfileConstP getCopyForJSON() {
-        MotorProfileConstP profile = new MotorProfileConstP(motorConfig, calibDirection);
-        profile.motorEnum          = this.motorEnum;
-        profile.motorConfig        = null;
-        profile.motor              = null;
-        profile.minTimeInc         = this.minTimeInc;
-        profile.encoderResolution  = this.encoderResolution;
-        profile.timeResolution     = this.timeResolution;
-        profile.power              = this.power;
-        profile.Pi                 = this.Pi;
-        profile.Pf                 = this.Pf;
-        /// This is the last -valid- index into the data arrays
-        profile.tIdxMax            = this.tIdxMax;
-        profile.t                  = this.t;
-        profile.tPextract          = this.tPextract;
-        profile.tVextract          = this.tVextract;
-        profile.tCextract          = this.tCextract;
-        profile.tCycle             = this.tCycle;
-        profile.V                  = this.V;
-        profile.Vavg               = this.Vavg;
-        profile.P                  = this.P;
-        profile.A                  = this.A;
-        profile.Aavg               = this.Aavg;
-        profile.C                  = this.C;
+    /**
+     * Returns time to reach acceleration steady state (should be zero) in seconds
+     * @return time to reach steady state
+     */
+    public Double getTimeToSteadyStateA() {
+        return hasSteadyStateA() ? t[ssIdxAavg] : null;
+    }
 
-        return profile;
+    public Double getSteadyStateA() {
+        return ssAavg;
     }
 
     public String getJSONFileId() {
@@ -419,8 +435,7 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
     }
 
     public void writeJSON() {
-        MotorProfileConstP trimmedThis = getCopyForJSON();
-        JSONUtils.writeJSON(trimmedThis);
+        JSONUtils.writeJSON(this);
     }
 
     public String getMetricsFileId() {
@@ -448,13 +463,17 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
     @Override
     public String toString() {
         var sb = new StringBuilder();
+
         sb.append("MotorProfileConstP\n");
         sb.append("  JSONFileId=")       .append(getJSONFileId())           .append("\n");
         sb.append("  motorEnum=")        .append(motorEnum)                 .append("\n");
+        sb.append("  calibDirection=")   .append(calibDirection.name())     .append("\n");
         sb.append("  minTimeInc=")       .append(minTimeInc)                .append("\n");
         sb.append("  encoderResolution=").append(encoderResolution)         .append("\n");
         sb.append("  timeResolution=")   .append(timeResolution)            .append("\n");
+        sb.append("  averagingPeriods=") .append(averagingPeriods)          .append("\n");
         sb.append("  power=")            .append(power)                     .append("\n");
+        sb.append("  signedPower=")      .append(signedPower)               .append("\n");
         sb.append("  Pi=")               .append(Pi)                        .append("\n");
         sb.append("  Pf=")               .append(Pf)                        .append("\n");
         sb.append("  tIdxMax=")          .append(tIdxMax)                   .append("\n");
@@ -463,44 +482,53 @@ public class MotorProfileConstP implements JSONWritable, MetricsWritable, Valida
         sb.append("  tVextract=\n")      .append(Arrays.toString(tVextract)).append("\n");
         sb.append("  tCextract=\n")      .append(Arrays.toString(tCextract)).append("\n");
         sb.append("  tCycle=\n")         .append(Arrays.toString(tCycle))   .append("\n");
+        sb.append("  P=\n")              .append(Arrays.toString(P))        .append("\n");
         sb.append("  V=\n")              .append(Arrays.toString(V))        .append("\n");
         sb.append("  Vavg=\n")           .append(Arrays.toString(Vavg))     .append("\n");
-        sb.append("  P=\n")              .append(Arrays.toString(P))        .append("\n");
         sb.append("  A=\n")              .append(Arrays.toString(A))        .append("\n");
         sb.append("  Aavg=\n")           .append(Arrays.toString(Aavg))     .append("\n");
         sb.append("  C=\n")              .append(Arrays.toString(C))        .append("\n");
+        sb.append("  Vmax=")             .append(Vmax)                      .append("\n");
+        sb.append("  Amax=")             .append(Amax)                      .append("\n");
+        sb.append("  Dmax=")             .append(Dmax)                      .append("\n");
+        sb.append("  isTargetReached=")  .append(isTargetReached)           .append("\n");
+        sb.append("  ssIdxVavg=")        .append(ssIdxVavg)                 .append("\n");
+        sb.append("  ssVavg=")           .append(ssVavg)                    .append("\n");
+        sb.append("  ssIdxAavg=")        .append(ssIdxAavg)                 .append("\n");
+        sb.append("  ssAavg=")           .append(ssAavg)                    .append("\n");
 
         return sb.toString();
     }
 
     public boolean isValid() {
-        return Validation.validate("motorEnum", motorEnum)                                                        &&
-                Validation.validate("motorConfig", motorConfig)                                                   &&
-                Validation.validate("motor",motor)                                                                &&
-                Validation.validate("minTimeInc", minTimeInc, (Double x) -> x>0.0)                                &&
-                Validation.validate("encoderResolution", encoderResolution, (Double x) -> x>0)                    &&
-                Validation.validate("timeResolution",timeResolution,(Integer i) -> i>0)                           &&
-                Validation.validate("power", power, (Double x) -> x>=-1 && x<=1)                                  &&
-                Validation.validate("tIdxMax", tIdxMax, (Integer i) -> i>=0 && i<timeResolution)                  &&
-                Validation.validate("averagingPeriods", averagingPeriods, (Integer i) -> i>0 && i<timeResolution) &&
-                Validation.validate("t", t)                                                                       &&
-                Validation.validate("tPextract", tPextract)                                                       &&
-                Validation.validate("tVextract", tVextract)                                                       &&
-                Validation.validate("tCextract", tCextract)                                                       &&
-                Validation.validate("tCycle", tCycle)                                                             &&
-                Validation.validate("P", P)                                                                       &&
-                Validation.validate("V", V)                                                                       &&
-                Validation.validate("Vavg", Vavg)                                                                 &&
-                Validation.validate("A", A)                                                                       &&
-                Validation.validate("Aavg", Aavg)                                                                 &&
-                Validation.validate("C", C)                                                                       &&
-                Validation.validate("Vmax", Vmax)                                                                 &&
-                Validation.validate("Amax", Amax)                                                                 &&
-                Validation.validate("Dmax", Dmax)                                                                 &&
-                Validation.validate("ssIdxVavg", ssIdxVavg, (Integer i) -> i>=0 && i<timeResolution)              &&
-                Validation.validate("ssVavg", ssVavg)                                                             &&
-                Validation.validate("ssIdxAavg", ssIdxAavg, (Integer i) -> i>=0 && i<timeResolution)              &&
-                Validation.validate("ssAavg", ssAavg);
+        return Validation.validate("motorEnum",          motorEnum)                                                              &&
+                Validation.validate("motorConfig",       motorConfig)                                                            &&
+                Validation.validate("motor",             motor)                                                                  &&
+                Validation.validate("minTimeInc",        minTimeInc,        (Double x)  -> x!=null && x>0.0)                     &&
+                Validation.validate("encoderResolution", encoderResolution, (Double x)  -> x!=null && x>0)                       &&
+                Validation.validate("timeResolution",    timeResolution,    (Integer i) -> i!=null && i>0)                       &&
+                Validation.validate("power",             power,             (Double x)  -> x!=null && x>=0  && x<=1)             &&
+                Validation.validate("signedPower",       signedPower,       (Double x)  -> x!=null && x>=-1 && x<=1)             &&
+                Validation.validate("tIdxMax",           tIdxMax,           (Integer i) -> i!=null && i>=0  && i<timeResolution) &&
+                Validation.validate("averagingPeriods",  averagingPeriods,  (Integer i) -> i!=null && i>0   && i<timeResolution) &&
+                Validation.validate("t",                 t)                                                                      &&
+                Validation.validate("tPextract",         tPextract)                                                              &&
+                Validation.validate("tVextract",         tVextract)                                                              &&
+                Validation.validate("tCextract",         tCextract)                                                              &&
+                Validation.validate("tCycle",            tCycle)                                                                 &&
+                Validation.validate("P",                 P)                                                                      &&
+                Validation.validate("V",                 V)                                                                      &&
+                Validation.validate("Vavg",              Vavg)                                                                   &&
+                Validation.validate("A",                 A)                                                                      &&
+                Validation.validate("Aavg",              Aavg)                                                                   &&
+                Validation.validate("C",                 C)                                                                      &&
+                Validation.validate("Vmax",              Vmax)                                                                   &&
+                Validation.validate("Amax",              Amax)                                                                   &&
+                Validation.validate("Dmax",              Dmax)                                                                   &&
+                Validation.validate("ssIdxVavg",         ssIdxVavg,         (Integer i) -> i!=null && i>=0 && i<timeResolution)  &&
+                Validation.validate("ssVavg",            ssVavg)                                                                 &&
+                Validation.validate("ssIdxAavg",         ssIdxAavg,         (Integer i) -> i!=null && i>=0 && i<timeResolution)  &&
+                Validation.validate("ssAavg",            ssAavg);
     }
 
     public static void main(String[] args) {
