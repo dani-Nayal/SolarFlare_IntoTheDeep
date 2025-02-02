@@ -125,13 +125,14 @@ public class Rig1MotorCalib extends LinearOpMode {
         telemetry.addData("F_Plast",              motorProfileF.getPLast());
         telemetry.addData("F_isTargetReached",    motorProfileF.hasReachedTarget());
         telemetry.addData("F_timeToTarget",       motorProfileF.getTimeToTarget());
+        telemetry.addData("F_noLoadVelocity",     motorConfig  .getNoLoadVelocity());
         telemetry.addData("F_hasSteadyStateV",    motorProfileF.hasSteadyStateV());
         telemetry.addData("F_timeToSteadyState",  motorProfileF.getTimeToSteadyState());
         telemetry.addData("F_Vss",                motorProfileF.getSteadyStateV());
+        telemetry.addData("F_Vmax",               motorProfileF.Vmax);
         telemetry.addData("F_hasSteadyStateA",    motorProfileF.hasSteadyStateA());
         telemetry.addData("F_timeToSteadyStateA", motorProfileF.getTimeToSteadyStateA());
         telemetry.addData("F_Ass",                motorProfileF.getSteadyStateA());
-        telemetry.addData("F_Vmax",               motorProfileF.Vmax);
         telemetry.addData("F_Amax",               motorProfileF.Amax);
         telemetry.addData("F_Dmax",               motorProfileF.Dmax);
 
@@ -141,13 +142,14 @@ public class Rig1MotorCalib extends LinearOpMode {
         telemetry.addData("R_Plast",              motorProfileR.getPLast());
         telemetry.addData("R_isTargetReached",    motorProfileR.hasReachedTarget());
         telemetry.addData("R_timeToTarget",       motorProfileR.getTimeToTarget());
+        telemetry.addData("R_noLoadVelocity",     motorConfig  .getNoLoadVelocity());
         telemetry.addData("R_hasSteadyStateV",    motorProfileR.hasSteadyStateV());
         telemetry.addData("R_timeToSteadyState",  motorProfileR.getTimeToSteadyState());
         telemetry.addData("R_Vss",                motorProfileR.getSteadyStateV());
+        telemetry.addData("R_Vmax",               motorProfileR.Vmax);
         telemetry.addData("R_hasSteadyStateA",    motorProfileR.hasSteadyStateA());
         telemetry.addData("R_timeToSteadyStateA", motorProfileR.getTimeToSteadyStateA());
         telemetry.addData("R_Ass",                motorProfileR.getSteadyStateA());
-        telemetry.addData("R_Vmax",               motorProfileR.Vmax);
         telemetry.addData("R_Amax",               motorProfileR.Amax);
         telemetry.addData("R_Dmax",               motorProfileR.Dmax);
         telemetry.update();

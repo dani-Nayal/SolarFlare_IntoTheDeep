@@ -24,7 +24,8 @@
         "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "averagingTime": 0.040
+        "averagingTime": 0.040,
+        "endSamples": 20
       }
     },
     "RIGHT_BACK": {
@@ -46,7 +47,8 @@
         "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "averagingTime": 0.040
+        "averagingTime": 0.040,
+        "endSamples": 20
       }
     },
     "LEFT_FRONT": {
@@ -68,7 +70,8 @@
         "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "averagingTime": 0.040
+        "averagingTime": 0.040,
+        "endSamples": 20
       }
     },
     "RIGHT_FRONT": {
@@ -90,7 +93,8 @@
         "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "averagingTime": 0.040
+        "averagingTime": 0.040,
+        "endSamples": 20
       }
     },
     "EXTENDO": {
@@ -112,7 +116,8 @@
         "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "averagingTime": 0.040
+        "averagingTime": 0.040,
+        "endSamples": 20
       }
     },
     "EXTENDO_PITCH": {
@@ -134,7 +139,8 @@
         "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "averagingTime": 0.040
+        "averagingTime": 0.040,
+        "endSamples": 20
       }
     },
     "BUCKET_SLIDES": {
@@ -156,7 +162,8 @@
         "minTimeInc": 0.002,
         "timeResolution": 100,
         "powerResolution": 100,
-        "averagingTime": 0.040
+        "averagingTime": 0.040,
+        "endSamples": 20
       }
     }
   },

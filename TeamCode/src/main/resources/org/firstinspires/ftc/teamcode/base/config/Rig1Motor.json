@@ -24,7 +24,8 @@
         "minTimeInc": 0.002,
         "timeResolution": 3000,
         "powerResolution": 100,
-        "averagingTime": 0.040
+        "averagingTime": 0.040,
+        "endSamples": 20
       }
     }
   },
