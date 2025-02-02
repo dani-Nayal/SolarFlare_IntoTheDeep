@@ -866,7 +866,7 @@ public abstract class  TeleOpComponents {
         );
         extendoPitch = new BotMotor(
                 "extendoPitch",
-                0.005,0,0.0, 15,
+                0.009,0,0.0003, 15,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{0,-1030,-960,0},
                 0,-1020,
@@ -878,14 +878,14 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.012,0.00057, 15,
+                0.015,0.0014,0.0005, 15,
                 new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
                 1070,0,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "MOTION_PROFILE"
+                "PID"
         );
         rightFront = new BotMotor(
                 "rightFront",

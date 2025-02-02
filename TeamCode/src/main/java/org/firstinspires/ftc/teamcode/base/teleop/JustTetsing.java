@@ -32,7 +32,21 @@ public class JustTetsing extends LinearOpMode {
                     this::opModeIsActive,
                     bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1070),
                     extendo.triggeredToggleAction(()->(gamepad1.b),0,400),
-                    extendoPitch.triggeredToggleAction(()->(gamepad1.x),-1020,0),
+                    new TeleOpActions.PressTrigger(new Condition[]{()->(gamepad1.x)},new TeleOpAction[]{
+                            new TeleOpActions.SemiUninterruptibleConditionalAction(new Condition[]{()->(extendoPitch.target==0),()->(extendoPitch.target==1020)},
+                                    new TeleOpAction[]{
+                                        new TeleOpSequentialAction(
+                                            new TeleOpActions.ShortAction(()->{extendoPitch.MOVEMENT_MODE="PID";}),
+                                            extendoPitch.setTargetAction(1020)
+                                        ),
+                                        new TeleOpSequentialAction(
+                                                new TeleOpActions.ShortAction(()->{extendoPitch.MOVEMENT_MODE="MOTION_PROFILE";}),
+                                                extendoPitch.setTargetAction(0)
+                                        ),
+                                    }
+                            )
+
+                    }),
                     new UpdateTelemetryAction()
             );
     }

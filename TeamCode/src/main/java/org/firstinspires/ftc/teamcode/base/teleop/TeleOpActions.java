@@ -751,43 +751,29 @@ public abstract class TeleOpActions{
         }
     }
     public static void runLoop(Condition opModeIsActive, TeleOpAction...actions){
-        ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
-        ArrayList<BotMotor> pidMotors = new ArrayList<>();
         for (BotMotor motor : TeleOpComponents.motors) {
-            if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE")) {
-                motionProfileMotors.add(motor);
+            if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE") || Objects.equals(motor.MOVEMENT_MODE, "PID")) {
+                motor.LOOP_TIMER.reset();
             }
-            else if (Objects.equals(motor.MOVEMENT_MODE, "PID")) {
-                pidMotors.add(motor);
-            }
-        }
-        for (int i=0;i<motionProfileMotors.size();i++){
-            motionProfileMotors.get(i).LOOP_TIMER.reset();
-        }
-        for (int i=0;i<pidMotors.size();i++){
-            pidMotors.get(i).LOOP_TIMER.reset();
         }
         while (opModeIsActive.call()) {
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
             }
-            for (int i=0;i<motionProfileMotors.size();i++) {
-                BotMotor motor = motionProfileMotors.get(i);
+            for (int i=0;i<motors.size();i++) {
+                BotMotor motor = motors.get(i);
                 if (!motor.isStallResetting) {
-                    motor.createPendingMotionProfiles();
-                    motor.runMotionProfileOnce();
-                }
-            }
-            for (int i=0;i<pidMotors.size();i++){
-                BotMotor motor = pidMotors.get(i);
-                if (!motor.isStallResetting){
-                    motor.runPIDOnce();
+                    if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE")) {
+                        motor.createPendingMotionProfiles();
+                        motor.runMotionProfileOnce();
+                    }
+                    else if (Objects.equals(motor.MOVEMENT_MODE, "PID")){
+                        motor.runPIDOnce();
+                    }
                 }
             }
         }
         motors.clear();
-        motionProfileMotors.clear();
-        pidMotors.clear();
         servos.clear();
         CRServos.clear();
     }
