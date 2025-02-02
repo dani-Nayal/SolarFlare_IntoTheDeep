@@ -18,10 +18,12 @@ public class BackUpTeleOp extends LinearOpMode {
     double extendoTarget = 0;
     double bucketSlidesTarget = 0;
     double clawWristPosition = 95;
-    double clawFingerPosition = 92;
+    double clawFingerPosition = 86;
     double clawPitchPosition = 100;
     double innerClawPitchPosition = 200;
     double bucketPosition = 36;
+
+    double bucketSlidesMax = 1070;
     public class MotionProfile{
         public double kP; public double kI; public double kD;
         public double MAX_ACCELERATION; public double MAX_VELOCITY;
@@ -135,6 +137,8 @@ public class BackUpTeleOp extends LinearOpMode {
         boolean isOp2SequenceActive = false;
         boolean isPressingY = false;
         boolean isPressingY2 = false;
+        boolean isBucketMaxSet = false;
+
         boolean isPressingA2 = false;
         boolean isX2SequenceActive = false;
         boolean isPressingBumper2 = false;
@@ -220,7 +224,7 @@ public class BackUpTeleOp extends LinearOpMode {
             else if (gamepad1.back && bucketSlidesTarget<15){
                 bucketSlidesTarget=0;
             }
-            if (gamepad2.back){
+            if ((gamepad2.back) && !(gamepad2.a)){
                 bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
@@ -250,7 +254,7 @@ public class BackUpTeleOp extends LinearOpMode {
             if (isBSequenceActive) {
                 extendoPitchTarget = -960;
                 clawWristPosition = 95;
-                clawFingerPosition = 92;
+                clawFingerPosition = 86;
                 clawPitchPosition = 68;
                 innerClawPitchPosition = 20;
                 bucketSlidesTarget=0;
@@ -282,17 +286,17 @@ public class BackUpTeleOp extends LinearOpMode {
                     extendoPitchTarget=0;
                 }
 
-                if (Atimer.seconds() > 1.1) {
-                    clawFingerPosition = 92;
+                if (Atimer.seconds() > 1.4) {
+                    clawFingerPosition = 86;
                 }
 
-                if (Atimer.seconds() > 1.3) {
+                if (Atimer.seconds() > 1.7) {
                     clawPitchPosition = 72.4;
                     innerClawPitchPosition = 160;
 
                 }
-                if (Atimer.seconds() > 1.75) {
-                    bucketSlidesTarget=1060;
+                if (Atimer.seconds() > 2) {
+                    bucketSlidesTarget=bucketSlidesMax;
                     isASequenceActive=false;
 
                 }
@@ -311,10 +315,10 @@ public class BackUpTeleOp extends LinearOpMode {
                 clawPitchPosition = 13;
                 innerClawPitchPosition = 82;
                 bucketPosition=36;
-                clawFingerPosition=92;
+                clawFingerPosition=86;
 
                 if (X2timer.seconds() > 0.3){
-                    clawFingerPosition = 20;
+                    clawFingerPosition = 0;
                 }
 
                 if (X2timer.seconds() > 1) {
@@ -368,11 +372,11 @@ public class BackUpTeleOp extends LinearOpMode {
 
                 if (B2timer.seconds() > 0.6) {
                     clawPitchPosition = 13;
-                    innerClawPitchPosition = 82;
-                    extendoPitchTarget=0;
+                    innerClawPitchPosition = 140;
+                    extendoPitchTarget=-200;
                 }
                 if (B2timer.seconds() > 1) {
-                    extendoTarget=550;
+                    extendoTarget=700;
                     isB2SequenceActive=false;
                 }
             }
@@ -397,7 +401,7 @@ public class BackUpTeleOp extends LinearOpMode {
                 }
                 if (B2timer.seconds() > 1) {
                     extendoTarget=0;
-                    clawFingerPosition=92;
+                    clawFingerPosition=86;
                     isOp2SequenceActive=false;
                 }
             }
@@ -489,7 +493,7 @@ public class BackUpTeleOp extends LinearOpMode {
             if (gamepad1.y){
                 if (!isPressingY) {
                     if (bucketSlidesTarget == 0) {
-                        bucketSlidesTarget = 1070;}
+                        bucketSlidesTarget = bucketSlidesMax;}
                     else {
                         bucketSlidesTarget = 0;
                     }
@@ -512,10 +516,10 @@ public class BackUpTeleOp extends LinearOpMode {
 
             // Default perpendicular claw pos 79.5 degrees
             if (gamepad2.left_trigger>0 && clawWristPosition >= 15) {
-                clawWristPosition -= 5;
+                clawWristPosition -= 6;
             }
             else if (gamepad2.right_trigger>0 && clawWristPosition <= 175) {
-                clawWristPosition += 5;
+                clawWristPosition += 6;
             }
 
 
@@ -525,7 +529,7 @@ public class BackUpTeleOp extends LinearOpMode {
 
             // BucketTransfer / default pos 85 degrees
             // Bucket Deposit pos 205 degrees
-            if (gamepad2.a){
+            if ((gamepad2.a)){
                 if (!isPressingA2){
                     isPressingA2=true;
                     if (bucketPosition==36) {bucketPosition=158;} else {bucketPosition=36;}
@@ -533,17 +537,25 @@ public class BackUpTeleOp extends LinearOpMode {
             }
             else isPressingA2=false;
 
+            if ((gamepad2.left_stick_x<0.2) && (gamepad2.right_stick_x>0.2)){
+                if (!isBucketMaxSet){
+                    isBucketMaxSet=true;
+                    if (bucketSlidesMax==570) {bucketSlidesMax=1070;} else {bucketSlidesMax=570;}
+                }
+            }
+            else isBucketMaxSet=false;
+
             if(gamepad2.right_bumper){
-                clawFingerPosition=92;
+                clawFingerPosition=86;
             }
             if(gamepad2.left_bumper){
-                clawFingerPosition=20;
+                clawFingerPosition=0;
             }
 
             if (gamepad2.y){
                 if (!isPressingY2){
                     isPressingY2=true;
-                    if (extendoTarget==793) {extendoTarget=0;} else {extendoTarget=793;}
+                    if (extendoPitchTarget==-200) {extendoPitchTarget=-450;} else {extendoPitchTarget=-200;}
                 }
             }
             else isPressingY2=false;
