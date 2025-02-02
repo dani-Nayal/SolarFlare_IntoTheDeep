@@ -140,7 +140,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
             TeleOpActions.runLoop(
                     this::opModeIsActive,
                     clawFingers.triggeredToggleAction(()->(gamepad2.left_bumper||gamepad2.right_bumper),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
-                    new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{bucketSlides.stallResetAction()}),
+                    new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{bucketSlides.stallResetAction(0)}),
                     clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),2),
                     bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
                     bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("depositPosition"),bucketSlides.getPos("transferPosition")),

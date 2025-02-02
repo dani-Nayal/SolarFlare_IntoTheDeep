@@ -3,7 +3,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -56,7 +55,9 @@ public abstract class  TeleOpComponents {
 
     public static class BotMotor extends DcMotorImplEx {
         boolean isPowered = true;
+        boolean forceStartVelocityZero = false;
         double errorTol;
+        double offset=0;
         boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 10;
         double maxVelocityParam;
         double maxAccelerationParam;
@@ -264,9 +265,13 @@ public abstract class  TeleOpComponents {
         }
         public class StallResetAction implements TeleOpAction{
             public boolean isStart = true;
+            public double offset=0;
+            public StallResetAction(double offset){
+                this.offset=offset;
+            }
             public boolean run(@NonNull TelemetryPacket packet){
                 if (isStart) {
-                    initiateStallReset();
+                    initiateStallReset(offset);
                     isStart=false;
                 }
                 checkStallResetOnce();
@@ -285,8 +290,8 @@ public abstract class  TeleOpComponents {
                 setPower(0);
             }
         }
-        public StallResetAction stallResetAction(){
-            return new StallResetAction();
+        public StallResetAction stallResetAction(double offset){
+            return new StallResetAction(offset);
         }
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change,double maxAcceleration, double maxVelocity){
             return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change),maxAcceleration,maxVelocity),new SetTargetAction(()->(target-change),maxAcceleration,maxVelocity)});
@@ -375,7 +380,13 @@ public abstract class  TeleOpComponents {
             profileStartPos=getCurrentPosition();
             double distance=target-profileStartPos;
             if (distance!=0) {
-                startVelocity = getVelocity();
+                if (!forceStartVelocityZero) {
+                    startVelocity = getVelocity();
+                }
+                else{
+                    startVelocity=0;
+                    forceStartVelocityZero=false;
+                }
                 currentMaxVelocity = max_velocity * Math.signum(distance);
                 currentMaxAcceleration = max_acceleration * Math.signum(currentMaxVelocity - startVelocity);
                 currentMaxDeceleration = -max_acceleration * Math.signum(distance);
@@ -408,8 +419,6 @@ public abstract class  TeleOpComponents {
                     accelDistance=0;
                     cruiseDistance=0;
                     decelDistance=0;
-                    telemetry.addData("e","e");
-                    telemetry.update();
                 }
             }
             else{
@@ -449,7 +458,9 @@ public abstract class  TeleOpComponents {
             previousError=error;
         }
         public void runPIDOnce(){
-            double error=target-getCurrentPosition();
+            double pos = getCurrentPosition();
+            instantTargetPosition=pos;
+            double error=target-pos;
             double kpPower = kP*error;
             integralSum += LOOP_TIMER.time()*error;
             double kiPower = kI*integralSum;
@@ -472,7 +483,9 @@ public abstract class  TeleOpComponents {
                 this.target = target;
                 integralSum = 0;
                 previousError = 0;
-                isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
+                if (Objects.equals(MOVEMENT_MODE, "MOTION_PROFILE")){
+                    isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
+                }
                 for (BotMotor motor : synchronizedMotors){
                     motor.setTarget(target,maxVelocity,maxAcceleration);
                 }
@@ -491,14 +504,15 @@ public abstract class  TeleOpComponents {
         public void setTarget(double target){
             this.setTarget(target, MAX_VELOCITY, MAX_ACCELERATION);
         }
-        public void initiateStallReset(){
+        public void initiateStallReset(double offset){
             isStallResetting=true;
+            this.offset=offset;
             setPower(-0.2);
             previousVoltage = getCurrent(CurrentUnit.AMPS);
         }
         public void checkStallResetOnce(){
             double voltage = getCurrent(CurrentUnit.AMPS);
-            if (voltage-previousVoltage>1.2){
+            if (voltage/previousVoltage>2){
                 setPower(0);
                 setMode(RunMode.STOP_AND_RESET_ENCODER);
                 setMode(RUN_MODE);
@@ -520,6 +534,42 @@ public abstract class  TeleOpComponents {
                 super.setPower(power);
             }
 
+        }
+        public void setMovementMode(String mode){
+            if (Objects.equals(mode, "MOTION_PROFILE")){
+                if (!Objects.equals(MOVEMENT_MODE, mode)){
+                    setPower(0);
+                    profileDelayCounter=1;
+                    forceStartVelocityZero=true;
+                }
+                if (Objects.isNull(MOVEMENT_TIMER)){
+                    MOVEMENT_TIMER=new ElapsedTime();
+                }
+                if (Objects.isNull(MOVEMENT_TIMER)){
+                    LOOP_TIMER=new ElapsedTime();
+                }
+            }
+            else if (Objects.equals(mode, "PID")) {
+                if (Objects.nonNull(MOVEMENT_TIMER)){
+                    MOVEMENT_TIMER=null;
+                }
+                if (Objects.isNull(MOVEMENT_TIMER)){
+                    LOOP_TIMER=new ElapsedTime();
+                }
+            }
+            else{
+                if (Objects.nonNull(MOVEMENT_TIMER)){
+                    MOVEMENT_TIMER=null;
+                }
+                if (Objects.nonNull(MOVEMENT_TIMER)){
+                    LOOP_TIMER=null;
+                }
+            }
+            MOVEMENT_MODE=mode;
+        }
+        @Override
+        public int getCurrentPosition(){
+            return (int) (super.getCurrentPosition()+offset);
         }
     }
 
@@ -855,7 +905,7 @@ public abstract class  TeleOpComponents {
         //initialize mechanism variables here
         extendo = new BotMotor(
                 "extendo",
-                0.015,0,0.0001, 15,
+                0.015,0,0.0006, 15,
                 new String[]{},new double[]{},
                 793,0,
                 250000,3500,
@@ -866,7 +916,7 @@ public abstract class  TeleOpComponents {
         );
         extendoPitch = new BotMotor(
                 "extendoPitch",
-                0.009,0,0.0003, 15,
+                0.0097,0,0.0003, 15,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{0,-1030,-960,0},
                 0,-1020,
@@ -878,14 +928,14 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.0014,0.0005, 15,
+                0.015,0.01,0.00053, 15,
                 new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
-                1070,0,
+                1055,0,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "PID"
+                "MOTION_PROFILE"
         );
         rightFront = new BotMotor(
                 "rightFront",
