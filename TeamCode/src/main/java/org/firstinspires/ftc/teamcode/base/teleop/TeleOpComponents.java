@@ -928,7 +928,7 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.01,0.00053, 15,
+                0.015,0.0115,0.00055, 15,
                 new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
                 1055,0,
                 250000,3500,

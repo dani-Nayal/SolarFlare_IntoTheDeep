@@ -583,17 +583,6 @@ public abstract class TeleOpActions{
             TeleOpComponents.telemetry.addData("bucketSlides target",TeleOpComponents.bucketSlides.target);
             TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
             TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.instantTargetPosition);
-            TeleOpComponents.telemetry.addData("extendoPitch movement",TeleOpComponents.extendoPitch.MOVEMENT_MODE);
-            TeleOpComponents.telemetry.addData("extendoPitch maxAccel",TeleOpComponents.extendoPitch.currentMaxAcceleration);
-            TeleOpComponents.telemetry.addData("extendoPitch maxVel",TeleOpComponents.extendoPitch.currentMaxVelocity);
-            TeleOpComponents.telemetry.addData("extendoPitch maxAccelParam",TeleOpComponents.extendoPitch.maxAccelerationParam);
-            TeleOpComponents.telemetry.addData("extendoPitch maxVelParam",TeleOpComponents.extendoPitch.maxVelocityParam);
-            TeleOpComponents.telemetry.addData("extendoPitch profileStartPos",TeleOpComponents.extendoPitch.profileStartPos);
-            TeleOpComponents.telemetry.addData("extendoPitch accelDT",TeleOpComponents.extendoPitch.accelDT);
-            TeleOpComponents.telemetry.addData("extendoPitch cruiseDT",TeleOpComponents.extendoPitch.cruiseDT);
-            TeleOpComponents.telemetry.addData("extendoPitch decelDT",TeleOpComponents.extendoPitch.decelDT);
-            TeleOpComponents.telemetry.addData("bucketSlides pos",TeleOpComponents.bucketSlides.getCurrentPosition());
-            TeleOpComponents.telemetry.addData("bucketSlides instant target",TeleOpComponents.bucketSlides.instantTargetPosition);
             TeleOpComponents.telemetry.addData("bucketSlides volts",TeleOpComponents.bucketSlides.getCurrent(CurrentUnit.AMPS));
             TeleOpComponents.telemetry.addData("loopy",TIMER.time());
             TeleOpComponents.telemetry.update();
