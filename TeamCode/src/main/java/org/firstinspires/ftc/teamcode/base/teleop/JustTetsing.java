@@ -28,12 +28,12 @@ public class JustTetsing extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         TeleOpComponents.initializeMechanisms(hardwareMap,telemetry,new Pose2d(0,0,Math.toRadians(90)));
         waitForStart();
-        TeleOpActions.runLoop(
-                this::opModeIsActive,
-                bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1060),
-                extendo.triggeredToggleAction(()->(gamepad1.b),0,793),
-                extendoPitch.triggeredToggleAction(()->(gamepad1.x),-960,0),
-                new UpdateTelemetryAction()
-        );
+            TeleOpActions.runLoop(
+                    this::opModeIsActive,
+                    bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1070),
+                    extendo.triggeredToggleAction(()->(gamepad1.b),0,400),
+                    extendoPitch.triggeredToggleAction(()->(gamepad1.x),-1020,0),
+                    new UpdateTelemetryAction()
+            );
     }
 }

@@ -752,27 +752,28 @@ public abstract class TeleOpActions{
     }
     public static void runLoop(Condition opModeIsActive, TeleOpAction...actions){
         ArrayList<BotMotor> motionProfileMotors = new ArrayList<>();
-        for (BotMotor motor : TeleOpComponents.motors){
-            if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE")){
+        ArrayList<BotMotor> pidMotors = new ArrayList<>();
+        for (BotMotor motor : TeleOpComponents.motors) {
+            if (Objects.equals(motor.MOVEMENT_MODE, "MOTION_PROFILE")) {
                 motionProfileMotors.add(motor);
             }
-        }
-        ArrayList<BotMotor> pidMotors = new ArrayList<>();
-        for (BotMotor motor : TeleOpComponents.motors){
-            if (Objects.equals(motor.MOVEMENT_MODE, "PID")){
+            else if (Objects.equals(motor.MOVEMENT_MODE, "PID")) {
                 pidMotors.add(motor);
             }
         }
         for (int i=0;i<motionProfileMotors.size();i++){
             motionProfileMotors.get(i).LOOP_TIMER.reset();
         }
+        for (int i=0;i<pidMotors.size();i++){
+            pidMotors.get(i).LOOP_TIMER.reset();
+        }
         while (opModeIsActive.call()) {
             for (TeleOpAction action : actions) {
                 action.repeatFromStart(packet);
             }
-            for (int i=0;i<motionProfileMotors.size();i++){
+            for (int i=0;i<motionProfileMotors.size();i++) {
                 BotMotor motor = motionProfileMotors.get(i);
-                if (!motor.isStallResetting){
+                if (!motor.isStallResetting) {
                     motor.createPendingMotionProfiles();
                     motor.runMotionProfileOnce();
                 }

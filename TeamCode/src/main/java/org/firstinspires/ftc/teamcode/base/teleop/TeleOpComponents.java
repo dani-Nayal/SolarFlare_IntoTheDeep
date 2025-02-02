@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -54,6 +55,7 @@ public abstract class  TeleOpComponents {
     public static BotMotor ryanNemesis;
 
     public static class BotMotor extends DcMotorImplEx {
+        boolean isPowered = true;
         double errorTol;
         boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 10;
         double maxVelocityParam;
@@ -363,7 +365,7 @@ public abstract class  TeleOpComponents {
                 LOOP_TIMER = new ElapsedTime();
             }
             else if (Objects.equals(movementMode, "PID")){
-                MOVEMENT_TIMER = new ElapsedTime();
+                LOOP_TIMER = new ElapsedTime();
             }
 
             hardwareMap.put(getDeviceName(),this);
@@ -505,6 +507,19 @@ public abstract class  TeleOpComponents {
             else {
                 previousVoltage=voltage;
             }
+        }
+        @Override
+        public void setMotorDisable(){
+            super.setMotorDisable();
+            isPowered=false;
+            setZeroPowerBehavior(ZeroPowerBehavior.FLOAT);
+        }
+        @Override
+        public void setPower(double power){
+            if (isPowered) {
+                super.setPower(power);
+            }
+
         }
     }
 
@@ -840,37 +855,37 @@ public abstract class  TeleOpComponents {
         //initialize mechanism variables here
         extendo = new BotMotor(
                 "extendo",
-                0.025,0,0.00015, 15,
+                0.015,0,0.0001, 15,
                 new String[]{},new double[]{},
                 793,0,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "PID"
+                "MOTION_PROFILE"
         );
         extendoPitch = new BotMotor(
                 "extendoPitch",
-                0.008,0,0.0008, 15,
+                0.005,0,0.0, 15,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{0,-960,-960,0},
-                0,-960,
+                new double[]{0,-1030,-960,0},
+                0,-1020,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "PID"
+                "MOTION_PROFILE"
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0,0.001, 15,
+                0.015,0.012,0.00057, 15,
                 new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
                 1070,0,
                 250000,3500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
-                "PID"
+                "MOTION_PROFILE"
         );
         rightFront = new BotMotor(
                 "rightFront",
