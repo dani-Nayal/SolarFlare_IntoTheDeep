@@ -18,8 +18,8 @@ public class MotorProfiles implements Validatable {
         dP                   = 2.0/powerResolution;
         motorProfiles        = new MotorProfileConstP[2*powerResolution];
         for(int i=0; i<powerResolution; i+=2) {
-            motorProfiles[i] = new MotorProfileConstP(motorConfig, Direction.FORWARD);
-            motorProfiles[i] = new MotorProfileConstP(motorConfig, Direction.REVERSE);
+            motorProfiles[i] = new MotorProfileConstP(motorConfig);
+            motorProfiles[i] = new MotorProfileConstP(motorConfig);
         }
     }
 
