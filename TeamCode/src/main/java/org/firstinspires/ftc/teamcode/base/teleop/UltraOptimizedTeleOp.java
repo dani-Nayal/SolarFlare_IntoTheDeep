@@ -51,6 +51,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 new TeleOpSequentialAction(
                         bucketSlides.setTargetAction(bucketSlides.getPos("transferPosition")),
                         new TeleOpParallelAction(
+                                new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("PID");}),
                                 extendoPitch.setTargetAction(extendoPitch.getPos("pickUpPosition")),
                                 clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
                                 clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
@@ -83,6 +84,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition"))
                         ),
                         new TeleOpParallelAction(
+                                new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
                                 extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
                         ),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
@@ -94,6 +96,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 ),
                 new TeleOpParallelAction(
                         bucket.setPositionAction(bucket.getPos("depositPosition")),
+                        new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("PID");}),
                         extendoPitch.setTargetAction(extendoPitch.getPos("specimenGrabPosition")),
                         clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
                         extendo.setTargetAction(extendo.MIN_POSITION),
@@ -107,6 +110,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                             bucket.setPositionAction(bucket.getPos("depositPosition")),
                             bucketSlides.setTargetAction(200)
                         ),
+                        new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
                         extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                         new TeleOpParallelAction(
                                 clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
@@ -128,6 +132,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition"))
                         ),
                         new TeleOpParallelAction(
+                                new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
                                 extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
                         ),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition")),

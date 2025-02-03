@@ -305,26 +305,84 @@ public abstract class  TeleOpComponents {
         public PressTrigger triggeredSetTargetAction(Condition condition, double target){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetTargetAction(target)});
         }
-        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity, double[] alternate1targets, double[] alternate2targets){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{
-                    new SemiUninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+                    new SemiUninterruptibleConditionalAction(new Condition[]{
+                                ()->{
+                                        if (target==target1) return true;
+                                        else{
+                                            for (double targ : alternate1targets){
+                                                if (target==targ){
+                                                    return true;
+                                                }
+                                            }
+                                        }
+                                        return false;
+                                    },
+                            ()->{
+                                if (target==target2) return true;
+                                else{
+                                    for (double targ : alternate2targets){
+                                        if (target==targ){
+                                            return true;
+                                        }
+                                    }
+                                }
+                                return false;
+                            },
+                            },new TeleOpAction[]{
                             new SetTargetAction(target2,maxAcceleration,maxVelocity),
                             new SetTargetAction(target1,maxAcceleration,maxVelocity)
                     })
 
             });
         }
-        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
-            return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
+            return triggeredToggleAction(condition,target1,target2,maxAcceleration, maxVelocity, new double[]{}, new double[]{});
         }
-        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
-            return new SemiUninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
+            return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY, new double[]{}, new double[]{});
+        }
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double[] alternate1targets, double[] alternate2targets){
+            return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY, alternate1targets, alternate2targets);
+        }
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity, double[] alternate1targets, double[] alternate2targets){
+            return new SemiUninterruptibleConditionalAction(new Condition[]{
+                    ()->{
+                        if (target==target1) return true;
+                        else{
+                            for (double targ : alternate1targets){
+                                if (target==targ){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    },
+                    ()->{
+                        if (target==target2) return true;
+                        else{
+                            for (double targ : alternate2targets){
+                                if (target==targ){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    },
+            },new TeleOpAction[]{
                     new SetTargetAction(target2,maxAcceleration,maxVelocity),
                     new SetTargetAction(target1,maxAcceleration,maxVelocity)
             });
         }
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2,double maxAcceleration, double maxVelocity){
+            return toggleAction(target1,target2,maxAcceleration,maxVelocity,new double[]{},new double[]{});
+        }
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2, double[] alternate1targets, double[] alternate2targets){
+            return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY,alternate1targets,alternate1targets);
+        }
         public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2){
-            return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
+            return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY,new double[]{}, new double[]{});
         }
         public UpwardFSMAction upwardFSMAction(double maxAcceleration, double maxVelocity,double...positions){
             return new UpwardFSMAction(maxAcceleration, maxVelocity,positions);
@@ -928,7 +986,7 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.009,0.00055, 12,
+                0.015,0.008,0.00055, 12,
                 new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
                 1055,0,
                 325000,4750,
