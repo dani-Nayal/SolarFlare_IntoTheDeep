@@ -31,7 +31,7 @@ public class JustTetsing extends LinearOpMode {
             TeleOpActions.runLoop(
                     this::opModeIsActive,
                     bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1055),
-                    extendo.triggeredToggleAction(()->(gamepad1.b),0,400),
+                    extendo.triggeredToggleAction(()->(gamepad1.b),0,600),
                     new TeleOpActions.PressTrigger(new Condition[]{()->(gamepad1.x)},new TeleOpAction[]{
                             new TeleOpActions.SemiUninterruptibleConditionalAction(new Condition[]{()->(extendoPitch.target==0),()->(extendoPitch.target==-1020)},
                                     new TeleOpAction[]{

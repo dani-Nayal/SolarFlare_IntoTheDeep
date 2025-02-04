@@ -26,10 +26,12 @@ import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.PressTrigger;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.ConditionalAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.RobotCentricMecanumAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpAction;
+import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpSleepAction;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 
 @TeleOp
 public class UltraOptimizedTeleOp extends LinearOpMode {
+    public boolean isBucketSlidesMaxLowered = false;
     @Override
     public void runOpMode() throws InterruptedException {
         TeleOpComponents.initializeMechanisms(hardwareMap,telemetry,new Pose2d(0,0,Math.toRadians(90)));
@@ -88,6 +90,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                                 extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
                         ),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
+                        new TeleOpSleepAction(0.1),
                         new TeleOpParallelAction(
                                 clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("backOffPosition"))
@@ -101,7 +104,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                         clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
                         extendo.setTargetAction(extendo.MIN_POSITION),
                         clawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition")),
-                        innerClawPitch.setPositionAction(clawPitch.getPos("specimenGrabPosition"))
+                        innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenGrabPosition"))
                 ),
                 new TeleOpSequentialAction(
                         new TeleOpParallelAction(
@@ -114,9 +117,9 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                         extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                         new TeleOpParallelAction(
                                 clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                innerClawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                extendo.setTargetAction(550)
-                        )
+                                innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
+                        ),
+                        extendo.setTargetAction(extendo.MAX_POSITION)
                 ),
                 new TeleOpSequentialAction(
                         extendo.setTargetAction(250),
@@ -148,7 +151,14 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                     new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{bucketSlides.stallResetAction(0)}),
                     clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),2),
                     bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
-                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("depositPosition"),bucketSlides.getPos("transferPosition")),
+                    new ConditionalAction(
+                            new Condition[]{()->(!isBucketSlidesMaxLowered),()->(isBucketSlidesMaxLowered)},
+                            new TeleOpAction[]{
+                                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("depositPosition"),bucketSlides.getPos("transferPosition")),
+                                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("lowDepositPosition"),bucketSlides.getPos("transferPosition"),new double[]{bucketSlides.getPos("depositPosition")},new double[]{}),
+                            }
+                    ),
+                    new PressTrigger(new Condition[]{()->(gamepad2.left_stick_x<0 && gamepad2.right_stick_x>0)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{isBucketSlidesMaxLowered=true;})}),
                     sequences,
                     new ConditionalAction(new Condition[]{()->(!isRRActive)}, new TeleOpAction[]{
                             new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_trigger>0.2))
