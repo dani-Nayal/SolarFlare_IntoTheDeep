@@ -217,25 +217,25 @@ public class MeepMeepTesting {
                 .build();
         Action onePlusThreeSpecimen8 = myBot.getDrive().actionBuilder(new Pose2d(51, -41, Math.toRadians(-100)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(34,-54), Math.toRadians(-90))
                 .build();
-        Action onePlusThreeSpecimen9 = myBot.getDrive().actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action onePlusThreeSpecimen9 = myBot.getDrive().actionBuilder(new Pose2d(34, -54, Math.toRadians(-90)))
                 // Score second specimen
                 .strafeToLinearHeading(new Vector2d(4,-46), Math.toRadians(90))
                 .build();
         Action onePlusThreeSpecimen10 = myBot.getDrive().actionBuilder(new Pose2d(4, -46, Math.toRadians(90)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(34,-54), Math.toRadians(-90))
                 .build();
-        Action onePlusThreeSpecimen11 = myBot.getDrive().actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action onePlusThreeSpecimen11 = myBot.getDrive().actionBuilder(new Pose2d(34, -54, Math.toRadians(-90)))
                 // Score third specimen
                 .strafeToLinearHeading(new Vector2d(0,-46), Math.toRadians(90))
                 .build();
         Action onePlusThreeSpecimen12 = myBot.getDrive().actionBuilder(new Pose2d(0, -46, Math.toRadians(90)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(34,-54), Math.toRadians(-90))
                 .build();
-        Action onePlusThreeSpecimen13 = myBot.getDrive().actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action onePlusThreeSpecimen13 = myBot.getDrive().actionBuilder(new Pose2d(34, -54, Math.toRadians(-90)))
                 // Score fourth specimen
                 .strafeToLinearHeading(new Vector2d(-4,-46), Math.toRadians(90))
                 .build();

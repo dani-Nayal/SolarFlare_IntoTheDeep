@@ -3,10 +3,6 @@ package org.firstinspires.ftc.teamcode.base.motorcontrol;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.base.config.HardwareConfig;
-import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
-import org.firstinspires.ftc.teamcode.base.config.RobotState;
-
 public class PID {
     public double error;
     public int encoderPosition;

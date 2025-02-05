@@ -18,11 +18,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.base.config.MotorEnum;
 import org.firstinspires.ftc.teamcode.base.motorcontrol.PID;
 
 @Autonomous
-public class FiveSpecimenAuto extends LinearOpMode {
+public class FourSpecimenAuto extends LinearOpMode {
     PID extendoPID;
     PID extendoPitchPID;
     PID bucketSlidesPID;
@@ -64,9 +63,10 @@ public class FiveSpecimenAuto extends LinearOpMode {
     Servo innerClawPitch;
     Servo clawFingers;
     Servo bucket;
-    int extendoTarget;
-    int extendoPitchTarget;
-    int bucketSlidesTarget;
+    Servo clawWrist;
+    int extendoTarget = EXTENDO_RETRACTED;
+    int extendoPitchTarget = EXTENDO_PITCH_TRANSFER;
+    int bucketSlidesTarget = BUCKET_SLIDES_TRANSFER;
     public class MotorPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
@@ -83,7 +83,8 @@ public class FiveSpecimenAuto extends LinearOpMode {
     public Action intakePickUpSample(int extendoPosition){
         return new SequentialAction(
             new ParallelAction(
-                new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
+                    new SetClawWristPositionAction(CLAW_WRIST_DEFAULT),
+                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
                 new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN)
@@ -98,6 +99,7 @@ public class FiveSpecimenAuto extends LinearOpMode {
     public Action intakePickUpHover(){
         return new SequentialAction(
                 new ParallelAction(
+                        new SetClawWristPositionAction(CLAW_WRIST_DEFAULT),
                         new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                         new SetClawFingersPositionAction(CLAW_FINGERS_OPEN)
@@ -107,6 +109,7 @@ public class FiveSpecimenAuto extends LinearOpMode {
     public Action pickUpSideSpecimenPosition(){
         return new SequentialAction(
                 new ParallelAction(
+                        new SetClawWristPositionAction(CLAW_WRIST_DEFAULT),
                         new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                         new SetBucketPositionAction(BUCKET_DEPOSIT),
                         new SetExtendoPitchTargetAction(EXTENDO_PITCH_GRAB_SPECIMEN),
@@ -121,6 +124,7 @@ public class FiveSpecimenAuto extends LinearOpMode {
         return new SequentialAction(
 
                 new ParallelAction(
+                        new SetClawWristPositionAction(CLAW_WRIST_DEFAULT),
                         new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
                         new SetClawPitchPositionAction(CLAW_PITCH_SCORE_SPECIMEN),
                         new SetBucketSlidesTargetAction(BUCKET_SLIDES_SCORING_SPECIMEN),
@@ -232,6 +236,21 @@ public class FiveSpecimenAuto extends LinearOpMode {
         }
     }
 
+    public class SetClawWristPositionAction implements Action {
+        double position;
+        ElapsedTime timer = new ElapsedTime();
+        public SetClawWristPositionAction(double position){
+            this.position = position;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket){
+            timer.reset();
+            clawWrist.setPosition(position / 270);
+            return !(timer.seconds()> 0.5);
+        }
+    }
+
     @Override
     public void runOpMode(){
 
@@ -244,6 +263,7 @@ public class FiveSpecimenAuto extends LinearOpMode {
         innerClawPitch = hardwareMap.servo.get("innerClawPitch");
         clawFingers = hardwareMap.servo.get("clawFingers");
         bucket = hardwareMap.servo.get("bucket");
+        clawWrist = hardwareMap.servo.get("clawWrist");
 
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -258,7 +278,6 @@ public class FiveSpecimenAuto extends LinearOpMode {
         bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         extendo.setDirection(DcMotorSimple.Direction.REVERSE);
-        extendoPitch.setDirection(DcMotorSimple.Direction.FORWARD);
         bucketSlides.setDirection(DcMotorSimple.Direction.REVERSE);
 
         clawPitchRight.setDirection(Servo.Direction.REVERSE);
@@ -300,25 +319,25 @@ public class FiveSpecimenAuto extends LinearOpMode {
                 .build();
         Action fourSpecimenPathing8 = drive.actionBuilder(new Pose2d(51, -41, Math.toRadians(-100)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(34,-54), Math.toRadians(-90))
                 .build();
-        Action fourSpecimenPathing9 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action fourSpecimenPathing9 = drive.actionBuilder(new Pose2d(34, -54, Math.toRadians(-90)))
                 // Score second specimen
                 .strafeToLinearHeading(new Vector2d(4,-46), Math.toRadians(90))
                 .build();
         Action fourSpecimenPathing10 = drive.actionBuilder(new Pose2d(4, -46, Math.toRadians(90)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(34,-54), Math.toRadians(-90))
                 .build();
-        Action fourSpecimenPathing11 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action fourSpecimenPathing11 = drive.actionBuilder(new Pose2d(34, -54, Math.toRadians(-90)))
                 // Score third specimen
                 .strafeToLinearHeading(new Vector2d(0,-46), Math.toRadians(90))
                 .build();
         Action fourSpecimenPathing12 = drive.actionBuilder(new Pose2d(0, -46, Math.toRadians(90)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
+                .strafeToLinearHeading(new Vector2d(34,-54), Math.toRadians(-90))
                 .build();
-        Action fourSpecimenPathing13 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action fourSpecimenPathing13 = drive.actionBuilder(new Pose2d(34, -54, Math.toRadians(-90)))
                 // Score fourth specimen
                 .strafeToLinearHeading(new Vector2d(-4,-46), Math.toRadians(90))
                 .build();
@@ -334,62 +353,97 @@ public class FiveSpecimenAuto extends LinearOpMode {
                         new MotorPID(),
                         new SequentialAction(
                                 new ParallelAction(
+                                        // Move to chambers for preload
                                         fourSpecimenPathing1,
+                                        // Prepare for spec scoring
                                         scoreSpecimenUpPosition()
                                 ),
+                                // Score specimen
                                 scoreSpecimenDownPosition(),
-                                fourSpecimenPathing2,
-                                intakePickUpSample(400),
-                                fourSpecimenPathing3,
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                // Go to sample zone 1
+                                fourSpecimenPathing2,
+                                // Pick up first sample
+                                intakePickUpSample(400),
+                                // Turn to observation zone first time
+                                fourSpecimenPathing3,
+                                // Drop sample into observation zone
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                // Go to sample zone 2
                                 new ParallelAction(
                                         fourSpecimenPathing4,
                                         intakePickUpHover()
                                         ),
+                                // Pick up second sample
                                 intakePickUpSample(400),
+                                // Turn to observation zone
                                 fourSpecimenPathing5,
+                                // Drop sample into observation zone
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                // Go to sample zone 3
                                 new ParallelAction(
                                         fourSpecimenPathing6,
                                         intakePickUpHover()
                                 ),
+                                // Pick up third sample
                                 intakePickUpSample(200),
+                                // Turn to observation zone
                                 fourSpecimenPathing7,
+                                // Drop sample into observation zone
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                // Go to specimen pick up position
                                 new ParallelAction(
                                         fourSpecimenPathing8,
                                         pickUpSideSpecimenPosition()
                                 ),
+                                // Grab specimen
                                 new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                // Go to chambers and prepare for spec scoring
                                 new ParallelAction(
                                         fourSpecimenPathing9,
                                         scoreSpecimenUpPosition()
                                 ),
+                                // Score specimen
                                 scoreSpecimenDownPosition(),
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                // Go to specimen pick up position
                                 new ParallelAction(
                                         fourSpecimenPathing10,
                                         pickUpSideSpecimenPosition()
                                 ),
+                                // Grab specimen
                                 new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                // Prepare for spec scoring
                                 new ParallelAction(
                                         fourSpecimenPathing11,
                                         scoreSpecimenUpPosition()
                                 ),
+                                // Score specimen
                                 scoreSpecimenDownPosition(),
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                // Go to specimen pick up position
                                 new ParallelAction(
                                         fourSpecimenPathing12,
                                         pickUpSideSpecimenPosition()
                                 ),
+                                // Grab specimen
                                 new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                // Go tp spec scoring position
                                 new ParallelAction(
                                         fourSpecimenPathing13,
                                         scoreSpecimenUpPosition()
                                 ),
+                                // Score specimen
                                 scoreSpecimenDownPosition(),
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                fourSpecimenPathing14
+
+                                // Park and set motor positions to defaults
+                                new ParallelAction(
+                                        fourSpecimenPathing14,
+                                        new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                        new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
+                                )
                         )
                 )
         );
