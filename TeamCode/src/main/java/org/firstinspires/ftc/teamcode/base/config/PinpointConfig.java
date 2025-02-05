@@ -44,7 +44,8 @@ public class PinpointConfig implements Validatable{
 
     public void initialize(HardwareMap hardwareMap) {
         try {
-            pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class, deviceName);
+            if(deviceName!=null)
+                pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class, deviceName);
         } catch (Exception e) {
             Logger logger = RobotLogger.getInstance().getConfigLogger();
             logger.throwing("MotorConfig", "Initialize", e);

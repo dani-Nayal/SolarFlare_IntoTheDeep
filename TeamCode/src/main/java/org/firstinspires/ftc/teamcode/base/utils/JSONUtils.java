@@ -56,15 +56,42 @@ String jsonString = gson.toJson(object);
 
 public class JSONUtils {
     public static <T> T parseJSON(Reader input, Class<T> contentsClass) {
-        Gson gson = new GsonBuilder().create();
+        Gson gson              = new GsonBuilder().create();
         return gson.fromJson(input, contentsClass);
     }
 
+    public static <T extends JSONWritable> void writeJSONThreaded(T obj) {
+        Thread      thread     = Thread.currentThread();
+        ThreadGroup group      = thread.getThreadGroup();
+        Thread      jsonThread = new Thread(
+                group,
+                () -> {
+                        String fileName = obj.getClass().getName() + "-" + obj.getJSONFileId() + ".json";
+                        String fullFileName = Application.getMetricsDirName() + "/" + fileName;
+                        try (Writer writer = new FileWriter(fullFileName)) {
+                            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                            gson.toJson(obj, writer);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    },
+                "JSONThread",
+                2*1024*1024);
+
+        jsonThread.start();
+
+        try {
+            thread.join();
+        } catch(InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static <T extends JSONWritable> void writeJSON(T obj) {
-        String fileName     = obj.getClass().getName() + "-" + obj.getJSONFileId() + ".json";
+        String fileName = obj.getClass().getName() + "-" + obj.getJSONFileId() + ".json";
         String fullFileName = Application.getMetricsDirName() + "/" + fileName;
-        try (Writer writer  = new FileWriter(fullFileName)) {
-            Gson gson       = new GsonBuilder().setPrettyPrinting().create();
+        try (Writer writer = new FileWriter(fullFileName)) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(obj, writer);
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -54,7 +54,11 @@ public abstract class  TeleOpComponents {
     public static BotMotor ryanNemesis;
 
     public static class BotMotor extends DcMotorImplEx {
+        public ZeroPowerBehavior zeroPowerBehavior;
+        boolean isPowered = true;
+        boolean forceStartVelocityZero = false;
         double errorTol;
+        double offset=0;
         boolean isProfilePending = false; int profileDelayCounter = 1; int profileDelayFactor = 10;
         double maxVelocityParam;
         double maxAccelerationParam;
@@ -262,9 +266,13 @@ public abstract class  TeleOpComponents {
         }
         public class StallResetAction implements TeleOpAction{
             public boolean isStart = true;
+            public double offset=0;
+            public StallResetAction(double offset){
+                this.offset=offset;
+            }
             public boolean run(@NonNull TelemetryPacket packet){
                 if (isStart) {
-                    initiateStallReset();
+                    initiateStallReset(offset);
                     isStart=false;
                 }
                 checkStallResetOnce();
@@ -283,8 +291,8 @@ public abstract class  TeleOpComponents {
                 setPower(0);
             }
         }
-        public StallResetAction stallResetAction(){
-            return new StallResetAction();
+        public StallResetAction stallResetAction(double offset){
+            return new StallResetAction(offset);
         }
         public ConditionalAction triggeredDynamicAction(Condition upCondition, Condition downCondition, double change,double maxAcceleration, double maxVelocity){
             return new ConditionalAction(new Condition[]{upCondition,downCondition}, new TeleOpAction[]{new SetTargetAction(()->(target+change),maxAcceleration,maxVelocity),new SetTargetAction(()->(target-change),maxAcceleration,maxVelocity)});
@@ -298,26 +306,84 @@ public abstract class  TeleOpComponents {
         public PressTrigger triggeredSetTargetAction(Condition condition, double target){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{new SetTargetAction(target)});
         }
-        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity, double[] alternate1targets, double[] alternate2targets){
             return new PressTrigger(new Condition[]{condition},new TeleOpAction[]{
-                    new SemiUninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+                    new SemiUninterruptibleConditionalAction(new Condition[]{
+                                ()->{
+                                        if (target==target1) return true;
+                                        else{
+                                            for (double targ : alternate1targets){
+                                                if (target==targ){
+                                                    return true;
+                                                }
+                                            }
+                                        }
+                                        return false;
+                                    },
+                            ()->{
+                                if (target==target2) return true;
+                                else{
+                                    for (double targ : alternate2targets){
+                                        if (target==targ){
+                                            return true;
+                                        }
+                                    }
+                                }
+                                return false;
+                            },
+                            },new TeleOpAction[]{
                             new SetTargetAction(target2,maxAcceleration,maxVelocity),
                             new SetTargetAction(target1,maxAcceleration,maxVelocity)
                     })
 
             });
         }
-        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
-            return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double maxAcceleration, double maxVelocity){
+            return triggeredToggleAction(condition,target1,target2,maxAcceleration, maxVelocity, new double[]{}, new double[]{});
         }
-        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity){
-            return new SemiUninterruptibleConditionalAction(new Condition[]{()->(target==target1),()->(target==target2)},new TeleOpAction[]{
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2){
+            return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY, new double[]{}, new double[]{});
+        }
+        public PressTrigger triggeredToggleAction(Condition condition, double target1, double target2, double[] alternate1targets, double[] alternate2targets){
+            return triggeredToggleAction(condition,target1,target2,MAX_ACCELERATION,MAX_VELOCITY, alternate1targets, alternate2targets);
+        }
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2, double maxAcceleration, double maxVelocity, double[] alternate1targets, double[] alternate2targets){
+            return new SemiUninterruptibleConditionalAction(new Condition[]{
+                    ()->{
+                        if (target==target1) return true;
+                        else{
+                            for (double targ : alternate1targets){
+                                if (target==targ){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    },
+                    ()->{
+                        if (target==target2) return true;
+                        else{
+                            for (double targ : alternate2targets){
+                                if (target==targ){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    },
+            },new TeleOpAction[]{
                     new SetTargetAction(target2,maxAcceleration,maxVelocity),
                     new SetTargetAction(target1,maxAcceleration,maxVelocity)
             });
         }
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2,double maxAcceleration, double maxVelocity){
+            return toggleAction(target1,target2,maxAcceleration,maxVelocity,new double[]{},new double[]{});
+        }
+        public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2, double[] alternate1targets, double[] alternate2targets){
+            return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY,alternate1targets,alternate1targets);
+        }
         public SemiUninterruptibleConditionalAction toggleAction(double target1, double target2){
-            return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY);
+            return toggleAction(target1,target2,MAX_ACCELERATION,MAX_VELOCITY,new double[]{}, new double[]{});
         }
         public UpwardFSMAction upwardFSMAction(double maxAcceleration, double maxVelocity,double...positions){
             return new UpwardFSMAction(maxAcceleration, maxVelocity,positions);
@@ -357,9 +423,13 @@ public abstract class  TeleOpComponents {
             setMode(RunMode.STOP_AND_RESET_ENCODER);
             setMode(runMode);
             setDirection(direction);
+            this.zeroPowerBehavior=zeroPowerBehaviour;
             setZeroPowerBehavior(zeroPowerBehaviour);
             if (Objects.equals(movementMode, "MOTION_PROFILE")){
                 MOVEMENT_TIMER = new ElapsedTime();
+                LOOP_TIMER = new ElapsedTime();
+            }
+            else if (Objects.equals(movementMode, "PID")){
                 LOOP_TIMER = new ElapsedTime();
             }
 
@@ -370,7 +440,13 @@ public abstract class  TeleOpComponents {
             profileStartPos=getCurrentPosition();
             double distance=target-profileStartPos;
             if (distance!=0) {
-                startVelocity = getVelocity();
+                if (!forceStartVelocityZero) {
+                    startVelocity = getVelocity();
+                }
+                else{
+                    startVelocity=0;
+                    forceStartVelocityZero=false;
+                }
                 currentMaxVelocity = max_velocity * Math.signum(distance);
                 currentMaxAcceleration = max_acceleration * Math.signum(currentMaxVelocity - startVelocity);
                 currentMaxDeceleration = -max_acceleration * Math.signum(distance);
@@ -403,8 +479,6 @@ public abstract class  TeleOpComponents {
                     accelDistance=0;
                     cruiseDistance=0;
                     decelDistance=0;
-                    telemetry.addData("e","e");
-                    telemetry.update();
                 }
             }
             else{
@@ -444,7 +518,9 @@ public abstract class  TeleOpComponents {
             previousError=error;
         }
         public void runPIDOnce(){
-            double error=target-getCurrentPosition();
+            double pos = getCurrentPosition();
+            instantTargetPosition=pos;
+            double error=target-pos;
             double kpPower = kP*error;
             integralSum += LOOP_TIMER.time()*error;
             double kiPower = kI*integralSum;
@@ -461,11 +537,15 @@ public abstract class  TeleOpComponents {
         public void setTarget(double target, double maxVelocity, double maxAcceleration){
             target = Math.min(MAX_POSITION, Math.max(MIN_POSITION, target));
             if (target!=this.target || maxVelocity != currentMaxVelocity || maxAcceleration != currentMaxAcceleration) {
-                MOVEMENT_TIMER.reset();
+                if (Objects.nonNull(MOVEMENT_TIMER)) {
+                    MOVEMENT_TIMER.reset();
+                }
                 this.target = target;
                 integralSum = 0;
                 previousError = 0;
-                isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
+                if (Objects.equals(MOVEMENT_MODE, "MOTION_PROFILE")){
+                    isProfilePending=true; maxAccelerationParam=maxAcceleration; maxVelocityParam=maxVelocity;
+                }
                 for (BotMotor motor : synchronizedMotors){
                     motor.setTarget(target,maxVelocity,maxAcceleration);
                 }
@@ -484,14 +564,15 @@ public abstract class  TeleOpComponents {
         public void setTarget(double target){
             this.setTarget(target, MAX_VELOCITY, MAX_ACCELERATION);
         }
-        public void initiateStallReset(){
+        public void initiateStallReset(double offset){
             isStallResetting=true;
+            this.offset=offset;
             setPower(-0.2);
             previousVoltage = getCurrent(CurrentUnit.AMPS);
         }
         public void checkStallResetOnce(){
             double voltage = getCurrent(CurrentUnit.AMPS);
-            if (voltage-previousVoltage>1.2){
+            if (voltage/previousVoltage>2){
                 setPower(0);
                 setMode(RunMode.STOP_AND_RESET_ENCODER);
                 setMode(RUN_MODE);
@@ -500,6 +581,61 @@ public abstract class  TeleOpComponents {
             else {
                 previousVoltage=voltage;
             }
+        }
+        @Override
+        public void setMotorDisable(){
+            super.setMotorDisable();
+            isPowered=false;
+            setZeroPowerBehavior(ZeroPowerBehavior.FLOAT);
+        }
+        @Override
+        public void setMotorEnable(){
+            super.setMotorEnable();
+            isPowered=true;
+            setZeroPowerBehavior(zeroPowerBehavior);
+        }
+        @Override
+        public void setPower(double power){
+            if (isPowered) {
+                super.setPower(power);
+            }
+
+        }
+        public void setMovementMode(String mode){
+            if (Objects.equals(mode, "MOTION_PROFILE")){
+                if (!Objects.equals(MOVEMENT_MODE, mode)){
+                    setPower(0);
+                    profileDelayCounter=1;
+                    forceStartVelocityZero=true;
+                }
+                if (Objects.isNull(MOVEMENT_TIMER)){
+                    MOVEMENT_TIMER=new ElapsedTime();
+                }
+                if (Objects.isNull(MOVEMENT_TIMER)){
+                    LOOP_TIMER=new ElapsedTime();
+                }
+            }
+            else if (Objects.equals(mode, "PID")) {
+                if (Objects.nonNull(MOVEMENT_TIMER)){
+                    MOVEMENT_TIMER=null;
+                }
+                if (Objects.isNull(MOVEMENT_TIMER)){
+                    LOOP_TIMER=new ElapsedTime();
+                }
+            }
+            else{
+                if (Objects.nonNull(MOVEMENT_TIMER)){
+                    MOVEMENT_TIMER=null;
+                }
+                if (Objects.nonNull(MOVEMENT_TIMER)){
+                    LOOP_TIMER=null;
+                }
+            }
+            MOVEMENT_MODE=mode;
+        }
+        @Override
+        public int getCurrentPosition(){
+            return (int) (super.getCurrentPosition()+offset);
         }
     }
 
@@ -835,10 +971,10 @@ public abstract class  TeleOpComponents {
         //initialize mechanism variables here
         extendo = new BotMotor(
                 "extendo",
-                0.015,0,0, 15,
+                0.014,0,0.00032, 10,
                 new String[]{},new double[]{},
-                793,0,
-                250000,3500,
+                600,0,
+                400000,5500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -846,11 +982,11 @@ public abstract class  TeleOpComponents {
         );
         extendoPitch = new BotMotor(
                 "extendoPitch",
-                0.005,0,0, 15,
+                0.01,0,0.0003, 15,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{0,-960,-960,0},
-                0,-960,
-                250000,3500,
+                new double[]{0,-1030,-960,0},
+                0,-1020,
+                375000,5500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -858,10 +994,10 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0,0, 15,
-                new String[]{"depositPosition","transferPosition"},new double[]{1070,0},
-                1070,0,
-                250000,3500,
+                0.015,0.008,0.00055, 12,
+                new String[]{"depositPosition","transferPosition","lowDepositPosition"},new double[]{1055,0,575},
+                1055,0,
+                325000,4750,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -914,7 +1050,7 @@ public abstract class  TeleOpComponents {
         clawFingers = new BotServo(
                 "clawFingers",
                 new String[]{"closedPosition","openPosition"},
-                new double[]{20,92},
+                new double[]{20,86},
                 92,
                 20,
                 180,
@@ -932,7 +1068,7 @@ public abstract class  TeleOpComponents {
                 Servo.Direction.FORWARD
         );
         clawPitch = new BotServo(
-                "clawPitch",
+                "clawPitchLeft",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{13,68,100,72.4,145,13},
                 270,

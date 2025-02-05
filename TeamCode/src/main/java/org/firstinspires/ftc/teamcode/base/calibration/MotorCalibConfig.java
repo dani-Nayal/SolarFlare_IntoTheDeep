@@ -37,7 +37,8 @@ public class MotorCalibConfig implements Validatable {
     public double minTimeInc;
     public int    timeResolution;
     public int    powerResolution;
-    public int    speedWindowSize;
+    public double averagingTime;
+    public int    endSamples;
 
     public boolean isValid() {
         return true;
@@ -51,7 +52,9 @@ public class MotorCalibConfig implements Validatable {
         sb.append("  minTimeInc=")     .append(minTimeInc)     .append("\n");
         sb.append("  timeResolution=") .append(timeResolution) .append("\n");
         sb.append("  powerResolution=").append(powerResolution).append("\n");
-        sb.append("  speedWindowSize=").append(speedWindowSize).append("\n");
+        sb.append("  averagingTime=")  .append(averagingTime)  .append("\n");
+        sb.append("  endSamples=")     .append(endSamples)     .append("\n");
+
 
         return sb.toString();
     }
