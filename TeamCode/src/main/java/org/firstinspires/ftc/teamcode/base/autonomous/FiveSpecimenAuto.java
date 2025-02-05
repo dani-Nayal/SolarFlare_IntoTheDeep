@@ -25,66 +25,117 @@ import org.firstinspires.ftc.teamcode.base.motorcontrol.PID;
 public class FiveSpecimenAuto extends LinearOpMode {
     PID extendoPID;
     PID extendoPitchPID;
+    PID bucketSlidesPID;
     PinpointDrive drive;
     public double robotLength = 15.364;
     public double robotWidth  = 14.375;
+    public final int EXTENDO_RETRACTED = 0;
+    public final int EXTENDO_SCORE_SPECIMEN_UP = 600;
+    public final int EXTENDO_SCORE_SPECIMEN_DOWN = 500;
     public final int EXTENDO_PITCH_TRANSFER = 0;
-    public final int EXTENDO_PITCH_PICK_UP = -960;
+    public final int EXTENDO_PITCH_SCORE_SPECIMEN = 0;
+    public final int EXTENDO_PITCH_PICK_UP = -1030;
+    public final int EXTENDO_PITCH_GRAB_SPECIMEN = -960;
     public final int BUCKET_SLIDES_HIGH_BUCKET = 1030;
     public final int BUCKET_SLIDES_TRANSFER = 0;
+    public final int BUCKET_SLIDES_SCORING_SPECIMEN = 200;
     public final int CLAW_FINGERS_OPEN = 20;
-    public final int CLAW_FINGERS_CLOSED = 92;
+    public final int CLAW_FINGERS_CLOSED = 86;
     public final int CLAW_WRIST_DEFAULT = 95;
-    public final int CLAW_PITCH_PICK_UP = 22;
-    public final int CLAW_PITCH_HOVER = 73;
-    public final int CLAW_PITCH_TRANSFER = 115;
-    public final int CLAW_PITCH_BACK_OFF = 77;
-    public final int INNER_CLAW_PITCH_PICK_UP = 62;
-    public final int INNER_CLAW_PITCH_HOVER = 0;
-    public final int INNER_CLAW_PITCH_TRANSFER = 186;
-    public final int INNER_CLAW_PITCH_BACK_OFF = 170;
+    public final int CLAW_PITCH_PICK_UP = 13;
+    public final int CLAW_PITCH_HOVER = 68;
+    public final int CLAW_PITCH_TRANSFER = 100;
+    public final int CLAW_PITCH_BACK_OFF = 72;
+    public final int CLAW_PITCH_GRAB_SPECIMEN = 145;
+    public final int CLAW_PITCH_SCORE_SPECIMEN = 13;
+    public final int INNER_CLAW_PITCH_PICK_UP = 82;
+    public final int INNER_CLAW_PITCH_HOVER = 20;
+    public final int INNER_CLAW_PITCH_TRANSFER = 200;
+    public final int INNER_CLAW_PITCH_BACK_OFF = 100;
+    public final int INNER_CLAW_PITCH_GRAB_SPECIMEN = 78;
+    public final int INNER_CLAW_PITCH_SCORE_SPECIMEN = 82;
     public final int BUCKET_TRANSFER = 46;
     public final int BUCKET_DEPOSIT = 158;
-
-    // Specimen stuff
-    public final int EXTENDO_SCORE_SPECIMEN = 800;
-    public final int EXTENDO_PITCH_SCORE_SPECIMEN = -620;
-    public final int CLAW_PITCH_SCORE_SPECIMEN = 127;
-    public final int INNER_CLAW_PITCH_SCORE_SPECIMEN = 179;
-
-    public final int EXTENDO_RETRACTED = 0;
-    public final int EXTENDO_PITCH_GRAB_SPECIMEN = -960;
-    public final int CLAW_PITCH_GRAB_SPECIMEN = 151;
-    public final int INNER_CLAW_PITCH_GRAB_SPECIMEN = 73;
     DcMotorEx extendo;
     DcMotorEx extendoPitch;
+    DcMotorEx bucketSlides;
     Servo clawPitchLeft;
     Servo clawPitchRight;
     Servo innerClawPitch;
     Servo clawFingers;
+    Servo bucket;
     int extendoTarget;
     int extendoPitchTarget;
+    int bucketSlidesTarget;
     public class MotorPID implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             double extendoPower = extendoPID.getPIDOutput(extendo, extendoTarget, 0.014, 0, 0.0032);
             double extendoPitchPower = extendoPitchPID.getPIDOutput(extendoPitch, extendoTarget, 0.01, 0, 0.0003);
+            double bucketSlidesPower = bucketSlidesPID.getPIDOutput(bucketSlides, bucketSlidesTarget, 0.015,0.008,0.00055);
 
             extendo.setPower(extendoPower);
             extendoPitch.setPower(extendoPitchPower);
+            bucketSlides.setPower(bucketSlidesPower);
             return true;
         }
     }
     public Action intakePickUpSample(int extendoPosition){
         return new SequentialAction(
-        new ParallelAction(
+            new ParallelAction(
                 new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
+                new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
+                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN)
+            ),
+            new SetExtendoTargetAction(extendoPosition),
                 new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP),
-                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN)
-        ),
-        new SetExtendoTargetAction(extendoPosition),
-        new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+            new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+        );
+    }
+
+    public Action intakePickUpHover(){
+        return new SequentialAction(
+                new ParallelAction(
+                        new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
+                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN)
+                )
+        );
+    }
+    public Action pickUpSideSpecimenPosition(){
+        return new SequentialAction(
+                new ParallelAction(
+                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_GRAB_SPECIMEN),
+                        new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                        new SetClawPitchPositionAction(CLAW_PITCH_GRAB_SPECIMEN),
+                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_GRAB_SPECIMEN)
+                )
+        );
+    }
+
+    public Action scoreSpecimenUpPosition(){
+        return new SequentialAction(
+
+                new ParallelAction(
+                        new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                        new SetClawPitchPositionAction(CLAW_PITCH_SCORE_SPECIMEN),
+                        new SetBucketSlidesTargetAction(BUCKET_SLIDES_SCORING_SPECIMEN),
+                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_SCORE_SPECIMEN),
+                        new SetClawPitchPositionAction(CLAW_PITCH_SCORE_SPECIMEN),
+                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_SCORE_SPECIMEN)
+                ),
+            new SetExtendoTargetAction(EXTENDO_SCORE_SPECIMEN_UP)
+        );
+    }
+
+    public Action scoreSpecimenDownPosition(){
+        return new SequentialAction(
+                new SetExtendoTargetAction(EXTENDO_SCORE_SPECIMEN_DOWN)
         );
     }
 
@@ -109,6 +160,18 @@ public class FiveSpecimenAuto extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             extendoPitchTarget = target;
             return !((extendoPitchTarget - extendoPitch.getCurrentPosition()) < 10);
+        }
+    }
+
+    public class SetBucketSlidesTargetAction implements Action{
+        int target;
+        public SetBucketSlidesTargetAction(int target){
+            this.target = target;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket){
+            bucketSlidesTarget = target;
+            return !((bucketSlidesTarget - bucketSlides.getCurrentPosition()) < 10);
         }
     }
 
@@ -155,28 +218,48 @@ public class FiveSpecimenAuto extends LinearOpMode {
         }
     }
 
+    public class SetBucketPositionAction implements Action {
+        double position;
+        ElapsedTime timer = new ElapsedTime();
+        public SetBucketPositionAction(double position){
+            this.position = position;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket){
+            timer.reset();
+            bucket.setPosition(position / 180);
+            return !(timer.seconds() > 0.5);
+        }
+    }
+
     @Override
     public void runOpMode(){
 
         extendo = hardwareMap.get(DcMotorEx.class, "extendo");
         extendoPitch = hardwareMap.get(DcMotorEx.class, "extendoPitch");
+        bucketSlides = hardwareMap.get(DcMotorEx.class, "bucketSlides");
 
         clawPitchLeft = hardwareMap.servo.get("clawPitchLeft");
         clawPitchRight = hardwareMap.servo.get("clawPitchRight");
         innerClawPitch = hardwareMap.servo.get("innerClawPitch");
         clawFingers = hardwareMap.servo.get("clawFingers");
+        bucket = hardwareMap.servo.get("bucket");
 
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extendoPitch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bucketSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         extendo.setDirection(DcMotorSimple.Direction.REVERSE);
         extendoPitch.setDirection(DcMotorSimple.Direction.FORWARD);
+        bucketSlides.setDirection(DcMotorSimple.Direction.REVERSE);
 
         clawPitchRight.setDirection(Servo.Direction.REVERSE);
         innerClawPitch.setDirection(Servo.Direction.REVERSE);
@@ -185,60 +268,61 @@ public class FiveSpecimenAuto extends LinearOpMode {
 
         extendoPID = new PID();
         extendoPitchPID = new PID();
+        bucketSlidesPID = new PID();
 
-        Action onePlusThreeSpecimen1 = drive.actionBuilder(new Pose2d(-(robotWidth / 2), -70 + (robotLength / 2), 90))
+        Action fourSpecimenPathing1 = drive.actionBuilder(new Pose2d(-(robotWidth / 2), -70 + (robotLength / 2), 90))
                 // Go to scoring zone first time
                 .strafeToLinearHeading(new Vector2d(8,-46), Math.toRadians(90))
                 .build();
-        Action onePlusThreeSpecimen2 = drive.actionBuilder(new Pose2d(8, -46, Math.toRadians(90)))
+        Action fourSpecimenPathing2 = drive.actionBuilder(new Pose2d(8, -46, Math.toRadians(90)))
                 // Go to sample 1 sample zone
                 .strafeToLinearHeading(new Vector2d(30.7,-45.1), Math.toRadians(50))
                 .build();
-        Action onePlusThreeSpecimen3 = drive.actionBuilder(new Pose2d(30.7, -45.1, Math.toRadians(50)))
+        Action fourSpecimenPathing3 = drive.actionBuilder(new Pose2d(30.7, -45.1, Math.toRadians(50)))
                 // Rotate towards observation zone 1st time
                 .turnTo(Math.toRadians(-45))
                 .build();
-        Action onePlusThreeSpecimen4 = drive.actionBuilder(new Pose2d(30.7, -45.1, Math.toRadians(-45)))
+        Action fourSpecimenPathing4 = drive.actionBuilder(new Pose2d(30.7, -45.1, Math.toRadians(-45)))
                 // Rotate to sample 2 in sample zone
                 .strafeToLinearHeading(new Vector2d(40,-41), Math.toRadians(40))
                 .build();
-        Action onePlusThreeSpecimen5 = drive.actionBuilder(new Pose2d(40, -41, Math.toRadians(40)))
+        Action fourSpecimenPathing5 = drive.actionBuilder(new Pose2d(40, -41, Math.toRadians(40)))
                 // Rotate towards observation zone 2nd time
                 .turnTo(Math.toRadians(-70))
                 .build();
-        Action onePlusThreeSpecimen6 = drive.actionBuilder(new Pose2d(40, -41, Math.toRadians(-70)))
+        Action fourSpecimenPathing6 = drive.actionBuilder(new Pose2d(40, -41, Math.toRadians(-70)))
                 // Rotate towards sample 3 in sample zone
                 .strafeToLinearHeading(new Vector2d(51,-41), Math.toRadians(40))
                 .build();
-        Action onePlusThreeSpecimen7 = drive.actionBuilder(new Pose2d(51, -41, Math.toRadians(40)))
+        Action fourSpecimenPathing7 = drive.actionBuilder(new Pose2d(51, -41, Math.toRadians(40)))
                 // Rotate towards observation zone 3rd time
                 .turnTo(Math.toRadians(-100))
                 .build();
-        Action onePlusThreeSpecimen8 = drive.actionBuilder(new Pose2d(51, -41, Math.toRadians(-100)))
+        Action fourSpecimenPathing8 = drive.actionBuilder(new Pose2d(51, -41, Math.toRadians(-100)))
                 // Go to pickup zone
                 .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
                 .build();
-        Action onePlusThreeSpecimen9 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action fourSpecimenPathing9 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
                 // Score second specimen
                 .strafeToLinearHeading(new Vector2d(4,-46), Math.toRadians(90))
                 .build();
-        Action onePlusThreeSpecimen10 = drive.actionBuilder(new Pose2d(4, -46, Math.toRadians(90)))
+        Action fourSpecimenPathing10 = drive.actionBuilder(new Pose2d(4, -46, Math.toRadians(90)))
                 // Go to pickup zone
                 .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
                 .build();
-        Action onePlusThreeSpecimen11 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action fourSpecimenPathing11 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
                 // Score third specimen
                 .strafeToLinearHeading(new Vector2d(0,-46), Math.toRadians(90))
                 .build();
-        Action onePlusThreeSpecimen12 = drive.actionBuilder(new Pose2d(0, -46, Math.toRadians(90)))
+        Action fourSpecimenPathing12 = drive.actionBuilder(new Pose2d(0, -46, Math.toRadians(90)))
                 // Go to pickup zone
                 .strafeToLinearHeading(new Vector2d(29,-52), Math.toRadians(-45))
                 .build();
-        Action onePlusThreeSpecimen13 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
+        Action fourSpecimenPathing13 = drive.actionBuilder(new Pose2d(29, -52, Math.toRadians(-45)))
                 // Score fourth specimen
                 .strafeToLinearHeading(new Vector2d(-4,-46), Math.toRadians(90))
                 .build();
-        Action onePlusThreeSpecimen14 = drive.actionBuilder(new Pose2d(-4, -46, Math.toRadians(90)))
+        Action fourSpecimenPathing14 = drive.actionBuilder(new Pose2d(-4, -46, Math.toRadians(90)))
                 // Park
                 .strafeToLinearHeading(new Vector2d(34,-62), Math.toRadians(90))
                 .build();
@@ -249,7 +333,63 @@ public class FiveSpecimenAuto extends LinearOpMode {
                 new ParallelAction(
                         new MotorPID(),
                         new SequentialAction(
-
+                                new ParallelAction(
+                                        fourSpecimenPathing1,
+                                        scoreSpecimenUpPosition()
+                                ),
+                                scoreSpecimenDownPosition(),
+                                fourSpecimenPathing2,
+                                intakePickUpSample(400),
+                                fourSpecimenPathing3,
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                new ParallelAction(
+                                        fourSpecimenPathing4,
+                                        intakePickUpHover()
+                                        ),
+                                intakePickUpSample(400),
+                                fourSpecimenPathing5,
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                new ParallelAction(
+                                        fourSpecimenPathing6,
+                                        intakePickUpHover()
+                                ),
+                                intakePickUpSample(200),
+                                fourSpecimenPathing7,
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                new ParallelAction(
+                                        fourSpecimenPathing8,
+                                        pickUpSideSpecimenPosition()
+                                ),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                new ParallelAction(
+                                        fourSpecimenPathing9,
+                                        scoreSpecimenUpPosition()
+                                ),
+                                scoreSpecimenDownPosition(),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                new ParallelAction(
+                                        fourSpecimenPathing10,
+                                        pickUpSideSpecimenPosition()
+                                ),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                new ParallelAction(
+                                        fourSpecimenPathing11,
+                                        scoreSpecimenUpPosition()
+                                ),
+                                scoreSpecimenDownPosition(),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                new ParallelAction(
+                                        fourSpecimenPathing12,
+                                        pickUpSideSpecimenPosition()
+                                ),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                new ParallelAction(
+                                        fourSpecimenPathing13,
+                                        scoreSpecimenUpPosition()
+                                ),
+                                scoreSpecimenDownPosition(),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                fourSpecimenPathing14
                         )
                 )
         );
