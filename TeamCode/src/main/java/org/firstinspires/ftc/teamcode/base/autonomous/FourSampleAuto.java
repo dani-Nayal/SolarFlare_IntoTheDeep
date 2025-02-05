@@ -32,7 +32,7 @@ public class FourSampleAuto extends LinearOpMode {
 
         state = RobotState.getInstance();
 
-        actions = new CustomActions(telemetry);
+        actions = new CustomActions(telemetry, hardwareMap);
         actions.setInitialDrivePosition("sample", "sample");
 
         waitForStart();
