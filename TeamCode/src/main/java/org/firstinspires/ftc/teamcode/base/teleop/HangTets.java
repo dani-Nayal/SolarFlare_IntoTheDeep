@@ -7,6 +7,8 @@ import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPi
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawWrist;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendoPitch;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.hang;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.hangRight;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.innerClawPitch;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotMotor;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.leftBack;
@@ -32,13 +34,16 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 
 @TeleOp
 public class HangTets extends LinearOpMode {
-    public boolean isBucketSlidesMaxLowered = false;
     @Override
     public void runOpMode() throws InterruptedException {
         TeleOpComponents.initializeMechanisms(hardwareMap,telemetry,new Pose2d(0,0,Math.toRadians(90)));
         waitForStart();
         TeleOpActions.runLoop(
                 this::opModeIsActive,
+                new PressTrigger(new Condition[]{()->(gamepad1.dpad_up)}, new TeleOpAction[]{hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return -0.2;})}),
+                new PressTrigger(new Condition[]{()->(gamepad1.dpad_down)}, new TeleOpAction[]{hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return 0.2;})}),
+                new PressTrigger(new Condition[]{()->(gamepad1.dpad_left)}, new TeleOpAction[]{hangRight.setPowerAction(()->{if (hangRight.getPower()!=0) return 0; else return -0.2;})}),
+                new PressTrigger(new Condition[]{()->(gamepad1.dpad_right)}, new TeleOpAction[]{hangRight.setPowerAction(()->{if (hangRight.getPower()!=0) return 0; else return 0.2;})}),
                 new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_trigger>0.2))
         );
     }

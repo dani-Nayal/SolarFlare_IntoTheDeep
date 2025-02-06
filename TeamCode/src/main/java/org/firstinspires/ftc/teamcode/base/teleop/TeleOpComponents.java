@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.CRServoImpl;
@@ -962,6 +963,9 @@ public abstract class  TeleOpComponents {
         public SetPowerAction setPowerAction(double power){
             return new SetPowerAction(power);
         }
+        public SetPowerAction setPowerAction(DoubleFunction powerFun){
+            return new SetPowerAction(powerFun);
+        }
 
     }
     public static void initializeMechanisms(HardwareMap hardwareMap, Telemetry telemetry, Pose2d initialDrivePose){
@@ -1106,6 +1110,18 @@ public abstract class  TeleOpComponents {
                 270,
                 422,
                 Servo.Direction.FORWARD
+        );
+        hang = new CRBotServo(
+                "hangLeft",
+                422,
+                DcMotorSimple.Direction.FORWARD
+
+        );
+        hangRight = new CRBotServo(
+                "hangRight",
+                422,
+                DcMotorSimple.Direction.REVERSE
+
         );
         synchronize(clawPitch,clawPitchRight);
     }
