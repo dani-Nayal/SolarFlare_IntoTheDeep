@@ -38,8 +38,8 @@ public class FourSpecimenAuto extends LinearOpMode {
     public final int BUCKET_SLIDES_HIGH_BUCKET = 1030;
     public final int BUCKET_SLIDES_TRANSFER = 0;
     public final int BUCKET_SLIDES_SCORING_SPECIMEN = 200;
-    public final int CLAW_FINGERS_OPEN = 20;
-    public final int CLAW_FINGERS_CLOSED = 86;
+    public final int CLAW_FINGERS_OPEN = 86;
+    public final int CLAW_FINGERS_CLOSED = 0;
     public final int CLAW_WRIST_DEFAULT = 95;
     public final int CLAW_PITCH_PICK_UP = 13;
     public final int CLAW_PITCH_HOVER = 68;
@@ -100,9 +100,11 @@ public class FourSpecimenAuto extends LinearOpMode {
                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN)
             ),
             new SetExtendoTargetAction(extendoPosition),
-                new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP),
-            new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                new ParallelAction(
+                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                ),
+        new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
         );
     }
 
@@ -138,11 +140,12 @@ public class FourSpecimenAuto extends LinearOpMode {
                         new SetBucketSlidesTargetAction(BUCKET_SLIDES_SCORING_SPECIMEN),
                         new SetBucketPositionAction(BUCKET_DEPOSIT),
                         new SetExtendoPitchTargetAction(EXTENDO_PITCH_SCORE_SPECIMEN),
-                        new SetClawPitchPositionAction(CLAW_PITCH_SCORE_SPECIMEN)
+                        new SetClawPitchPositionAction(CLAW_PITCH_SCORE_SPECIMEN),
+                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_SCORE_SPECIMEN)
+
                 ),
             new ParallelAction(
                     new SetExtendoTargetAction(EXTENDO_SCORE_SPECIMEN_UP),
-                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_SCORE_SPECIMEN),
                     new SetClawPitchPositionAction(CLAW_PITCH_SCORE_SPECIMEN)
 
             )
@@ -194,14 +197,18 @@ public class FourSpecimenAuto extends LinearOpMode {
     public class SetClawPitchPositionAction implements Action {
         double position;
         ElapsedTime timer = new ElapsedTime();
+        boolean isStart = true;
         public SetClawPitchPositionAction(double position){
             this.position = position;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            timer.reset();
-            clawPitchLeft.setPosition(position / 270);
-            clawPitchRight.setPosition(position / 270);
+            if (isStart) {
+                isStart=false;
+                clawPitchLeft.setPosition(position / 270);
+                clawPitchRight.setPosition(position / 270);
+                timer.reset();
+            }
             return !(timer.seconds() > 0.5);
         }
     }
@@ -209,13 +216,17 @@ public class FourSpecimenAuto extends LinearOpMode {
     public class SetInnerClawPitchPositionAction implements Action {
         double position;
         ElapsedTime timer = new ElapsedTime();
+        boolean isStart = true;
         public SetInnerClawPitchPositionAction(double position){
             this.position = position;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            timer.reset();
-            innerClawPitch.setPosition(position / 270);
+            if (isStart) {
+                isStart=false;
+                innerClawPitch.setPosition(position / 270);
+                timer.reset();
+            }
             return !(timer.seconds() > 0.5);
         }
     }
@@ -223,13 +234,17 @@ public class FourSpecimenAuto extends LinearOpMode {
     public class SetClawFingersPositionAction implements Action {
         double position;
         ElapsedTime timer = new ElapsedTime();
+        boolean isStart = true;
         public SetClawFingersPositionAction(double position){
             this.position = position;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            timer.reset();
-            clawFingers.setPosition(position / 180);
+            if (isStart) {
+                isStart=false;
+                clawFingers.setPosition(position / 180);
+                timer.reset();
+            }
             return !(timer.seconds() > 0.5);
         }
     }
@@ -237,13 +252,17 @@ public class FourSpecimenAuto extends LinearOpMode {
     public class SetBucketPositionAction implements Action {
         double position;
         ElapsedTime timer = new ElapsedTime();
+        boolean isStart = true;
         public SetBucketPositionAction(double position){
             this.position = position;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            timer.reset();
-            bucket.setPosition(position / 270);
+            if (isStart) {
+                isStart=false;
+                bucket.setPosition(position / 270);
+                timer.reset();
+            }
             return !(timer.seconds() > 0.5);
         }
     }
@@ -251,14 +270,18 @@ public class FourSpecimenAuto extends LinearOpMode {
     public class SetClawWristPositionAction implements Action {
         double position;
         ElapsedTime timer = new ElapsedTime();
+        boolean isStart = true;
         public SetClawWristPositionAction(double position){
             this.position = position;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            timer.reset();
-            clawWrist.setPosition(position / 270);
+            if (isStart){
+                isStart=false;
+                clawWrist.setPosition(position / 270);
+                timer.reset();
+            }
             return !(timer.seconds()> 0.5);
         }
     }
@@ -375,7 +398,10 @@ public class FourSpecimenAuto extends LinearOpMode {
                                 scoreSpecimenDownPosition(),
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                 // Go to sample zone 1
-                                fourSpecimenPathing2,
+                                new ParallelAction(
+                                        fourSpecimenPathing2,
+                                        new SetExtendoTargetAction(EXTENDO_RETRACTED)
+                                        ),
                                 // Pick up first sample
                                 intakePickUpSample(400),
                                 // Turn to observation zone first time
@@ -399,7 +425,7 @@ public class FourSpecimenAuto extends LinearOpMode {
                                         intakePickUpHover()
                                 ),
                                 // Pick up third sample
-                                intakePickUpSample(200),
+                                intakePickUpSample(350),
                                 // Turn to observation zone
                                 fourSpecimenPathing7,
                                 // Drop sample into observation zone
