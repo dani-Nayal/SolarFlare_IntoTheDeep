@@ -166,7 +166,7 @@ public class FourSpecimenAuto extends LinearOpMode {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             extendoTarget = target;
-            return !((extendoTarget - extendo.getCurrentPosition()) < 30);
+            return !(Math.abs(extendoTarget - extendo.getCurrentPosition()) < 30);
         }
     }
 
@@ -178,7 +178,7 @@ public class FourSpecimenAuto extends LinearOpMode {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             extendoPitchTarget = target;
-            return !((extendoPitchTarget - extendoPitch.getCurrentPosition()) < 30);
+            return !(Math.abs(extendoPitchTarget - extendoPitch.getCurrentPosition()) < 30);
         }
     }
 
@@ -190,7 +190,7 @@ public class FourSpecimenAuto extends LinearOpMode {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             bucketSlidesTarget = target;
-            return !((bucketSlidesTarget - bucketSlides.getCurrentPosition()) < 30);
+            return !(Math.abs(bucketSlidesTarget - bucketSlides.getCurrentPosition()) < 30);
         }
     }
 

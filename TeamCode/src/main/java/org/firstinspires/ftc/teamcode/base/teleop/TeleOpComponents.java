@@ -1108,7 +1108,6 @@ public abstract class  TeleOpComponents {
                 Servo.Direction.FORWARD
         );
         synchronize(clawPitch,clawPitchRight);
-
     }
     public static void synchronize(BotServo...servos){
         servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));

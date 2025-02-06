@@ -151,7 +151,6 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
         });
             TeleOpActions.runLoop(
                     this::opModeIsActive,
-                    new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{if (bucketSlides.isPowered) bucketSlides.setMotorDisable(); else bucketSlides.setMotorEnable();})}),
                     clawFingers.triggeredToggleAction(()->(gamepad2.left_bumper||gamepad2.right_bumper),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
                     new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{bucketSlides.stallResetAction(0)}),
                     clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),2),
@@ -159,8 +158,8 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                     new ConditionalAction(
                             new Condition[]{()->(!isBucketSlidesMaxLowered),()->(isBucketSlidesMaxLowered)},
                             new TeleOpAction[]{
-                                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("depositPosition"),bucketSlides.getPos("transferPosition"),new double[]{200},new double[]{}),
-                                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("lowDepositPosition"),bucketSlides.getPos("transferPosition"),new double[]{bucketSlides.getPos("depositPosition"),200},new double[]{}),
+                                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("depositPosition"),bucketSlides.getPos("transferPosition"),new double[]{},new double[]{200}),
+                                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("lowDepositPosition"),bucketSlides.getPos("transferPosition"),new double[]{},new double[]{bucketSlides.getPos("depositPosition"),200}),
                             }
                     ),
                     new PressTrigger(new Condition[]{()->(gamepad2.left_stick_x<0 && gamepad2.right_stick_x>0)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{isBucketSlidesMaxLowered=true;})}),
