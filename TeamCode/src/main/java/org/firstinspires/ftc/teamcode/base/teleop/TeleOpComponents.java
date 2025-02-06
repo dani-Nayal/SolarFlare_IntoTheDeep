@@ -1090,7 +1090,7 @@ public abstract class  TeleOpComponents {
         innerClawPitch = new BotServo(
                 "innerClawPitch",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{82,20,200,100,78,82},
+                new double[]{82,20,200,160,78,82},
                 270,
                 0,
                 270,

@@ -79,7 +79,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 new TeleOpSequentialAction(
                         new TeleOpParallelAction(
                                 bucketSlides.setTargetAction(bucketSlides.getPos("transferPosition")),
-                                bucket.setPositionAction(bucketSlides.getPos("transferPosition")),
+                                bucket.setPositionAction(bucket.getPos("transferPosition")),
                                 clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
                                 extendo.setTargetAction(extendo.MIN_POSITION),
                                 clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
@@ -111,10 +111,9 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                             clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
                             innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
                             bucket.setPositionAction(bucket.getPos("depositPosition")),
-                            bucketSlides.setTargetAction(200)
+                            bucketSlides.setTargetAction(bucket.getPos("depositPosition"))
                         ),
                         new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
-
                         new TeleOpParallelAction(
                                 extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                                 new TeleOpSequentialAction(
