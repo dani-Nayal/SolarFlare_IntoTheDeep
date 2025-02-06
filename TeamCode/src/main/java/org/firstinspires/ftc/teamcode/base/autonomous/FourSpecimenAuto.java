@@ -425,7 +425,8 @@ public class FourSpecimenAuto extends LinearOpMode {
                                         intakePickUpHover()
                                 ),
                                 // Pick up third sample
-                                intakePickUpSample(350),
+                                intakePickUpSample(400),
+                                new SetExtendoTargetAction(EXTENDO_RETRACTED),
                                 // Turn to observation zone
                                 fourSpecimenPathing7,
                                 // Drop sample into observation zone
