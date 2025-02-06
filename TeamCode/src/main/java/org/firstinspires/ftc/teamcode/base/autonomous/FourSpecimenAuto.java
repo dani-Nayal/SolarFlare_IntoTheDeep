@@ -360,7 +360,7 @@ public class FourSpecimenAuto extends LinearOpMode {
                 // Score second specimen
                 .strafeToLinearHeading(new Vector2d(4,-35), Math.toRadians(90))
                 .build();
-        Action fourSpecimenPathing10 = drive.actionBuilder(new Pose2d(4, -46, Math.toRadians(90)))
+        Action fourSpecimenPathing10 = drive.actionBuilder(new Pose2d(4, -35, Math.toRadians(90)))
                 // Go to pickup zone
                 .strafeToLinearHeading(new Vector2d(34,-51), Math.toRadians(-90))
                 .build();
