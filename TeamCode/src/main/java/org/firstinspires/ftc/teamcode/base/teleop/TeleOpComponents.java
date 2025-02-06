@@ -420,7 +420,7 @@ public abstract class  TeleOpComponents {
             this.RUN_MODE = runMode;
             this.MOVEMENT_MODE=movementMode;
 
-            setMode(RunMode.STOP_AND_RESET_ENCODER);
+            //setMode(RunMode.STOP_AND_RESET_ENCODER);
             setMode(runMode);
             setDirection(direction);
             this.zeroPowerBehavior=zeroPowerBehaviour;
@@ -996,7 +996,7 @@ public abstract class  TeleOpComponents {
                 "bucketSlides",
                 0.015,0.006,0.00055, 12,
                 new String[]{"depositPosition","transferPosition","lowDepositPosition"},new double[]{1065,0,575},
-                1065,0,
+                Double.POSITIVE_INFINITY,0,
                 325000,4750,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,

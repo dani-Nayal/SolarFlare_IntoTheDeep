@@ -17,6 +17,7 @@ import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.rightF
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.UpdateTelemetryAction;
@@ -111,21 +112,23 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                             clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
                             innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
                             bucket.setPositionAction(bucket.getPos("depositPosition")),
-                            bucketSlides.setTargetAction(bucket.getPos("depositPosition"))
+                            bucketSlides.setTargetAction(200)
                         ),
                         new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
                         new TeleOpParallelAction(
                                 extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                                 new TeleOpSequentialAction(
-                                    new TeleOpActions.SleepWhileTrue(()->(Math.abs(extendoPitch.instantTargetPosition-(-500))>5)),
-                                    clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                    innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
+                                    new TeleOpActions.SleepWhileTrue(()->(Math.abs(extendoPitch.instantTargetPosition-(-800))>20)),
+                                    new TeleOpParallelAction(
+                                        clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
+                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
+                                    )
                                 )
                         ),
                         extendo.setTargetAction(extendo.MAX_POSITION)
                 ),
                 new TeleOpSequentialAction(
-                        extendo.setTargetAction(500),
+                        extendo.setTargetAction(400),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                 ),
                 new TeleOpSequentialAction(
@@ -151,7 +154,9 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
             TeleOpActions.runLoop(
                     this::opModeIsActive,
                     clawFingers.triggeredToggleAction(()->(gamepad2.left_bumper||gamepad2.right_bumper),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
-                    new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{bucketSlides.stallResetAction(0)}),
+                    new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{extendoPitch.stallResetAction(-1020)}),
+                    new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);bucketSlides.offset=1065;})}),
+                    bucketSlides.triggeredDynamicAction(()->(gamepad1.dpad_up),()->(gamepad1.dpad_down),15),
                     clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),2),
                     bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
                     new ConditionalAction(
