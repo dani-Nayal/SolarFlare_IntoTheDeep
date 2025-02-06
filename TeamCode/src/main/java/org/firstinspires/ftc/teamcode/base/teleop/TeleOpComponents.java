@@ -994,9 +994,9 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.008,0.00055, 12,
-                new String[]{"depositPosition","transferPosition","lowDepositPosition"},new double[]{1055,0,575},
-                1055,0,
+                0.015,0.006,0.00055, 12,
+                new String[]{"depositPosition","transferPosition","lowDepositPosition"},new double[]{1065,0,575},
+                1065,0,
                 325000,4750,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,

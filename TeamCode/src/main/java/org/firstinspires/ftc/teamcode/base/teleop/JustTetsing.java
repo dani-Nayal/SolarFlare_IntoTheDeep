@@ -32,7 +32,7 @@ public class JustTetsing extends LinearOpMode {
         extendo.setMotorDisable();
             TeleOpActions.runLoop(
                     this::opModeIsActive,
-                    bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1055),
+                    bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1065),
                     new UpdateTelemetryAction()
             );
     }
