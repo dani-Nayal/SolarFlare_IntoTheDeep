@@ -430,6 +430,7 @@ public class FourSpecimenAuto extends LinearOpMode {
                                 // Turn to observation zone
                                 fourSpecimenPathing7,
                                 // Drop sample into observation zone
+                                new SetExtendoTargetAction(100),
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                 // Go to specimen pick up position
                                 new ParallelAction(
