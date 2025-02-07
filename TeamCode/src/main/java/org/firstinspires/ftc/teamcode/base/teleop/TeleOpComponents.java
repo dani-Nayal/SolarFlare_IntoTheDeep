@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -421,7 +422,7 @@ public abstract class  TeleOpComponents {
             this.RUN_MODE = runMode;
             this.MOVEMENT_MODE=movementMode;
 
-            //setMode(RunMode.STOP_AND_RESET_ENCODER);
+            setMode(RunMode.STOP_AND_RESET_ENCODER);
             setMode(runMode);
             setDirection(direction);
             this.zeroPowerBehavior=zeroPowerBehaviour;
@@ -925,7 +926,7 @@ public abstract class  TeleOpComponents {
                         double servoSpeed,
                         Direction direction)
         {
-            super(hardwareMap.get(Servo.class, deviceName).getController(), hardwareMap.get(Servo.class, deviceName).getPortNumber());
+            super(hardwareMap.get(CRServo.class, deviceName).getController(), hardwareMap.get(CRServo.class, deviceName).getPortNumber());
             this.SERVO_SPEED = servoSpeed;
             setDirection(direction);
             hardwareMap.put(getDeviceName(),this);
@@ -978,7 +979,7 @@ public abstract class  TeleOpComponents {
                 0.014,0,0.00032, 10,
                 new String[]{},new double[]{},
                 600,0,
-                400000,5500,
+                475000,6000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -990,7 +991,7 @@ public abstract class  TeleOpComponents {
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{0,-1030,-960,0},
                 0,-1020,
-                375000,5500,
+                475000,6750,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -998,10 +999,10 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.006,0.00055, 12,
+                0.015,0.003,0.00055, 12,
                 new String[]{"depositPosition","transferPosition","lowDepositPosition"},new double[]{1065,0,575},
                 Double.POSITIVE_INFINITY,0,
-                325000,4750,
+                475000,6500,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -1121,8 +1122,8 @@ public abstract class  TeleOpComponents {
                 "hangRight",
                 422,
                 DcMotorSimple.Direction.REVERSE
-
         );
+        synchronize(hang,hangRight);
         synchronize(clawPitch,clawPitchRight);
     }
     public static void synchronize(BotServo...servos){

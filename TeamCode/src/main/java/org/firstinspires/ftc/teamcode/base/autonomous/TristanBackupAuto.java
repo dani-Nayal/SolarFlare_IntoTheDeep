@@ -352,7 +352,7 @@ public class TristanBackupAuto extends LinearOpMode {
                 .build();
         Action onePlusThreeBucket6 = drive.actionBuilder(new Pose2d(-58,-54, Math.toRadians(45)))
                 // sample zone 2
-                .strafeToLinearHeading(new Vector2d(-64.5,-54), Math.toRadians(93))
+                .strafeToLinearHeading(new Vector2d(-63.5,-54), Math.toRadians(93))
                 .build();
         Action onePlusThreeBucket7 = drive.actionBuilder(new Pose2d(-64.5,-54, Math.toRadians(93)))
                 // turn and score bucket
@@ -360,7 +360,7 @@ public class TristanBackupAuto extends LinearOpMode {
                 .build();
         Action onePlusThreeBucket8 = drive.actionBuilder(new Pose2d(-58,-55, Math.toRadians(45)))
                 // sample 3
-                .strafeToLinearHeading(new Vector2d(-64.5,-54), Math.toRadians(108))
+                .strafeToLinearHeading(new Vector2d(-63.5,-54), Math.toRadians(108))
                 .build();
         Action onePlusThreeBucket9 = drive.actionBuilder(new Pose2d(-64.5,-54, Math.toRadians(108                     )))
                 // obs zone

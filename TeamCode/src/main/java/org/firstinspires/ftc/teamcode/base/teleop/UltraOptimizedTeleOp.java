@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawPi
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawWrist;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendo;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendoPitch;
+import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.hang;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.innerClawPitch;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotMotor;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.leftBack;
@@ -153,10 +154,20 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
         });
             TeleOpActions.runLoop(
                     this::opModeIsActive,
+                    new PressTrigger(new Condition[]{()->(gamepad1.dpad_up)}, new TeleOpAction[]{
+                                hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return -1;})
+                            }),
+                    new PressTrigger(new Condition[]{()->(gamepad1.dpad_down)}, new TeleOpAction[]{
+                            new TeleOpParallelAction(
+                                    hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return 1;}),
+                                    clawPitch.setPositionAction(clawPitch.getPos("pickUpPosition")),
+                                    innerClawPitch.setPositionAction(innerClawPitch.getPos("pickUpPosition"))
+                            )
+                    }),
                     clawFingers.triggeredToggleAction(()->(gamepad2.left_bumper||gamepad2.right_bumper),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
                     new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{extendoPitch.stallResetAction(-1020)}),
                     new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);bucketSlides.offset=1065;})}),
-                    bucketSlides.triggeredDynamicAction(()->(gamepad1.dpad_up),()->(gamepad1.dpad_down),15),
+                    bucketSlides.triggeredDynamicAction(()->(gamepad1.dpad_left),()->(gamepad1.dpad_right),15),
                     clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),2),
                     bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
                     new ConditionalAction(
