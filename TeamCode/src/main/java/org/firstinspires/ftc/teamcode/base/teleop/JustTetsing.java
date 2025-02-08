@@ -35,9 +35,10 @@ public class JustTetsing extends LinearOpMode {
         bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bucketSlides.setMotorDisable();
             TeleOpActions.runLoop(
                     this::opModeIsActive,
-                    bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1065),
+                    //bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1065),
                     extendo.triggeredToggleAction(()->(gamepad1.a),0,600),
                     extendoPitch.triggeredToggleAction(()->(gamepad1.a),0,-1020),
                     new UpdateTelemetryAction()
