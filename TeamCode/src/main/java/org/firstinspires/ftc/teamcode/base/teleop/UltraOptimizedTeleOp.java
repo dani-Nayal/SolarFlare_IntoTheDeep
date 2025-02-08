@@ -157,7 +157,7 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                     new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{extendoPitch.stallResetAction(-1020)}),
                     new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);bucketSlides.offset=1065;})}),
                     bucketSlides.triggeredDynamicAction(()->(gamepad1.dpad_up),()->(gamepad1.dpad_down),15),
-                    clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),2),
+                    clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),6),
                     bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
                     new ConditionalAction(
                             new Condition[]{()->(!isBucketSlidesMaxLowered),()->(isBucketSlidesMaxLowered)},
