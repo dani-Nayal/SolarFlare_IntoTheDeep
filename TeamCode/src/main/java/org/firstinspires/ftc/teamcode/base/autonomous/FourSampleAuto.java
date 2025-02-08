@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name = "TristanAuto", group = "Autonomous")
+@Autonomous(name = "foursample", group = "Autonomous")
 public class FourSampleAuto extends LinearOpMode {
     double kP = 0.015;
     DcMotor extendo;
@@ -336,9 +336,9 @@ public class FourSampleAuto extends LinearOpMode {
                 .build();
         Action onePlusThreeBucket4 = drive.actionBuilder(new Pose2d(-62,-53, Math.toRadians(45)))
                 // Sample zone 1
-                .strafeToLinearHeading(new Vector2d(-48,-54), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-46,-55.5), Math.toRadians(90))
                 .build();
-        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-48,-54, Math.toRadians(90)))
+        Action onePlusThreeBucket5 = drive.actionBuilder(new Pose2d(-46,-55.5, Math.toRadians(90)))
                 // Score bucket
                 .strafeToLinearHeading(new Vector2d(-58,-54), Math.toRadians(45))
                 .build();

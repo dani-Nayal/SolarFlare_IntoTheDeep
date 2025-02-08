@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -924,7 +925,7 @@ public abstract class  TeleOpComponents {
                         double servoSpeed,
                         Direction direction)
         {
-            super(hardwareMap.get(Servo.class, deviceName).getController(), hardwareMap.get(Servo.class, deviceName).getPortNumber());
+            super(hardwareMap.get(CRServo.class, deviceName).getController(), hardwareMap.get(CRServo.class, deviceName).getPortNumber());
             this.SERVO_SPEED = servoSpeed;
             setDirection(direction);
             hardwareMap.put(getDeviceName(),this);
@@ -974,10 +975,10 @@ public abstract class  TeleOpComponents {
         //initialize mechanism variables here
         extendo = new BotMotor(
                 "extendo",
-                0.014,0,0.00032, 50,
+                0.014,0,0.00032, 30,
                 new String[]{},new double[]{},
                 600,0,
-                400000,5500,
+                550000,7750,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -989,7 +990,7 @@ public abstract class  TeleOpComponents {
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
                 new double[]{0,-1030,-960,0},
                 0,-1020,
-                375000,5500,
+                550000,7750,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.FORWARD,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -997,9 +998,9 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.007,0.00055, 50,
+                0.015,0.007,0.00055, 60,
                 new String[]{"depositPosition","transferPosition","lowDepositPosition"},new double[]{1065,0,575},
-                Double.POSITIVE_INFINITY,0,
+                Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY,
                 325000,4750,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
@@ -1053,9 +1054,9 @@ public abstract class  TeleOpComponents {
         clawFingers = new BotServo(
                 "clawFingers",
                 new String[]{"closedPosition","openPosition"},
-                new double[]{20,86},
+                new double[]{0,86},
                 92,
-                20,
+                0,
                 180,
                 422,
                 Servo.Direction.FORWARD
@@ -1073,7 +1074,7 @@ public abstract class  TeleOpComponents {
         clawPitch = new BotServo(
                 "clawPitchLeft",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,100,72.4,145,13},
+                new double[]{13,68,110,72.4,145,13},
                 270,
                 0,
                 270,
@@ -1123,6 +1124,7 @@ public abstract class  TeleOpComponents {
 
         );
         synchronize(clawPitch,clawPitchRight);
+        synchronize(hang,hangRight);
     }
     public static void synchronize(BotServo...servos){
         servos[0].synchronizedServos.addAll(Arrays.asList(servos).subList(1, servos.length));
