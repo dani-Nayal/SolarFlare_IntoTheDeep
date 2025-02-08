@@ -45,6 +45,7 @@ public class NoDrivetrainTeleOp extends LinearOpMode {
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extendo.MAX_POSITION=400;
+        bucketSlides.MAX_POSITION=400;
         clawFingers.setPosition(clawFingers.getPos("openPosition"));
         clawWrist.setPosition(clawWrist.getPos("normalPosition"));
         clawPitch.setPosition(clawPitch.getPos("transferPosition"));
