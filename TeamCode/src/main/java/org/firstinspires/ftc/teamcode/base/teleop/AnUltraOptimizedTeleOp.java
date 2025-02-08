@@ -32,7 +32,7 @@ import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpSleepActio
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 
 @TeleOp
-public class UltraOptimizedTeleOp extends LinearOpMode {
+public class AnUltraOptimizedTeleOp extends LinearOpMode {
     public boolean isBucketSlidesMaxLowered = false;
     @Override
     public void runOpMode() throws InterruptedException {
