@@ -32,20 +32,19 @@ import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpSleepActio
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 
 @TeleOp
-public class UltraOptimizedTeleOp extends LinearOpMode {
+public class NoDrivetrainTeleOp extends LinearOpMode {
     public boolean isBucketSlidesMaxLowered = false;
     @Override
     public void runOpMode() throws InterruptedException {
         TeleOpComponents.initializeMechanisms(hardwareMap,telemetry,new Pose2d(0,0,Math.toRadians(90)));
         waitForStart();
-        if (gamepad1.options){
-            bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+        bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extendoPitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extendoPitch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extendo.MAX_POSITION=400;
         clawFingers.setPosition(clawFingers.getPos("openPosition"));
         clawWrist.setPosition(clawWrist.getPos("normalPosition"));
         clawPitch.setPosition(clawPitch.getPos("transferPosition"));
@@ -118,20 +117,20 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                 ),
                 new TeleOpSequentialAction(
                         new TeleOpParallelAction(
-                            clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
-                            innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
-                            bucket.setPositionAction(bucket.getPos("depositPosition")),
-                            bucketSlides.setTargetAction(200)
+                                clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
+                                innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
+                                bucket.setPositionAction(bucket.getPos("depositPosition")),
+                                bucketSlides.setTargetAction(200)
                         ),
                         new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
                         new TeleOpParallelAction(
                                 extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                                 new TeleOpSequentialAction(
-                                    new TeleOpActions.SleepWhileTrue(()->(extendoPitch.instantTargetPosition<-800)),
-                                    new TeleOpParallelAction(
-                                        clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
-                                    )
+                                        new TeleOpActions.SleepWhileTrue(()->(extendoPitch.instantTargetPosition<-800)),
+                                        new TeleOpParallelAction(
+                                                clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
+                                                innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
+                                        )
                                 )
                         ),
                         extendo.setTargetAction(extendo.MAX_POSITION)
@@ -160,35 +159,33 @@ public class UltraOptimizedTeleOp extends LinearOpMode {
                         )
                 )
         });
-            TeleOpActions.runLoop(
-                    this::opModeIsActive,
-                    new PressTrigger(new Condition[]{()->(gamepad1.dpad_down)}, new TeleOpAction[]{
-                            new TeleOpParallelAction(
-                                    hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return 1;}),
-                                    clawPitch.setPositionAction(clawPitch.getPos("pickUpPosition")),
-                                    innerClawPitch.setPositionAction(innerClawPitch.getPos("pickUpPosition"))
-                            )
-                    }),
-                    new PressTrigger(new Condition[]{()->(gamepad1.dpad_up)}, new TeleOpAction[]{hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return -1;})}),
-                    clawFingers.triggeredToggleAction(()->(gamepad2.left_bumper||gamepad2.right_bumper),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
-                    new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{extendoPitch.stallResetAction(-1020)}),
-                    new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);bucketSlides.offset=1065;})}),
-                    bucketSlides.triggeredDynamicAction(()->(gamepad1.dpad_up),()->(gamepad1.dpad_down),15),
-                    clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),6),
-                    bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
-                    new ConditionalAction(
-                            new Condition[]{()->(!isBucketSlidesMaxLowered),()->(isBucketSlidesMaxLowered)},
-                            new TeleOpAction[]{
-                                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("depositPosition"),bucketSlides.getPos("transferPosition"),new double[]{},new double[]{200}),
-                                    bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("lowDepositPosition"),bucketSlides.getPos("transferPosition"),new double[]{},new double[]{bucketSlides.getPos("depositPosition"),200}),
-                            }
-                    ),
-                    new PressTrigger(new Condition[]{()->(gamepad2.left_stick_x<0 && gamepad2.right_stick_x>0)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{isBucketSlidesMaxLowered=true;})}),
-                    sequences,
-                    new ConditionalAction(new Condition[]{()->(!isRRActive)}, new TeleOpAction[]{
-                            new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_trigger>0.2))
-                    }),
-                    new UpdateTelemetryAction()
-            );
+        TeleOpActions.runLoop(
+                this::opModeIsActive,
+                new PressTrigger(new Condition[]{()->(gamepad1.dpad_down)}, new TeleOpAction[]{
+                        new TeleOpParallelAction(
+                                hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return 1;}),
+                                clawPitch.setPositionAction(clawPitch.getPos("pickUpPosition")),
+                                innerClawPitch.setPositionAction(innerClawPitch.getPos("pickUpPosition"))
+                        )
+                }),
+                new PressTrigger(new Condition[]{()->(gamepad1.dpad_up)}, new TeleOpAction[]{hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return -1;})}),
+                clawFingers.triggeredToggleAction(()->(gamepad2.left_bumper||gamepad2.right_bumper),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
+                new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{extendoPitch.stallResetAction(-1020)}),
+                new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);bucketSlides.offset=1065;})}),
+                bucketSlides.triggeredDynamicAction(()->(gamepad1.dpad_up),()->(gamepad1.dpad_down),15),
+                clawWrist.triggeredDynamicAction(()->(gamepad2.right_trigger>0),()->(gamepad2.left_trigger>0),6),
+                bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
+                new ConditionalAction(
+                        new Condition[]{()->(!isBucketSlidesMaxLowered),()->(isBucketSlidesMaxLowered)},
+                        new TeleOpAction[]{
+                                bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("depositPosition"),bucketSlides.getPos("transferPosition"),new double[]{},new double[]{200}),
+                                bucketSlides.triggeredToggleAction(()->(gamepad1.y),bucketSlides.getPos("lowDepositPosition"),bucketSlides.getPos("transferPosition"),new double[]{},new double[]{bucketSlides.getPos("depositPosition"),200}),
+                        }
+                ),
+                new PressTrigger(new Condition[]{()->(gamepad2.left_stick_x<0 && gamepad2.right_stick_x>0)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{isBucketSlidesMaxLowered=true;})}),
+                sequences,
+                new UpdateTelemetryAction()
+        );
     }
 }
+

@@ -421,7 +421,6 @@ public abstract class  TeleOpComponents {
             this.RUN_MODE = runMode;
             this.MOVEMENT_MODE=movementMode;
 
-            //setMode(RunMode.STOP_AND_RESET_ENCODER);
             setMode(runMode);
             setDirection(direction);
             this.zeroPowerBehavior=zeroPowerBehaviour;
