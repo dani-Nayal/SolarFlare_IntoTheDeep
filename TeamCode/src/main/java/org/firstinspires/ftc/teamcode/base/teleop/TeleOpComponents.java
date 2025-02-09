@@ -975,10 +975,10 @@ public abstract class  TeleOpComponents {
         //initialize mechanism variables here
         extendo = new BotMotor(
                 "extendo",
-                0.014,0,0.00032, 30,
+                0.014,0,0.00032, 110,
                 new String[]{},new double[]{},
-                600,0,
-                550000,7750,
+                500,0,
+                400000,5250,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -998,10 +998,10 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.007,0.00055, 60,
+                0.015,0.006,0.00055, 60,
                 new String[]{"depositPosition","transferPosition","lowDepositPosition"},new double[]{1065,0,575},
                 Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY,
-                325000,4750,
+                450000,6000,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
                 DcMotorEx.Direction.REVERSE,
                 DcMotorEx.ZeroPowerBehavior.BRAKE,
@@ -1054,7 +1054,7 @@ public abstract class  TeleOpComponents {
         clawFingers = new BotServo(
                 "clawFingers",
                 new String[]{"closedPosition","openPosition"},
-                new double[]{0,86},
+                new double[]{20,86},
                 92,
                 0,
                 180,
@@ -1084,7 +1084,7 @@ public abstract class  TeleOpComponents {
         clawPitchRight = new BotServo(
                 "clawPitchRight",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,100,72.4,145,13},
+                new double[]{13,68,110,72.4,145,13},
                 270,
                 0,
                 270,
@@ -1104,7 +1104,7 @@ public abstract class  TeleOpComponents {
         bucket = new BotServo(
                 "bucket",
                 new String[]{"transferPosition","depositPosition"},
-                new double[]{36,158},
+                new double[]{36,140},
                 270,
                 0,
                 270,

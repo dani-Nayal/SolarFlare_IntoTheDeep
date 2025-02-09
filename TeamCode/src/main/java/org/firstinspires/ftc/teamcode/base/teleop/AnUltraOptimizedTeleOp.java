@@ -138,7 +138,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                         extendo.setTargetAction(extendo.MAX_POSITION)
                 ),
                 new TeleOpSequentialAction(
-                        extendo.setTargetAction(400),
+                        extendo.setTargetAction(375),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                 ),
                 new TeleOpParallelAction(
@@ -186,6 +186,9 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                             new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_trigger>0.2))
                     }),
                     extendo.triggeredDynamicAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),15),
+                    new PressTrigger(new Condition[]{()->(gamepad1.options)}, new TeleOpAction[]{new TeleOpActions.ShortAction(()->{
+                        extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    })}),
                     new TeleOpActions.ShortAction(()->{clawWrist.setPosition(clawWrist.getPosition());}),
                     new UpdateTelemetryAction()
             );
