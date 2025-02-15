@@ -1058,7 +1058,7 @@ public abstract class  TeleOpComponents {
                 92,
                 0,
                 180,
-                422,
+                800,
                 Servo.Direction.FORWARD
         );
         clawWrist = new BotServo(
@@ -1078,7 +1078,7 @@ public abstract class  TeleOpComponents {
                 270,
                 0,
                 270,
-                422,
+                800,
                 Servo.Direction.FORWARD
         );
         clawPitchRight = new BotServo(
@@ -1088,7 +1088,7 @@ public abstract class  TeleOpComponents {
                 270,
                 0,
                 270,
-                422,
+                800,
                 Servo.Direction.REVERSE
         );
         innerClawPitch = new BotServo(
@@ -1098,7 +1098,7 @@ public abstract class  TeleOpComponents {
                 270,
                 0,
                 270,
-                422,
+                200,
                 Servo.Direction.REVERSE
         );
         bucket = new BotServo(

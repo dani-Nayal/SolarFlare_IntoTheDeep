@@ -54,7 +54,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
         PressTrigger sequences = new PressTrigger(new Condition[]{
                 () -> (gamepad1.b),
                 () -> (gamepad2.x),
-                () -> (gamepad1.a),
+                () -> (gamepad2.right_trigger>0),
                 () -> (gamepad2.options),
                 ()->(gamepad2.b),
                 ()->(gamepad2.y),
@@ -179,7 +179,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                     new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{extendoPitch.stallResetAction(-1020)}),
                     new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);bucketSlides.offset=1065;})}),
                     bucketSlides.triggeredDynamicAction(()->(gamepad1.dpad_left),()->(gamepad1.dpad_right),15),
-                    clawWrist.triggeredDynamicAction(()->(gamepad2.left_trigger>0),()->(gamepad2.right_trigger>0),8),
+                    clawWrist.triggeredDynamicAction(()->(gamepad1.left_trigger>0),()->(gamepad1.right_trigger>0),8),
                     bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
                     new ConditionalAction(
                             new Condition[]{()->(!isBucketSlidesMaxLowered),()->(isBucketSlidesMaxLowered)},
