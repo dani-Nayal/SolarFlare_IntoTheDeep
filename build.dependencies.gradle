@@ -2,6 +2,10 @@ repositories {
     mavenCentral()
     google() // Needed for androidx
     maven { url = 'https://maven.brott.dev/' }
+<<<<<<< Updated upstream
+=======
+    maven { url = 'https://maven.brott.dev/' }
+>>>>>>> Stashed changes
     maven { url= 'https://maven.pedropathing.com/' }
 }
 
