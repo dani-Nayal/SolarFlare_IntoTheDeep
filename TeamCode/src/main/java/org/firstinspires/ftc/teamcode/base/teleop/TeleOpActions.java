@@ -544,10 +544,10 @@ public abstract class TeleOpActions{
             double backRightPower = (rotY + rotX - rx) / denominator;
 
             if (slowDownFun!=null && slowDownFun.call()) { // Checks for left trigger input, slows all motors by 50%
-                frontLeftPower = 0.5 * (rotY + rotX + rx) / denominator;
-                backLeftPower = 0.5 * (rotY - rotX + rx) / denominator;
-                frontRightPower = 0.5 * (rotY - rotX - rx) / denominator;
-                backRightPower = 0.5 * (rotY + rotX - rx) / denominator;
+                frontLeftPower = 0.85 * (rotY + rotX + rx) / denominator;
+                backLeftPower = 0.85 * (rotY - rotX + rx) / denominator;
+                frontRightPower = 0.85 * (rotY - rotX - rx) / denominator;
+                backRightPower = 0.85 * (rotY + rotX - rx) / denominator;
             }
 
             motors[0].setPower(frontLeftPower);

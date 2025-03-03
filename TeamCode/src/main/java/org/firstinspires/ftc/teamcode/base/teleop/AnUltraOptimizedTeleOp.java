@@ -282,7 +282,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                     new PressTrigger(new Condition[]{()->(gamepad2.left_stick_x<0 && gamepad2.right_stick_x>0)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{isBucketSlidesMaxLowered=true;})}),
                     sequences,
                     new ConditionalAction(new Condition[]{()->(!isRRActive)}, new TeleOpAction[]{
-                            new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_trigger>0.2))
+                            new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(true))
                     }),
                     extendo.triggeredDynamicAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),15),
                     new PressTrigger(new Condition[]{()->(gamepad1.options)}, new TeleOpAction[]{new TeleOpActions.ShortAction(()->{
