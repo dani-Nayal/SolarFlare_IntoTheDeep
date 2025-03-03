@@ -82,7 +82,6 @@ public abstract class  TeleOpComponents {
         public ElapsedTime MOVEMENT_TIMER = null; public ElapsedTime LOOP_TIMER = null;
         double integralSum = 0;
         double previousError = 0;
-        double previousVoltage = 0;
         boolean isStallResetting = false;
         public String MOVEMENT_MODE;
 
@@ -569,18 +568,14 @@ public abstract class  TeleOpComponents {
             isStallResetting=true;
             this.offset=offset;
             setPower(-0.2);
-            previousVoltage = getCurrent(CurrentUnit.AMPS);
         }
         public void checkStallResetOnce(){
             double voltage = getCurrent(CurrentUnit.AMPS);
-            if (voltage/previousVoltage>2){
+            if (voltage>5.1){
                 setPower(0);
                 setMode(RunMode.STOP_AND_RESET_ENCODER);
                 setMode(RUN_MODE);
                 isStallResetting=false;
-            }
-            else {
-                previousVoltage=voltage;
             }
         }
         @Override
@@ -689,7 +684,7 @@ public abstract class  TeleOpComponents {
                 }
             }
             setPosition(position);
-            time=Math.abs(getPosition()-startPos)/SERVO_SPEED+0.07;
+            time=Math.abs(getPosition()-startPos)/SERVO_SPEED;
             MOVEMENT_TIMER.reset();
         }
         public void changeOffset(double amount){
