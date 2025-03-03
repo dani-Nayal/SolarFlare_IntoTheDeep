@@ -40,6 +40,7 @@ public class JustTetsing extends LinearOpMode {
             TeleOpActions.runLoop(
                     this::opModeIsActive,
                     bucketSlides.triggeredToggleAction(()->(gamepad1.a),0,1065),
+                    new TeleOpActions.PressTrigger(new Condition[]{()->(gamepad1.options)},new TeleOpAction[]{bucketSlides.stallResetAction(0)}),
                     new UpdateTelemetryAction()
             );
     }
