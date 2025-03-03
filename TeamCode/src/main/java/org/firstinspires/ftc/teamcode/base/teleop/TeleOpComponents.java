@@ -32,6 +32,7 @@ import java.util.Objects;
 
 
 public abstract class  TeleOpComponents {
+    public static int thing;
     public static HardwareMap hardwareMap;
     public static Telemetry telemetry;
     public static PinpointDrive drive;
@@ -268,6 +269,7 @@ public abstract class  TeleOpComponents {
         public class StallResetAction implements TeleOpAction{
             public boolean isStart = true;
             public double offset=0;
+            public ElapsedTime delayTimer = new ElapsedTime();
             public StallResetAction(double offset){
                 this.offset=offset;
             }
@@ -275,8 +277,11 @@ public abstract class  TeleOpComponents {
                 if (isStart) {
                     initiateStallReset(offset);
                     isStart=false;
+                    delayTimer.reset();
                 }
-                checkStallResetOnce();
+                if (delayTimer.time()>0.3) {
+                    checkStallResetOnce();
+                }
                 return isStallResetting;
             }
 
@@ -567,11 +572,12 @@ public abstract class  TeleOpComponents {
         public void initiateStallReset(double offset){
             isStallResetting=true;
             this.offset=offset;
-            setPower(-0.2);
+            setPower(-0.5);
         }
         public void checkStallResetOnce(){
             double voltage = getCurrent(CurrentUnit.AMPS);
-            if (voltage>5.1){
+            if (voltage>2){
+                thing=getCurrentPosition();
                 setPower(0);
                 setMode(RunMode.STOP_AND_RESET_ENCODER);
                 setMode(RUN_MODE);
@@ -993,7 +999,7 @@ public abstract class  TeleOpComponents {
         );
         bucketSlides = new BotMotor(
                 "bucketSlides",
-                0.015,0.003,0.00055, 60,
+                0.015,0.0039,0.00055, 60,
                 new String[]{"depositPosition","transferPosition","lowDepositPosition"},new double[]{1065,0,575},
                 Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY,
                 600000,8000,
@@ -1062,7 +1068,7 @@ public abstract class  TeleOpComponents {
                 new double[]{95},
                 185,
                 5,
-                1800,
+                270,
                 422,
                 Servo.Direction.FORWARD
         );

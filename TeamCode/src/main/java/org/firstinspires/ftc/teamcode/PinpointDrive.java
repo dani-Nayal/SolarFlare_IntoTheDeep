@@ -45,8 +45,8 @@ public class PinpointDrive extends MecanumDrive {
 
         // Robot center x = 7.1875, y = 7.682
 
-        public double xOffset = 3.0625;
-        public double yOffset = 3.8125;
+        public double xOffset = 3.925;
+        public double yOffset = 2.93;
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
