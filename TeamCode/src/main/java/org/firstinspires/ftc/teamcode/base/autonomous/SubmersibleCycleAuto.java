@@ -39,7 +39,12 @@ public class SubmersibleCycleAuto extends OpMode {
                 values[selectedRow][selectedColumn]+=0.2;
             }
             else{
-                values[selectedRow][selectedColumn]+=2;
+                if (values[selectedRow][selectedColumn]<88) {
+                    values[selectedRow][selectedColumn] += 2;
+                }
+                else{
+                    values[selectedRow][selectedColumn] = 90;
+                }
             }
         }
         else if (gamepad1.left_trigger>0){
@@ -47,7 +52,12 @@ public class SubmersibleCycleAuto extends OpMode {
                 values[selectedRow][selectedColumn]-=0.2;
             }
             else{
-                values[selectedRow][selectedColumn]-=2;
+                if (values[selectedRow][selectedColumn]>-88) {
+                    values[selectedRow][selectedColumn] -= 2;
+                }
+                else{
+                    values[selectedRow][selectedColumn] = -90;
+                }
             }
         }
         else if (gamepad1.right_bumper){
@@ -55,7 +65,12 @@ public class SubmersibleCycleAuto extends OpMode {
                 values[selectedRow][selectedColumn]+=0.01;
             }
             else{
-                values[selectedRow][selectedColumn]+=0.25;
+                if (values[selectedRow][selectedColumn]<89.75) {
+                    values[selectedRow][selectedColumn] += 0.25;
+                }
+                else{
+                    values[selectedRow][selectedColumn] = 90;
+                }
             }
         }
         else if (gamepad1.left_bumper){
@@ -63,7 +78,12 @@ public class SubmersibleCycleAuto extends OpMode {
                 values[selectedRow][selectedColumn]-=0.01;
             }
             else{
-                values[selectedRow][selectedColumn]-=0.25;
+                if (values[selectedRow][selectedColumn]>-89.75) {
+                    values[selectedRow][selectedColumn] -= 0.25;
+                }
+                else{
+                    values[selectedRow][selectedColumn] = -90;
+                }
             }
         }
 
