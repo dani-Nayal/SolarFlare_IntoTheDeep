@@ -404,6 +404,7 @@ public class PreloadSpecimen extends LinearOpMode {
         Actions.runBlocking(
                 new ParallelAction(
                         new MotorPID(),
+                        (@NonNull TelemetryPacket packet)->{telemetry.addData("extendo target",extendoTarget);telemetry.addData("extendo pos",extendo.getCurrentPosition());telemetry.update();return true;},
                         new SequentialAction(
                                 new ParallelAction(
                                         new SetBucketSlidesTargetAction(BUCKET_SLIDES_SCORING_SPECIMEN),
