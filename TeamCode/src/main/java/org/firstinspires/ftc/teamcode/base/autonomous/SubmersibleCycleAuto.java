@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @Autonomous
 public class SubmersibleCycleAuto extends OpMode {
     public double[][] values = new double[3][3];
-    public int selectedRow = 1;
-    public int selectedColumn = 1;
+    public int selectedRow = 0;
+    public int selectedColumn = 0;
     public boolean dpadPressed = false;
 
     public String[][] labelArray = new String[][]{new String[]{"Sample 1 X","Sample 1 Y","Sample 1 Deg"}, new String[]{"Sample 2 X","Sample 2 Y","Sample 2 Deg"}, new String[]{"Sample 3 X","Sample 3 Y","Sample 3 Deg"}};
@@ -18,16 +18,16 @@ public class SubmersibleCycleAuto extends OpMode {
     @Override
     public void init_loop() {
 
-        if (gamepad1.dpad_up && selectedRow>1&&!dpadPressed){
+        if (gamepad1.dpad_up && selectedRow>0&&!dpadPressed){
             selectedRow-=1;
         }
-        else if (gamepad1.dpad_down && selectedRow<3&&!dpadPressed){
+        else if (gamepad1.dpad_down && selectedRow<2&&!dpadPressed){
             selectedRow+=1;
         }
-        else if (gamepad1.dpad_left && selectedColumn>1&&!dpadPressed){
+        else if (gamepad1.dpad_left && selectedColumn>0&&!dpadPressed){
             selectedRow-=1;
         }
-        else if (gamepad1.dpad_right && selectedColumn<3&&!dpadPressed){
+        else if (gamepad1.dpad_right && selectedColumn<2&&!dpadPressed){
             selectedRow+=1;
         }
         dpadPressed = gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_right;
