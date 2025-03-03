@@ -73,18 +73,21 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                         bucket.setPosition(bucket.getPos("transferPosition"));
                     })}),
                     bucketSlides.setTargetAction(bucketSlides.getPos("transferPosition")),
-                    new TeleOpSequentialAction(
-                            new TeleOpParallelAction(
-                                    new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("PID");}),
-                                    extendoPitch.setTargetAction(extendoPitch.getPos("pickUpPosition")),
-                                    clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
-                                    clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
-                                    innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition"))
-                            ),
+                    new TeleOpParallelAction(
+                        new TeleOpParallelAction(
+                                new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("PID");}),
+                                extendoPitch.setTargetAction(extendoPitch.getPos("pickUpPosition")),
+                                clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
+                                clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
+                                innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition"))
+                        ),
+                        new TeleOpSequentialAction(
+                            new TeleOpActions.SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-820)),
                             new TeleOpParallelAction(
                                     extendo.setTargetAction(428),
                                     clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                             )
+                        )
                     )
                 ),
                 new TeleOpSequentialAction(
