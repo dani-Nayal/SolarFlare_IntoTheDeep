@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.base.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+@Autonomous
 public class SubmersibleCycleAuto extends OpMode {
     public double[][] values = new double[3][3];
     public int selectedRow = 1;
