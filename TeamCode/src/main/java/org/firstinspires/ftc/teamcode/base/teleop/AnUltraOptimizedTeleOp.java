@@ -195,7 +195,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                 ),
                                 new TeleOpSequentialAction(
                                         new TeleOpActions.SleepWhileTrue(()->(extendoPitch.instantTargetPosition<-100)),
-                                        extendo.setTargetAction(extendo.MAX_POSITION)
+                                        extendo.setTargetAction(420)
                                 )
                         )
                 ),
@@ -211,8 +211,8 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                             innerClawPitch.setPosition(innerClawPitch.getPos("transferPosition"));
                             bucket.setPosition(bucket.getPos("transferPosition"));
                         })}),
-                        extendo.setTargetAction(250),
-                        clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
+                        extendo.setTargetAction(250)
+                        //clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                 ),
                 new TeleOpParallelAction(
                         new ConditionalAction(new Condition[]{()->(!startedPower)}, new TeleOpAction[]{new TeleOpActions.ShortAction(()->{
@@ -267,7 +267,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                     new PressTrigger(new Condition[]{()->(gamepad2.left_trigger>0)},new TeleOpAction[]{bucketSlides.stallResetAction(0)}),
                     new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);bucketSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);bucketSlides.offset=1065;})}),
                     bucketSlides.triggeredDynamicAction(()->(gamepad1.dpad_left),()->(gamepad1.dpad_right),15),
-                    clawWrist.triggeredDynamicAction(()->(gamepad1.left_trigger>0),()->(gamepad1.right_trigger>0),8),
+                    clawWrist.triggeredDynamicAction(()->(gamepad1.left_trigger>0),()->(gamepad1.right_trigger>0),-8),
                     bucket.triggeredToggleAction(()->(gamepad2.a),bucket.getPos("transferPosition"),bucket.getPos("depositPosition")),
                     new ConditionalAction(
                             new Condition[]{()->(!isBucketSlidesMaxLowered),()->(isBucketSlidesMaxLowered)},
