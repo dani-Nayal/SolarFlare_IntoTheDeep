@@ -38,8 +38,8 @@ public class SubmersibleCycleAuto extends OpMode {
         for (int x = 0;x<3;x++){
             for (int y = 0;y<3;y++){
                 if (x!=selectedRow||y!=selectedColumn){
-                    if (labelArray[selectedRow][selectedColumn].startsWith("[")){
-                        labelArray[selectedRow][selectedColumn]= (String) labelArray[selectedRow][selectedColumn].subSequence(1,labelArray[selectedRow][selectedColumn].length());
+                    if (labelArray[x][y].startsWith("[")){
+                        labelArray[x][y]= (String) labelArray[x][y].subSequence(1,labelArray[x][y].length());
                     }
                 }
             }
