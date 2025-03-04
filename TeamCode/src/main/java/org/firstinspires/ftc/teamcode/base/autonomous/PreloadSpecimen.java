@@ -29,6 +29,8 @@ public class PreloadSpecimen extends LinearOpMode {
     PinpointDrive drive;
     public double robotLength = 15.364;
     public double robotWidth  = 14.375;
+
+    public final int SERVO_SPEED=555;
     public final int EXTENDO_RETRACTED = 0;
     public final int EXTENDO_SCORE_SPECIMEN_UP = 480;
     public final int EXTENDO_SCORE_SPECIMEN_DOWN = 300;
@@ -216,6 +218,7 @@ public class PreloadSpecimen extends LinearOpMode {
         double position;
         ElapsedTime timer = new ElapsedTime();
         boolean isStart = true;
+        double time;
         public SetClawPitchPositionAction(double position){
             this.position = position;
         }
@@ -225,9 +228,10 @@ public class PreloadSpecimen extends LinearOpMode {
                 isStart=false;
                 clawPitchLeft.setPosition(position / 270);
                 clawPitchRight.setPosition(position / 270);
+                time=Math.abs(position-clawPitchLeft.getPosition())/SERVO_SPEED;
                 timer.reset();
             }
-            return !(timer.seconds() > 0.5);
+            return !(timer.seconds() > time);
         }
     }
 
@@ -235,6 +239,7 @@ public class PreloadSpecimen extends LinearOpMode {
         double position;
         ElapsedTime timer = new ElapsedTime();
         boolean isStart = true;
+        double time;
         public SetInnerClawPitchPositionAction(double position){
             this.position = position;
         }
@@ -243,9 +248,10 @@ public class PreloadSpecimen extends LinearOpMode {
             if (isStart) {
                 isStart=false;
                 innerClawPitch.setPosition(position / 270);
+                time=Math.abs(position-innerClawPitch.getPosition())/SERVO_SPEED;
                 timer.reset();
             }
-            return !(timer.seconds() > 0.5);
+            return !(timer.seconds() > time);
         }
     }
 
@@ -253,6 +259,7 @@ public class PreloadSpecimen extends LinearOpMode {
         double position;
         ElapsedTime timer = new ElapsedTime();
         boolean isStart = true;
+        double time;
         public SetClawFingersPositionAction(double position){
             this.position = position;
         }
@@ -261,9 +268,10 @@ public class PreloadSpecimen extends LinearOpMode {
             if (isStart) {
                 isStart=false;
                 clawFingers.setPosition(position / 180);
+                time=Math.abs(position-clawFingers.getPosition())/SERVO_SPEED;
                 timer.reset();
             }
-            return !(timer.seconds() > 0.5);
+            return !(timer.seconds() > time);
         }
     }
 
@@ -271,6 +279,7 @@ public class PreloadSpecimen extends LinearOpMode {
         double position;
         ElapsedTime timer = new ElapsedTime();
         boolean isStart = true;
+        double time;
         public SetBucketPositionAction(double position){
             this.position = position;
         }
@@ -279,9 +288,10 @@ public class PreloadSpecimen extends LinearOpMode {
             if (isStart) {
                 isStart=false;
                 bucket.setPosition(position / 270);
+                time=Math.abs(position-bucket.getPosition())/SERVO_SPEED;
                 timer.reset();
             }
-            return !(timer.seconds() > 0.5);
+            return !(timer.seconds() > time);
         }
     }
 
@@ -289,6 +299,7 @@ public class PreloadSpecimen extends LinearOpMode {
         double position;
         ElapsedTime timer = new ElapsedTime();
         boolean isStart = true;
+        double time;
         public SetClawWristPositionAction(double position){
             this.position = position;
         }
@@ -298,9 +309,10 @@ public class PreloadSpecimen extends LinearOpMode {
             if (isStart){
                 isStart=false;
                 clawWrist.setPosition(position / 270);
+                time=Math.abs(position-clawWrist.getPosition())/SERVO_SPEED;
                 timer.reset();
             }
-            return !(timer.seconds()> 0.5);
+            return !(timer.seconds()> time);
         }
     }
 
