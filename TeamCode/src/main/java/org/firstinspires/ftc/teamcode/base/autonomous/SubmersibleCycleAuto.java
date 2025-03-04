@@ -47,11 +47,11 @@ public class SubmersibleCycleAuto extends OpMode {
 
         if (gamepad1.right_trigger>0){
             if (selectedColumn!=3){
-                values[selectedRow][selectedColumn]+=0.2;
+                values[selectedRow][selectedColumn]+=0.01;
             }
             else{
-                if (values[selectedRow][selectedColumn]<88) {
-                    values[selectedRow][selectedColumn] += 2;
+                if (values[selectedRow][selectedColumn]<89.5) {
+                    values[selectedRow][selectedColumn] += 0.5;
                 }
                 else{
                     values[selectedRow][selectedColumn] = 90;
@@ -60,11 +60,11 @@ public class SubmersibleCycleAuto extends OpMode {
         }
         else if (gamepad1.left_trigger>0){
             if (selectedColumn!=3){
-                values[selectedRow][selectedColumn]-=0.2;
+                values[selectedRow][selectedColumn]-=0.01;
             }
             else{
-                if (values[selectedRow][selectedColumn]>-88) {
-                    values[selectedRow][selectedColumn] -= 2;
+                if (values[selectedRow][selectedColumn]>-89.5) {
+                    values[selectedRow][selectedColumn] -= 0.5;
                 }
                 else{
                     values[selectedRow][selectedColumn] = -90;
@@ -73,11 +73,11 @@ public class SubmersibleCycleAuto extends OpMode {
         }
         else if (gamepad1.right_bumper){
             if (selectedColumn!=3){
-                values[selectedRow][selectedColumn]+=0.01;
+                values[selectedRow][selectedColumn]+=0.001;
             }
             else{
-                if (values[selectedRow][selectedColumn]<89.75) {
-                    values[selectedRow][selectedColumn] += 0.25;
+                if (values[selectedRow][selectedColumn]<89.95) {
+                    values[selectedRow][selectedColumn] += 0.05;
                 }
                 else{
                     values[selectedRow][selectedColumn] = 90;
@@ -86,11 +86,11 @@ public class SubmersibleCycleAuto extends OpMode {
         }
         else if (gamepad1.left_bumper){
             if (selectedColumn!=3){
-                values[selectedRow][selectedColumn]-=0.01;
+                values[selectedRow][selectedColumn]-=0.001;
             }
             else{
-                if (values[selectedRow][selectedColumn]>-89.75) {
-                    values[selectedRow][selectedColumn] -= 0.25;
+                if (values[selectedRow][selectedColumn]>-89.95) {
+                    values[selectedRow][selectedColumn] -= 0.05;
                 }
                 else{
                     values[selectedRow][selectedColumn] = -90;
