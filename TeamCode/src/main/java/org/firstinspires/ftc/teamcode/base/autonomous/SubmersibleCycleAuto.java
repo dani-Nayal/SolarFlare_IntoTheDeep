@@ -25,15 +25,24 @@ public class SubmersibleCycleAuto extends OpMode {
             selectedRow+=1;
         }
         else if (gamepad1.dpad_left && selectedColumn>0&&!dpadPressed){
-            selectedRow-=1;
+            selectedColumn-=1;
         }
         else if (gamepad1.dpad_right && selectedColumn<2&&!dpadPressed){
-            selectedRow+=1;
+            selectedColumn+=1;
         }
         dpadPressed = gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_right;
 
         if (!labelArray[selectedRow][selectedColumn].startsWith("[")){
             labelArray[selectedRow][selectedColumn]="["+labelArray[selectedRow][selectedColumn]+"]";
+        }
+        for (int x = 0;x<3;x++){
+            for (int y = 0;y<3;y++){
+                if (x!=selectedRow||y!=selectedColumn){
+                    if (labelArray[selectedRow][selectedColumn].startsWith("[")){
+                        labelArray[selectedRow][selectedColumn]= (String) labelArray[selectedRow][selectedColumn].subSequence(1,labelArray[selectedRow][selectedColumn].length());
+                    }
+                }
+            }
         }
 
         if (gamepad1.right_trigger>0){

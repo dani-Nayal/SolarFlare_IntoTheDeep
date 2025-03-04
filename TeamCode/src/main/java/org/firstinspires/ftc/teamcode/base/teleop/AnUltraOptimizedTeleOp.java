@@ -82,7 +82,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition"))
                         ),
                         new TeleOpSequentialAction(
-                            new TeleOpActions.SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-820)),
+                            new TeleOpActions.SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-920)),
                             new TeleOpParallelAction(
                                     extendo.setTargetAction(428),
                                     clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
