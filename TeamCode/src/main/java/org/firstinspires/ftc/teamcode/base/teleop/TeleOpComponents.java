@@ -598,7 +598,7 @@ public abstract class  TeleOpComponents {
         }
         @Override
         public void setPower(double power){
-            if (isPowered) {
+            if (isPowered || isStallResetting) {
                 super.setPower(power);
             }
 
@@ -1099,7 +1099,7 @@ public abstract class  TeleOpComponents {
                 270,
                 0,
                 270,
-                200,
+                800,
                 Servo.Direction.REVERSE
         );
         bucket = new BotServo(
