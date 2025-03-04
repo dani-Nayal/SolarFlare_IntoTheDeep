@@ -10,7 +10,7 @@ public class SubmersibleCycleAuto extends OpMode {
     public int selectedColumn = 0;
     public boolean dpadPressed = false;
 
-    public String[][] labelArray = new String[][]{new String[]{"Sample 1 X","Sample 1 Y","Sample 1 Deg"}, new String[]{"Sample 2 X","Sample 2 Y","Sample 2 Deg"}, new String[]{"Sample 3 X","Sample 3 Y","Sample 3 Deg"}};
+    public String[][] labelArray = new String[][]{new String[]{"Samp 1 X","Samp 1 Y","Samp 1 Deg"}, new String[]{"Samp 2 X","Samp 2 Y","Samp 2 Deg"}, new String[]{"Samp 3 X","Samp 3 Y","Samp 3 Deg"}};
 
     @Override
     public void init() {}
@@ -39,7 +39,7 @@ public class SubmersibleCycleAuto extends OpMode {
             for (int y = 0;y<3;y++){
                 if (x!=selectedRow||y!=selectedColumn){
                     if (labelArray[x][y].startsWith("[")){
-                        labelArray[x][y]= (String) labelArray[x][y].subSequence(1,labelArray[x][y].length());
+                        labelArray[x][y]= (String) labelArray[x][y].subSequence(1,labelArray[x][y].length()-1);
                     }
                 }
             }
@@ -98,9 +98,9 @@ public class SubmersibleCycleAuto extends OpMode {
             }
         }
 
-        telemetry.addData(labelArray[0][0]+": " + values[0][0]+"    "+labelArray[0][1]+": " + values[0][1]+"    "+labelArray[0][2]+": " + values[0][2]+"    ","");
-        telemetry.addData(labelArray[1][0]+": " + values[1][0]+"    "+labelArray[1][1]+": " + values[1][1]+"    "+labelArray[1][2]+": " + values[1][2]+"    ","");
-        telemetry.addData(labelArray[2][0]+": " + values[2][0]+"    "+labelArray[2][1]+": " + values[2][1]+"    "+labelArray[2][2]+": " + values[2][2]+"    ","");
+        telemetry.addData(labelArray[0][0]+": " + values[0][0]+"    "+labelArray[0][1]+": " + values[0][1]+", "+labelArray[0][2]+": " + values[0][2],"");
+        telemetry.addData(labelArray[1][0]+": " + values[1][0]+", "+labelArray[1][1]+": " + values[1][1]+", "+labelArray[1][2]+": " + values[1][2],"");
+        telemetry.addData(labelArray[2][0]+": " + values[2][0]+", "+labelArray[2][1]+": " + values[2][1]+", "+labelArray[2][2]+": " + values[2][2],"");
         telemetry.update();
     }
 
