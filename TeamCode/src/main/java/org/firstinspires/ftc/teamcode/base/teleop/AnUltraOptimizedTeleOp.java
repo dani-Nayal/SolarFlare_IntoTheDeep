@@ -41,6 +41,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
         bucketSlides.isPowered=false;
         extendo.isPowered=false;
         extendoPitch.isPowered=false;
+        clawWrist.currPos=95;
         waitForStart();
         if (gamepad1.options){
             bucketSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
