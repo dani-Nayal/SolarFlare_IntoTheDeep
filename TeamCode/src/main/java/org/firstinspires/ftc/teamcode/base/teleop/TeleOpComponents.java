@@ -581,6 +581,7 @@ public abstract class  TeleOpComponents {
                 setPower(0);
                 setMode(RunMode.STOP_AND_RESET_ENCODER);
                 setMode(RUN_MODE);
+                target=offset;
                 isStallResetting=false;
             }
         }
