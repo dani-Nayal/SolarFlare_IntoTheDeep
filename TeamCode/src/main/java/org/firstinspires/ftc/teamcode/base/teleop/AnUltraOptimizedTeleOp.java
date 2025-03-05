@@ -263,14 +263,14 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
         });
             TeleOpActions.runLoop(
                     this::opModeIsActive,
-                    new PressTrigger(new Condition[]{()->(gamepad2.dpad_left)}, new TeleOpAction[]{
+                    new PressTrigger(new Condition[]{()->(gamepad2.dpad_down)}, new TeleOpAction[]{
                             new TeleOpParallelAction(
                                     hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return 1;}),
                                     clawPitch.setPositionAction(clawPitch.getPos("pickUpPosition")),
                                     innerClawPitch.setPositionAction(innerClawPitch.getPos("pickUpPosition"))
                             )
                     }),
-                    new PressTrigger(new Condition[]{()->(gamepad2.dpad_right)}, new TeleOpAction[]{hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return -1;})}),
+                    new PressTrigger(new Condition[]{()->(gamepad2.dpad_up)}, new TeleOpAction[]{hang.setPowerAction(()->{if (hang.getPower()!=0) return 0; else return -1;})}),
                     clawFingers.triggeredToggleAction(()->(gamepad2.left_bumper||gamepad2.right_bumper),clawFingers.getPos("openPosition"),clawFingers.getPos("closedPosition")),
                     new PressTrigger(new Condition[]{()->(gamepad1.back)},new TeleOpAction[]{extendoPitch.stallResetAction(-1020)}),
                     new PressTrigger(new Condition[]{()->(gamepad2.back)},new TeleOpAction[]{bucketSlides.stallResetAction(0)}),
