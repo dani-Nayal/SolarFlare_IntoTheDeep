@@ -35,7 +35,7 @@ import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 public class AnUltraOptimizedTeleOp extends LinearOpMode {
     public boolean isBucketSlidesMaxLowered = false;
     public boolean startedPower = false;
-    public boolean specimenSwitch = false;
+    public boolean specimenSwitch = true;
     @Override
     public void runOpMode() throws InterruptedException {
         TeleOpComponents.initializeMechanisms(hardwareMap,telemetry,new Pose2d(0,0,Math.toRadians(90)));
@@ -241,22 +241,22 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                             new Condition[]{()->(specimenSwitch),()->(!specimenSwitch)},
                             new TeleOpAction[]{
                                 new TeleOpSequentialAction(
-                                    new TeleOpActions.ShortAction(()->{specimenSwitch=!specimenSwitch;}),
-                                    new TeleOpParallelAction(
-                                        clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
-                                        clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
-                                        bucket.setPositionAction(bucket.getPos("transferPosition"))
-                                    ),
-                                    extendo.setTargetAction(extendo.MIN_POSITION)
+                                        new TeleOpActions.ShortAction(()->{specimenSwitch=!specimenSwitch;}),
+                                        new TeleOpParallelAction(
+                                                clawWrist.setPositionAction(clawWrist.getPos("normalPosition")),
+                                                clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
+                                                innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
+                                                bucket.setPositionAction(bucket.getPos("transferPosition")),
+                                                extendo.setTargetAction(extendo.MIN_POSITION)
+                                        )
                                 ),
                                 new TeleOpParallelAction(
-                                        new TeleOpActions.ShortAction(()->{specimenSwitch=!specimenSwitch;}),
-                                        extendo.setTargetAction(428),
-                                        clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition")),
-                                        bucket.setPositionAction(bucket.getPos("transferPosition"))
-                                )
+                                    new TeleOpActions.ShortAction(()->{specimenSwitch=!specimenSwitch;}),
+                                    extendo.setTargetAction(428),
+                                    clawPitch.setPositionAction(clawPitch.getPos("hoverPosition")),
+                                    innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition")),
+                                    bucket.setPositionAction(bucket.getPos("transferPosition"))
+                                ),
                             }
                         )
                 ),
