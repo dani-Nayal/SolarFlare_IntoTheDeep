@@ -213,19 +213,6 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                         extendo.setTargetAction(250)
                         //clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
                 ),
-
-                new TeleOpParallelAction(
-                        new ConditionalAction(new Condition[]{()->(!startedPower)}, new TeleOpAction[]{new TeleOpActions.ShortAction(()->{
-                            startedPower=true;
-                            bucketSlides.isPowered=true;
-                            extendo.isPowered=true;
-                            extendoPitch.isPowered=true;
-                            clawFingers.setPosition(clawFingers.getPos("openPosition"));
-                            clawWrist.setPosition(clawWrist.getPos("normalPosition"));
-                            clawPitch.setPosition(clawPitch.getPos("transferPosition"));
-                            innerClawPitch.setPosition(innerClawPitch.getPos("transferPosition"));
-                        })})
-                ),
                 new TeleOpSequentialAction(
                         new ConditionalAction(new Condition[]{()->(!startedPower)}, new TeleOpAction[]{new TeleOpActions.ShortAction(()->{
                             startedPower=true;
