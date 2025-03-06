@@ -403,7 +403,10 @@ public class SubmersibleCycleAuto extends OpMode {
             Action goToSecondPickup = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(80)))
                     .strafeToLinearHeading(new Vector2d(-61,-58),Math.toRadians(80))
                     .build();
-            Action goToThirdPickup = drive.actionBuilder(new Pose2d(-61, -58, Math.toRadians(90)))
+            Action goToSecondDeposit = drive.actionBuilder(new Pose2d(-61, -58, Math.toRadians(90)))
+                    .strafeToLinearHeading(new Vector2d(-60,-58),Math.toRadians(45))
+                    .build();
+            Action goToThirdPickup = drive.actionBuilder(new Pose2d(-60, -58, Math.toRadians(45)))
                     .strafeToLinearHeading(new Vector2d(-65,-56),Math.toRadians(120))
                     .build();
             Action goToThirdDeposit = drive.actionBuilder(new Pose2d(-65, -56, Math.toRadians(120)))
@@ -419,8 +422,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                 new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
                                 new ParallelAction(
                                         new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP),
+                                        new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                                         new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                         new SetClawWristPositionAction(85),
                                         new SequentialAction(
@@ -431,9 +434,15 @@ public class SubmersibleCycleAuto extends OpMode {
                             ),
                             new ParallelAction(
                                 new SetBucketPositionAction(BUCKET_DEPOSIT),
-                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                new SequentialAction(
+                                    new ParallelAction(
+                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                    ),
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                )
                             ),
-                            new SleepAction(0.4),
+                            new SleepAction(0.2),
                             new ParallelAction(
                                     goToSecondPickup,
                                     new SequentialAction(
@@ -460,8 +469,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                         new ParallelAction(
                                                 new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
                                                 new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP),
+                                                new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                                 new SetClawWristPositionAction(95),
                                                 new SequentialAction(
@@ -473,11 +482,17 @@ public class SubmersibleCycleAuto extends OpMode {
                             ),
                             new ParallelAction(
                                     new SetBucketPositionAction(BUCKET_DEPOSIT),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SequentialAction(
+                                            new ParallelAction(
+                                                    new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                            ),
+                                            new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    )
                             ),
-                            new SleepAction(0.4),
+                            new SleepAction(0.2),
                             new ParallelAction(
-                                    goToThirdPickup,
+                                    goToSecondDeposit,
                                     new SequentialAction(
                                             new ParallelAction(
                                                     new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
@@ -502,8 +517,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new ParallelAction(
                                                     new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
                                                     new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                    new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP),
+                                                    new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                                     new SetClawWristPositionAction(125),
                                                     new SequentialAction(
@@ -513,11 +528,17 @@ public class SubmersibleCycleAuto extends OpMode {
                                             )
                                     )
                             ),
-                            new ParallelAction(
-                                    new SetBucketPositionAction(BUCKET_DEPOSIT),
+                            new SetBucketPositionAction(BUCKET_DEPOSIT),
+                            new SleepAction(0.4),
+                            goToThirdPickup,
+                            new SequentialAction(
+                                    new ParallelAction(
+                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                    ),
                                     new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
                             ),
-                            new SleepAction(0.4),
+                            new SleepAction(0.2),
                             new ParallelAction(
                                     goToThirdDeposit,
                                     new SequentialAction(
@@ -544,8 +565,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new ParallelAction(
                                                     new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
                                                     new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                    new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP),
+                                                    new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                                     new SetClawWristPositionAction(125),
                                                     new SequentialAction(
@@ -554,7 +575,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     )
                                             )
                                     )
-                            )
+                            ),
+                            new SetBucketPositionAction(BUCKET_DEPOSIT)
 
                     )
                 )
