@@ -297,7 +297,7 @@ public abstract class TeleOpActions{
                     timeOutTimer = new ElapsedTime();
                 }
             }
-            return returnCondition.call();
+            return !returnCondition.call();
         }
     }
 

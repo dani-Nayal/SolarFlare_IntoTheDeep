@@ -131,13 +131,8 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                 extendo.setTargetAction(extendo.MIN_POSITION),
                                 clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
-                                new TeleOpSequentialAction(
-                                        new TeleOpActions.SleepWhileTrue(()->(extendo.instantTargetPosition<160)),
-                                        new TeleOpParallelAction(
-                                                new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
-                                                extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
-                                        )
-                                )
+                                new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
+                                extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
                         ),
                         clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
                         new TeleOpSleepAction(0.1),
