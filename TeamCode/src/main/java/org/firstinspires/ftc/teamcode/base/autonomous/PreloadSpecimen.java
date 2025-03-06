@@ -41,7 +41,7 @@ public class PreloadSpecimen extends LinearOpMode {
     public final int BUCKET_SLIDES_HIGH_BUCKET = 1030;
     public final int BUCKET_SLIDES_TRANSFER = 0;
     public final int BUCKET_SLIDES_SCORING_SPECIMEN = 350;
-    public final int CLAW_FINGERS_OPEN = 86;
+    public final int CLAW_FINGERS_OPEN = 95;
     public final int CLAW_FINGERS_CLOSED = 20;
     public final int CLAW_WRIST_DEFAULT = 95;
     public final int CLAW_PITCH_PICK_UP = 13;

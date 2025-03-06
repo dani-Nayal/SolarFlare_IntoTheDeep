@@ -23,11 +23,11 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class MeepMeepTesting {
-    static MeepMeep meepMeep = new MeepMeep(500);
+    static MeepMeep meepMeep = new MeepMeep(700);
     static RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
             // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
             .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-            .setDimensions(12.4375,15.0625)
+            .setDimensions(14.3,15.0625)
             .build();
 
     public static void main(String[] args) {
