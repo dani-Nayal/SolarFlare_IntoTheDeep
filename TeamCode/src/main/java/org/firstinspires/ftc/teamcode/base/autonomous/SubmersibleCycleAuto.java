@@ -45,7 +45,7 @@ public class SubmersibleCycleAuto extends OpMode {
     public final int EXTENDO_PITCH_SCORE_SPECIMEN = 0;
     public final int EXTENDO_PITCH_PICK_UP = -1000;
     public final int EXTENDO_PITCH_GRAB_SPECIMEN = -960;
-    public final int BUCKET_SLIDES_HIGH_BUCKET = 1030;
+    public final int BUCKET_SLIDES_HIGH_BUCKET = 1070;
     public final int BUCKET_SLIDES_TRANSFER = 0;
     public final int BUCKET_SLIDES_SCORING_SPECIMEN = 350;
     public final int CLAW_FINGERS_OPEN = 95;
@@ -401,9 +401,9 @@ public class SubmersibleCycleAuto extends OpMode {
                     .strafeToLinearHeading(new Vector2d(-65,-54),Math.toRadians(67))
                     .build();
             Action goToSecondPickup = drive.actionBuilder(new Pose2d(-65, -54, Math.toRadians(67)))
-                    .strafeToLinearHeading(new Vector2d(-62,-55),Math.toRadians(75))
+                    .strafeToLinearHeading(new Vector2d(-70,-53),Math.toRadians(75))
                     .build();
-            Action goToSecondDeposit = drive.actionBuilder(new Pose2d(-62, -55, Math.toRadians(75)))
+            Action goToSecondDeposit = drive.actionBuilder(new Pose2d(-70, -53, Math.toRadians(75)))
                     .strafeToLinearHeading(new Vector2d(-60,-54),Math.toRadians(45))
                     .build();
             Action goToThirdPickup = drive.actionBuilder(new Pose2d(-60, -54, Math.toRadians(45)))
@@ -430,7 +430,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                         new SetClawWristPositionAction(95),
                                         new SequentialAction(
                                             new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
-                                            new SetExtendoTargetAction(EXTENDO_EXTENDED)
+                                            new SetExtendoTargetAction(350)
                                         )
                                 )
                             ),
