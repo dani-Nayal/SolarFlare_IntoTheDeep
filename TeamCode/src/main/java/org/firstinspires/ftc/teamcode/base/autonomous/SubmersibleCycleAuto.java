@@ -647,7 +647,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
                                                     new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                    new SetClawWristPositionAction(125),
+                                                    new SetClawWristPositionAction(140+values[1][2]),
                                                     new SequentialAction(
                                                             new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                             new SetExtendoTargetAction(EXTENDO_EXTENDED)
@@ -698,7 +698,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
                                                     new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                    new SetClawWristPositionAction(125),
+                                                    new SetClawWristPositionAction(140+values[2][2]),
                                                     new SequentialAction(
                                                             new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                             new SetExtendoTargetAction(EXTENDO_EXTENDED)
