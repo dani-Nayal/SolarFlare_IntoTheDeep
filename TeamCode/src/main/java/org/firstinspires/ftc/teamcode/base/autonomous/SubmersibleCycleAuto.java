@@ -479,14 +479,10 @@ public class SubmersibleCycleAuto extends OpMode {
                                                 new SetBucketPositionAction(BUCKET_TRANSFER),
                                                 new ParallelAction(
                                                         new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                        new SequentialAction(
-                                                                new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-160)),
-                                                                new ParallelAction(
-                                                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                                        new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
-                                                                )
-                                                        )
+                                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                        new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                        new SetClawWristPositionAction(95)
                                                 )
                                         ),
                                             new SleepAction(0.5),
@@ -526,14 +522,10 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetBucketPositionAction(BUCKET_TRANSFER),
                                                     new ParallelAction(
                                                             new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SequentialAction(
-                                                                    new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-160)),
-                                                                    new ParallelAction(
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
-                                                                    )
-                                                            )
+                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                            new SetClawWristPositionAction(95)
                                                     )
                                             ),
                                             new SleepAction(0.5),
@@ -574,14 +566,10 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetBucketPositionAction(BUCKET_TRANSFER),
                                                     new ParallelAction(
                                                             new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SequentialAction(
-                                                                    new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-160)),
-                                                                    new ParallelAction(
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
-                                                                    )
-                                                            )
+                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                            new SetClawWristPositionAction(95)
                                                     )
                                             ),
                                             new SleepAction(0.5),
@@ -624,17 +612,11 @@ public class SubmersibleCycleAuto extends OpMode {
                                     depositFirstSubAndGoToSecond,
                                     new SequentialAction(
                                             new ParallelAction(
-                                                    new ParallelAction(
-                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SequentialAction(
-                                                                    new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-160)),
-                                                                    new ParallelAction(
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
-                                                                    )
-                                                            )
-                                                    )
+                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                    new SetClawWristPositionAction(95)
                                             ),
                                             new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                             new ParallelAction(
@@ -675,17 +657,11 @@ public class SubmersibleCycleAuto extends OpMode {
                                     depositSecondSubAndGoToThird,
                                     new SequentialAction(
                                             new ParallelAction(
-                                                    new ParallelAction(
-                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SequentialAction(
-                                                                    new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-160)),
-                                                                    new ParallelAction(
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
-                                                                    )
-                                                            )
-                                                    )
+                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                    new SetClawWristPositionAction(95)
                                             ),
                                             new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                             new ParallelAction(
@@ -726,17 +702,11 @@ public class SubmersibleCycleAuto extends OpMode {
                                     goToThirdSubDeposit,
                                     new SequentialAction(
                                             new ParallelAction(
-                                                    new ParallelAction(
-                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SequentialAction(
-                                                                    new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-160)),
-                                                                    new ParallelAction(
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
-                                                                    )
-                                                            )
-                                                    )
+                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                    new SetClawWristPositionAction(95)
                                             ),
                                             new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                             new ParallelAction(
