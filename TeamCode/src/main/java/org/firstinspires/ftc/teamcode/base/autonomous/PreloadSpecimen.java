@@ -360,21 +360,21 @@ public class PreloadSpecimen extends LinearOpMode {
                 .build();
         Action fourSpecimenPathing2 = drive.actionBuilder(new Pose2d(8, -33, Math.toRadians(90)))
                 // Go to sample 1 sample zone
-                .strafeToLinearHeading(new Vector2d(38,-44), Math.toRadians(40))
+                .strafeToLinearHeading(new Vector2d(35,-41.5), Math.toRadians(40))
                 .build();
-        Action fourSpecimenPathing3 = drive.actionBuilder(new Pose2d(38, -44, Math.toRadians(40)))
+        Action fourSpecimenPathing3 = drive.actionBuilder(new Pose2d(35, -41.5, Math.toRadians(40)))
                 // Rotate towards observation zone 1st time
-                .turnTo(Math.toRadians(-45))
+                .turnTo(Math.toRadians(-60))
                 .build();
-        Action fourSpecimenPathing4 = drive.actionBuilder(new Pose2d(38, -44, Math.toRadians(-45)))
+        Action fourSpecimenPathing4 = drive.actionBuilder(new Pose2d(35, -41.5, Math.toRadians(-60)))
                 // Rotate to sample 2 in sample zone
-                .strafeToLinearHeading(new Vector2d(43,-40), Math.toRadians(48))
+                .strafeToLinearHeading(new Vector2d(43.5,-41), Math.toRadians(48))
                 .build();
-        Action fourSpecimenPathing5 = drive.actionBuilder(new Pose2d(43, -40, Math.toRadians(48)))
+        Action fourSpecimenPathing5 = drive.actionBuilder(new Pose2d(43.5, -41, Math.toRadians(48)))
                 // Rotate towards observation zone 2nd time
                 .turnTo(Math.toRadians(-70))
                 .build();
-        Action fourSpecimenPathing6 = drive.actionBuilder(new Pose2d(43, -40, Math.toRadians(-70)))
+        Action fourSpecimenPathing6 = drive.actionBuilder(new Pose2d(43.5, -41, Math.toRadians(-70)))
                 // Rotate towards sample 3 in sample zone
                 .strafeToLinearHeading(new Vector2d(52,-40), Math.toRadians(40))
                 .build();
@@ -382,31 +382,31 @@ public class PreloadSpecimen extends LinearOpMode {
                 // Rotate towards observation zone 3rd time
                 .strafeToLinearHeading(new Vector2d(52, -45), Math.toRadians(-100))
                 .build();
-        Action fourSpecimenPathing8 = drive.actionBuilder(new Pose2d(43, -40, Math.toRadians(-70)))
+        Action fourSpecimenPathing8 = drive.actionBuilder(new Pose2d(43.5, -41, Math.toRadians(-70)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(34,-49), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(34,-52), Math.toRadians(-90))
                 .build();
-        Action fourSpecimenPathing9 = drive.actionBuilder(new Pose2d(34, -49, Math.toRadians(-90)))
+        Action fourSpecimenPathing9 = drive.actionBuilder(new Pose2d(34, -52, Math.toRadians(-90)))
                 // Score second specimen
-                .strafeToLinearHeading(new Vector2d(4,-36), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(4,-32.7), Math.toRadians(90))
                 .build();
-        Action fourSpecimenPathing10 = drive.actionBuilder(new Pose2d(4, -36, Math.toRadians(90)))
+        Action fourSpecimenPathing10 = drive.actionBuilder(new Pose2d(4, -32.7, Math.toRadians(90)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(34,-49), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(34,-51), Math.toRadians(-90))
                 .build();
-        Action fourSpecimenPathing11 = drive.actionBuilder(new Pose2d(34, -49, Math.toRadians(-90)))
+        Action fourSpecimenPathing11 = drive.actionBuilder(new Pose2d(34, -51, Math.toRadians(-90)))
                 // Score third specimen
-                .strafeToLinearHeading(new Vector2d(0,-36), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(0,-32.3), Math.toRadians(90))
                 .build();
-        Action fourSpecimenPathing12 = drive.actionBuilder(new Pose2d(0, -36, Math.toRadians(90)))
+        Action fourSpecimenPathing12 = drive.actionBuilder(new Pose2d(0, -32.3, Math.toRadians(90)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(34,-49), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(34,-52), Math.toRadians(-90))
                 .build();
-        Action fourSpecimenPathing13 = drive.actionBuilder(new Pose2d(34, -49, Math.toRadians(-90)))
+        Action fourSpecimenPathing13 = drive.actionBuilder(new Pose2d(34, -52, Math.toRadians(-90)))
                 // Score fourth specimen
-                .strafeToLinearHeading(new Vector2d(-4,-36), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-4,-32.3), Math.toRadians(90))
                 .build();
-        Action fourSpecimenPathing14 = drive.actionBuilder(new Pose2d(-4, -36, Math.toRadians(90)))
+        Action fourSpecimenPathing14 = drive.actionBuilder(new Pose2d(-4, -32.3, Math.toRadians(90)))
                 // Park
                 .strafeToLinearHeading(new Vector2d(34,-62), Math.toRadians(90))
                 .build();
@@ -419,12 +419,12 @@ public class PreloadSpecimen extends LinearOpMode {
                         new SequentialAction(
                                 new ParallelAction(
                                         new SetBucketSlidesTargetAction(BUCKET_SLIDES_SCORING_SPECIMEN),
-                                        new SetBucketSlidesTargetAction(BUCKET_DEPOSIT),
+                                        //new SetBucketSlidesTargetAction(BUCKET_TRANSFER),
                                         new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
                                         new SetClawPitchPositionAction(CLAW_PITCH_SCORE_SPECIMEN),
                                         new SetClawWristPositionAction(CLAW_WRIST_DEFAULT),
                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_SCORE_SPECIMEN),
-                                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                                        new SetBucketPositionAction(BUCKET_TRANSFER),
                                         fourSpecimenPathing1,
                                         new SequentialAction(
                                                 new SleepAction(0.5),
@@ -432,7 +432,7 @@ public class PreloadSpecimen extends LinearOpMode {
                                                 new SetExtendoTargetAction(EXTENDO_SCORE_SPECIMEN_UP)
                                         )
                                 ),
-                                new SleepAction(0.3),
+                                new SleepAction(0.2),
                                 new SetExtendoTargetAction(EXTENDO_SCORE_SPECIMEN_DOWN),
                                 new SleepAction(0.3),
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
@@ -446,22 +446,23 @@ public class PreloadSpecimen extends LinearOpMode {
                                                         new SetClawWristPositionAction(50),
                                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER)
                                                 ),
-                                                new SleepAction(0.5),
+                                                new SleepAction(0.2),
                                                 new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                new SleepAction(0.5),
+                                                new SleepAction(0.3),
                                                 new SetExtendoTargetAction(EXTENDO_SCORE_SPECIMEN_DOWN)
 
                                         )
                                 ),
-                                new SleepAction(0.5),
+                                new SleepAction(0.4),
                                 new ParallelAction(
+                                        new SetBucketSlidesTargetAction(BUCKET_TRANSFER),
                                         new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                 ),
 
-                                new SleepAction(0.5),
+                                new SleepAction(0.2),
                                 new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                new SleepAction(0.5),
+                                new SleepAction(0.2),
                                 fourSpecimenPathing3,
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
 
@@ -480,63 +481,76 @@ public class PreloadSpecimen extends LinearOpMode {
                                         new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                 ),
-                                new SleepAction(0.5),
+                                new SleepAction(0.2),
                                 new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                new SleepAction(0.5),
+                                new SleepAction(0.2),
                                 fourSpecimenPathing5,
                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                 new ParallelAction(
                                         pickUpSideSpecimenPosition(),
                                         fourSpecimenPathing8
                                 ),
-                                new SleepAction(0.5),
+                                new SleepAction(0.2),
+                                pickUpSideSpecimen(),
+                                new SleepAction(0.1),
                                 new ParallelAction(
-                                        pickUpSideSpecimen(),
-                                        new SequentialAction(
-                                                new SleepAction(0.5),
-                                                fourSpecimenPathing9
-                                        )
+                                        fourSpecimenPathing9,
+                                        scoreSpecimenUpPosition()
                                 ),
-                                scoreSpecimenUpPosition(),
-                                new SleepAction(0.5),
+
+                                new SleepAction(0.2),
                                 scoreSpecimenDownPosition(),
+                                new SleepAction(0.3),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
 
                                 new ParallelAction(
-                                        pickUpSideSpecimenPosition(),
+                                        new SequentialAction(
+                                                new SleepAction(2),
+                                                pickUpSideSpecimenPosition()
+                                                ),
                                         fourSpecimenPathing10
                                 ),
-                                new SleepAction(0.5),
+
+                                new SleepAction(0.2),
+                                pickUpSideSpecimen(),
+                                new SleepAction(0.1),
                                 new ParallelAction(
-                                        pickUpSideSpecimen(),
-                                        new SequentialAction(
-                                                new SleepAction(0.5),
-                                                fourSpecimenPathing11
-                                        )
+                                        fourSpecimenPathing11,
+                                        scoreSpecimenUpPosition()
                                 ),
-                                scoreSpecimenUpPosition(),
-                                new SleepAction(0.5),
+
+                                new SleepAction(0.2),
                                 scoreSpecimenDownPosition(),
+                                new SleepAction(0.3),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+
                                 new ParallelAction(
-                                        pickUpSideSpecimenPosition(),
+                                        new SequentialAction(
+                                                new SleepAction(2),
+                                                pickUpSideSpecimenPosition()
+                                        ),
                                         fourSpecimenPathing12
                                 ),
-                                new SleepAction(0.5),
+                                new SleepAction(0.2),
+                                pickUpSideSpecimen(),
+                                new SleepAction(0.1),
                                 new ParallelAction(
-                                        pickUpSideSpecimen(),
-                                        new SequentialAction(
-                                                new SleepAction(0.5),
-                                                fourSpecimenPathing13
-                                        )
+                                        fourSpecimenPathing13,
+                                        scoreSpecimenUpPosition()
                                 ),
-                                scoreSpecimenUpPosition(),
-                                new SleepAction(0.5),
-                                scoreSpecimenDownPosition()
 
+                                new SleepAction(0.2),
+                                scoreSpecimenDownPosition(),
+                                new SleepAction(0.3),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
 
-
-
-
-
+                                new ParallelAction(
+                                        new SequentialAction(
+                                                new SleepAction(2),
+                                                pickUpSideSpecimenPosition()
+                                        ),
+                                        fourSpecimenPathing14
+                                )
 
 
 
