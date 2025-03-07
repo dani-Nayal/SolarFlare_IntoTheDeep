@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.base.teleop;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.isRRActive;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucket;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.bucketSlides;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.clawFingers;
@@ -9,11 +8,6 @@ import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extend
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.extendoPitch;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.hang;
 import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.innerClawPitch;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.BotMotor;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.leftBack;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.leftFront;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.rightBack;
-import static org.firstinspires.ftc.teamcode.base.teleop.TeleOpComponents.rightFront;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -26,7 +20,6 @@ import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpSequential
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpParallelAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.PressTrigger;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.ConditionalAction;
-import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.RobotCentricMecanumAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpSleepAction;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
@@ -127,7 +120,7 @@ public class NoDrivetrainTeleOp extends LinearOpMode {
                         new TeleOpParallelAction(
                                 extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                                 new TeleOpSequentialAction(
-                                        new TeleOpActions.SleepWhileTrue(()->(extendoPitch.instantTargetPosition<-800)),
+                                        new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition<-800)),
                                         new TeleOpParallelAction(
                                                 clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
                                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))

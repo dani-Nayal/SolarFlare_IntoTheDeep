@@ -28,7 +28,6 @@ import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.PressTrigger;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.ConditionalAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.RobotCentricMecanumAction;
 import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpAction;
-import org.firstinspires.ftc.teamcode.base.teleop.TeleOpActions.TeleOpSleepAction;
 import org.firstinspires.ftc.teamcode.base.teleop.LambdaInterfaces.Condition;
 
 @TeleOp
@@ -83,7 +82,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition"))
                         ),
                         new TeleOpSequentialAction(
-                            new TeleOpActions.SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-900)),
+                            new TeleOpActions.SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-900)),
                             new TeleOpParallelAction(
                                     extendo.setTargetAction(428),
                                     clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
@@ -132,13 +131,15 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                 clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
                                 new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
-                                extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
-                        ),
-                        clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
-                        new TeleOpSleepAction(0.1),
-                        new TeleOpParallelAction(
-                                clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
-                                innerClawPitch.setPositionAction(innerClawPitch.getPos("backOffPosition"))
+                                extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition")),
+                                new TeleOpSequentialAction(
+                                    new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-50)),
+                                    clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
+                                    new TeleOpParallelAction(
+                                            clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
+                                            innerClawPitch.setPositionAction(innerClawPitch.getPos("backOffPosition"))
+                                    )
+                                )
                         ),
                         bucketSlides.setTargetAction(()->{if (!isBucketSlidesMaxLowered) return bucketSlides.getPos("depositPosition"); else return bucketSlides.getPos("lowDepositPosition");})
                 ),
@@ -182,14 +183,14 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                         new TeleOpParallelAction(
                                 extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                                 new TeleOpSequentialAction(
-                                    new TeleOpActions.SleepWhileTrue(()->(extendoPitch.instantTargetPosition<-800)),
+                                    new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-800)),
                                     new TeleOpParallelAction(
                                         clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
                                         innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
                                     )
                                 ),
                                 new TeleOpSequentialAction(
-                                        new TeleOpActions.SleepWhileTrue(()->(extendoPitch.instantTargetPosition<-100)),
+                                        new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-100)),
                                         extendo.setTargetAction(420)
                                 )
                         )

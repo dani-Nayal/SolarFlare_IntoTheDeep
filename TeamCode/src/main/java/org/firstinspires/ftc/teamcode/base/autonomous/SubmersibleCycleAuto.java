@@ -77,13 +77,13 @@ public class SubmersibleCycleAuto extends OpMode {
     int extendoPitchTarget = EXTENDO_PITCH_TRANSFER;
     int bucketSlidesTarget = BUCKET_SLIDES_TRANSFER;
 
-    public static class SleepWhileTrue implements Action {
+    public static class SleepUntilTrue implements Action {
         public LambdaInterfaces.Condition condition;
         public double timeout;
         private ElapsedTime timeOutTimer = null;
         public boolean isStart = true;
         public LambdaInterfaces.Condition returnCondition;
-        public SleepWhileTrue(LambdaInterfaces.Condition condition, double timeout){
+        public SleepUntilTrue(LambdaInterfaces.Condition condition, double timeout){
             this.condition=condition;
             this.timeout=timeout;
             if (timeout!=Double.POSITIVE_INFINITY) {
@@ -93,7 +93,7 @@ public class SubmersibleCycleAuto extends OpMode {
                 returnCondition = condition;
             }
         }
-        public SleepWhileTrue(LambdaInterfaces.Condition condition){
+        public SleepUntilTrue(LambdaInterfaces.Condition condition){
             this(condition, Double.POSITIVE_INFINITY);
         }
 
@@ -399,7 +399,10 @@ public class SubmersibleCycleAuto extends OpMode {
             Action goToFirstPickup = drive.actionBuilder(new Pose2d(-47.5, -62, Math.toRadians(45)))
                     .strafeToLinearHeading(new Vector2d(-65,-54),Math.toRadians(67))
                     .build();
-            Action goToSecondPickup = drive.actionBuilder(new Pose2d(-65, -54, Math.toRadians(67)))
+            Action goToFirstDeposit = drive.actionBuilder(new Pose2d(-65, -54, Math.toRadians(67)))
+                    .strafeToLinearHeading(new Vector2d(-68,-53),Math.toRadians(80))
+                    .build();
+            Action goToSecondPickup = drive.actionBuilder(new Pose2d(-68, -53, Math.toRadians(80)))
                     .strafeToLinearHeading(new Vector2d(-70,-53),Math.toRadians(75))
                     .build();
             Action goToSecondDeposit = drive.actionBuilder(new Pose2d(-70, -53, Math.toRadians(75)))
@@ -457,7 +460,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                         new SetBucketPositionAction(BUCKET_TRANSFER),
                                         new SetClawWristPositionAction(95),
                                         new SequentialAction(
-                                            new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
+                                            new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                             new SetExtendoTargetAction(350)
                                         )
                                 )
@@ -472,7 +475,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                     new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
                             ),
                             new ParallelAction(
-                                    goToSecondPickup,
+                                    goToFirstDeposit,
                                     new SequentialAction(
                                         new ParallelAction(
                                                 new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
@@ -499,7 +502,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                                 new SetClawWristPositionAction(95),
                                                 new SequentialAction(
-                                                        new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
+                                                        new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                         new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                                 )
                                         )
@@ -507,6 +510,7 @@ public class SubmersibleCycleAuto extends OpMode {
                             ),
                             new SetBucketPositionAction(BUCKET_DEPOSIT),
                             new SleepAction(0.4),
+                            goToSecondPickup,
                             new SequentialAction(
                                     new ParallelAction(
                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -542,7 +546,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                                     new SetClawWristPositionAction(125),
                                                     new SequentialAction(
-                                                            new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
+                                                            new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                             new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                                     )
                                             )
@@ -587,7 +591,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                                     new SetClawWristPositionAction(125),
                                                     new SequentialAction(
-                                                            new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
+                                                            new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                             new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                                     )
                                             )
@@ -631,11 +635,11 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                                     new SetClawWristPositionAction(140+values[1][2]),
                                                     new SequentialAction(
-                                                            new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
+                                                            new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                             new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                                     )
                                             ),
-                                            new SleepWhileTrue(()->(
+                                            new SleepUntilTrue(()->(
                                                     (-60-drive.pose.position.x)*(-60-drive.pose.position.x)+(-56-drive.pose.position.y)*(-56-drive.pose.position.y)<9
                                             )),
                                             new SetBucketPositionAction(BUCKET_DEPOSIT),
@@ -676,11 +680,11 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                                     new SetClawWristPositionAction(140+values[2][2]),
                                                     new SequentialAction(
-                                                            new SleepWhileTrue(()->(extendoPitch.getCurrentPosition()<-960)),
+                                                            new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                             new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                                     )
                                             ),
-                                            new SleepWhileTrue(()->(
+                                            new SleepUntilTrue(()->(
                                                     (-60-drive.pose.position.x)*(-60-drive.pose.position.x)+(-56-drive.pose.position.y)*(-56-drive.pose.position.y)<9
                                             )),
                                             new SetBucketPositionAction(BUCKET_DEPOSIT),

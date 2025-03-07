@@ -130,7 +130,7 @@ public class HoverPositionTeleOp extends LinearOpMode {
                                 clawPitch.setPositionAction(clawPitch.getPos("transferPosition")),
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
                                 new TeleOpSequentialAction(
-                                        new TeleOpActions.SleepWhileTrue(()->(extendo.instantTargetPosition<160)),
+                                        new TeleOpActions.SleepUntilTrue(()->(extendo.instantTargetPosition<160)),
                                         new TeleOpParallelAction(
                                                 new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
                                                 extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition"))
@@ -187,14 +187,14 @@ public class HoverPositionTeleOp extends LinearOpMode {
                         new TeleOpParallelAction(
                                 extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
                                 new TeleOpSequentialAction(
-                                        new TeleOpActions.SleepWhileTrue(()->(extendoPitch.instantTargetPosition<-800)),
+                                        new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition<-800)),
                                         new TeleOpParallelAction(
                                                 clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
                                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
                                         )
                                 ),
                                 new TeleOpSequentialAction(
-                                        new TeleOpActions.SleepWhileTrue(()->(extendoPitch.instantTargetPosition<-100)),
+                                        new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition<-100)),
                                         extendo.setTargetAction(extendo.MAX_POSITION)
                                 )
                         )

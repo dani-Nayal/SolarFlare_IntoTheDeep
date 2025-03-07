@@ -261,13 +261,13 @@ public abstract class TeleOpActions{
         }
     }
 
-    public static class SleepWhileTrue implements TeleOpAction{
+    public static class SleepUntilTrue implements TeleOpAction{
         public Condition condition;
         public double timeout;
         private ElapsedTime timeOutTimer = null;
         public boolean isStart = true;
         public Condition returnCondition;
-        public SleepWhileTrue(Condition condition, double timeout){
+        public SleepUntilTrue(Condition condition, double timeout){
             this.condition=condition;
             this.timeout=timeout;
             if (timeout!=Double.POSITIVE_INFINITY) {
@@ -277,7 +277,7 @@ public abstract class TeleOpActions{
                 returnCondition = condition;
             }
         }
-        public SleepWhileTrue(Condition condition){
+        public SleepUntilTrue(Condition condition){
             this(condition, Double.POSITIVE_INFINITY);
         }
         @Override
