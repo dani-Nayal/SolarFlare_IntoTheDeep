@@ -23,7 +23,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class MeepMeepTesting {
-    static MeepMeep meepMeep = new MeepMeep(700);
+    static MeepMeep meepMeep = new MeepMeep(500);
     static RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
             // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
             .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
@@ -277,22 +277,30 @@ public class MeepMeepTesting {
                 .strafeToLinearHeading(new Vector2d(12.4375/2,-37),Math.toRadians(90))
                 .strafeToLinearHeading(new Vector2d(39,-56),Math.toRadians(-45))
                 .build();
-
+        Action goToFirstSub = myBot.getDrive().actionBuilder(new Pose2d(-60, -56, Math.toRadians(45)))
+                .splineTo(
+                        new Vector2d(
+                                -24+1.1811*20-30,
+                                -24+1.1811*20
+                        ),
+                        Math.toRadians(0)
+                )
+                .build();
+        Action depositFirstSubAndGoToSecond = myBot.getDrive().actionBuilder(new Pose2d(-24+1.1811*20-30, -24+1.1811*20, Math.toRadians(0)))
+                .setTangent(-135)
+                .splineToLinearHeading(new Pose2d(-60,-56,Math.toRadians(45)),Math.toRadians(-120))
+                .setTangent(45)
+                .splineToLinearHeading(
+                        new Pose2d(
+                                -24+1.1811*15-30,
+                                -24+1.1811*9,
+                                Math.toRadians(0)
+                        ),
+                        Math.toRadians(0))
+                .build();
         myBot.runAction(new SequentialAction(
-                onePlusThreeSpecimen1,
-                onePlusThreeSpecimen2,
-                onePlusThreeSpecimen3,
-                onePlusThreeSpecimen4,
-                onePlusThreeSpecimen5,
-                onePlusThreeSpecimen6,
-                onePlusThreeSpecimen7,
-                onePlusThreeSpecimen8,
-                onePlusThreeSpecimen9,
-                onePlusThreeSpecimen10,
-                onePlusThreeSpecimen11,
-                onePlusThreeSpecimen12,
-                onePlusThreeSpecimen13,
-                onePlusThreeSpecimen14
+                goToFirstSub,
+                depositFirstSubAndGoToSecond
         ));
     }
 }

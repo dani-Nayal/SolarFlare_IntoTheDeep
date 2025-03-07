@@ -403,9 +403,9 @@ public class SubmersibleCycleAuto extends OpMode {
                     .strafeToLinearHeading(new Vector2d(-68,-53),Math.toRadians(80))
                     .build();
             Action goToSecondPickup = drive.actionBuilder(new Pose2d(-68, -53, Math.toRadians(80)))
-                    .strafeToLinearHeading(new Vector2d(-70,-53),Math.toRadians(75))
+                    .strafeToLinearHeading(new Vector2d(-65,-56),Math.toRadians(75))
                     .build();
-            Action goToSecondDeposit = drive.actionBuilder(new Pose2d(-70, -53, Math.toRadians(75)))
+            Action goToSecondDeposit = drive.actionBuilder(new Pose2d(-65, -56, Math.toRadians(75)))
                     .strafeToLinearHeading(new Vector2d(-60,-54),Math.toRadians(45))
                     .build();
             Action goToThirdPickup = drive.actionBuilder(new Pose2d(-60, -54, Math.toRadians(45)))
@@ -415,34 +415,39 @@ public class SubmersibleCycleAuto extends OpMode {
                     .strafeToLinearHeading(new Vector2d(-60,-56),Math.toRadians(45))
                     .build();
             Action goToFirstSub = drive.actionBuilder(new Pose2d(-60, -56, Math.toRadians(45)))
-                    .strafeToLinearHeading(
+                    .splineTo(
                             new Vector2d(
-                                    -24+TICK_TO_IN*values[0][0]-30/Math.sqrt(2),
-                                    -24+TICK_TO_IN*values[0][1]-30/Math.sqrt(2)
-                                    ),
-                            Math.toRadians(45)
+                                    -24+TICK_TO_IN*values[0][0]-30,
+                                    -24+TICK_TO_IN*values[0][1]
+                            ),
+                            Math.toRadians(0)
                     )
                     .build();
-            Action depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24+TICK_TO_IN*values[0][0]-30/Math.sqrt(2), -24+TICK_TO_IN*values[0][1]-30/Math.sqrt(2), Math.toRadians(45)))
-                    .splineToConstantHeading(new Vector2d(-60,-56), Math.toRadians(135))
-                    .splineToConstantHeading(
+            Action depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24+TICK_TO_IN*values[0][0]-30, -24+TICK_TO_IN*values[0][1], Math.toRadians(0)))
+                    .setTangent(-135)
+                    .splineToLinearHeading(new Pose2d(-60,-56,Math.toRadians(45)),Math.toRadians(-120))
+                    .setTangent(45)
+                    .splineTo(
                             new Vector2d(
-                                -24+TICK_TO_IN*values[1][0]-30/Math.sqrt(2),
-                                -24+TICK_TO_IN*values[1][1]-30/Math.sqrt(2)
+                                    -24+TICK_TO_IN*values[1][0]-30,
+                                    -24+TICK_TO_IN*values[1][1]
                             ),
-                            Math.toRadians(45))
+                            Math.toRadians(0))
                     .build();
-            Action depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24+TICK_TO_IN*values[1][0]-30/Math.sqrt(2), -24+TICK_TO_IN*values[1][1]-30/Math.sqrt(2), Math.toRadians(45)))
-                    .splineToConstantHeading(new Vector2d(-60,-56), Math.toRadians(135))
-                    .splineToConstantHeading(
+            Action depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24+TICK_TO_IN*values[1][0]-30, -24+TICK_TO_IN*values[1][1], Math.toRadians(0)))
+                    .setTangent(-135)
+                    .splineToLinearHeading(new Pose2d(-60,-56,Math.toRadians(45)),Math.toRadians(-120))
+                    .setTangent(45)
+                    .splineTo(
                             new Vector2d(
-                                    -24+TICK_TO_IN*values[2][0]-30/Math.sqrt(2),
-                                    -24+TICK_TO_IN*values[2][1]-30/Math.sqrt(2)
+                                    -24+TICK_TO_IN*values[2][0]-30,
+                                    -24+TICK_TO_IN*values[2][1]
                             ),
-                            Math.toRadians(45))
+                            Math.toRadians(0))
                     .build();
-            Action goToThirdSubDeposit = drive.actionBuilder(new Pose2d(-24+TICK_TO_IN*values[2][0]-30/Math.sqrt(2), -24+TICK_TO_IN*values[2][1]-30/Math.sqrt(2), Math.toRadians(45)))
-                    .strafeToConstantHeading(new Vector2d(-60,-56))
+            Action goToThirdSubDeposit = drive.actionBuilder(new Pose2d(-24+TICK_TO_IN*values[2][0]-30, -24+TICK_TO_IN*values[2][1], Math.toRadians(0)))
+                    .setTangent(-135)
+                    .splineToLinearHeading(new Pose2d(-60,-56,Math.toRadians(45)),Math.toRadians(-120))
                     .build();
             Actions.runBlocking(
                 new ParallelAction(
@@ -461,7 +466,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                         new SetClawWristPositionAction(95),
                                         new SequentialAction(
                                             new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
-                                            new SetExtendoTargetAction(350)
+                                            new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                         )
                                 )
                             ),
@@ -488,7 +493,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                         new SetClawWristPositionAction(95)
                                                 )
                                         ),
-                                            new SleepAction(0.5),
+                                            new SleepAction(0.3),
                                             new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                         new ParallelAction(
                                                 new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
@@ -510,7 +515,14 @@ public class SubmersibleCycleAuto extends OpMode {
                             ),
                             new SetBucketPositionAction(BUCKET_DEPOSIT),
                             new SleepAction(0.4),
-                            goToSecondPickup,
+                            new ParallelAction(
+                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
+                                    new SetBucketPositionAction(BUCKET_TRANSFER),
+                                    new SequentialAction(
+                                            new SleepAction(0.2),
+                                            goToSecondPickup
+                                    )
+                            ),
                             new SequentialAction(
                                     new ParallelAction(
                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -522,8 +534,6 @@ public class SubmersibleCycleAuto extends OpMode {
                                     goToSecondDeposit,
                                     new SequentialAction(
                                             new ParallelAction(
-                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                                    new SetBucketPositionAction(BUCKET_TRANSFER),
                                                     new ParallelAction(
                                                             new SetExtendoTargetAction(EXTENDO_RETRACTED),
                                                             new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
@@ -532,7 +542,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                             new SetClawWristPositionAction(95)
                                                     )
                                             ),
-                                            new SleepAction(0.5),
+                                            new SleepAction(0.3),
                                             new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                             new ParallelAction(
                                                     new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
@@ -576,7 +586,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                             new SetClawWristPositionAction(95)
                                                     )
                                             ),
-                                            new SleepAction(0.5),
+                                            new SleepAction(0.3),
 
                                             new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
                                             new ParallelAction(
@@ -603,7 +613,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                     goToFirstSub,
                                     new SetBucketPositionAction(BUCKET_TRANSFER),
                                     new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetClawWristPositionAction(140+values[0][2])
+                                    new SetClawWristPositionAction(95+values[0][2])
                             ),
                             new SequentialAction(
                                     new ParallelAction(
@@ -633,7 +643,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
                                                     new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                    new SetClawWristPositionAction(140+values[1][2]),
+                                                    new SetClawWristPositionAction(95+values[1][2]),
                                                     new SequentialAction(
                                                             new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                             new SetExtendoTargetAction(EXTENDO_EXTENDED)
@@ -678,7 +688,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                     new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
                                                     new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
                                                     new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                    new SetClawWristPositionAction(140+values[2][2]),
+                                                    new SetClawWristPositionAction(95+values[2][2]),
                                                     new SequentialAction(
                                                             new SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-960)),
                                                             new SetExtendoTargetAction(EXTENDO_EXTENDED)
