@@ -1056,11 +1056,11 @@ public abstract class  TeleOpComponents {
         clawFingers = new BotServo(
                 "clawFingers",
                 new String[]{"closedPosition","openPosition"},
-                new double[]{20,95},
+                new double[]{20,92},
                 92,
                 0,
                 180,
-                800,
+                555,
                 Servo.Direction.FORWARD
         );
         clawWrist = new BotServo(

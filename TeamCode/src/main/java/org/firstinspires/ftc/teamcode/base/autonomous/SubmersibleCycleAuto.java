@@ -52,7 +52,7 @@ public class SubmersibleCycleAuto extends OpMode {
     public final int BUCKET_SLIDES_HIGH_BUCKET = 1070;
     public final int BUCKET_SLIDES_TRANSFER = 0;
     public final int BUCKET_SLIDES_SCORING_SPECIMEN = 350;
-    public final int CLAW_FINGERS_OPEN = 95;
+    public final int CLAW_FINGERS_OPEN = 92;
     public final int CLAW_FINGERS_CLOSED = 20;
     public final int CLAW_WRIST_DEFAULT = 95;
     public final int CLAW_PITCH_PICK_UP = 13;
@@ -401,38 +401,38 @@ public class SubmersibleCycleAuto extends OpMode {
                     .setTangent(45)
                     .splineToLinearHeading(
                             new Pose2d(
-                                    -24 + TICK_TO_IN * values[0][0] - 30.5,
+                                    -24 + TICK_TO_IN * values[0][0] - 31.2,
                                     -24 + TICK_TO_IN * values[0][1] + 0.5,
                                     Math.toRadians(0)
                             ),
                             Math.toRadians(0)
                     )
                     .build();
-            depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[0][0] - 30.5, -24 + TICK_TO_IN * values[0][1] + 0.5, Math.toRadians(0)))
+            depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[0][0] - 31.2, -24 + TICK_TO_IN * values[0][1] + 0.5, Math.toRadians(0)))
                     .setTangent(-135)
                     .splineToLinearHeading(new Pose2d(-60, -56, Math.toRadians(45)), Math.toRadians(-120))
                     .setTangent(45)
                     .splineToLinearHeading(
                             new Pose2d(
-                                    -24 + TICK_TO_IN * values[1][0] - 30.5,
+                                    -24 + TICK_TO_IN * values[1][0] - 31.2,
                                     -24 + TICK_TO_IN * values[1][1] + 0.5,
                                     Math.toRadians(0)
                             ),
                             Math.toRadians(0))
                     .build();
-            depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[1][0] - 30.5, -24 + TICK_TO_IN * values[1][1] + 0.5, Math.toRadians(0)))
+            depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[1][0] - 31.2, -24 + TICK_TO_IN * values[1][1] + 0.5, Math.toRadians(0)))
                     .setTangent(-135)
                     .splineToLinearHeading(new Pose2d(-60, -56, Math.toRadians(45)), Math.toRadians(-120))
                     .setTangent(45)
                     .splineToLinearHeading(
                             new Pose2d(
-                                    -24 + TICK_TO_IN * values[2][0] - 30.5,
+                                    -24 + TICK_TO_IN * values[2][0] - 31.2,
                                     -24 + TICK_TO_IN * values[2][1] + 0.5,
                                     Math.toRadians(0)
                             ),
                             Math.toRadians(0))
                     .build();
-            goToThirdSubDeposit = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[2][0] - 30.5, -24 + TICK_TO_IN * values[2][1] + 0.5, Math.toRadians(0)))
+            goToThirdSubDeposit = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[2][0] - 31.2, -24 + TICK_TO_IN * values[2][1] + 0.5, Math.toRadians(0)))
                     .setTangent(-135)
                     .splineToLinearHeading(new Pose2d(-60, -56, Math.toRadians(45)), Math.toRadians(-120))
                     .build();
@@ -489,7 +489,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                                     ),
-                                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                                    new SleepAction(0.07)
                                             ),
                                             new ParallelAction(
                                                     goToFirstDeposit,
@@ -542,7 +543,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     goToSecondDeposit,
@@ -590,7 +592,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     goToThirdDeposit,
@@ -642,7 +645,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
                                     new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     depositFirstSubAndGoToSecond,
@@ -691,7 +695,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
                                     new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     depositSecondSubAndGoToThird,
@@ -740,7 +745,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
                                     new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     goToThirdSubDeposit,
@@ -843,7 +849,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                                     ),
-                                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                                    new SleepAction(0.07)
                                             ),
                                             new ParallelAction(
                                                     goToFirstDeposit,
@@ -896,7 +903,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     goToSecondDeposit,
@@ -944,7 +952,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     goToThirdDeposit,
@@ -996,7 +1005,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
                                     new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     depositFirstSubAndGoToSecond,
@@ -1045,7 +1055,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
                                     new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     depositSecondSubAndGoToThird,
@@ -1094,7 +1105,8 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
                                     new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED)
+                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                    new SleepAction(0.07)
                             ),
                             new ParallelAction(
                                     goToThirdSubDeposit,
