@@ -330,7 +330,7 @@ public class EightSampleAuto extends OpMode {
                                 new SetClawWristPositionAction(95 + values[0][2]),
                                 new SequentialAction(
                                         new SleepUntilTrue(() -> (
-                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 15
+                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
                                         )),
                                         new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                         new SleepUntilTrue(()->(
@@ -383,7 +383,7 @@ public class EightSampleAuto extends OpMode {
                                         ),
                                         new SequentialAction(
                                                 new SleepUntilTrue(() -> (
-                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 15
+                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
@@ -437,7 +437,7 @@ public class EightSampleAuto extends OpMode {
                                         ),
                                         new SequentialAction(
                                                 new SleepUntilTrue(() -> (
-                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 15
+                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
@@ -491,7 +491,7 @@ public class EightSampleAuto extends OpMode {
                                         ),
                                         new SequentialAction(
                                                 new SleepUntilTrue(() -> (
-                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 15
+                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
