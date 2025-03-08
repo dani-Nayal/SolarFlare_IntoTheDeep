@@ -231,16 +231,19 @@ public class EightSampleAuto extends OpMode {
                                 new SetBucketPositionAction(BUCKET_TRANSFER),
                                 new SequentialAction(
                                         new SleepAction(0.2),
-                                        goToSecondPickup
+                                        goToSecondPickup,
+                                        new SleepUntilTrue(()->(
+                                                Math.sqrt((drive.pose.position.x-(-62.5))*(drive.pose.position.x-(-62.5))+
+                                                        (drive.pose.position.y-(-58))*(drive.pose.position.y-(-58)))<1
+                                        )),
+                                        new ParallelAction(
+                                                new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                        ),
+                                        new SleepAction(0.07),
+                                        new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                        new SleepAction(0.07)
                                 )
-                        ),
-                        new SequentialAction(
-                                new ParallelAction(
-                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                ),
-                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                new SleepAction(0.07)
                         ),
                         new ParallelAction(
                                 goToSecondDeposit,
@@ -281,15 +284,20 @@ public class EightSampleAuto extends OpMode {
                         new ParallelAction(
                                 new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
                                 new SetBucketPositionAction(BUCKET_TRANSFER),
-                                goToThirdPickup
-                        ),
-                        new SequentialAction(
-                                new ParallelAction(
-                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                ),
-                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                new SleepAction(0.07)
+                                goToThirdPickup,
+                                new SequentialAction(
+                                        new SleepUntilTrue(()->(
+                                                Math.sqrt((drive.pose.position.x-(-65))*(drive.pose.position.x-(-65))+
+                                                (drive.pose.position.y-(-56))*(drive.pose.position.y-(-56)))<1
+                                        )),
+                                        new ParallelAction(
+                                                new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                        ),
+                                        new SleepAction(0.07),
+                                        new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                        new SleepAction(0.07)
+                                )
                         ),
                         new ParallelAction(
                                 goToThirdDeposit,
