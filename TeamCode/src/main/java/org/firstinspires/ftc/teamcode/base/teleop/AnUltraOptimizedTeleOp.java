@@ -82,7 +82,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition"))
                         ),
                         new TeleOpSequentialAction(
-                            new TeleOpActions.SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-900)),
+                            new TeleOpActions.SleepUntilTrue(()->(extendoPitch.getCurrentPosition()<-700)),
                             new TeleOpParallelAction(
                                     extendo.setTargetAction(428),
                                     clawFingers.setPositionAction(clawFingers.getPos("openPosition"))
@@ -133,7 +133,7 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                 new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
                                 extendoPitch.setTargetAction(extendoPitch.getPos("transferPosition")),
                                 new TeleOpSequentialAction(
-                                    new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-50)),
+                                    new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-30)),
                                     clawFingers.setPositionAction(clawFingers.getPos("openPosition")),
                                     new TeleOpParallelAction(
                                             clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
@@ -173,26 +173,29 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                             clawPitch.setPosition(clawPitch.getPos("transferPosition"));
                             innerClawPitch.setPosition(innerClawPitch.getPos("transferPosition"));
                         })}),
+                        clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
                         new TeleOpParallelAction(
-                            clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
-                            innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
                             bucket.setPositionAction(bucket.getPos("depositPosition")),
-                            bucketSlides.setTargetAction(200)
-                        ),
-                        new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
-                        new TeleOpParallelAction(
-                                extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
-                                new TeleOpSequentialAction(
-                                    new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-800)),
+                            bucketSlides.setTargetAction(200),
+                            innerClawPitch.setPositionAction(innerClawPitch.getPos("transferPosition")),
+                            new TeleOpSequentialAction(
+                                    new TeleOpActions.TeleOpSleepAction(0.2),
                                     new TeleOpParallelAction(
-                                        clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
-                                        innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
+                                            new TeleOpActions.ShortAction(()->{extendoPitch.setMovementMode("MOTION_PROFILE");}),
+                                            extendoPitch.setTargetAction(extendoPitch.getPos("specimenDepositPosition")),
+                                            new TeleOpSequentialAction(
+                                                    new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-900)),
+                                                    new TeleOpParallelAction(
+                                                            clawPitch.setPositionAction(clawPitch.getPos("specimenDepositPosition")),
+                                                            innerClawPitch.setPositionAction(innerClawPitch.getPos("specimenDepositPosition"))
+                                                    )
+                                            ),
+                                            new TeleOpSequentialAction(
+                                                    new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-100)),
+                                                    extendo.setTargetAction(420)
+                                            )
                                     )
-                                ),
-                                new TeleOpSequentialAction(
-                                        new TeleOpActions.SleepUntilTrue(()->(extendoPitch.instantTargetPosition>-100)),
-                                        extendo.setTargetAction(420)
-                                )
+                            )
                         )
                 ),
                 new TeleOpSequentialAction(
@@ -269,9 +272,9 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                     new PressTrigger(new Condition[]{()->(gamepad2.left_stick_x<0 && gamepad2.right_stick_x>0)},new TeleOpAction[]{new TeleOpActions.ShortAction(()->{isBucketSlidesMaxLowered=true;})}),
                     sequences,
                     new ConditionalAction(new Condition[]{()->(!isRRActive)}, new TeleOpAction[]{
-                            new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.options))
+                            new RobotCentricMecanumAction(new BotMotor[]{leftFront,leftBack,rightFront,rightBack},()->(gamepad1.left_stick_x),()->(gamepad1.left_stick_y),()->(gamepad1.right_stick_x),()->(gamepad1.left_bumper))
                     }),
-                    extendo.triggeredDynamicAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),15),
+                    //extendo.triggeredDynamicAction(()->(gamepad1.right_bumper),()->(gamepad1.left_bumper),15),
                     new TeleOpActions.ShortAction(()->{clawWrist.setPosition(clawWrist.getPosition());}),
                     new UpdateTelemetryAction()
             );

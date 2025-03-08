@@ -990,7 +990,7 @@ public abstract class  TeleOpComponents {
                 "extendoPitch",
                 0.01,0,0.0003, 50,
                 new String[]{"transferPosition","pickUpPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{0,-1030,-960,0},
+                new double[]{0,-1020,-960,0},
                 0,-1020,
                 550000,7750,
                 DcMotorEx.RunMode.RUN_WITHOUT_ENCODER,
@@ -1076,7 +1076,7 @@ public abstract class  TeleOpComponents {
         clawPitch = new BotServo(
                 "clawPitchLeft",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,113,72.4,135,13},
+                new double[]{13,68,113,72.4,127,13},
                 270,
                 0,
                 270,
@@ -1086,7 +1086,7 @@ public abstract class  TeleOpComponents {
         clawPitchRight = new BotServo(
                 "clawPitchRight",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{13,68,113,72.4,135,13},
+                new double[]{13,68,113,72.4,127,13},
                 270,
                 0,
                 270,
@@ -1096,7 +1096,7 @@ public abstract class  TeleOpComponents {
         innerClawPitch = new BotServo(
                 "innerClawPitch",
                 new String[]{"pickUpPosition", "hoverPosition","transferPosition","backOffPosition","specimenGrabPosition","specimenDepositPosition"},
-                new double[]{82,20,205,160,88,82},
+                new double[]{82,20,205,160,96,82},
                 270,
                 0,
                 270,
