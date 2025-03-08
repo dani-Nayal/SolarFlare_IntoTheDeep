@@ -138,10 +138,10 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                     new TeleOpParallelAction(
                                             clawPitch.setPositionAction(clawPitch.getPos("backOffPosition")),
                                             innerClawPitch.setPositionAction(innerClawPitch.getPos("backOffPosition"))
-                                    )
+                                    ),
+                                    bucketSlides.setTargetAction(()->{if (!isBucketSlidesMaxLowered) return bucketSlides.getPos("depositPosition"); else return bucketSlides.getPos("lowDepositPosition");})
                                 )
-                        ),
-                        bucketSlides.setTargetAction(()->{if (!isBucketSlidesMaxLowered) return bucketSlides.getPos("depositPosition"); else return bucketSlides.getPos("lowDepositPosition");})
+                        )
                 ),
                 new TeleOpParallelAction(
                         new ConditionalAction(new Condition[]{()->(!startedPower)}, new TeleOpAction[]{new TeleOpActions.ShortAction(()->{
