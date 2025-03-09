@@ -86,6 +86,392 @@ public class SubmersibleCycleAuto extends OpMode {
 
     }
 
+    public void generatePath(){
+        drive = new PinpointDrive(hardwareMap, new Pose2d(-47.5, -62, Math.toRadians(45)));
+        goToFirstPickup = drive.actionBuilder(new Pose2d(-47.5, -62, Math.toRadians(45)))
+                .strafeToLinearHeading(new Vector2d(-65, -54), Math.toRadians(67.5))
+                .build();
+        goToFirstDeposit = drive.actionBuilder(new Pose2d(-65, -54, Math.toRadians(67.5)))
+                .strafeToLinearHeading(new Vector2d(-68, -53), Math.toRadians(80))
+                .build();
+        goToSecondPickup = drive.actionBuilder(new Pose2d(-68, -53, Math.toRadians(80)))
+                .strafeToLinearHeading(new Vector2d(-62, -58), Math.toRadians(83))
+                .build();
+        goToSecondDeposit = drive.actionBuilder(new Pose2d(-62, -58, Math.toRadians(83)))
+                .strafeToLinearHeading(new Vector2d(-68, -51.5), Math.toRadians(70))
+                .build();
+        goToThirdPickup = drive.actionBuilder(new Pose2d(-68, -51.5, Math.toRadians(70)))
+                .strafeToLinearHeading(new Vector2d(-65, -56), Math.toRadians(113))
+                .build();
+        goToThirdDeposit = drive.actionBuilder(new Pose2d(-65, -56, Math.toRadians(113)))
+                .strafeToLinearHeading(new Vector2d(-60, -56), Math.toRadians(45))
+                .build();
+        goToFirstSub = drive.actionBuilder(new Pose2d(-60, -56, Math.toRadians(45)))
+                .setTangent(45)
+                .splineToLinearHeading(
+                        new Pose2d(
+                                -24 + TICK_TO_IN * values[0][0] - 30.7,
+                                -24 + TICK_TO_IN * values[0][1],
+                                Math.toRadians(0)
+                        ),
+                        Math.toRadians(0)
+                )
+                .build();
+        depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[0][0] - 30.7, -24 + TICK_TO_IN * values[0][1], Math.toRadians(0)))
+                .setTangent(-135)
+                .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
+                .setTangent(45)
+                .splineToLinearHeading(
+                        new Pose2d(
+                                -24 + TICK_TO_IN * values[1][0] - 30.7,
+                                -24 + TICK_TO_IN * values[1][1],
+                                Math.toRadians(0)
+                        ),
+                        Math.toRadians(0))
+                .build();
+        depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[1][0] - 30.7, -24 + TICK_TO_IN * values[1][1], Math.toRadians(0)))
+                .setTangent(-135)
+                .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
+                .setTangent(45)
+                .splineToLinearHeading(
+                        new Pose2d(
+                                -24 + TICK_TO_IN * values[2][0] - 30.7,
+                                -24 + TICK_TO_IN * values[2][1],
+                                Math.toRadians(0)
+                        ),
+                        Math.toRadians(0))
+                .build();
+        goToThirdSubDeposit = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[2][0] - 30.7, -24 + TICK_TO_IN * values[2][1] + 0.2, Math.toRadians(0)))
+                .setTangent(-135)
+                .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
+                .build();
+        path = new ParallelAction(
+                new MotorPID(),
+                new SequentialAction(
+                        new ParallelAction(
+                                goToFirstPickup,
+                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
+                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                new ParallelAction(
+                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
+                                        new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
+                                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                        new SetBucketPositionAction(BUCKET_TRANSFER),
+                                        new SetClawWristPositionAction(95),
+                                        new SequentialAction(
+                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
+                                                new SetExtendoTargetAction(EXTENDO_EXTENDED)
+                                        )
+                                )
+                        ),
+                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                        new SleepAction(0.4),
+                        new ParallelAction(
+                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
+                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                new SequentialAction(
+                                        new SequentialAction(
+                                                new ParallelAction(
+                                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                                ),
+                                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                                new SleepAction(0.07)
+                                        ),
+                                        new ParallelAction(
+                                                goToFirstDeposit,
+                                                new SequentialAction(
+                                                        new ParallelAction(
+                                                                new ParallelAction(
+                                                                        new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                                        new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                                        new SetClawWristPositionAction(95),
+                                                                        new SequentialAction(
+                                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                                new ParallelAction(
+                                                                                        new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
+                                                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
+                                                                                ),
+                                                                                new ParallelAction(
+                                                                                        new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
+                                                                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
+                                                                                        new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
+                                                                                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                                        new SetClawWristPositionAction(95),
+                                                                                        new SequentialAction(
+                                                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
+                                                                                                new SetExtendoTargetAction(EXTENDO_EXTENDED)
+                                                                                        )
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        ),
+                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                        new SleepAction(0.4),
+                        new ParallelAction(
+                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
+                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                new SequentialAction(
+                                        new SleepAction(0.2),
+                                        goToSecondPickup
+                                )
+                        ),
+                        new SequentialAction(
+                                new ParallelAction(
+                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                ),
+                                new SleepAction(0.07),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                new SleepAction(0.07)
+                        ),
+                        new ParallelAction(
+                                goToSecondDeposit,
+                                new SequentialAction(
+                                        new ParallelAction(
+                                                new ParallelAction(
+                                                        new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                        new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                        new SetClawWristPositionAction(95),
+                                                        new SequentialAction(
+                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                new ParallelAction(
+                                                                        new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
+                                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
+                                                                ),
+                                                                new ParallelAction(
+                                                                        new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
+                                                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
+                                                                        new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
+                                                                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                        new SetClawWristPositionAction(125),
+                                                                        new SequentialAction(
+                                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
+                                                                                new SetExtendoTargetAction(EXTENDO_EXTENDED)
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        ),
+                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                        new SleepAction(0.4),
+                        new ParallelAction(
+                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
+                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                goToThirdPickup
+                        ),
+                        new SequentialAction(
+                                new ParallelAction(
+                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                ),
+                                new SleepAction(0.07),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                new SleepAction(0.07)
+                        ),
+                        new ParallelAction(
+                                goToThirdDeposit,
+                                new SequentialAction(
+                                        new ParallelAction(
+                                                new ParallelAction(
+                                                        new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                        new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                        new SetClawWristPositionAction(95),
+                                                        new SequentialAction(
+                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                new ParallelAction(
+                                                                        new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
+                                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
+                                                                ),
+                                                                new ParallelAction(
+                                                                        new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
+                                                                        new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
+                                                                        new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
+                                                                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                        new SetClawWristPositionAction(125)
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        ),
+                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                        new SleepAction(0.4),
+                        new ParallelAction(
+                                goToFirstSub,
+                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
+                                new SetClawWristPositionAction(95 + values[0][2]),
+                                new SequentialAction(
+                                        new SleepUntilTrue(() -> (
+                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
+                                        )),
+                                        new SetExtendoTargetAction(EXTENDO_EXTENDED)
+                                )
+                        ),
+                        new SequentialAction(
+                                new ParallelAction(
+                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                ),
+                                new SleepAction(0.07),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                new SleepAction(0.07)
+                        ),
+                        new ParallelAction(
+                                depositFirstSubAndGoToSecond,
+                                new SequentialAction(
+                                        new ParallelAction(
+                                                new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                new SetClawWristPositionAction(95),
+                                                new SequentialAction(
+                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                        new ParallelAction(
+                                                                new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
+                                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
+                                                        ),
+                                                        new ParallelAction(
+                                                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
+                                                                new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
+                                                                new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
+                                                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                new SetClawWristPositionAction(95 + values[1][2])
+                                                        )
+                                                )
+                                        ),
+                                        new SleepUntilTrue(() -> (
+                                                (-60 - drive.pose.position.x) * (-60 - drive.pose.position.x) + (-56 - drive.pose.position.y) * (-56 - drive.pose.position.y) < 9
+                                        )),
+                                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                                        new SleepAction(0.4),
+                                        new ParallelAction(
+                                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
+                                        ),
+                                        new SleepUntilTrue(() -> (
+                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
+                                        )),
+                                        new SetExtendoTargetAction(EXTENDO_EXTENDED)
+                                )
+                        ),
+                        new SequentialAction(
+                                new ParallelAction(
+                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                ),
+                                new SleepAction(0.07),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                new SleepAction(0.07)
+                        ),
+                        new ParallelAction(
+                                depositSecondSubAndGoToThird,
+                                new SequentialAction(
+                                        new ParallelAction(
+                                                new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                new SetClawWristPositionAction(95),
+                                                new SequentialAction(
+                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                        new ParallelAction(
+                                                                new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
+                                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
+                                                        ),
+                                                        new ParallelAction(
+                                                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
+                                                                new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
+                                                                new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
+                                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
+                                                                new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                new SetClawWristPositionAction(95 + values[2][2])
+                                                        )
+                                                )
+                                        ),
+                                        new SleepUntilTrue(() -> (
+                                                (-60 - drive.pose.position.x) * (-60 - drive.pose.position.x) + (-56 - drive.pose.position.y) * (-56 - drive.pose.position.y) < 9
+                                        )),
+                                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                                        new SleepAction(0.4),
+                                        new ParallelAction(
+                                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
+                                        ),
+                                        new SleepUntilTrue(() -> (
+                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
+                                        )),
+                                        new SetExtendoTargetAction(EXTENDO_EXTENDED)
+                                )
+                        ),
+                        new SequentialAction(
+                                new ParallelAction(
+                                        new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
+                                        new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
+                                ),
+                                new SleepAction(0.07),
+                                new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
+                                new SleepAction(0.07)
+                        ),
+                        new ParallelAction(
+                                goToThirdSubDeposit,
+                                new SequentialAction(
+                                        new ParallelAction(
+                                                new SetExtendoTargetAction(EXTENDO_RETRACTED),
+                                                new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
+                                                new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
+                                                new SetClawWristPositionAction(95),
+                                                new SequentialAction(
+                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                        new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                        new ParallelAction(
+                                                                new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
+                                                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
+                                                        ),
+                                                        new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET)
+                                                )
+
+                                        )
+                                )
+                        ),
+                        new SetBucketPositionAction(BUCKET_DEPOSIT),
+                        new SleepAction(0.4),
+                        new ParallelAction(
+                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
+                        ),
+                        new ParallelAction(
+                                new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
+                                new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
+                        )
+                )
+        );
+    }
     public static class SleepUntilTrue implements Action {
         public LambdaInterfaces.Condition condition;
         public double timeout;
@@ -378,412 +764,7 @@ public class SubmersibleCycleAuto extends OpMode {
         }
         else if (firstLoop){
             firstLoop=false;
-            drive = new PinpointDrive(hardwareMap, new Pose2d(-47.5, -62, Math.toRadians(45)));
-            goToFirstPickup = drive.actionBuilder(new Pose2d(-47.5, -62, Math.toRadians(45)))
-                    .strafeToLinearHeading(new Vector2d(-65, -54), Math.toRadians(67.5))
-                    .build();
-            goToFirstDeposit = drive.actionBuilder(new Pose2d(-65, -54, Math.toRadians(67.5)))
-                    .strafeToLinearHeading(new Vector2d(-68, -53), Math.toRadians(80))
-                    .build();
-            goToSecondPickup = drive.actionBuilder(new Pose2d(-68, -53, Math.toRadians(80)))
-                    .strafeToLinearHeading(new Vector2d(-62, -58), Math.toRadians(83))
-                    .build();
-            goToSecondDeposit = drive.actionBuilder(new Pose2d(-62, -58, Math.toRadians(83)))
-                    .strafeToLinearHeading(new Vector2d(-68, -51.5), Math.toRadians(70))
-                    .build();
-            goToThirdPickup = drive.actionBuilder(new Pose2d(-68, -51.5, Math.toRadians(70)))
-                    .strafeToLinearHeading(new Vector2d(-65, -56), Math.toRadians(113))
-                    .build();
-            goToThirdDeposit = drive.actionBuilder(new Pose2d(-65, -56, Math.toRadians(113)))
-                    .strafeToLinearHeading(new Vector2d(-60, -56), Math.toRadians(45))
-                    .build();
-            goToFirstSub = drive.actionBuilder(new Pose2d(-60, -56, Math.toRadians(45)))
-                    .setTangent(45)
-                    .splineToLinearHeading(
-                            new Pose2d(
-                                    -24 + TICK_TO_IN * values[0][0] - 30.7,
-                                    -24 + TICK_TO_IN * values[0][1],
-                                    Math.toRadians(0)
-                            ),
-                            Math.toRadians(0)
-                    )
-                    .build();
-            depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[0][0] - 30.7, -24 + TICK_TO_IN * values[0][1], Math.toRadians(0)))
-                    .setTangent(-135)
-                    .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
-                    .setTangent(45)
-                    .splineToLinearHeading(
-                            new Pose2d(
-                                    -24 + TICK_TO_IN * values[1][0] - 30.7,
-                                    -24 + TICK_TO_IN * values[1][1],
-                                    Math.toRadians(0)
-                            ),
-                            Math.toRadians(0))
-                    .build();
-            depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[1][0] - 30.7, -24 + TICK_TO_IN * values[1][1], Math.toRadians(0)))
-                    .setTangent(-135)
-                    .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
-                    .setTangent(45)
-                    .splineToLinearHeading(
-                            new Pose2d(
-                                    -24 + TICK_TO_IN * values[2][0] - 30.7,
-                                    -24 + TICK_TO_IN * values[2][1],
-                                    Math.toRadians(0)
-                            ),
-                            Math.toRadians(0))
-                    .build();
-            goToThirdSubDeposit = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[2][0] - 30.7, -24 + TICK_TO_IN * values[2][1] + 0.2, Math.toRadians(0)))
-                    .setTangent(-135)
-                    .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
-                    .build();
-
-            /*
-
-
-
-
-
-
-
-
-            CHANGE HERE, THEN COPY TO BACKUP
-
-
-
-
-
-
-
-
-
-            */
-
-            path = new ParallelAction(
-                    new MotorPID(),
-                    new SequentialAction(
-                            new ParallelAction(
-                                    goToFirstPickup,
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new ParallelAction(
-                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                            new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                            new SetBucketPositionAction(BUCKET_TRANSFER),
-                                            new SetClawWristPositionAction(95),
-                                            new SequentialAction(
-                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
-                                                    new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new SequentialAction(
-                                            new SequentialAction(
-                                                    new ParallelAction(
-                                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                                    ),
-                                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                                    new SleepAction(0.07)
-                                            ),
-                                            new ParallelAction(
-                                                    goToFirstDeposit,
-                                                    new SequentialAction(
-                                                            new ParallelAction(
-                                                                    new ParallelAction(
-                                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                                            new SetClawWristPositionAction(95),
-                                                                            new SequentialAction(
-                                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                                    new ParallelAction(
-                                                                                            new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                                                    ),
-                                                                                    new ParallelAction(
-                                                                                            new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                                            new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                                            new SetClawWristPositionAction(95),
-                                                                                            new SequentialAction(
-                                                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
-                                                                                                    new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                                                                            )
-                                                                                    )
-                                                                            )
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new SequentialAction(
-                                            new SleepAction(0.2),
-                                            goToSecondPickup
-                                    )
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    goToSecondDeposit,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new ParallelAction(
-                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                            new SetClawWristPositionAction(95),
-                                                            new SequentialAction(
-                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                    new ParallelAction(
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                                    ),
-                                                                    new ParallelAction(
-                                                                            new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                            new SetClawWristPositionAction(125),
-                                                                            new SequentialAction(
-                                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
-                                                                                    new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                                                            )
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    goToThirdPickup
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    goToThirdDeposit,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new ParallelAction(
-                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                            new SetClawWristPositionAction(95),
-                                                            new SequentialAction(
-                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                    new ParallelAction(
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                                    ),
-                                                                    new ParallelAction(
-                                                                            new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                            new SetClawWristPositionAction(125)
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    goToFirstSub,
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetClawWristPositionAction(95 + values[0][2]),
-                                    new SequentialAction(
-                                            new SleepUntilTrue(() -> (
-                                                    Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
-                                            )),
-                                            new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                    )
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    depositFirstSubAndGoToSecond,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                    new SetClawWristPositionAction(95),
-                                                    new SequentialAction(
-                                                            new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                            new ParallelAction(
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                            ),
-                                                            new ParallelAction(
-                                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                    new SetClawWristPositionAction(95 + values[1][2])
-                                                            )
-                                                    )
-                                            ),
-                                            new SleepUntilTrue(() -> (
-                                                    (-60 - drive.pose.position.x) * (-60 - drive.pose.position.x) + (-56 - drive.pose.position.y) * (-56 - drive.pose.position.y) < 9
-                                            )),
-                                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                                            new SleepAction(0.4),
-                                            new ParallelAction(
-                                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
-                                            ),
-                                            new SleepUntilTrue(() -> (
-                                                    Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
-                                            )),
-                                            new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                    )
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    depositSecondSubAndGoToThird,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                    new SetClawWristPositionAction(95),
-                                                    new SequentialAction(
-                                                            new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                            new ParallelAction(
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                            ),
-                                                            new ParallelAction(
-                                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                    new SetClawWristPositionAction(95 + values[2][2])
-                                                            )
-                                                    )
-                                            ),
-                                            new SleepUntilTrue(() -> (
-                                                    (-60 - drive.pose.position.x) * (-60 - drive.pose.position.x) + (-56 - drive.pose.position.y) * (-56 - drive.pose.position.y) < 9
-                                            )),
-                                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                                            new SleepAction(0.4),
-                                            new ParallelAction(
-                                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
-                                            ),
-                                            new SleepUntilTrue(() -> (
-                                                    Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
-                                            )),
-                                            new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                    )
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    goToThirdSubDeposit,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                    new SetClawWristPositionAction(95),
-                                                    new SequentialAction(
-                                                            new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                            new ParallelAction(
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                            ),
-                                                            new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET)
-                                                    )
-
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
-                            ),
-                            new ParallelAction(
-                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
-                            )
-                    )
-            );
+            generatePath();
         }
     }
     @Override
@@ -820,330 +801,7 @@ public class SubmersibleCycleAuto extends OpMode {
         bucket.setPosition((double) 36 / 270);
 
         if (Objects.isNull(path)){
-            path = new ParallelAction(
-                    new MotorPID(),
-                    new SequentialAction(
-                            new ParallelAction(
-                                    goToFirstPickup,
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new ParallelAction(
-                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                            new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                            new SetBucketPositionAction(BUCKET_TRANSFER),
-                                            new SetClawWristPositionAction(95),
-                                            new SequentialAction(
-                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
-                                                    new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new SequentialAction(
-                                            new SequentialAction(
-                                                    new ParallelAction(
-                                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                                    ),
-                                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                                    new SleepAction(0.07)
-                                            ),
-                                            new ParallelAction(
-                                                    goToFirstDeposit,
-                                                    new SequentialAction(
-                                                            new ParallelAction(
-                                                                    new ParallelAction(
-                                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                                            new SetClawWristPositionAction(95),
-                                                                            new SequentialAction(
-                                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                                    new ParallelAction(
-                                                                                            new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                                                    ),
-                                                                                    new ParallelAction(
-                                                                                            new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                                            new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                                            new SetClawWristPositionAction(95),
-                                                                                            new SequentialAction(
-                                                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
-                                                                                                    new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                                                                            )
-                                                                                    )
-                                                                            )
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new SequentialAction(
-                                            new SleepAction(0.2),
-                                            goToSecondPickup
-                                    )
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    goToSecondDeposit,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new ParallelAction(
-                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                            new SetClawWristPositionAction(95),
-                                                            new SequentialAction(
-                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                    new ParallelAction(
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                                    ),
-                                                                    new ParallelAction(
-                                                                            new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                            new SetClawWristPositionAction(125),
-                                                                            new SequentialAction(
-                                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() < -700)),
-                                                                                    new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                                                            )
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    goToThirdPickup
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    goToThirdDeposit,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new ParallelAction(
-                                                            new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                            new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                            new SetClawWristPositionAction(95),
-                                                            new SequentialAction(
-                                                                    new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                    new ParallelAction(
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                                    ),
-                                                                    new ParallelAction(
-                                                                            new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                            new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                            new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                            new SetClawWristPositionAction(125)
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    goToFirstSub,
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER),
-                                    new SetClawWristPositionAction(95 + values[0][2]),
-                                    new SequentialAction(
-                                            new SleepUntilTrue(() -> (
-                                                    Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
-                                            )),
-                                            new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                    )
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    depositFirstSubAndGoToSecond,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                    new SetClawWristPositionAction(95),
-                                                    new SequentialAction(
-                                                            new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                            new ParallelAction(
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                            ),
-                                                            new ParallelAction(
-                                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                    new SetClawWristPositionAction(95 + values[1][2])
-                                                            )
-                                                    )
-                                            ),
-                                            new SleepUntilTrue(() -> (
-                                                    (-60 - drive.pose.position.x) * (-60 - drive.pose.position.x) + (-56 - drive.pose.position.y) * (-56 - drive.pose.position.y) < 9
-                                            )),
-                                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                                            new SleepAction(0.4),
-                                            new ParallelAction(
-                                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
-                                            ),
-                                            new SleepUntilTrue(() -> (
-                                                    Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
-                                            )),
-                                            new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                    )
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    depositSecondSubAndGoToThird,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                    new SetClawWristPositionAction(95),
-                                                    new SequentialAction(
-                                                            new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                            new ParallelAction(
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                            ),
-                                                            new ParallelAction(
-                                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET),
-                                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_PICK_UP),
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_HOVER),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_HOVER),
-                                                                    new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                                    new SetClawWristPositionAction(95 + values[2][2])
-                                                            )
-                                                    )
-                                            ),
-                                            new SleepUntilTrue(() -> (
-                                                    (-60 - drive.pose.position.x) * (-60 - drive.pose.position.x) + (-56 - drive.pose.position.y) * (-56 - drive.pose.position.y) < 9
-                                            )),
-                                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                                            new SleepAction(0.4),
-                                            new ParallelAction(
-                                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
-                                            ),
-                                            new SleepUntilTrue(() -> (
-                                                    Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
-                                            )),
-                                            new SetExtendoTargetAction(EXTENDO_EXTENDED)
-                                    )
-                            ),
-                            new SequentialAction(
-                                    new ParallelAction(
-                                            new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
-                                            new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
-                                    ),
-                                    new SleepAction(0.07),
-                                    new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
-                                    new SleepAction(0.07)
-                            ),
-                            new ParallelAction(
-                                    goToThirdSubDeposit,
-                                    new SequentialAction(
-                                            new ParallelAction(
-                                                    new SetExtendoTargetAction(EXTENDO_RETRACTED),
-                                                    new SetExtendoPitchTargetAction(EXTENDO_PITCH_TRANSFER),
-                                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
-                                                    new SetClawWristPositionAction(95),
-                                                    new SequentialAction(
-                                                            new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
-                                                            new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
-                                                            new ParallelAction(
-                                                                    new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
-                                                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
-                                                            ),
-                                                            new SetBucketSlidesTargetAction(BUCKET_SLIDES_HIGH_BUCKET)
-                                                    )
-
-                                            )
-                                    )
-                            ),
-                            new SetBucketPositionAction(BUCKET_DEPOSIT),
-                            new SleepAction(0.4),
-                            new ParallelAction(
-                                    new SetBucketPositionAction(BUCKET_TRANSFER),
-                                    new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
-                            ),
-                            new ParallelAction(
-                                    new SetClawPitchPositionAction(CLAW_PITCH_TRANSFER),
-                                    new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER)
-                            )
-                    )
-            );
+            generatePath();
         }
 
         Actions.runBlocking(
