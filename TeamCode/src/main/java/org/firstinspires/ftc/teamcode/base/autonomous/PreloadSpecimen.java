@@ -388,7 +388,7 @@ public class PreloadSpecimen extends LinearOpMode {
                 .build();
         Action fourSpecimenPathing9 = drive.actionBuilder(new Pose2d(34, -52, Math.toRadians(-90)))
                 // Score second specimen
-                .strafeToLinearHeading(new Vector2d(4,-32.7), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(4,-30), Math.toRadians(90))
                 .build();
         Action fourSpecimenPathing10 = drive.actionBuilder(new Pose2d(4, -32.7, Math.toRadians(90)))
                 // Go to pickup zone

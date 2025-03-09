@@ -386,9 +386,9 @@ public class SubmersibleCycleAuto extends OpMode {
                     .strafeToLinearHeading(new Vector2d(-68, -53), Math.toRadians(80))
                     .build();
             goToSecondPickup = drive.actionBuilder(new Pose2d(-68, -53, Math.toRadians(80)))
-                    .strafeToLinearHeading(new Vector2d(-62.5, -58), Math.toRadians(83))
+                    .strafeToLinearHeading(new Vector2d(-62, -58), Math.toRadians(83))
                     .build();
-            goToSecondDeposit = drive.actionBuilder(new Pose2d(-62.5, -58, Math.toRadians(83)))
+            goToSecondDeposit = drive.actionBuilder(new Pose2d(-62, -58, Math.toRadians(83)))
                     .strafeToLinearHeading(new Vector2d(-68, -51.5), Math.toRadians(80))
                     .build();
             goToThirdPickup = drive.actionBuilder(new Pose2d(-68, -51.5, Math.toRadians(80)))
@@ -402,39 +402,39 @@ public class SubmersibleCycleAuto extends OpMode {
                     .splineToLinearHeading(
                             new Pose2d(
                                     -24 + TICK_TO_IN * values[0][0] - 31.2,
-                                    -24 + TICK_TO_IN * values[0][1] + 0.5,
+                                    -24 + TICK_TO_IN * values[0][1],
                                     Math.toRadians(0)
                             ),
                             Math.toRadians(0)
                     )
                     .build();
-            depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[0][0] - 31.2, -24 + TICK_TO_IN * values[0][1] + 0.5, Math.toRadians(0)))
+            depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[0][0] - 31.2, -24 + TICK_TO_IN * values[0][1], Math.toRadians(0)))
                     .setTangent(-135)
-                    .splineToLinearHeading(new Pose2d(-60, -56, Math.toRadians(45)), Math.toRadians(-120))
+                    .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
                     .setTangent(45)
                     .splineToLinearHeading(
                             new Pose2d(
                                     -24 + TICK_TO_IN * values[1][0] - 31.2,
-                                    -24 + TICK_TO_IN * values[1][1] + 0.5,
+                                    -24 + TICK_TO_IN * values[1][1],
                                     Math.toRadians(0)
                             ),
                             Math.toRadians(0))
                     .build();
-            depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[1][0] - 31.2, -24 + TICK_TO_IN * values[1][1] + 0.5, Math.toRadians(0)))
+            depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[1][0] - 31.2, -24 + TICK_TO_IN * values[1][1], Math.toRadians(0)))
                     .setTangent(-135)
-                    .splineToLinearHeading(new Pose2d(-60, -56, Math.toRadians(45)), Math.toRadians(-120))
+                    .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
                     .setTangent(45)
                     .splineToLinearHeading(
                             new Pose2d(
                                     -24 + TICK_TO_IN * values[2][0] - 31.2,
-                                    -24 + TICK_TO_IN * values[2][1] + 0.5,
+                                    -24 + TICK_TO_IN * values[2][1] + 0.2,
                                     Math.toRadians(0)
                             ),
                             Math.toRadians(0))
                     .build();
-            goToThirdSubDeposit = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[2][0] - 31.2, -24 + TICK_TO_IN * values[2][1] + 0.5, Math.toRadians(0)))
+            goToThirdSubDeposit = drive.actionBuilder(new Pose2d(-24 + TICK_TO_IN * values[2][0] - 31.2, -24 + TICK_TO_IN * values[2][1] + 0.2, Math.toRadians(0)))
                     .setTangent(-135)
-                    .splineToLinearHeading(new Pose2d(-60, -56, Math.toRadians(45)), Math.toRadians(-120))
+                    .splineToLinearHeading(new Pose2d(-58, -57, Math.toRadians(45)), Math.toRadians(-120))
                     .build();
 
             /*
@@ -543,6 +543,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
+                                    new SleepAction(0.07),
                                     new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
                                     new SleepAction(0.07)
                             ),
@@ -592,6 +593,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                             new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
                                             new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_PICK_UP)
                                     ),
+                                    new SleepAction(0.07),
                                     new SetClawFingersPositionAction(CLAW_FINGERS_CLOSED),
                                     new SleepAction(0.07)
                             ),

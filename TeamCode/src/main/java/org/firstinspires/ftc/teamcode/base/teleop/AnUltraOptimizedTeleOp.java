@@ -106,7 +106,9 @@ public class AnUltraOptimizedTeleOp extends LinearOpMode {
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("pickUpPosition")),
                                 clawPitch.setPositionAction(clawPitch.getPos("pickUpPosition"))
                         ),
+                        new TeleOpActions.TeleOpSleepAction(0.1),
                         clawFingers.setPositionAction(clawFingers.getPos("closedPosition")),
+                        new TeleOpActions.TeleOpSleepAction(0.2),
                         new TeleOpParallelAction(
                                 innerClawPitch.setPositionAction(innerClawPitch.getPos("hoverPosition")),
                                 clawPitch.setPositionAction(clawPitch.getPos("hoverPosition"))
