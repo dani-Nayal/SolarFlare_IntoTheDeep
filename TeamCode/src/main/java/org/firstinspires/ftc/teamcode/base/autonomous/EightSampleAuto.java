@@ -89,18 +89,18 @@ public class EightSampleAuto extends OpMode {
     public void generatePath(){
         drive = new PinpointDrive(hardwareMap, new Pose2d(-47.5, -62, Math.toRadians(45)));
         goToFirstPickup = drive.actionBuilder(new Pose2d(-47.5, -62, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-65, -54), Math.toRadians(69))
+                .strafeToLinearHeading(new Vector2d(-65, -54), Math.toRadians(67.5))
                 .build();
-        goToFirstDeposit = drive.actionBuilder(new Pose2d(-65, -54, Math.toRadians(69)))
+        goToFirstDeposit = drive.actionBuilder(new Pose2d(-65, -54, Math.toRadians(67.5)))
                 .strafeToLinearHeading(new Vector2d(-68, -53), Math.toRadians(80))
                 .build();
         goToSecondPickup = drive.actionBuilder(new Pose2d(-68, -53, Math.toRadians(80)))
-                .strafeToLinearHeading(new Vector2d(-62.5, -58), Math.toRadians(83))
+                .strafeToLinearHeading(new Vector2d(-62, -58), Math.toRadians(83))
                 .build();
-        goToSecondDeposit = drive.actionBuilder(new Pose2d(-62.5, -58, Math.toRadians(83)))
-                .strafeToLinearHeading(new Vector2d(-68, -51.5), Math.toRadians(80))
+        goToSecondDeposit = drive.actionBuilder(new Pose2d(-62, -58, Math.toRadians(83)))
+                .strafeToLinearHeading(new Vector2d(-68, -51.5), Math.toRadians(70))
                 .build();
-        goToThirdPickup = drive.actionBuilder(new Pose2d(-68, -51.5, Math.toRadians(80)))
+        goToThirdPickup = drive.actionBuilder(new Pose2d(-68, -51.5, Math.toRadians(70)))
                 .strafeToLinearHeading(new Vector2d(-65, -56), Math.toRadians(113))
                 .build();
         goToThirdDeposit = drive.actionBuilder(new Pose2d(-65, -56, Math.toRadians(113)))
@@ -110,47 +110,47 @@ public class EightSampleAuto extends OpMode {
                 .setTangent(45)
                 .splineToLinearHeading(
                         new Pose2d(
-                                -24+1.1811*values[0][0]-31.2,
-                                -24+1.1811*values[0][1]+0.5,
+                                -24+1.1811*values[0][0]-30.7,
+                                -24+1.1811*values[0][1],
                                 Math.toRadians(0)
                         ),
                         Math.toRadians(20)
                 )
                 .build();
-        depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24+1.1811*values[0][0]-31.2, -24+1.1811*values[0][1]+0.5, Math.toRadians(0)))
+        depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24+1.1811*values[0][0]-30.7, -24+1.1811*values[0][1], Math.toRadians(0)))
                 .setTangent(-90)
                 .splineToSplineHeading(new Pose2d(-57,-49,Math.toRadians(45)),Math.toRadians(-85))
                 .splineToLinearHeading(
                         new Pose2d(
-                                -24+1.1811*values[1][0]-31.2,
-                                -24+1.1811*values[1][1]+0.5,
+                                -24+1.1811*values[1][0]-30.7,
+                                -24+1.1811*values[1][1],
                                 Math.toRadians(0)
                         ),
                         Math.toRadians(20))
                 .build();
-        depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24+1.1811*values[1][0]-31.2, -24+1.1811*values[1][1]+0.5, Math.toRadians(0)))
+        depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24+1.1811*values[1][0]-30.7, -24+1.1811*values[1][1], Math.toRadians(0)))
                 .setTangent(-90)
                 .splineToSplineHeading(new Pose2d(-57,-49,Math.toRadians(45)),Math.toRadians(-85))
                 .splineToLinearHeading(
                         new Pose2d(
-                                -24+1.1811*values[2][0]-31.2,
-                                -24+1.1811*values[2][1]+0.5,
+                                -24+1.1811*values[2][0]-30.7,
+                                -24+1.1811*values[2][1],
                                 Math.toRadians(0)
                         ),
                         Math.toRadians(20))
                 .build();
-        depositThirdSubAndGoToFourth = drive.actionBuilder(new Pose2d(-24+1.1811*values[2][0]-31.2, -24+1.1811*values[2][1]+0.5, Math.toRadians(0)))
+        depositThirdSubAndGoToFourth = drive.actionBuilder(new Pose2d(-24+1.1811*values[2][0]-30.7, -24+1.1811*values[2][1], Math.toRadians(0)))
                 .setTangent(-90)
                 .splineToSplineHeading(new Pose2d(-57,-49,Math.toRadians(45)),Math.toRadians(-85))
                 .splineToLinearHeading(
                         new Pose2d(
-                                -24+1.1811*values[3][0]-31.2,
-                                -24+1.1811*values[3][1]+0.5,
+                                -24+1.1811*values[3][0]-30.7,
+                                -24+1.1811*values[3][1],
                                 Math.toRadians(0)
                         ),
                         Math.toRadians(20))
                 .build();
-        goToFourthSubDeposit = drive.actionBuilder(new Pose2d(-24+1.1811*values[3][0]-31.2, -24+1.1811*values[3][1]+0.5, Math.toRadians(0)))
+        goToFourthSubDeposit = drive.actionBuilder(new Pose2d(-24+1.1811*values[3][0]-30.7, -24+1.1811*values[3][1], Math.toRadians(0)))
                 .setTangent(-90)
                 .splineToLinearHeading(new Pose2d(-60,-56,Math.toRadians(45)),Math.toRadians(-85))
                 .build();
@@ -342,8 +342,8 @@ public class EightSampleAuto extends OpMode {
                                         )),
                                         new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                         new SleepUntilTrue(()->(
-                                                Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-31.2))*(drive.pose.position.x-(-24+1.1811*values[0][0]-31.2))+
-                                                        (drive.pose.position.y-(-24+1.1811*values[0][1]+0.5))*(drive.pose.position.y-(-24+1.1811*values[0][1]+0.5)))<1
+                                                Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))+
+                                                        (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<1
                                         )),
                                         new ParallelAction(
                                                 new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -395,8 +395,8 @@ public class EightSampleAuto extends OpMode {
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
-                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-31.2))*(drive.pose.position.x-(-24+1.1811*values[0][0]-31.2))+
-                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]+0.5))*(drive.pose.position.y-(-24+1.1811*values[0][1]+0.5)))<1
+                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))+
+                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<1
                                                 )),
                                                 new ParallelAction(
                                                         new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -449,8 +449,8 @@ public class EightSampleAuto extends OpMode {
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
-                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-31.2))*(drive.pose.position.x-(-24+1.1811*values[0][0]-31.2))+
-                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]+0.5))*(drive.pose.position.y-(-24+1.1811*values[0][1]+0.5)))<1
+                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))+
+                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<1
                                                 )),
                                                 new ParallelAction(
                                                         new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -503,8 +503,8 @@ public class EightSampleAuto extends OpMode {
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
-                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-31.2))*(drive.pose.position.x-(-24+1.1811*values[0][0]-31.2))+
-                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]+0.5))*(drive.pose.position.y-(-24+1.1811*values[0][1]+0.5)))<1
+                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))+
+                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<1
                                                 )),
                                                 new ParallelAction(
                                                         new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
