@@ -360,17 +360,17 @@ public class PreloadSpecimen extends LinearOpMode {
                 .build();
         Action fourSpecimenPathing2 = drive.actionBuilder(new Pose2d(8, -33, Math.toRadians(90)))
                 // Go to sample 1 sample zone
-                .strafeToLinearHeading(new Vector2d(35,-41.5), Math.toRadians(40))
+                .strafeToLinearHeading(new Vector2d(34.2,-42.5), Math.toRadians(40))
                 .build();
-        Action fourSpecimenPathing3 = drive.actionBuilder(new Pose2d(35, -41.5, Math.toRadians(40)))
+        Action fourSpecimenPathing3 = drive.actionBuilder(new Pose2d(34.2, -42.5, Math.toRadians(40)))
                 // Rotate towards observation zone 1st time
-                .turnTo(Math.toRadians(-60))
+                .turnTo(Math.toRadians(-80))
                 .build();
-        Action fourSpecimenPathing4 = drive.actionBuilder(new Pose2d(35, -41.5, Math.toRadians(-60)))
+        Action fourSpecimenPathing4 = drive.actionBuilder(new Pose2d(35, -41.5, Math.toRadians(-80)))
                 // Rotate to sample 2 in sample zone
-                .strafeToLinearHeading(new Vector2d(43.5,-41), Math.toRadians(48))
+                .strafeToLinearHeading(new Vector2d(45,-43), Math.toRadians(48))
                 .build();
-        Action fourSpecimenPathing5 = drive.actionBuilder(new Pose2d(43.5, -41, Math.toRadians(48)))
+        Action fourSpecimenPathing5 = drive.actionBuilder(new Pose2d(45, -43, Math.toRadians(48)))
                 // Rotate towards observation zone 2nd time
                 .turnTo(Math.toRadians(-70))
                 .build();
@@ -400,9 +400,9 @@ public class PreloadSpecimen extends LinearOpMode {
                 .build();
         Action fourSpecimenPathing12 = drive.actionBuilder(new Pose2d(0, -32.3, Math.toRadians(90)))
                 // Go to pickup zone
-                .strafeToLinearHeading(new Vector2d(34,-52), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(34,-51.5), Math.toRadians(-90))
                 .build();
-        Action fourSpecimenPathing13 = drive.actionBuilder(new Pose2d(34, -52, Math.toRadians(-90)))
+        Action fourSpecimenPathing13 = drive.actionBuilder(new Pose2d(34, -51.5, Math.toRadians(-90)))
                 // Score fourth specimen
                 .strafeToLinearHeading(new Vector2d(-4,-32.3), Math.toRadians(90))
                 .build();

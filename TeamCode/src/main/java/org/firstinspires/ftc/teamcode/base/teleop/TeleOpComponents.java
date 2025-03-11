@@ -572,11 +572,11 @@ public abstract class  TeleOpComponents {
         public void initiateStallReset(double offset){
             isStallResetting=true;
             this.offset=offset;
-            setPower(-0.5);
+            setPower(-0.3);
         }
         public void checkStallResetOnce(){
             double voltage = getCurrent(CurrentUnit.AMPS);
-            if (voltage>2){
+            if (voltage>1.5){
                 thing=getCurrentPosition();
                 setPower(0);
                 setMode(RunMode.STOP_AND_RESET_ENCODER);
@@ -977,7 +977,7 @@ public abstract class  TeleOpComponents {
         //initialize mechanism variables here
         extendo = new BotMotor(
                 "extendo",
-                0.014,0,0.00032, 110,
+                0.013,0,0.00032, 110,
                 new String[]{},new double[]{},
                 500,0,
                 400000,5250,

@@ -63,7 +63,7 @@ public class EightSampleAuto extends OpMode {
     public final int CLAW_PITCH_SCORE_SPECIMEN = 13;
     public final int INNER_CLAW_PITCH_PICK_UP = 82;
     public final int INNER_CLAW_PITCH_HOVER = 20;
-    public final int INNER_CLAW_PITCH_TRANSFER = 200;
+    public final int INNER_CLAW_PITCH_TRANSFER = 204;
     public final int INNER_CLAW_PITCH_BACK_OFF = 100;
     public final int INNER_CLAW_PITCH_GRAB_SPECIMEN = 78;
     public final int INNER_CLAW_PITCH_SCORE_SPECIMEN = 82;
@@ -81,6 +81,7 @@ public class EightSampleAuto extends OpMode {
     int extendoTarget = EXTENDO_RETRACTED;
     int extendoPitchTarget = EXTENDO_PITCH_TRANSFER;
     int bucketSlidesTarget = BUCKET_SLIDES_TRANSFER;
+    double bucketPos = 36;
     @Override
     public void stop(){
 
@@ -89,15 +90,15 @@ public class EightSampleAuto extends OpMode {
     public void generatePath(){
         drive = new PinpointDrive(hardwareMap, new Pose2d(-47.5, -62, Math.toRadians(45)));
         goToFirstPickup = drive.actionBuilder(new Pose2d(-47.5, -62, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-65, -54), Math.toRadians(67.5))
+                .strafeToLinearHeading(new Vector2d(-65, -53.3), Math.toRadians(66.5))
                 .build();
-        goToFirstDeposit = drive.actionBuilder(new Pose2d(-65, -54, Math.toRadians(67.5)))
+        goToFirstDeposit = drive.actionBuilder(new Pose2d(-65, -53.3, Math.toRadians(66.5)))
                 .strafeToLinearHeading(new Vector2d(-68, -53), Math.toRadians(80))
                 .build();
         goToSecondPickup = drive.actionBuilder(new Pose2d(-68, -53, Math.toRadians(80)))
-                .strafeToLinearHeading(new Vector2d(-62, -58), Math.toRadians(83))
+                .strafeToLinearHeading(new Vector2d(-62, -57.3), Math.toRadians(83))
                 .build();
-        goToSecondDeposit = drive.actionBuilder(new Pose2d(-62, -58, Math.toRadians(83)))
+        goToSecondDeposit = drive.actionBuilder(new Pose2d(-62, -57.3, Math.toRadians(83)))
                 .strafeToLinearHeading(new Vector2d(-68, -51.5), Math.toRadians(70))
                 .build();
         goToThirdPickup = drive.actionBuilder(new Pose2d(-68, -51.5, Math.toRadians(70)))
@@ -110,49 +111,49 @@ public class EightSampleAuto extends OpMode {
                 .setTangent(45)
                 .splineToLinearHeading(
                         new Pose2d(
-                                -24+1.1811*values[0][0]-30.7,
+                                -24+1.1811*values[0][0]-29.7,
                                 -24+1.1811*values[0][1],
                                 Math.toRadians(0)
                         ),
                         Math.toRadians(20)
                 )
                 .build();
-        depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24+1.1811*values[0][0]-30.7, -24+1.1811*values[0][1], Math.toRadians(0)))
+        depositFirstSubAndGoToSecond = drive.actionBuilder(new Pose2d(-24+1.1811*values[0][0]-29.7, -24+1.1811*values[0][1], Math.toRadians(0)))
                 .setTangent(-90)
                 .splineToSplineHeading(new Pose2d(-57,-49,Math.toRadians(45)),Math.toRadians(-85))
                 .splineToLinearHeading(
                         new Pose2d(
-                                -24+1.1811*values[1][0]-30.7,
+                                -24+1.1811*values[1][0]-29.7,
                                 -24+1.1811*values[1][1],
                                 Math.toRadians(0)
                         ),
                         Math.toRadians(20))
                 .build();
-        depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24+1.1811*values[1][0]-30.7, -24+1.1811*values[1][1], Math.toRadians(0)))
+        depositSecondSubAndGoToThird = drive.actionBuilder(new Pose2d(-24+1.1811*values[1][0]-29.7, -24+1.1811*values[1][1], Math.toRadians(0)))
                 .setTangent(-90)
                 .splineToSplineHeading(new Pose2d(-57,-49,Math.toRadians(45)),Math.toRadians(-85))
                 .splineToLinearHeading(
                         new Pose2d(
-                                -24+1.1811*values[2][0]-30.7,
+                                -24+1.1811*values[2][0]-29.7,
                                 -24+1.1811*values[2][1],
                                 Math.toRadians(0)
                         ),
                         Math.toRadians(20))
                 .build();
-        depositThirdSubAndGoToFourth = drive.actionBuilder(new Pose2d(-24+1.1811*values[2][0]-30.7, -24+1.1811*values[2][1], Math.toRadians(0)))
+        depositThirdSubAndGoToFourth = drive.actionBuilder(new Pose2d(-24+1.1811*values[2][0]-29.7, -24+1.1811*values[2][1], Math.toRadians(0)))
                 .setTangent(-90)
                 .splineToSplineHeading(new Pose2d(-57,-49,Math.toRadians(45)),Math.toRadians(-85))
                 .splineToLinearHeading(
                         new Pose2d(
-                                -24+1.1811*values[3][0]-30.7,
+                                -24+1.1811*values[3][0]-29.7,
                                 -24+1.1811*values[3][1],
                                 Math.toRadians(0)
                         ),
                         Math.toRadians(20))
                 .build();
-        goToFourthSubDeposit = drive.actionBuilder(new Pose2d(-24+1.1811*values[3][0]-30.7, -24+1.1811*values[3][1], Math.toRadians(0)))
+        goToFourthSubDeposit = drive.actionBuilder(new Pose2d(-24+1.1811*values[3][0]-29.7, -24+1.1811*values[3][1], Math.toRadians(0)))
                 .setTangent(-90)
-                .splineToLinearHeading(new Pose2d(-60,-56,Math.toRadians(45)),Math.toRadians(-85))
+                .splineToLinearHeading(new Pose2d(-56,-59,Math.toRadians(45)),Math.toRadians(-85))
                 .build();
         path = new ParallelAction(
                 new MotorPID(),
@@ -199,8 +200,9 @@ public class EightSampleAuto extends OpMode {
                                                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
                                                                         new SetClawWristPositionAction(95),
                                                                         new SequentialAction(
-                                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -43)),
                                                                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                                new SleepAction(0.07),
                                                                                 new ParallelAction(
                                                                                         new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
                                                                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
@@ -233,8 +235,8 @@ public class EightSampleAuto extends OpMode {
                                         new SleepAction(0.2),
                                         goToSecondPickup,
                                         new SleepUntilTrue(()->(
-                                                Math.sqrt((drive.pose.position.x-(-62.5))*(drive.pose.position.x-(-62.5))+
-                                                        (drive.pose.position.y-(-58))*(drive.pose.position.y-(-58)))<1
+                                                Math.sqrt((drive.pose.position.x-(-62))*(drive.pose.position.x-(-62))+
+                                                        (drive.pose.position.y-(-57.3))*(drive.pose.position.y-(-57.3)))<7
                                         )),
                                         new ParallelAction(
                                                 new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -256,8 +258,9 @@ public class EightSampleAuto extends OpMode {
                                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
                                                         new SetClawWristPositionAction(95),
                                                         new SequentialAction(
-                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -43)),
                                                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                new SleepAction(0.07),
                                                                 new ParallelAction(
                                                                         new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
                                                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
@@ -288,7 +291,8 @@ public class EightSampleAuto extends OpMode {
                                 new SequentialAction(
                                         new SleepUntilTrue(()->(
                                                 Math.sqrt((drive.pose.position.x-(-65))*(drive.pose.position.x-(-65))+
-                                                (drive.pose.position.y-(-56))*(drive.pose.position.y-(-56)))<1
+                                                (drive.pose.position.y-(-56))*(drive.pose.position.y-(-56)))<7
+                                                &&Math.abs(Math.toDegrees(drive.pose.heading.toDouble())-113)<9
                                         )),
                                         new ParallelAction(
                                                 new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -310,8 +314,9 @@ public class EightSampleAuto extends OpMode {
                                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
                                                         new SetClawWristPositionAction(95),
                                                         new SequentialAction(
-                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                                new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -43)),
                                                                 new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                                new SleepAction(0.07),
                                                                 new ParallelAction(
                                                                         new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
                                                                         new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
@@ -338,12 +343,12 @@ public class EightSampleAuto extends OpMode {
                                 new SetClawWristPositionAction(95 + values[0][2]),
                                 new SequentialAction(
                                         new SleepUntilTrue(() -> (
-                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
+                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 15
                                         )),
                                         new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                         new SleepUntilTrue(()->(
-                                                Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))+
-                                                        (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<1
+                                                Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-29.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-29.7))+
+                                                        (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<6
                                         )),
                                         new ParallelAction(
                                                 new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -364,8 +369,9 @@ public class EightSampleAuto extends OpMode {
                                                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
                                                 new SetClawWristPositionAction(95),
                                                 new SequentialAction(
-                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -43)),
                                                         new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                        new SleepAction(0.07),
                                                         new ParallelAction(
                                                                 new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
                                                                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
@@ -391,12 +397,12 @@ public class EightSampleAuto extends OpMode {
                                         ),
                                         new SequentialAction(
                                                 new SleepUntilTrue(() -> (
-                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
+                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 15
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
-                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))+
-                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<1
+                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[1][0]-29.7))*(drive.pose.position.x-(-24+1.1811*values[1][0]-29.7))+
+                                                                (drive.pose.position.y-(-24+1.1811*values[1][1]))*(drive.pose.position.y-(-24+1.1811*values[1][1])))<6
                                                 )),
                                                 new ParallelAction(
                                                         new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -418,8 +424,9 @@ public class EightSampleAuto extends OpMode {
                                                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
                                                 new SetClawWristPositionAction(95),
                                                 new SequentialAction(
-                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -43)),
                                                         new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                        new SleepAction(0.07),
                                                         new ParallelAction(
                                                                 new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
                                                                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
@@ -445,12 +452,12 @@ public class EightSampleAuto extends OpMode {
                                         ),
                                         new SequentialAction(
                                                 new SleepUntilTrue(() -> (
-                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
+                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 15
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
-                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))+
-                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<1
+                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[2][0]-29.7))*(drive.pose.position.x-(-24+1.1811*values[2][0]-29.7))+
+                                                                (drive.pose.position.y-(-24+1.1811*values[2][1]))*(drive.pose.position.y-(-24+1.1811*values[2][1])))<6
                                                 )),
                                                 new ParallelAction(
                                                         new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -472,8 +479,9 @@ public class EightSampleAuto extends OpMode {
                                                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
                                                 new SetClawWristPositionAction(95),
                                                 new SequentialAction(
-                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -43)),
                                                         new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                        new SleepAction(0.07),
                                                         new ParallelAction(
                                                                 new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
                                                                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
@@ -499,12 +507,12 @@ public class EightSampleAuto extends OpMode {
                                         ),
                                         new SequentialAction(
                                                 new SleepUntilTrue(() -> (
-                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
+                                                        Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 15
                                                 )),
                                                 new SetExtendoTargetAction(EXTENDO_EXTENDED),
                                                 new SleepUntilTrue(()->(
-                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))*(drive.pose.position.x-(-24+1.1811*values[0][0]-30.7))+
-                                                                (drive.pose.position.y-(-24+1.1811*values[0][1]))*(drive.pose.position.y-(-24+1.1811*values[0][1])))<1
+                                                        Math.sqrt((drive.pose.position.x-(-24+1.1811*values[3][0]-29.7))*(drive.pose.position.x-(-24+1.1811*values[3][0]-29.7))+
+                                                                (drive.pose.position.y-(-24+1.1811*values[3][1]))*(drive.pose.position.y-(-24+1.1811*values[3][1])))<6
                                                 )),
                                                 new ParallelAction(
                                                         new SetClawPitchPositionAction(CLAW_PITCH_PICK_UP),
@@ -526,8 +534,9 @@ public class EightSampleAuto extends OpMode {
                                                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_TRANSFER),
                                                 new SetClawWristPositionAction(95),
                                                 new SequentialAction(
-                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -25)),
+                                                        new SleepUntilTrue(() -> (extendoPitch.getCurrentPosition() > -43)),
                                                         new SetClawFingersPositionAction(CLAW_FINGERS_OPEN),
+                                                        new SleepAction(0.07),
                                                         new ParallelAction(
                                                                 new SetClawPitchPositionAction(CLAW_PITCH_BACK_OFF),
                                                                 new SetInnerClawPitchPositionAction(INNER_CLAW_PITCH_BACK_OFF)
@@ -593,6 +602,7 @@ public class EightSampleAuto extends OpMode {
             extendo.setPower(extendoPower);
             extendoPitch.setPower(extendoPitchPower);
             bucketSlides.setPower(bucketSlidesPower);
+            bucket.setPosition(bucketPos/270);
 
             telemetry.addData("extendo target", extendoTarget);
             telemetry.addData("extendoPitch target", extendoPitchTarget);
@@ -601,6 +611,10 @@ public class EightSampleAuto extends OpMode {
             telemetry.addData("extendo position", extendo.getCurrentPosition());
             telemetry.addData("extendoPitch position", extendoPitch.getCurrentPosition());
             telemetry.addData("bucketSlides position", bucketSlides.getCurrentPosition());
+
+            telemetry.addData("x",drive.pose.position.x);
+            telemetry.addData("y",drive.pose.position.y);
+            telemetry.addData("heading",drive.pose.heading.toDouble());
             telemetry.update();
 
             return true;
@@ -717,6 +731,7 @@ public class EightSampleAuto extends OpMode {
             if (isStart) {
                 isStart=false;
                 bucket.setPosition(position / 270);
+                bucketPos=position;
                 time=Math.abs(position-bucket.getPosition())/SERVO_SPEED;
                 timer.reset();
             }

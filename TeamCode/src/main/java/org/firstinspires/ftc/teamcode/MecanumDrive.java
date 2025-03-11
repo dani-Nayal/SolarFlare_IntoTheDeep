@@ -241,7 +241,6 @@ public class MecanumDrive {
         for (DualNum<Time> power : wheelVels.all()) {
             maxPowerMag = Math.max(maxPowerMag, power.value());
         }
-
         leftFront.setPower(wheelVels.leftFront.get(0) / maxPowerMag);
         leftBack.setPower(wheelVels.leftBack.get(0) / maxPowerMag);
         rightBack.setPower(wheelVels.rightBack.get(0) / maxPowerMag);
@@ -312,12 +311,10 @@ public class MecanumDrive {
             mecanumCommandWriter.write(new MecanumCommandMessage(
                     voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
             ));
-
             leftFront.setPower(leftFrontPower);
             leftBack.setPower(leftBackPower);
             rightBack.setPower(rightBackPower);
             rightFront.setPower(rightFrontPower);
-
             p.put("x", pose.position.x);
             p.put("y", pose.position.y);
             p.put("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
@@ -403,12 +400,10 @@ public class MecanumDrive {
             mecanumCommandWriter.write(new MecanumCommandMessage(
                     voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
             ));
-
             leftFront.setPower(feedforward.compute(wheelVels.leftFront) / voltage);
             leftBack.setPower(feedforward.compute(wheelVels.leftBack) / voltage);
             rightBack.setPower(feedforward.compute(wheelVels.rightBack) / voltage);
             rightFront.setPower(feedforward.compute(wheelVels.rightFront) / voltage);
-
             Canvas c = p.fieldOverlay();
             drawPoseHistory(c);
 
