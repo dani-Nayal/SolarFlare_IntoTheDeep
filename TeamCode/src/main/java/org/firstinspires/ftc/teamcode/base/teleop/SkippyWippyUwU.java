@@ -18,11 +18,24 @@ public class SkippyWippyUwU extends LinearOpMode {
         innerClawPitch.setDirection(Servo.Direction.REVERSE);
         waitForStart();
         clawWrist.setPosition((double) 95/270);
+<<<<<<< Updated upstream
         clawFingers.setPosition((double) 92/180);
         clawPitchLeft.setPosition((double) 68/270);
         clawPitchRight.setPosition((double) 68/270);
         innerClawPitch.setPosition((double) 20/270);
         bucket.setPosition((double) 36/270);
+=======
+
+        sleep(10000000);
+
+
+        //clawFingers.setPosition((double) 92/180);
+        //clawPitchLeft.setPosition((double) 68/270);
+        //clawPitchRight.setPosition((double) 68/270);
+        //innerClawPitch.setPosition((double) 20/270);
+        //bucket.setPosition((double) 36/270);
+        /*
+>>>>>>> Stashed changes
         while (opModeIsActive()) {
             if (gamepad1.right_bumper){
                 clawFingers.setPosition(clawFingers.getPosition()+((double) 1 /180));
@@ -33,5 +46,6 @@ public class SkippyWippyUwU extends LinearOpMode {
             telemetry.addData("pos",clawFingers.getPosition()*180);
             telemetry.update();
         }
+         */
     }
 }

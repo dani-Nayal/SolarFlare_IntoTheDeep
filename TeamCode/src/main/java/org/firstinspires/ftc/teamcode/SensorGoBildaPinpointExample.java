@@ -66,8 +66,8 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
 
     GoBildaPinpointDriverRR odo; // Declare OpMode member for the Odometry Computer
 
+    final double INCHES_TO_MM = 25.4;
     double oldTime = 0;
-
 
     @Override
     public void runOpMode() {
@@ -85,7 +85,11 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
         the tracking point the Y (strafe) odometry pod is. forward of center is a positive number,
         backwards is a negative number.
          */
+<<<<<<< Updated upstream
         odo.setOffsets(99.695, 74.422); //these are tuned for 3110-0002-0001 Product Insight #1
+=======
+        odo.setOffsets(3.925 * INCHES_TO_MM,2.93 * INCHES_TO_MM); //these are tuned for 3110-0002-0001 Product Insight #1
+>>>>>>> Stashed changes
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -186,7 +190,7 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
             FAULT_X_POD_NOT_DETECTED - The device does not detect an X pod plugged in
             FAULT_Y_POD_NOT_DETECTED - The device does not detect a Y pod plugged in
             */
-            telemetry.addData("Status", odo.getDeviceStatus());
+             telemetry.addData("Status", odo.getDeviceStatus());
 
             telemetry.addData("REV Hub Frequency: ", frequency); //prints the control system refresh rate
             telemetry.update();
