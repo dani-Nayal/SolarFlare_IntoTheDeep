@@ -614,7 +614,7 @@ public class EightSampleAuto extends OpMode {
 
             telemetry.addData("x",drive.pose.position.x);
             telemetry.addData("y",drive.pose.position.y);
-            telemetry.addData("heading",drive.pose.heading.toDouble());
+            telemetry.addData("heading",Math.toDegrees(drive.pose.heading.toDouble()));
             telemetry.update();
 
             return true;

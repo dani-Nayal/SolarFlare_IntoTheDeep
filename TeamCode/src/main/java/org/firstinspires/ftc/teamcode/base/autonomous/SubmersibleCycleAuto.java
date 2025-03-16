@@ -327,7 +327,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                 new SetClawWristPositionAction(95 + values[0][2]),
                                 new SequentialAction(
                                         new SleepUntilTrue(() -> (
-                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
+                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
                                         )),
                                         new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                 )
@@ -378,7 +378,7 @@ public class SubmersibleCycleAuto extends OpMode {
                                                 new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
                                         ),
                                         new SleepUntilTrue(() -> (
-                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
+                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
                                         )),
                                         new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                 )
@@ -425,11 +425,11 @@ public class SubmersibleCycleAuto extends OpMode {
                                         new SetBucketPositionAction(BUCKET_DEPOSIT),
                                         new SleepAction(0.4),
                                         new ParallelAction(
-                                                new SetBucketPositionAction(BUCKET_TRANSFER),
+                                                 new SetBucketPositionAction(BUCKET_TRANSFER),
                                                 new SetBucketSlidesTargetAction(BUCKET_SLIDES_TRANSFER)
                                         ),
                                         new SleepUntilTrue(() -> (
-                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 30
+                                                Math.abs(Math.toDegrees(drive.pose.heading.toDouble()) - 0) < 20
                                         )),
                                         new SetExtendoTargetAction(EXTENDO_EXTENDED)
                                 )
